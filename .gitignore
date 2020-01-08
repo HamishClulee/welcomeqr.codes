@@ -1,7 +1,8 @@
 .DS_Store
 node_modules/
 server/node_modules/
-server/.env.example
+server/.env
+server/src/.env
 /dist/
 /.cache/
 erl_crash.dump*
