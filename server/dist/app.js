@@ -27,6 +27,7 @@ const MongoStore = connect_mongo_1.default(express_session_1.default);
 // Controllers (route handlers)
 const homeController = __importStar(require("./controllers/home"));
 const userController = __importStar(require("./controllers/user"));
+// import * as apiController from './controllers/api'
 const contactController = __importStar(require("./controllers/contact"));
 // API keys and Passport configuration
 const passportConfig = __importStar(require("./config/passport"));
@@ -66,15 +67,14 @@ app.use((req, res, next) => {
 });
 app.use((req, res, next) => {
     // After successful login, redirect back to the intended page
-    if (!req.user &&
-        req.path !== '/login' &&
-        req.path !== '/signup' &&
-        !req.path.match(/^\/auth/) &&
-        !req.path.match(/\./)) {
+    if (!req.user
+        && req.path !== '/login'
+        && req.path !== '/signup'
+        && !req.path.match(/^\/auth/)
+        && !req.path.match(/\./)) {
         req.session.returnTo = req.path;
     }
-    else if (req.user &&
-        req.path == '/account') {
+    else if (req.user && req.path == '/account') {
         req.session.returnTo = req.path;
     }
     next();
