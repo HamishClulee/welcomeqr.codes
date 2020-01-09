@@ -2,9 +2,9 @@ import NODE from '../api'
 
 const actions = {
 
-  SESSION_CHALLENGE: ({ commit } : { commit: any}) => {
+  SESSION_CHALLENGE: ({ commit } : { commit: any }) => {
 
-    NODE.get('/api/session_challenge')
+    NODE.get('/user/session_challenge')
       .then(() => {
 
         commit('IS_AUTHED', true)

@@ -10,6 +10,7 @@ import mongoose from 'mongoose'
 import passport from 'passport'
 import bluebird from 'bluebird'
 let history = require('connect-history-api-fallback')
+let cors = require('cors')
 import { MONGODB_URI, SESSION_SECRET } from './util/secrets'
 
 const MongoStore = mongo(session)
@@ -57,6 +58,10 @@ app.use(session({
 app.use(passport.initialize())
 app.use(passport.session())
 app.use(flash())
+app.use(cors({
+    origin: process.env.NODE_ENV !== 'production' ? 'http://localhost:8080' : 'https://welcomeqr.codes',
+    credentials: true
+}))
 app.use(lusca.xframe('SAMEORIGIN'))
 app.use(lusca.xssProtection(true))
 app.use((req, res, next) => {
@@ -84,7 +89,7 @@ app.use((req, res, next) => {
 /**
  * Primary app routes.
  */
-app.get('/', homeController.index)
+app.get('/user/session_challenge', userController.sessionChallenge)
 app.get('/login', userController.getLogin)
 app.post('/login', userController.postLogin)
 app.get('/logout', userController.logout)
