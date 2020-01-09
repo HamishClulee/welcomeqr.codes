@@ -21,6 +21,7 @@ const path_1 = __importDefault(require("path"));
 const mongoose_1 = __importDefault(require("mongoose"));
 const passport_1 = __importDefault(require("passport"));
 const bluebird_1 = __importDefault(require("bluebird"));
+let history = require('connect-history-api-fallback');
 const secrets_1 = require("./util/secrets");
 const MongoStore = connect_mongo_1.default(express_session_1.default);
 // Controllers (route handlers)
@@ -78,9 +79,6 @@ app.use((req, res, next) => {
     }
     next();
 });
-if (process.env.NODE_ENV === 'production') {
-    app.use(express_1.default.static(path_1.default.join(__dirname, 'front-end'), { maxAge: 31557600000 }));
-}
 /**
  * Primary app routes.
  */
@@ -100,5 +98,14 @@ app.get('/account', passportConfig.isAuthenticated, userController.getAccount);
 app.post('/account/profile', passportConfig.isAuthenticated, userController.postUpdateProfile);
 app.post('/account/password', passportConfig.isAuthenticated, userController.postUpdatePassword);
 app.post('/account/delete', passportConfig.isAuthenticated, userController.postDeleteAccount);
+const _static = express_1.default.static(path_1.default.join(__dirname, 'front-end'), { maxAge: 31557600000 });
+if (process.env.NODE_ENV === 'production') {
+    app.use(_static);
+}
+app.use(history({
+    verbose: true,
+    disableDotRule: true
+}));
+app.get('*', _static);
 exports.default = app;
 //# sourceMappingURL=app.js.map
