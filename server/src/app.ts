@@ -9,6 +9,7 @@ import path from 'path'
 import mongoose from 'mongoose'
 import passport from 'passport'
 import bluebird from 'bluebird'
+let history = require('connect-history-api-fallback')
 import { MONGODB_URI, SESSION_SECRET } from './util/secrets'
 
 const MongoStore = mongo(session)
@@ -77,12 +78,6 @@ app.use((req, res, next) => {
     next()
 })
 
-if (process.env.NODE_ENV === 'production') {
-    app.use(
-        express.static(path.join(__dirname, 'front-end'), { maxAge: 31557600000 })
-    )
-}
-
 /**
  * Primary app routes.
  */
@@ -102,5 +97,18 @@ app.get('/account', passportConfig.isAuthenticated, userController.getAccount)
 app.post('/account/profile', passportConfig.isAuthenticated, userController.postUpdateProfile)
 app.post('/account/password', passportConfig.isAuthenticated, userController.postUpdatePassword)
 app.post('/account/delete', passportConfig.isAuthenticated, userController.postDeleteAccount)
+
+const _static = express.static(path.join(__dirname, 'front-end'), { maxAge: 31557600000 })
+
+if (process.env.NODE_ENV === 'production') {
+    app.use(_static)
+}
+
+app.use(history({
+    verbose: true,
+    disableDotRule: true
+}))
+
+app.get('*', _static)
 
 export default app
