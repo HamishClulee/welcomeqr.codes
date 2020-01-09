@@ -1,7 +1,7 @@
-"use strict";
+'use strict'
 
-import { Response, Request, NextFunction } from "express";
-import { UserDocument } from "../models/User";
+import { Response, Request, NextFunction } from 'express'
+import { UserDocument } from '../models/User'
 
 
 /**
@@ -9,8 +9,8 @@ import { UserDocument } from "../models/User";
  * List of API examples.
  */
 export const getApi = (req: Request, res: Response) => {
-    res.render("api/index", {
-        title: "API Examples"
-    });
-};
+    res.render('api/index', {
+        title: 'API Examples'
+    })
+}
 
