@@ -28,6 +28,14 @@ block content
       button.btn.btn-primary(type='submit') Change Password
 
   .page-header
+    h1 Logout
+
+  form.form-horizontal(action='/logout', method='GET')
+    .form-group
+      input(type='hidden', name='_csrf', value=_csrf)
+      button.btn.btn-primary(type='submit') logout
+
+  .page-header
     h1 Delete Account
 
   form.form-horizontal(action='/account/delete', method='POST')
