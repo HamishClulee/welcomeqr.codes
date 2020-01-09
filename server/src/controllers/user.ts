@@ -10,6 +10,46 @@ import { check, sanitize, validationResult } from 'express-validator'
 import '../config/passport'
 
 /**
+ * GET /user/session_challenge
+ * Check if the user is authed
+ */
+export const sessionChallenge = (req: Request, res: Response) => {
+
+    if (!req.session.passport) {
+
+        return res.status(401).send({
+            'status': 401,
+            'message': 'No user logged in.'
+        })
+
+    } else {
+
+        User.findOne({ _id: req.session.passport.user }, (err, user) => {
+
+            if (err) {
+                return res.status(401).send({
+                    'status': 401,
+                    'message': 'You are not authenticated.'
+                })
+            }
+
+            if (user) {
+
+                return res.status(200).send({ userContent: 'you are a premium user' })
+
+            } else {
+
+                return res.status(401).send({
+                    'status': 401,
+                    'message': 'You are not authenticated.'
+                })
+                
+            }
+        })
+    }
+}
+
+/**
  * GET /login
  * Login page.
  */

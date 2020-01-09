@@ -22,10 +22,9 @@ const mongoose_1 = __importDefault(require("mongoose"));
 const passport_1 = __importDefault(require("passport"));
 const bluebird_1 = __importDefault(require("bluebird"));
 let history = require('connect-history-api-fallback');
+let cors = require('cors');
 const secrets_1 = require("./util/secrets");
 const MongoStore = connect_mongo_1.default(express_session_1.default);
-// Controllers (route handlers)
-const homeController = __importStar(require("./controllers/home"));
 const userController = __importStar(require("./controllers/user"));
 // import * as apiController from './controllers/api'
 const contactController = __importStar(require("./controllers/contact"));
@@ -59,6 +58,10 @@ app.use(express_session_1.default({
 app.use(passport_1.default.initialize());
 app.use(passport_1.default.session());
 app.use(express_flash_1.default());
+app.use(cors({
+    origin: process.env.NODE_ENV !== 'production' ? 'http://localhost:8080' : 'https://welcomeqr.codes',
+    credentials: true
+}));
 app.use(lusca_1.default.xframe('SAMEORIGIN'));
 app.use(lusca_1.default.xssProtection(true));
 app.use((req, res, next) => {
@@ -82,7 +85,7 @@ app.use((req, res, next) => {
 /**
  * Primary app routes.
  */
-app.get('/', homeController.index);
+app.get('/user/session_challenge', userController.sessionChallenge);
 app.get('/login', userController.getLogin);
 app.post('/login', userController.postLogin);
 app.get('/logout', userController.logout);
