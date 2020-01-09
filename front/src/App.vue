@@ -1,32 +1,43 @@
 <template>
-  <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">Not Found</router-link>
-    </div>
-    <router-view/>
+  <div class="god-div">
+      <div v-if="isauthed">
+          <router-view></router-view>
+      </div>
+      <underconstruction v-else></underconstruction>
   </div>
 </template>
 
-<style lang="scss">
+<script>
+import { mapActions, mapGetters } from 'vuex'
+import underconstruction from './components/underconstruction.vue'
 
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
+export default {
+  name: 'app',
+  components: {
+    underconstruction,
+  },
+  created() {
+
+    this.SESSION_CHALLENGE()
+
+  },
+  methods: {
+    ...mapActions(['SESSION_CHALLENGE']),
+  },
+  computed: {
+    ...mapGetters(['isauthed']),
+  },
 }
-#nav {
-  padding: 30px;
+</script>
 
-  a {
-    font-weight: bold;
-    color: #2c3e50;
+<style lang="sass">
 
-    &.router-link-exact-active {
-      color: #42b983;
-    }
-  }
-}
+.god-div
+  font-family: 'Avenir', Helvetica, Arial, sans-serif
+  -webkit-font-smoothing: antialiased
+  -moz-osx-font-smoothing: grayscale
+  text-align: center
+  color: #2c3e50
+  width: 100%
+  overflow-x: hidden !important
 </style>

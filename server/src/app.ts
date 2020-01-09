@@ -17,7 +17,7 @@ const MongoStore = mongo(session)
 // Controllers (route handlers)
 import * as homeController from './controllers/home'
 import * as userController from './controllers/user'
-import * as apiController from './controllers/api'
+// import * as apiController from './controllers/api'
 import * as contactController from './controllers/contact'
 
 
@@ -65,15 +65,18 @@ app.use((req, res, next) => {
 })
 app.use((req, res, next) => {
     // After successful login, redirect back to the intended page
-    if (!req.user &&
-    req.path !== '/login' &&
-    req.path !== '/signup' &&
-    !req.path.match(/^\/auth/) &&
-    !req.path.match(/\./)) {
+    if (!req.user
+            && req.path !== '/login'
+            && req.path !== '/signup'
+            && !req.path.match(/^\/auth/)
+            && !req.path.match(/\./)) {
+
         req.session.returnTo = req.path
-    } else if (req.user &&
-    req.path == '/account') {
+
+    } else if (req.user && req.path == '/account') {
+
         req.session.returnTo = req.path
+
     }
     next()
 })
