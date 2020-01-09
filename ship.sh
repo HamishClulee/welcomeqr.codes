@@ -1,14 +1,17 @@
 #!/usr/bin/env bash
 set -eu
-echo "---------------------- Building locally. --------------------------------------"
-cd front
+echo "---------------------- Building Server. --------------------------------------"
+cd server
+yarn build
+echo "---------------------- Building front. --------------------------------------"
+cd ../front
 yarn build --fix
 cd ..
-echo "---------------------- Copying static assets to /server. ----------------------"
+echo "---------------------- Copying static assets to /server/dist. ----------------"
 DATE=`date '+%Y-%m-%d %H:%M:%S'`
-rm -R $PWD/server/src/front-end
-mkdir $PWD/server/src/front-end
-cp -a $PWD/front/dist/. $PWD/server/src/front-end
+rm -R $PWD/server/dist/front-end
+mkdir $PWD/server/dist/front-end
+cp -a $PWD/front/dist/. $PWD/server/dist/front-end
 echo "---------------------- Pushing to GIT. ----------------------------------------"
 git add .
 MSG=". Deployed: $DATE"

@@ -3,7 +3,7 @@ node_modules/
 server/node_modules/
 server/.env
 server/src/.env
-/dist/
+front/dist/
 /.cache/
 erl_crash.dump*
 npm-debug.log*
