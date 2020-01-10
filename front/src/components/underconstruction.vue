@@ -4,17 +4,17 @@
 
       <section class="construction-con">
 
-        <object height="300" id="my-svg" type="image/svg+xml" :data="require('./qrcode.svg')"></object>
+        <object id="my-svg" type="image/svg+xml" :data="require('./qrcode.svg')"></object>
         
         <div class="heading-con">
           <h1 :class="showhead ? 'fadein' : 'hidden'">Don't waste your time with welcome booklets!</h1>
-          <object width="80%" :class="showhead2 ? 'fadein' : 'hidden'" id="my-svg2" type="image/svg+xml" :data="require('./text.svg')"></object>
+          <object :class="showhead2 ? 'fadein' : 'hidden'" id="my-svg2" type="image/svg+xml" :data="require('./text.svg')"></object>
         </div>
 
       </section>
 
       <footer class="construction-foot">
-        <h5>This application is still in Beta, contact hamish.clulee@gmail.com to request early access.</h5>
+        <h5>This application is still in Beta, <a href="/contact">contact us</a> to request early access.</h5>
       </footer>
 
     </main>
@@ -34,29 +34,36 @@ export default {
   },
   mounted() {
 
-  new Vivus('my-svg',   {
-    type: 'delayed',
-    duration: 800,
-    animTimingFunction: Vivus.EASE_IN
-  }, () => { /* fires at completed */ })
-
-  setTimeout(() => this.showhead = true, 1500)
-
-  setTimeout(() => {
-
-    this.showhead2 = true
-
-    new Vivus('my-svg2',   {
-      type: 'sync',
-      duration: 100,
+    new Vivus('my-svg',   {
+      type: 'delayed',
+      duration: 800,
+      animTimingFunction: Vivus.EASE_IN
     }, () => { /* fires at completed */ })
-    
-  }, 3000)
+
+    setTimeout(() => this.showhead = true, 1500)
+
+    setTimeout(() => {
+
+      this.showhead2 = true
+
+      new Vivus('my-svg2',   {
+        type: 'sync',
+        duration: 100,
+      }, () => { /* fires at completed */ })
+      
+    }, 3000)
   
   }
 }
 </script>
 <style lang="sass" scoped>
+#my-svg
+  height: 300px
+  @media (min-width: 0px) and (max-width: 1000px)
+    height: 40vw
+#my-svg2
+  width: 80%
+  max-width: 800px
 .page-con
   width: 100%
   height: 100vh
@@ -87,6 +94,8 @@ export default {
   h5
     text-transform: unset
     color: lighten($font, 15)
+    a 
+      color: $link
     @media (min-width: 740px) and (max-width: 1000px)
       font-size: 1.1em
     @media (min-width: 0px) and (max-width: 740px)
@@ -100,13 +109,13 @@ export default {
   @media (min-width: 0px) and (max-width: 1000px)
     padding-left: 0
   h1
-    margin: 10px 0
+    margin: 10px 20px 0 0
     @media (min-width: 740px) and (max-width: 1240px)
       margin-right: 20px
       font-size: 2em
     @media (min-width: 0px) and (max-width: 740px)
       margin-right: 20px
-      font-size: 1.2em
+      font-size: 1.4em
 .hidden
   opacity: 0
 .fadein
