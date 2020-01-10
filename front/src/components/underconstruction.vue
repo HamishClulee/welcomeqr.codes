@@ -1,23 +1,115 @@
+/* eslint-disable max-len */
 <template>
-    <div class="construction-con">
-        <h1>This MEVN app is currently under construction</h1>
-    </div>
+    <main class="page-con">
+
+      <section class="construction-con">
+
+        <object height="300" id="my-svg" type="image/svg+xml" :data="require('./qrcode.svg')"></object>
+        
+        <div class="heading-con">
+          <h1 :class="showhead ? 'fadein' : 'hidden'">Don't waste your time with welcome booklets!</h1>
+          <object width="80%" :class="showhead2 ? 'fadein' : 'hidden'" id="my-svg2" type="image/svg+xml" :data="require('./text.svg')"></object>
+        </div>
+
+      </section>
+
+      <footer class="construction-foot">
+        <h5>This application is still in Beta, contact hamish.clulee@gmail.com to request early access.</h5>
+      </footer>
+
+    </main>
 </template>
 
 <script>
+import Vivus from 'vivus'
 export default {
   name: 'underconstruction',
+  data () {
+
+    return {
+      showhead: false,
+      showhead2: false
+    }
+
+  },
+  mounted() {
+
+  new Vivus('my-svg',   {
+    type: 'delayed',
+    duration: 800,
+    animTimingFunction: Vivus.EASE_IN
+  }, () => { /* fires at completed */ })
+
+  setTimeout(() => this.showhead = true, 1500)
+
+  setTimeout(() => {
+
+    this.showhead2 = true
+
+    new Vivus('my-svg2',   {
+      type: 'sync',
+      duration: 100,
+    }, () => { /* fires at completed */ })
+    
+  }, 3000)
+  
+  }
 }
 </script>
 <style lang="sass" scoped>
+.page-con
+  width: 100%
+  height: 100vh
+  overflow: hidden !important
 .construction-con
-    height: 100vh
-    display: flex
+    padding: 2em
+    height: 90vh
+    width: 100%
     align-items: center
-    justify-content: center
-    flex-direction: row
-    text-align: center
-    color: $link
-    @media (min-width: 0px) and (max-width: 780px)
+    display: flex
+    @media (min-width: 0px) and (max-width: 1000px)
         flex-direction: column
+        align-items: flex-start
+        justify-content: center
+        padding: 2em -2em
+.construction-foot
+  width: 100vw
+  overflow-x: hidden !important
+  position: absolute
+  bottom: 0
+  height: 60px
+  border-top: 1px solid #adadad
+  background-color: $primary
+  display: flex
+  align-items: center
+  justify-content: center
+  box-shadow: 0 -5px 5px -5px rgba(0,0,0,0.19)
+  h5
+    text-transform: unset
+    color: lighten($font, 15)
+    @media (min-width: 740px) and (max-width: 1000px)
+      font-size: 1.1em
+    @media (min-width: 0px) and (max-width: 740px)
+      font-size: 0.8em
+.heading-con
+  display: flex
+  flex-direction: column
+  text-align: left
+  align-items: flex-start
+  padding-left: 1em
+  @media (min-width: 0px) and (max-width: 1000px)
+    padding-left: 0
+  h1
+    margin: 10px 0
+    @media (min-width: 740px) and (max-width: 1240px)
+      margin-right: 20px
+      font-size: 2em
+    @media (min-width: 0px) and (max-width: 740px)
+      margin-right: 20px
+      font-size: 1.2em
+.hidden
+  opacity: 0
+.fadein
+  transition: opacity 1s ease
+  opacity: 1
 </style>
