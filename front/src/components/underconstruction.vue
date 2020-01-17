@@ -1,4 +1,3 @@
-/* eslint-disable max-len */
 <template>
     <main class="page-con">
 
@@ -28,31 +27,44 @@ export default {
 
     return {
       showhead: false,
-      showhead2: false
+      showhead2: false,
+      viv1: null,
+      viv2: null,
+      time1: null,
+      time2: null
     }
 
   },
   mounted() {
 
-    new Vivus('my-svg',   {
-      type: 'delayed',
-      duration: 800,
-      animTimingFunction: Vivus.EASE_IN
-    }, () => { /* fires at completed */ })
+    if (!this.$store.state.isauthed) {
 
-    setTimeout(() => this.showhead = true, 1500)
-
-    setTimeout(() => {
-
-      this.showhead2 = true
-
-      new Vivus('my-svg2',   {
-        type: 'sync',
-        duration: 100,
+      this.viv1 = new Vivus('my-svg',   {
+        type: 'delayed',
+        duration: 800,
+        animTimingFunction: Vivus.EASE_IN
       }, () => { /* fires at completed */ })
-      
-    }, 3000)
-  
+
+      setTimeout(() => this.showhead = true, 1500)
+
+      this.time1 = setTimeout(() => {
+
+        this.showhead2 = true
+
+        this.viv2 = new Vivus('my-svg2',   {
+          type: 'sync',
+          duration: 100,
+        }, () => { /* fires at completed */ })
+        
+      }, 3000)
+
+    }
+
+  },
+  beforeDestroy() {
+
+    clearTimeout(this.time1)
+
   }
 }
 </script>
