@@ -5,7 +5,7 @@ block content
     h3 Contact Form
     hr
 
-  form.form-horizontal(method='POST')
+  form.form-horizontal(method='POST' action='/contact')
     input(type='hidden', name='_csrf', value=_csrf)
     .form-group.row.justify-content-md-center
       label.col-sm-2.col-form-label.text-right.font-weight-bold(for='name') Name
