@@ -1,8 +1,8 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import home from '../views/home.vue'
-import create from '../views/create.vue'
-import notfound from '../views/notfound.vue'
+const home = () => import('../views/home.vue')
+const create = () => import('../views/create.vue')
+const notfound = () => import('../views/notfound.vue')
 
 import overwritemetas from '../utils/seo'
 
