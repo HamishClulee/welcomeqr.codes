@@ -20,8 +20,76 @@
 
     </div> -->
 
+    <div class="Squire-UI"><div class="menu" contenteditable="false">
+        <div class="group">
+            <div data-action="bold" class="item"><i class="fa fa-bold"></i></div>
+            <div data-action="italic" class="item"><i class="fa fa-italic"></i></div>
+            <div data-action="underline" class="item"><i class="fa fa-underline"></i></div>
+            <div id="selectFont" data-action="selectFont" class="item drop-target">
+                <i class="fa fa-font"></i>
+            </div>
+        </div>
+        <div class="group">
+            <div id="makeLink" data-action="makeLink" class="item drop-target"><i class="fa fa-link"></i></div>
+            <div data-action="makeOrderedList" class="item"><i class="fa fa-list"></i></div>
+            <div id="insertImage" data-action="insertImage" class="item drop-target">
+                <i class="fa fa-picture-o"></i>
+            </div>
+            <div data-action="increaseQuoteLevel" class="item"><i class="fa fa-quote-right"></i></div>
+        </div>
+
+        <div class="group">
+            <div data-action="makeHeading" class="item"><i class="fa fa-header"></i></div>
+            <div data-action="alignLeft" class="item"><i class="fa fa-align-left"></i></div>
+            <div data-action="alignCenter" class="item"><i class="fa fa-align-center"></i></div>
+            <div data-action="alignRight" class="item"><i class="fa fa-align-right"></i></div>
+        </div>
+        
+        <div class="group">
+            <div data-action="undo" class="item"><i class="fa fa-undo"></i></div>
+            <div data-action="redo" class="item"><i class="fa fa-undo flip"></i></div>
+        </div>
+    </div>
+    <div class="templates hidden">
+        <div id="drop-font">
+            <strong>Change Font</strong>
+            <i class="fa fa-chevron-up quit"></i><br>
+            Text Size: 
+            <select id="textSelector">
+                <option data-size="12">Small</option>
+                <option data-size="24">Medium</option>
+                <option data-size="30">Large</option>
+            </select>
+            <br>        Font: 
+            <select id="fontSelect">
+                <option data-fonts="georgia">Georgia</option>
+                <option data-fonts="arial">Arial</option>
+                <option data-fonts="helvetica, arial">Helvetica</option>
+                <option data-fonts="menlo, consolas, courier new, monospace">Monospace</option>
+                <option data-fonts="tahoma, sans-serif">Tahoma</option>
+                <option data-fonts="verdana">Verdana</option>
+            </select><br>
+
+            <div class="btn submitFont">Apply</div>
+        </div>
+        <div id="drop-link">
+            <strong>Insert Link</strong>
+            <i class="fa fa-chevron-up quit"></i>
+            <input placeholder="Link URL" type="text" id="url">
+            <div class="btn submitLink">Insert</div>
+        </div>
+        <div id="drop-image">
+            <strong>Insert Image</strong>
+            <i class="fa fa-chevron-up quit"></i>
+            <input placeholder="Image URL" type="text" id="imageUrl">
+            <div class="btn sumbitImageURL">Insert</div>
+        </div>
+    </div>
+    </div>
+
+
     <div class="squire-container">
-        <iframe id="squire" frameborder="0" src="https://welcomeqr.codes/squire/index.html" @load="frameloaded()" />
+        <iframe id="squire" frameborder="0" :src="`${base}/squire/index.html`" @load="frameloaded()" />
     </div>
 
 
@@ -34,29 +102,290 @@ export default {
     data () {
 
         return {
-            squireframe: null
+            squire: null,
+            base: process.env.NODE_ENV === 'development' ? 'http://localhost:8080' : 'https://welcomeqr.codes'
         }
     
-},
+    },
     mounted () {
 
     },
     methods: {
         frameloaded () {
 
-            this.squireframe = document.getElementById('squire')
+            this.squire = document.getElementById('squire')
         
         }
     }
 }
 </script>
-<style lang="sass" scoped>
-.squire-container
-    width: 100%
-    height: 100vh
-    iframe
-        width: 100%
-        height: 100vh
+<style>
+body {
+    margin: 0;
+    font-family: 'Lato', sans-serif !important;
+}
 
+.header {
+    padding: 50px 0 30px;
+    color: #fff;
+    text-align: center;
+    background: #1d193d;
+    margin-bottom: 20px;
+}
+
+.header h1 {
+    font-size: 8em;
+    line-height: 1em;
+    font-weight: 900;
+}
+
+.header h2 {
+    margin-bottom: 1em;
+    font-size: 3em;
+    font-weight: 300;
+    text-transform: lowercase;
+    color: #afaedf;
+}
+
+    .col-centered{
+        float: none;
+        margin: 0 auto;
+        width: 80%;
+    }
+
+.alignCenter {
+    text-align: center;
+}
+
+iframe {
+    width: 100%;
+    border: 1px #919191 solid;
+    border-radius: 4px;
+    -webkit-border-radius: 4px;
+    padding: 7px 8px;
+    color: #333;
+    background-color: #fff;
+    background-repeat: no-repeat;
+    background-position: right center;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    outline: none;
+    box-shadow: inset 0 1px 2px rgba(0,0,0,0.075);
+}
+
+.menu .item {
+    color:#000;
+    float:left;
+    background:#FFF;
+    padding:10px;
+    border-left:1px #EEE solid;
+    border-bottom: 3px transparent solid;
+    -webkit-font-smoothing:subpixel-antialiased
+}
+
+.menu .group {
+    border-radius:3px;
+    display:inline-block;
+    border:1px #EEE solid;
+    margin:5px
+}
+
+.menu .group .item .flip {
+    -ms-transform:rotateY(180deg);
+    -webkit-transform:rotateY(180deg);
+    -moz-transform:rotateY(180deg);
+    transform:rotateY(180deg)
+}
+
+.btn {
+    background: #516066;
+    display: block;
+    position: relative;
+    padding: 10px 15px;
+    margin-top: 10px;
+    text-transform: uppercase;
+    font-size: 11px;
+    font-weight: 500;
+    color: #fff;
+    text-align: center;
+    overflow: hidden;
+    letter-spacing: 1px;
+    border-radius: 4px;
+}
+
+input[type=text] {
+    background-color: #fff;
+    vertical-align: middle;
+    max-width: 100%;
+    border: 1px solid #a8afb2;
+    border-color: #a8afb2 #d4d7d9 #d4d7d9;
+    color: #516066;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    -webkit-transition: border linear 150ms;
+    -moz-transition: border linear 150ms;
+    -o-transition: border linear 150ms;
+    transition: border linear 150ms;
+    font-size: 14px;
+    padding: 5px;
+    width: 100%;
+}
+
+.menu .group .item:hover, .menu .item:first-child:hover {
+	border-bottom: 3px #55ACEE solid;
+}
+
+.menu .item:first-child {
+    border-left:none;
+}
+.menu {
+    text-align: center;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+.drop {
+    border: 1px solid #dbdbdb;
+    padding: 14px;
+    background: white;
+    box-shadow: 0 1px 0 rgba(255,255,255,0),0 0 10px rgba(0,0,0,0.1);
+    -webkit-border-radius: 4px;
+    border-radius: 4px;
+    margin-top: 5px;
+}
+
+.hidden {
+    display: none;
+}
+
+.quit {
+    float: right;
+    top:0;
+    right:0;
+    margin-bottom: 5px;
+}
+.drop-element, .drop-element:after, .drop-element:before, .drop-element *, .drop-element *:after, .drop-element *:before {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box; }
+
+.drop-element {
+  position: absolute;
+  display: none; }
+  .drop-element.drop-open {
+    display: block; }
+
+.drop-element.drop-theme-arrows {
+  max-width: 100%;
+  max-height: 100%; }
+  .drop-element.drop-theme-arrows .drop-content {
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    -ms-border-radius: 5px;
+    -o-border-radius: 5px;
+    border-radius: 5px;
+    position: relative;
+    font-family: inherit;
+    background: #eeeeee;
+    color: #444444;
+    padding: 1em;
+    font-size: 1.1em;
+    line-height: 1.5em;
+    -webkit-transform: translateZ(0);
+    -moz-transform: translateZ(0);
+    -ms-transform: translateZ(0);
+    -o-transform: translateZ(0);
+    transform: translateZ(0);
+    -webkit-filter: drop-shadow(0 1px 4px rgba(0, 0, 0, 0.2));
+    -moz-filter: drop-shadow(0 1px 4px rgba(0, 0, 0, 0.2));
+    filter: drop-shadow(0 1px 4px rgba(0, 0, 0, 0.2)); }
+    .drop-element.drop-theme-arrows .drop-content:before {
+      content: "";
+      display: block;
+      position: absolute;
+      width: 0;
+      height: 0;
+      border-color: transparent;
+      border-width: 16px;
+      border-style: solid; }
+  .drop-element.drop-theme-arrows.drop-element-attached-bottom.drop-element-attached-center .drop-content {
+    margin-bottom: 16px; }
+    .drop-element.drop-theme-arrows.drop-element-attached-bottom.drop-element-attached-center .drop-content:before {
+      top: 100%;
+      left: 50%;
+      margin-left: -16px;
+      border-top-color: #eeeeee; }
+  .drop-element.drop-theme-arrows.drop-element-attached-top.drop-element-attached-center .drop-content {
+    margin-top: 16px; }
+    .drop-element.drop-theme-arrows.drop-element-attached-top.drop-element-attached-center .drop-content:before {
+      bottom: 100%;
+      left: 50%;
+      margin-left: -16px;
+      border-bottom-color: #eeeeee; }
+  .drop-element.drop-theme-arrows.drop-element-attached-right.drop-element-attached-middle .drop-content {
+    margin-right: 16px; }
+    .drop-element.drop-theme-arrows.drop-element-attached-right.drop-element-attached-middle .drop-content:before {
+      left: 100%;
+      top: 50%;
+      margin-top: -16px;
+      border-left-color: #eeeeee; }
+  .drop-element.drop-theme-arrows.drop-element-attached-left.drop-element-attached-middle .drop-content {
+    margin-left: 16px; }
+    .drop-element.drop-theme-arrows.drop-element-attached-left.drop-element-attached-middle .drop-content:before {
+      right: 100%;
+      top: 50%;
+      margin-top: -16px;
+      border-right-color: #eeeeee; }
+  .drop-element.drop-theme-arrows.drop-element-attached-top.drop-element-attached-left.drop-target-attached-bottom .drop-content {
+    margin-top: 16px; }
+    .drop-element.drop-theme-arrows.drop-element-attached-top.drop-element-attached-left.drop-target-attached-bottom .drop-content:before {
+      bottom: 100%;
+      left: 16px;
+      border-bottom-color: #eeeeee; }
+  .drop-element.drop-theme-arrows.drop-element-attached-top.drop-element-attached-right.drop-target-attached-bottom .drop-content {
+    margin-top: 16px; }
+    .drop-element.drop-theme-arrows.drop-element-attached-top.drop-element-attached-right.drop-target-attached-bottom .drop-content:before {
+      bottom: 100%;
+      right: 16px;
+      border-bottom-color: #eeeeee; }
+  .drop-element.drop-theme-arrows.drop-element-attached-bottom.drop-element-attached-left.drop-target-attached-top .drop-content {
+    margin-bottom: 16px; }
+    .drop-element.drop-theme-arrows.drop-element-attached-bottom.drop-element-attached-left.drop-target-attached-top .drop-content:before {
+      top: 100%;
+      left: 16px;
+      border-top-color: #eeeeee; }
+  .drop-element.drop-theme-arrows.drop-element-attached-bottom.drop-element-attached-right.drop-target-attached-top .drop-content {
+    margin-bottom: 16px; }
+    .drop-element.drop-theme-arrows.drop-element-attached-bottom.drop-element-attached-right.drop-target-attached-top .drop-content:before {
+      top: 100%;
+      right: 16px;
+      border-top-color: #eeeeee; }
+  .drop-element.drop-theme-arrows.drop-element-attached-top.drop-element-attached-right.drop-target-attached-left .drop-content {
+    margin-right: 16px; }
+    .drop-element.drop-theme-arrows.drop-element-attached-top.drop-element-attached-right.drop-target-attached-left .drop-content:before {
+      top: 16px;
+      left: 100%;
+      border-left-color: #eeeeee; }
+  .drop-element.drop-theme-arrows.drop-element-attached-top.drop-element-attached-left.drop-target-attached-right .drop-content {
+    margin-left: 16px; }
+    .drop-element.drop-theme-arrows.drop-element-attached-top.drop-element-attached-left.drop-target-attached-right .drop-content:before {
+      top: 16px;
+      right: 100%;
+      border-right-color: #eeeeee; }
+  .drop-element.drop-theme-arrows.drop-element-attached-bottom.drop-element-attached-right.drop-target-attached-left .drop-content {
+    margin-right: 16px; }
+    .drop-element.drop-theme-arrows.drop-element-attached-bottom.drop-element-attached-right.drop-target-attached-left .drop-content:before {
+      bottom: 16px;
+      left: 100%;
+      border-left-color: #eeeeee; }
+  .drop-element.drop-theme-arrows.drop-element-attached-bottom.drop-element-attached-left.drop-target-attached-right .drop-content {
+    margin-left: 16px; }
+    .drop-element.drop-theme-arrows.drop-element-attached-bottom.drop-element-attached-left.drop-target-attached-right .drop-content:before {
+      bottom: 16px;
+      right: 100%;
+      border-right-color: #eeeeee; }
 </style>
 
