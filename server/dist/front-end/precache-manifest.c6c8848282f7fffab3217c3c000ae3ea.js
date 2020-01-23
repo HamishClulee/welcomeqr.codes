@@ -1,15 +1,23 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "7021b72eac2f44b4a34f",
+    "revision": "f87c99999dac67713f56",
     "url": "/css/app.b9d144c9.css"
   },
   {
-    "revision": "de34241d5f65ea1bc718",
-    "url": "/css/chunk-10e87356.f7e657ab.css"
+    "revision": "8a14ac51d52cc823266c",
+    "url": "/css/chunk-78089f0e.f7e657ab.css"
   },
   {
-    "revision": "6a92927a62a82aa6bbca",
-    "url": "/css/chunk-73cac324.a2a7c712.css"
+    "revision": "bf4e59a73befaf1f7100",
+    "url": "/css/chunk-b4a1acaa.a0a5f20f.css"
+  },
+  {
+    "revision": "20ac21debd0fb0717740c52d12ae7bfc",
+    "url": "/img/bold.20ac21de.svg"
+  },
+  {
+    "revision": "a4928a5c6eee99543219f3535b115296",
+    "url": "/img/italic.a4928a5c.svg"
   },
   {
     "revision": "924b541f3a6e1a0375b94b0e803cac4f",
@@ -20,24 +28,24 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/img/text.ff52bf7d.svg"
   },
   {
-    "revision": "a068eed202c75986af87e0564879b150",
+    "revision": "55deb8792eee4274f9481755b6a2e60a",
     "url": "/index.html"
   },
   {
-    "revision": "7021b72eac2f44b4a34f",
-    "url": "/js/app.e4977677.js"
-  },
-  {
-    "revision": "de34241d5f65ea1bc718",
-    "url": "/js/chunk-10e87356.69e81b7f.js"
+    "revision": "f87c99999dac67713f56",
+    "url": "/js/app.ef9b38b5.js"
   },
   {
     "revision": "067685cc10bcaa7a8507",
     "url": "/js/chunk-2d0b6cf7.d1a9305c.js"
   },
   {
-    "revision": "6a92927a62a82aa6bbca",
-    "url": "/js/chunk-73cac324.0374095f.js"
+    "revision": "8a14ac51d52cc823266c",
+    "url": "/js/chunk-78089f0e.8b9ff5ad.js"
+  },
+  {
+    "revision": "bf4e59a73befaf1f7100",
+    "url": "/js/chunk-b4a1acaa.3c8a109f.js"
   },
   {
     "revision": "d0a21f6aedc868f71583",
@@ -52,7 +60,7 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/robots.txt"
   },
   {
-    "revision": "01e4e644ae87e9f5d6cea6484966d609",
+    "revision": "af4e8ec54f38db673172840ec40e182a",
     "url": "/squire/index.html"
   },
   {
