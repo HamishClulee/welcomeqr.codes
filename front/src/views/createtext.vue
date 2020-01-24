@@ -9,13 +9,11 @@
                 <div class="button-group">
                     <span id="bold">Bold</span>
                     <span id="removeBold">Unbold</span>
-                    <span id="italic">Italic</span>
                 </div>
 
                 <div class="button-group">
+                    <span id="italic">Italic</span>
                     <span id="removeItalic">Unitalic</span>
-                    <span id="underline">Underline</span>
-                    <span id="removeUnderline">Deunderline</span>
                 </div>
 
                 <div class="button-group">
@@ -27,37 +25,35 @@
                     <span id="setFontFace" class="prompt">Font face</span> 
                 </div>
 
-            </section>
-            <section>
                 <div class="button-group">
                     <span id="setTextColour" class="prompt">Text colour</span>
-                    <span id="setHighlightColour" class="prompt">Text highlight</span>
                     <span id="makeLink" class="prompt">Link</span>
                 </div>
-            </section>
-            <section>
+
                 <div class="button-group">
                     <span id="makeHeader">Make Header</span>
-                    <span id="increaseQuoteLevel">Quote</span>
-                    <span id="decreaseQuoteLevel">Dequote</span>
                 </div>
+
+                <div class="button-group">
+                    <span id="undo">Undo</span>
+                    <span id="redo">Redo</span>
+                </div>
+
+            </section>
+            <section>
+
+            </section>
+            <section>
                 <div class="button-group">
                     <span id="makeUnorderedList">List</span>
                     <span id="removeList">Unlist</span>
                     <span id="increaseListLevel">Increase list level</span>
                     <span id="decreaseListLevel">Decrease list level</span>
                 </div>
+ 
                 <div class="button-group">
-                    <span id="code">Code</span>
-                    <span id="removeCode">Uncode</span>
-                </div>
-                <div class="button-group">
-                    <span id="insertImage" class="prompt">Insert image</span>
-                    <span id="setHTML" class="prompt">Set HTML</span>
-                </div>
-                <div class="button-group">
-                    <span id="undo">Undo</span>
-                    <span id="redo">Redo</span>
+                    <span id="insertImage" class="prompt">Image</span>
+                    <!-- <span id="setHTML" class="prompt">Set HTML</span> -->
                 </div>
             </section>
         </header>
@@ -91,13 +87,7 @@ export default {
                 ul: {'class': 'UL'},
                 ol: {'class': 'OL'},
                 li: {'class': 'listItem'},
-                a: {'target': '_blank'},
-                pre: {
-                    style: 'border-radius:3px;border:1px solid #ccc;padding:7px 10px;background:#f6f6f6;font-family:menlo,consolas,monospace;font-size:90%;white-space:pre-wrap;word-wrap:break-word;overflow-wrap:break-word;'
-                },
-                code: {
-                    style: 'border-radius:3px;border:1px solid #ccc;padding:1px 3px;background:#f6f6f6;font-family:menlo,consolas,monospace;font-size:90%;'
-                },
+                a: {'target': '_blank'}
             }
         })
         Squire.prototype.makeHeader = function () {
@@ -152,9 +142,11 @@ export default {
 .create-con
     padding: 2em
 h5
-    margin-bottom: 30px
+    margin-bottom: 20px
     margin-left: 4px
     color: $secondary
+    border-bottom: 1px solid #adadad
+    padding-bottom: 5px
 span 
     cursor: pointer
     margin: 4px
@@ -173,9 +165,10 @@ section
     align-items: center
     justify-content: flex-start
     padding-bottom: 10px
-    margin-bottom: 20px
+    margin-bottom: 5px
 
-#editor 
+#editor
+    margin-top: 10px
     -moz-box-sizing: border-box
     -webkit-box-sizing: border-box
     box-sizing: border-box
