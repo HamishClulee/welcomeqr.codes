@@ -50,7 +50,7 @@
 </template>
 
 <script>
-import { debounce } from "lodash"
+import { debounce } from "../utils/functions"
 export default {
     name: 'create',
     data () {
@@ -76,7 +76,7 @@ export default {
 
             this.editor.addEventListener('input', debounce(() => {
 
-                this.handleInput(), 300
+                this.handleInput()
             
             }, 300))
             this.editor.addEventListener('select', debounce(() => {
