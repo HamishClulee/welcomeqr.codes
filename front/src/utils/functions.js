@@ -1,6 +1,6 @@
-const debounce = (func, wait, immediate = true) => {
+const debounce = (func, wait, immediate = false) => {
 
-    var timeout
+    let timeout
     
 	return () => {
         
