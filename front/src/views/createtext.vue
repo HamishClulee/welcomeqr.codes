@@ -104,20 +104,20 @@ export default {
 
             return this.modifyBlocks( function( frag ) {
 
-            var output = this._doc.createDocumentFragment()
-            var block = frag
+                let output = this._doc.createDocumentFragment()
+                let block = frag
 
-            while ( block = Squire.getNextBlock( block ) ) {
+                while ( block = Squire.getNextBlock( block ) ) {
 
-                output.appendChild(
-                    this.createElement( 'h2', [ Squire.empty( block ) ] )
-                )
+                    output.appendChild(
+                        this.createElement( 'h2', [ Squire.empty( block ) ] )
+                    )
+                
+                }
+
+                return output
             
-            }
-
-            return output
-            
-        })
+            })
         
         }
 
@@ -161,6 +161,7 @@ span
     border: 1px solid #adadad
     padding: 10px 20px
     transistion: position 1s ease
+    font-family: $body-font
     &:hover
         transistion: position 1s ease
         position: relative
@@ -185,7 +186,7 @@ section
     background: transparent
     color: #2b2b2b
     cursor: text
-
+    font-family: sans-serif
 a 
     text-decoration: none
 
