@@ -141,7 +141,7 @@ export default {
 
 <style lang="sass" scoped>
 header
-    margin-bottom: 20px    
+    margin-top: 20px    
 .create-con
     padding: 2em
 h5
