@@ -14,7 +14,7 @@ mkdir $PWD/server/dist/front-end
 cp -a $PWD/front/dist/. $PWD/server/dist/front-end
 echo "---------------------- Pushing to GIT. ----------------------------------------"
 git add .
-MSG=". Deployed: $DATE"
+MSG="=> deployed: $DATE"
 git commit -m "$1 $MSG"
 git push
 echo "---------------------- shiping the mevn'z -------------------------------------"

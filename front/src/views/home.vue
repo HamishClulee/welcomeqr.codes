@@ -1,6 +1,8 @@
 <template>
     <main class="home-con">
 
+        <underconstruction></underconstruction>
+
         <displaysection sassclass="primary">
 
             <h1 class="h1">Welcome QR is the perfect solution for Airbnb and Holiday accomodation providers.</h1>
@@ -66,11 +68,13 @@
 <script>
 import displaysection from '../components/displaysection'
 import ctabutton from '../components/buttons/ctabutton'
+import underconstruction from '../components/underconstruction'
 export default {
   name: 'home',
   components: {
       displaysection,
-      ctabutton
+      ctabutton,
+      underconstruction
   },
   methods: {
       ctaroute () {
@@ -85,9 +89,9 @@ export default {
 <style lang="sass" scoped>
 .home-con
     text-align: center
-h1
+.h1
     font-size: 1.8em
-h2
+.h2
     font-size: 1.6em
     font-weight: lighter
 p
