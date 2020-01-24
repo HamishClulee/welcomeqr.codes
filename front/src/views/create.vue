@@ -59,6 +59,7 @@ export default {
             base: process.env.NODE_ENV === 'development' ? 'http://localhost:8080' : 'https://welcomeqr.codes',
             isBold: false,
             isItalic: false,
+            isFocused: false,
         }
     
     },
@@ -69,6 +70,29 @@ export default {
         frameloaded () {
 
             this.editor = document.getElementById('squire').contentWindow.editor
+            this.isFocused = true
+            this.editor.focus()
+
+            this.editor.addEventListener('input', () => {
+
+                this.handleInput()
+            
+            })
+            this.editor.addEventListener('select', () => {
+
+                this.handleSelect()
+            
+            })
+        
+        },
+        handleInput () {
+
+            // Fires, todo: debounce and impl
+        
+        },
+        handleSelect () {
+
+            // Fires, todo: debounce and impl
         
         },
         togglebold () {
