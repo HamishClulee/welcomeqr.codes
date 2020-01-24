@@ -11,7 +11,7 @@
 
                 <div class="button-manager">
 
-                    <div data-action="bold" class="sqiure-item" @click="togglebold()">
+                    <div data-action="bold" class="sqiure-item" @click="bold()">
                         <div class="button-bkgrnd bold"></div>
                     </div>
 
@@ -20,7 +20,7 @@
 
                 <div class="button-manager">
                     
-                    <div data-action="italic" class="sqiure-item" @click="toggleitalic()">
+                    <div data-action="italic" class="sqiure-item" @click="italic()">
                         <div class="button-bkgrnd italic"></div>
                     </div>
 
@@ -59,8 +59,7 @@ export default {
             editor: null,
             base: process.env.NODE_ENV === 'development' ? 'http://localhost:8080' : 'https://welcomeqr.codes',
             isBold: false,
-            isItalic: false,
-            isFocused: false,
+            isItalic: false
         }
     
     },
@@ -84,29 +83,83 @@ export default {
                 this.handleSelect()
             
             }, 500))
+            this.editor.addEventListener('pathChange', debounce(() => {
+
+                this.handlePathChange()
+            
+            }, 500))
         
         },
         handleInput () {
 
-            // Fires, todo: debounce and impl
+            // todo impl
         
         },
         handleSelect () {
 
-            // Fires, todo: debounce and impl
+            // console.log(this.editor.getSelection().hasFormat())
         
         },
-        togglebold () {
+        handlePathChange () {
 
-            this.isBold ? this.editor.bold() : this.editor.removeBold()
-            this.isBold = !this.isBold
+            // console.log(this.editor.getPath())
         
         },
-        toggleitalic () {
+        checkState(which) {
 
-            this.isItalic ? this.editor.italic() : this.editor.removeItalic()
-            this.isItalic = !this.isItalic
-        
+            switch (which) {
+
+                case 'bold':
+                    // console.log(this.editor.getPath())
+                    return this.getLastPathItem === 'B'
+                case 'italic':
+                    // console.log(this.editor.getPath())
+                    return this.getLastPathItem === 'I'
+
+            }
+
+
+        },
+        bold () {
+
+            this.editor.focus()
+
+            if (!this.checkState('bold')) {
+
+                this.editor.bold()
+                this.isBold = true
+            
+            } else {
+
+                this.editor.removeBold()
+                this.isBold = false
+            
+            } 
+            
+        },
+        italic () {
+
+            this.editor.focus()
+
+            if (!this.checkState('italic')) {
+
+                this.editor.italic()
+                this.isItalic = true
+            
+            } else {
+
+                this.editor.removeItalic()
+                this.isItalic = false
+            
+            } 
+
+        }
+    },
+    computed: {
+        getLastPathItem() {
+
+            return this.editor.getPath().split('>')[this.editor.getPath().split('>').length - 1]
+
         }
     }
 }
@@ -118,6 +171,9 @@ export default {
     flex-direction: column
 .squire-row, .button-group
     flex-direction: row
+.squire-row, .button-group, .squire-item
+    justify-contents: center
+    alight-items: center
 .create-con
     width: 95%
     max-width: 1400px
@@ -135,17 +191,9 @@ export default {
     &:hover
         .indic
             background: #adadad
-.squire-row
-    justify-contents: center
-    alight-items: center
-.button-group
-    justify-contents: center
-    alight-items: center
 .sqiure-item
     border: 1px solid #efefef
     padding: 10px
-    align-items: center
-    justify-content: center
     border-radius: 2px
     margin: 2px
     cursor: pointer
