@@ -50,6 +50,7 @@
 </template>
 
 <script>
+import { debounce } from "lodash"
 export default {
     name: 'create',
     data () {
@@ -73,16 +74,16 @@ export default {
             this.isFocused = true
             this.editor.focus()
 
-            this.editor.addEventListener('input', () => {
+            this.editor.addEventListener('input', debounce(() => {
 
-                this.handleInput()
+                this.handleInput(), 300
             
-            })
-            this.editor.addEventListener('select', () => {
+            }, 300))
+            this.editor.addEventListener('select', debounce(() => {
 
                 this.handleSelect()
             
-            })
+            }, 500))
         
         },
         handleInput () {
