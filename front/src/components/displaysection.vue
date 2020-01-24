@@ -1,5 +1,5 @@
 <template>
-  <section class="display-section-container" :class="sassclass">
+  <section class="section display-section-container" :class="sassclass">
       <slot></slot>
   </section>
 </template>
