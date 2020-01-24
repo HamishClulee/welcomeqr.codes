@@ -83,6 +83,8 @@ export default {
 </script>
 
 <style lang="sass" scoped>
+.home-con
+    text-align: center
 h1
     font-size: 1.8em
 h2
@@ -90,12 +92,16 @@ h2
     font-weight: lighter
 p
     font-size: 1.8em
+    font-family: $body-font
 ul
     list-style: none
+    text-align: left
+    margin-left: 4em
 li
     font-size: 1.4em
     font-family: $heading-font
     margin-left: -60px
+    text-align: left
 .tilde
     color: $primary
 </style>

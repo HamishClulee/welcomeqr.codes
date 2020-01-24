@@ -19,4 +19,9 @@ module.exports = {
     types.forEach(type => addStyleResource(config.module.rule('sass').oneOf(type)))
 
   },
+  pluginOptions: {
+    webpackBundleAnalyzer: {
+      openAnalyzer: false
+    }
+  }
 }
