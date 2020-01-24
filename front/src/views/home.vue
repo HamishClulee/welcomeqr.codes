@@ -3,8 +3,8 @@
 
         <displaysection sassclass="primary">
 
-            <h1>Welcome QR is the perfect solution for Airbnb and Holiday accomodation providers.</h1>
-            <h2>
+            <h1 class="h1">Welcome QR is the perfect solution for Airbnb and Holiday accomodation providers.</h1>
+            <h2 class="h2">
                 Instead of printing a physical welcome document for your guests, which is expensive 
                 time consuming, subject to damagage and loss, and requires reprints for all rooms 
                 everytime you want to make a change - Choose WelcomeQR.
@@ -20,7 +20,7 @@
                 scan the QR we provide and are directed to your personalised and custonisable web site 
                 which can be updated in seconds, as many times as you like.
             </p>
-            <h1>
+            <h1 class="h1">
                 We know your life is busy, and we know that saving time and increasing value is the 
                 way to success in your industry!
             </h1>
@@ -39,7 +39,7 @@
                 Want to inform guests of up-coming events or upload different welcome text containing 
                 seasonal information?
             </p>
-            <h1>
+            <h1 class="h1">
                 Have the freedom to create and delete things at will, never use the printers again!
             </h1>
             <ctabutton text="try it for free" :do="ctaroute"></ctabutton>
