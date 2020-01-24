@@ -1,7 +1,7 @@
 <template>
     <main class="create-con">
 
-        <h5>Toolbox</h5>
+        <h5 class="h5">Toolbox</h5>
 
         <header>
 
@@ -90,6 +90,7 @@ export default {
                 a: {'target': '_blank'}
             }
         })
+
         Squire.prototype.makeHeader = function () {
 
             return this.modifyBlocks( function( frag ) {
@@ -139,10 +140,12 @@ export default {
 </script>
 
 <style lang="sass" scoped>
+header
+    margin-bottom: 20px    
 .create-con
     padding: 2em
 h5
-    margin-bottom: 20px
+    margin-bottom: 30px
     margin-left: 4px
     color: $secondary
     border-bottom: 1px solid #adadad
@@ -152,13 +155,7 @@ span
     margin: 4px
     border: 1px solid #adadad
     padding: 10px 20px
-    transistion: position 1s ease
     font-family: $body-font
-    &:hover
-        transistion: position 1s ease
-        position: relative
-        bottom: 3px
-
 section
     display: flex
     flex-direction: row
