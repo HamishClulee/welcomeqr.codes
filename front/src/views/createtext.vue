@@ -100,7 +100,7 @@ export default {
                 },
             }
         })
-        Squire.prototype.makeHeader = () => {
+        Squire.prototype.makeHeader = function () {
 
             return this.modifyBlocks( function( frag ) {
 
@@ -114,7 +114,7 @@ export default {
                 )
             
             }
-            
+
             return output
             
         })
