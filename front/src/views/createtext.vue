@@ -5,21 +5,41 @@
 
         <header>
 
+            
+
             <section>
                 <div class="button-group">
-                    <span id="bold">Bold</span>
+
+                    <span id="bold"><unicon name="bold" fill="#1976D2"></unicon></span>
                     <span id="removeBold">Unbold</span>
-                    <span id="italic">Italic</span>
+                    
                 </div>
 
                 <div class="button-group">
+
+                    <span id="italic"><unicon name="italic" fill="#1976D2"></unicon></span>
                     <span id="removeItalic">Unitalic</span>
-                    <span id="underline">Underline</span>
+
+                </div>
+
+                <div class="button-group">
+                    <span id="underline"><unicon name="underline" fill="#1976D2"></unicon></span>
                     <span id="removeUnderline">Deunderline</span>
                 </div>
 
                 <div class="button-group">
-                    <span id="removeAllFormatting">Remove formatting</span>
+                    <button class="button tertiary" id="removeAllFormatting">Remove formatting from selection</button>
+                    <span id="undo">Undo</span>
+                    <span id="redo">Redo</span>
+                </div>
+
+            </section>
+
+            <section>
+
+                <div class="button-group">
+                    <span id="setTextColour" class="prompt">Text colour</span>
+                    <span id="makeLink" class="prompt">Link</span>
                 </div>
 
                 <div class="button-group">
@@ -27,39 +47,27 @@
                     <span id="setFontFace" class="prompt">Font face</span> 
                 </div>
 
-            </section>
-            <section>
-                <div class="button-group">
-                    <span id="setTextColour" class="prompt">Text colour</span>
-                    <span id="setHighlightColour" class="prompt">Text highlight</span>
-                    <span id="makeLink" class="prompt">Link</span>
-                </div>
-            </section>
-            <section>
                 <div class="button-group">
                     <span id="makeHeader">Make Header</span>
-                    <span id="increaseQuoteLevel">Quote</span>
-                    <span id="decreaseQuoteLevel">Dequote</span>
                 </div>
+
                 <div class="button-group">
                     <span id="makeUnorderedList">List</span>
                     <span id="removeList">Unlist</span>
                     <span id="increaseListLevel">Increase list level</span>
                     <span id="decreaseListLevel">Decrease list level</span>
                 </div>
-                <div class="button-group">
-                    <span id="code">Code</span>
-                    <span id="removeCode">Uncode</span>
-                </div>
+
                 <div class="button-group">
                     <span id="insertImage" class="prompt">Insert image</span>
                     <span id="setHTML" class="prompt">Set HTML</span>
                 </div>
-                <div class="button-group">
-                    <span id="undo">Undo</span>
-                    <span id="redo">Redo</span>
-                </div>
+
             </section>
+
+            <!-- <section>
+                <button class="button save">Save</button>
+            </section> -->
         </header>
 
         <div id="editor"></div>
@@ -74,7 +82,6 @@ export default {
 
         return {
             editor: null,
-
             base: process.env.NODE_ENV === 'development' ? 'http://localhost:8080' : 'https://welcomeqr.codes',
             isBold: false,
             isItalic: false
@@ -104,20 +111,20 @@ export default {
 
             return this.modifyBlocks( function( frag ) {
 
-            var output = this._doc.createDocumentFragment()
-            var block = frag
+                var output = this._doc.createDocumentFragment()
+                var block = frag
 
-            while ( block = Squire.getNextBlock( block ) ) {
+                while ( block = Squire.getNextBlock( block ) ) {
 
-                output.appendChild(
-                    this.createElement( 'h2', [ Squire.empty( block ) ] )
-                )
-            
-            }
+                    output.appendChild(
+                        this.createElement( 'h2', [ Squire.empty( block ) ] )
+                    )
+                
+                }
 
-            return output
-            
-        })
+                return output
+
+            })
         
         }
 
@@ -149,6 +156,18 @@ export default {
 </script>
 
 <style lang="sass" scoped>
+.unicon
+    position: relative
+    top: 2px
+.save
+    border-color: $secondary
+    color: white
+    width: 100%
+    background-color: $secondary
+.tertiary
+    background-color: #fccecb
+    border-color: $tertiary
+    color: $font
 .create-con
     padding: 2em
 h5
@@ -161,6 +180,9 @@ span
     border: 1px solid #adadad
     padding: 10px 20px
     transistion: position 1s ease
+    display: flex
+    justify-content: center
+    align-items: center
     &:hover
         transistion: position 1s ease
         position: relative
@@ -173,6 +195,15 @@ section
     justify-content: flex-start
     padding-bottom: 10px
     margin-bottom: 20px
+
+.button-group
+    display: flex
+    flex-direction: row
+    align-items: center
+    justify-content: flex-start
+    margin-right: 40px
+    padding-bottom: 10px
+    border-bottom: 1px solid #adadad
 
 #editor 
     -moz-box-sizing: border-box
