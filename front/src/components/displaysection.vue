@@ -1,5 +1,8 @@
 <template>
-  <section class="section display-section-container" :class="sassclass">
+  <section
+    class="section display-section-container"
+    :style="isFooter ? { height: '40vh', minHeight: '40vh' } : null"
+    :class="sassclass">
       <slot></slot>
   </section>
 </template>
@@ -11,6 +14,11 @@ export default {
         sassclass: {
             required: true,
             type: String
+        },
+        isFooter: {
+            required: false,
+            default: false,
+            type: Boolean
         }
     }
 }
@@ -37,4 +45,6 @@ export default {
 .highlight
     background-color: $highlight
     color: white
+.white
+    background-color: white
 </style>
