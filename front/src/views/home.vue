@@ -4,16 +4,16 @@
         <displaysection sassclass="white">
 
             <div class="landing-con">
-                <object id="qr-svg" type="image/svg+xml" :data="require('../components/qrcode.svg')"></object>
+                <object id="qr-svg" type="image/svg+xml" :data="require('../svg/qrcode.svg')"></object>
         
                 <div class="heading-con">
                     <h1 class="main-h1" :class="showheading ? 'fadein' : 'hidden'">Don't waste your time with welcome booklets!</h1>
-                    <object :class="showtext ? 'fadein' : 'hidden'" id="text-svg" type="image/svg+xml" :data="require('../components/text.svg')"></object>
+                    <object :class="showtext ? 'fadein' : 'hidden'" id="text-svg" type="image/svg+xml" :data="require('../svg/text.svg')"></object>
                 </div>
             </div>
 
             <footer class="construction-foot" @click="scrollDown">
-                <unicon height="50" width="50" fill="#adadad" name="arrow-circle-down"></unicon>
+                <object type="image/svg+xml" :data="require('../svg/arrow-circle-down.svg')"></object>
                 <h6 class="h6">FIND OUT WHY!</h6>
             </footer>
 
