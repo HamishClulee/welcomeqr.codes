@@ -26,7 +26,7 @@ const routes = [
     },
   },
   {
-    path: '/create',
+    path: '/create-text',
     name: 'create',
     component: create,
     beforeEnter: (to: any, from: any, next: any) => {
@@ -40,7 +40,7 @@ const routes = [
     },
   },
   {
-    path: '/create-text',
+    path: '/create',
     name: 'createtext',
     component: createtext,
     beforeEnter: (to: any, from: any, next: any) => {

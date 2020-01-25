@@ -203,10 +203,6 @@ export default {
     background-size: contain
     height: 15px
     width: 17px
-.bold
-    background: center / contain no-repeat url('../components/texteditoricons/bold.svg')
-.italic
-    background: center / contain no-repeat url('../components/texteditoricons/italic.svg')
 .svg-hover
     height: 15px
     cursor: pointer

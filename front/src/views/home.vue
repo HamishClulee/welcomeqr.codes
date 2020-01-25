@@ -1,9 +1,25 @@
 <template>
     <main class="home-con">
 
-        <underconstruction></underconstruction>
+        <displaysection sassclass="white">
 
-        <displaysection sassclass="primary">
+            <div class="landing-con">
+                <object id="qr-svg" type="image/svg+xml" :data="require('../components/qrcode.svg')"></object>
+        
+                <div class="heading-con">
+                    <h1 class="main-h1" :class="showheading ? 'fadein' : 'hidden'">Don't waste your time with welcome booklets!</h1>
+                    <object :class="showtext ? 'fadein' : 'hidden'" id="text-svg" type="image/svg+xml" :data="require('../components/text.svg')"></object>
+                </div>
+            </div>
+
+            <footer class="construction-foot" @click="scrollDown">
+                <unicon height="50" width="50" fill="#adadad" name="arrow-circle-down"></unicon>
+                <h6 class="h6">FIND OUT WHY!</h6>
+            </footer>
+
+        </displaysection>
+
+        <displaysection id="srcoll-pop" sassclass="primary">
 
             <h1 class="h1">Welcome QR is the perfect solution for Airbnb and Holiday accomodation providers.</h1>
             <h2 class="h2">
@@ -61,6 +77,14 @@
             </p>
             <ctabutton text="try it for free" :do="ctaroute"></ctabutton>
         </displaysection>
+
+        <displaysection :isFooter="true" sassclass="white">
+
+            <p>
+                Write some footer content
+            </p>
+
+        </displaysection>
         
     </main>
 </template>
@@ -68,27 +92,109 @@
 <script>
 import displaysection from '../components/displaysection'
 import ctabutton from '../components/buttons/ctabutton'
-import underconstruction from '../components/underconstruction'
+import Vivus from 'vivus'
 export default {
-  name: 'home',
-  components: {
-      displaysection,
-      ctabutton,
-      underconstruction
-  },
-  methods: {
-      ctaroute () {
+    name: 'home',
+    components: {
+        displaysection,
+        ctabutton
+    },
+    data () {
 
-          this.$router.push({ name: 'create' })
-      
+        return {
+            showtext: false,
+            showheading: false,
+            qrviv: null,
+            textviv: null,
+            qrtime: null,
+            texttime: null
+        }
+
+    },
+    mounted () {
+
+        this.qrviv = new Vivus('qr-svg',   {
+            type: 'delayed',
+            duration: 800,
+            animTimingFunction: Vivus.EASE_IN
+        }, () => { /* fires at completed */ })
+
+        setTimeout(() => this.showheading = true, 1500)
+
+            this.texttime = setTimeout(() => {
+
+            this.showtext = true
+
+            this.textviv = new Vivus('text-svg',   {
+                type: 'sync',
+                duration: 100,
+            }, () => { /* fires at completed */ })
+
+        }, 3000)
+    
+    },
+    methods: {
+        ctaroute () {
+
+            this.$router.push({ name: 'create' })
+
+        },
+        scrollDown() {
+
+            const el = document.getElementById('srcoll-pop')
+            el.scrollIntoView({ alignToTop: true, behavior: 'smooth' })
+        
+        }
+    },
+    beforeDestroy() {
+
+        clearTimeout(this.qrtime)
+
     }
-  }
 }
 </script>
 
 <style lang="sass" scoped>
+.landing-con
+    width: 100%
+    display: flex
+    align-items: center
+    display: flex
+    text-align: left
+    @media (min-width: 0px) and (max-width: 1000px)
+        flex-direction: column
+        align-items: flex-start
+        justify-content: center
+#qr-svg
+    height: 300px
+    @media (min-width: 0px) and (max-width: 1000px)
+        height: 40vw
+#text-svg
+    width: 80%
+    max-width: 800px
+.construction-foot
+    width: 100%
+    position: absolute
+    bottom: 0
+    height: 100px
+    cursor: pointer
+    display: flex
+    flex-direction: column
+    align-items: center
+    justify-content: center
+.heading-con
+    display: flex
+    flex-direction: column
+    text-align: left
+    align-items: flex-start
+    padding-left: 1em
+    @media (min-width: 0px) and (max-width: 1000px)
+        padding-left: 0
 .home-con
     text-align: center
+.main-h1
+    font-size: 2.8em
+    font-family: $heading-font
 .h1
     font-size: 1.8em
 .h2
@@ -108,4 +214,9 @@ li
     text-align: left
 .tilde
     color: $primary
+.hidden
+    opacity: 0
+.fadein
+    transition: opacity 1s ease
+    opacity: 1
 </style>
