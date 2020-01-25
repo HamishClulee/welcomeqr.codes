@@ -64,10 +64,6 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/squire/index.html"
   },
   {
-    "revision": "0c331252ad7e6917e4c73004ae9ca990",
-    "url": "/squire/squire-raw.js"
-  },
-  {
     "revision": "c650557ef395c43d0b8ac0ca46a2fc93",
     "url": "/squire/squire.js"
   }
