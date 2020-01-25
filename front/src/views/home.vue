@@ -136,7 +136,7 @@ export default {
     methods: {
         ctaroute () {
 
-            this.$router.push({ name: 'create' })
+            this.$router.push({ path: '/create' })
 
         },
         scrollDown() {
