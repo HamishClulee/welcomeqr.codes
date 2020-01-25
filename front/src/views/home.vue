@@ -13,8 +13,8 @@
             </div>
 
             <footer class="construction-foot" @click="scrollDown">
-                <object type="image/svg+xml" :data="require('../svg/arrow-circle-down.svg')"></object>
-                <h6 class="h6">FIND OUT WHY!</h6>
+                <div class="icon-backer" @click.stop="scrollDown"></div>
+                <h6 @click.stop="scrollDown" class="h6">FIND OUT WHY!</h6>
             </footer>
 
         </displaysection>
@@ -155,6 +155,10 @@ export default {
 </script>
 
 <style lang="sass" scoped>
+.icon-backer
+    background: center / contain no-repeat url("../svg/arrow-circle-down.svg")
+    height: 50px
+    width: 50px
 .landing-con
     width: 100%
     display: flex

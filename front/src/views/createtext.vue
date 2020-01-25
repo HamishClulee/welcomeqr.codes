@@ -22,13 +22,13 @@
                 </div>
 
                 <div class="button-group">
-                    <span id="setFontSize" class="prompt">Font size</span>
-                    <span id="setFontFace" class="prompt">Font face</span> 
+                    <span id="setFontSize" class="prompt"></span>
+                    <span id="setFontFace" class="prompt"></span> 
                 </div>
 
                 <div class="button-group">
                     <span id="setTextColour" class="prompt">Text colour</span>
-                    <span id="makeLink" class="prompt">Link</span>
+                    <span id="makeLink" class="prompt"></span>
                 </div>
 
                 <div class="button-group">
@@ -36,22 +36,22 @@
                 </div>
 
                 <div class="button-group">
-                    <span id="undo">Undo</span>
-                    <span id="redo">Redo</span>
+                    <span id="undo"></span>
+                    <span id="redo"></span>
                 </div>
 
             </section>
 
             <section class="section">
                 <div class="button-group">
-                    <span id="makeUnorderedList">List</span>
+                    <span id="makeUnorderedList"></span>
                     <span id="removeList">Unlist</span>
-                    <span id="increaseListLevel">Increase list level</span>
+                    <span id="increaseListLevel"></span>
                     <span id="decreaseListLevel">Decrease list level</span>
                 </div>
  
                 <div class="button-group">
-                    <span id="insertImage" class="prompt">Image</span>
+                    <span id="insertImage" class="prompt"></span>
                     <!-- <span id="setHTML" class="prompt">Set HTML</span> -->
                 </div>
             </section>
@@ -166,13 +166,34 @@ span, .span
     margin-bottom: 20px
 #bold
     background: center / contain no-repeat url("../svg/bold.svg")
+    background-size: unset
 #italic
     background: center / contain no-repeat url("../svg/italic.svg")
+    background-size: unset
 #undo
+    background: center / contain no-repeat url("../svg/undo.svg")
+    background-size: unset
 #redo
+    background: center / contain no-repeat url("../svg/redo.svg")
+    background-size: unset
 #setFontSize
+    background: center / contain no-repeat url("../svg/text-size.svg")
+    background-size: unset
 #setFontFace
-#link
+    background: center / contain no-repeat url("../svg/text-size.svg")
+    background-size: unset
+#makeLink
+    background: center / contain no-repeat url("../svg/link.svg")
+    background-size: unset
+#makeUnorderedList
+    background: center / contain no-repeat url("../svg/list.svg")
+    background-size: unset
+#increaseListLevel
+    background: center / contain no-repeat url("../svg/list-indent.svg")
+    background-size: unset
+#insertImage
+    background: center / contain no-repeat url("../svg/image.svg")
+    background-size: unset
 </style>
 
 
