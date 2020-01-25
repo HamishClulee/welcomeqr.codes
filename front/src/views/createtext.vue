@@ -1,18 +1,19 @@
 <template>
     <main class="create-con">
+        <router-link :to="{ name: 'home'}">back</router-link>
 
-        <h5 class="h5">Toolbox</h5>
+        <h5 class="h5-editor">Toolbox</h5>
 
-        <header>
+        <header class="header">
 
-            <section>
+            <section class="section">
                 <div class="button-group">
-                    <span id="bold">Bold</span>
+                    <span id="bold"></span>
                     <span id="removeBold">Unbold</span>
                 </div>
 
                 <div class="button-group">
-                    <span id="italic">Italic</span>
+                    <span id="italic"></span>
                     <span id="removeItalic">Unitalic</span>
                 </div>
 
@@ -40,10 +41,8 @@
                 </div>
 
             </section>
-            <section>
 
-            </section>
-            <section>
+            <section class="section">
                 <div class="button-group">
                     <span id="makeUnorderedList">List</span>
                     <span id="removeList">Unlist</span>
@@ -140,54 +139,40 @@ export default {
 </script>
 
 <style lang="sass" scoped>
-header
+.header
     margin-top: 20px    
 .create-con
     padding: 2em
-h5
+.h5-editor
     margin-bottom: 30px
+    font-size: 2em
+    font-family: $heading-font
     margin-left: 4px
     color: $secondary
     border-bottom: 1px solid #adadad
     padding-bottom: 5px
-span 
+span, .span
     cursor: pointer
     margin: 4px
     border: 1px solid #adadad
     padding: 10px 20px
     font-family: $body-font
-section
+.section
     display: flex
     flex-direction: row
     align-items: center
     justify-content: flex-start
     padding-bottom: 10px
-    margin-bottom: 5px
-
-#editor
-    margin-top: 10px
-    -moz-box-sizing: border-box
-    -webkit-box-sizing: border-box
-    box-sizing: border-box
-    min-height: 400px
-    height: 80vh
-    border: 1px solid #888
-    padding: 1em
-    background: transparent
-    color: #2b2b2b
-    cursor: text
-    font-family: sans-serif
-a 
-    text-decoration: none
-
-ul, ol 
-    margin: 0 1em
-    padding: 0 1em
-
-blockquote 
-    border-left: 2px solid blue
-    margin: 0
-    padding: 0 10px
+    margin-bottom: 20px
+#bold
+    background: center / contain no-repeat url("../svg/bold.svg")
+#italic
+    background: center / contain no-repeat url("../svg/italic.svg")
+#undo
+#redo
+#setFontSize
+#setFontFace
+#link
 </style>
 
 
