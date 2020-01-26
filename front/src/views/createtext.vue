@@ -26,7 +26,8 @@
 
                 <div class="button-group">
                     <span id="setTextColour" class="prompt">Text colour</span>
-                    <span id="makeLink" class="prompt"></span>
+                    <span @click="showLinkModal = true" class="link"></span>
+                    <linkmodal :show="showLinkModal" @callback="insertLink" @closemodal="showLinkModal = false"></linkmodal>
                 </div>
 
                 <div class="button-group">
@@ -41,8 +42,8 @@
                 </div>
  
                 <div class="button-group">
-                    <span id="insertImage" class="prompt"></span>
-                    <!-- <span id="setHTML" class="prompt">Set HTML</span> -->
+                    <span id="insertImage" @click="showImageUpload = true"></span>
+
                 </div>
 
                 <div class="button-group">
@@ -54,19 +55,51 @@
 
         <div id="editor"></div>
 
+        <myupload
+            field="img"
+            @crop-success="cropSuccess"
+            @crop-upload-success="cropUploadSuccess"
+            @crop-upload-fail="cropUploadFail"
+            v-model="showImageUpload"
+            :width="300"
+            :height="300"
+            url="/upload"
+            langType="en"
+            :params="params"
+            :headers="headers"
+            img-format="png">
+        </myupload>
+        <img :src="imgDataUrl">
+
     </main>
 </template>
 
 <script>
+import linkmodal from '../components/linkmodal.vue'
+import myupload from 'vue-image-crop-upload'
 export default {
     name: 'create',
+    components: {
+        linkmodal,
+        myupload
+    },
     data () {
 
         return {
             editor: null,
             base: process.env.NODE_ENV === 'development' ? 'http://localhost:8080' : 'https://welcomeqr.codes',
             isBold: false,
-            isItalic: false
+            isItalic: false,
+            showLinkModal: false,
+            showImageUpload: false,
+			params: {
+				token: '123456798',
+				name: 'avatar'
+			},
+			headers: {
+				smail: '*_~'
+			},
+			imgDataUrl: ''
         }
     
     },
@@ -133,7 +166,43 @@ export default {
 
             this.isItalic = !this.isItalic
 
+        },
+        insertLink(val){
+
+            if (!val.name || !val.url) {
+
+                this.imageModalShow = !this.imageModalShow
+
+            } else {
+
+                this.imageModalShow = !this.imageModalShow
+                const html = `<a target="_blank" href="${val.url} + ">${val.name}</a>`
+                this.editor.insertHTML(html)
+
+            }
+
+        },
+        toggleShow() {
+
+            this.showImageUpload = !this.showImageUpload
+        
+        },
+        cropSuccess(imgDataUrl, field){
+
+            this.imgDataUrl = imgDataUrl
+        
+        },
+        cropUploadSuccess(jsonData, field){
+
+            // TODO impl
+        
+        },
+        cropUploadFail(status, field){
+
+            // TODO impl
+            
         }
+
     },
     computed: {
 
@@ -199,7 +268,7 @@ span, .span
 #setFontFace
     background: center / contain no-repeat url("../svg/text-size.svg")
     background-size: unset
-#makeLink
+.link
     background: center / contain no-repeat url("../svg/link.svg")
     background-size: unset
 #makeUnorderedList
