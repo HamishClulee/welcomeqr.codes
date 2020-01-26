@@ -8,13 +8,11 @@
 
             <section class="section">
                 <div class="button-group">
-                    <span id="bold"></span>
-                    <span id="removeBold">Unbold</span>
+                    <span @click="changeBold" class="bold" :class="{ 'active-button': isBold }"></span>
                 </div>
 
                 <div class="button-group">
-                    <span id="italic"></span>
-                    <span id="removeItalic">Unitalic</span>
+                    <span @click="changeItalic" class="italic" :class="{ 'active-button': isItalic }"></span>
                 </div>
 
                 <div class="button-group">
@@ -36,23 +34,20 @@
                 </div>
 
                 <div class="button-group">
-                    <span id="undo"></span>
-                    <span id="redo"></span>
-                </div>
-
-            </section>
-
-            <section class="section">
-                <div class="button-group">
                     <span id="makeUnorderedList"></span>
-                    <span id="removeList">Unlist</span>
                     <span id="increaseListLevel"></span>
+                    <span id="removeList">Unlist</span>
                     <span id="decreaseListLevel">Decrease list level</span>
                 </div>
  
                 <div class="button-group">
                     <span id="insertImage" class="prompt"></span>
                     <!-- <span id="setHTML" class="prompt">Set HTML</span> -->
+                </div>
+
+                <div class="button-group">
+                    <span id="undo"></span>
+                    <span id="redo"></span>
                 </div>
             </section>
         </header>
@@ -69,7 +64,6 @@ export default {
 
         return {
             editor: null,
-
             base: process.env.NODE_ENV === 'development' ? 'http://localhost:8080' : 'https://welcomeqr.codes',
             isBold: false,
             isItalic: false
@@ -130,15 +124,38 @@ export default {
     
     },
     methods: {
+        changeBold() {
 
+            this.isBold = !this.isBold
+
+        },
+        changeItalic() {
+
+            this.isItalic = !this.isItalic
+
+        }
     },
     computed: {
 
+    },
+    watch: {
+        isBold(val) {
+
+            val ? this.editor['bold'](null) : this.editor['removeBold'](null)
+        
+        },
+        isItalic(val) {
+
+            val ? this.editor['italic'](null) : this.editor['removeItalic'](null)
+        
+        }
     }
 }
 </script>
 
 <style lang="sass" scoped>
+.active-button
+    border-bottom: 4px solid $secondary
 .header
     margin-top: 20px    
 .create-con
@@ -164,10 +181,10 @@ span, .span
     justify-content: flex-start
     padding-bottom: 10px
     margin-bottom: 20px
-#bold
+.bold
     background: center / contain no-repeat url("../svg/bold.svg")
     background-size: unset
-#italic
+.italic
     background: center / contain no-repeat url("../svg/italic.svg")
     background-size: unset
 #undo
