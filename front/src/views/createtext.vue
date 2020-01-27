@@ -7,48 +7,51 @@
         <header class="header">
 
             <section class="section">
-                <div class="button-group">
+                <div class="button-group" title="toggle bold">
                     <span @click="changeBold" class="bold" :class="{ 'active-button': isBold }"></span>
                 </div>
 
-                <div class="button-group">
+                <div class="button-group" title="toggle italic">
                     <span @click="changeItalic" class="italic" :class="{ 'active-button': isItalic }"></span>
                 </div>
 
-                <div class="button-group">
-                    <span id="removeAllFormatting">Remove formatting</span>
+                <div class="button-group" title="Remove all formatting from selection">
+                    <span id="removeAllFormatting"></span>
                 </div>
 
                 <div class="button-group">
-                    <span id="setFontSize" class="prompt"></span>
-                    <span id="setFontFace" class="prompt"></span> 
-                </div>
-
-                <div class="button-group">
-                    <span id="setTextColour" class="prompt">Text colour</span>
-                    <span @click="showLinkModal = true" class="link"></span>
+                    <span id="setTextColour" title="Set the color of the selected text"></span>
+                    <span @click="showLinkModal = true" class="link" title="Insert and internal or external link"></span>
                     <linkmodal :show="showLinkModal" @callback="insertLink" @closemodal="showLinkModal = false"></linkmodal>
                 </div>
 
                 <div class="button-group">
-                    <span id="makeHeader">Make Header</span>
+                    <span id="makeHeader" title="Set selection to be a heading"></span>
                 </div>
 
                 <div class="button-group">
-                    <span id="makeUnorderedList"></span>
-                    <span id="increaseListLevel"></span>
-                    <span id="removeList">Unlist</span>
-                    <span id="decreaseListLevel">Decrease list level</span>
+
+                    <span @click="changeList" class="list" :class="{ 'active-button': isList }" title="Make a bulleted list"></span>
+
+                    <span id="increaseListLevel" title="Indent the bulleted list"></span>
+
                 </div>
  
-                <div class="button-group">
+                <div class="button-group" title="Insert and image into the document">
                     <span id="insertImage" @click="showImageUpload = true"></span>
 
                 </div>
 
                 <div class="button-group">
-                    <span id="undo"></span>
-                    <span id="redo"></span>
+                    <span id="undo" title="Undo last action"></span>
+                    <span id="redo" title="Redo the last action you undid"></span>
+                </div>
+            </section>
+
+            <section class="section">
+                <div class="button-group">
+                    <span id="setFontSize" title="Set the font size">Use multiselect</span>
+                    <span id="setFontFace" title="Change the font">Use multiselect</span> 
                 </div>
             </section>
         </header>
@@ -90,6 +93,7 @@ export default {
             base: process.env.NODE_ENV === 'development' ? 'http://localhost:8080' : 'https://welcomeqr.codes',
             isBold: false,
             isItalic: false,
+            isList: false,
             showLinkModal: false,
             showImageUpload: false,
 			params: {
@@ -167,6 +171,11 @@ export default {
             this.isItalic = !this.isItalic
 
         },
+        changeList() {
+
+            this.isList = !this.isList
+
+        },
         insertLink(val){
 
             if (!val.name || !val.url) {
@@ -204,9 +213,6 @@ export default {
         }
 
     },
-    computed: {
-
-    },
     watch: {
         isBold(val) {
 
@@ -216,6 +222,11 @@ export default {
         isItalic(val) {
 
             val ? this.editor['italic'](null) : this.editor['removeItalic'](null)
+        
+        },
+        isList(val) {
+
+            val ? this.editor['makeUnorderedList'](null) : this.editor['removeList'](null)
         
         }
     }
@@ -263,15 +274,13 @@ span, .span
     background: center / contain no-repeat url("../svg/redo.svg")
     background-size: unset
 #setFontSize
-    background: center / contain no-repeat url("../svg/text-size.svg")
-    background-size: unset
+
 #setFontFace
-    background: center / contain no-repeat url("../svg/text-size.svg")
-    background-size: unset
+
 .link
     background: center / contain no-repeat url("../svg/link.svg")
     background-size: unset
-#makeUnorderedList
+.list
     background: center / contain no-repeat url("../svg/list.svg")
     background-size: unset
 #increaseListLevel
@@ -279,6 +288,15 @@ span, .span
     background-size: unset
 #insertImage
     background: center / contain no-repeat url("../svg/image.svg")
+    background-size: unset
+#removeAllFormatting
+    background: center / contain no-repeat url("../svg/cancel.svg")
+    background-size: unset
+#setTextColour
+    background: center / contain no-repeat url("../svg/palette.svg")
+    background-size: unset
+#makeHeader
+    background: center / contain no-repeat url("../svg/text-size.svg")
     background-size: unset
 </style>
 
