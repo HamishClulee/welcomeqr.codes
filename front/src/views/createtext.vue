@@ -20,9 +20,15 @@
                 </div>
 
                 <div class="button-group">
-                    <span id="setTextColour" title="Set the color of the selected text"></span>
+
+                    <span @click.stop="showColorPicker = !showColorPicker" class="color" title="Set the color of the selected text"></span>
+
+                    <chrome-picker @input="setTextColour" class="color-picker" v-if="showColorPicker" v-model="colors" />
+
                     <span @click="showLinkModal = true" class="link" title="Insert and internal or external link"></span>
+
                     <linkmodal :show="showLinkModal" @callback="insertLink" @closemodal="showLinkModal = false"></linkmodal>
+
                 </div>
 
                 <div class="button-group">
@@ -51,7 +57,7 @@
             <section class="section">
                 <div class="button-group">
                     <span id="setFontSize" title="Set the font size">Use multiselect</span>
-                    <span id="setFontFace" title="Change the font">Use multiselect</span> 
+                    <span id="setFontFace" title="Change the font">Use multiselect</span>
                 </div>
             </section>
         </header>
@@ -80,11 +86,13 @@
 <script>
 import linkmodal from '../components/linkmodal.vue'
 import myupload from 'vue-image-crop-upload'
+import { Chrome } from 'vue-color'
 export default {
     name: 'create',
     components: {
         linkmodal,
-        myupload
+        myupload,
+        'chrome-picker': Chrome
     },
     data () {
 
@@ -96,6 +104,14 @@ export default {
             isList: false,
             showLinkModal: false,
             showImageUpload: false,
+            showColorPicker: false,
+            colors: {
+                hex: '#194d33',
+                hsl: { h: 150, s: 0.5, l: 0.2, a: 1 },
+                hsv: { h: 150, s: 0.66, v: 0.30, a: 1 },
+                rgba: { r: 25, g: 77, b: 51, a: 1 },
+                a: 1
+            },
 			params: {
 				token: '123456798',
 				name: 'avatar'
@@ -161,6 +177,11 @@ export default {
     
     },
     methods: {
+        setTextColour(e) {
+
+            this.editor["setTextColour"] (e.hex)
+
+        },
         changeBold() {
 
             this.isBold = !this.isBold
@@ -234,6 +255,10 @@ export default {
 </script>
 
 <style lang="sass" scoped>
+.color-picker
+    position: absolute
+    left: 187px
+    top: 227px
 .active-button
     border-bottom: 4px solid $secondary
 .header
@@ -292,7 +317,7 @@ span, .span
 #removeAllFormatting
     background: center / contain no-repeat url("../svg/cancel.svg")
     background-size: unset
-#setTextColour
+.color
     background: center / contain no-repeat url("../svg/palette.svg")
     background-size: unset
 #makeHeader
