@@ -21,7 +21,7 @@
 
                 <div class="button-group">
 
-                    <span @click.stop="showColorPicker = !showColorPicker" class="color" title="Set the color of the selected text"></span>
+                    <span @click.stop="showColorPicker = !showColorPicker" :class="showColorPicker ? 'removeAllFormatting' : 'color'" title="Set the color of the selected text"></span>
 
                     <chrome-picker @input="setTextColour" class="color-picker" v-if="showColorPicker" v-model="colors" />
 
@@ -36,6 +36,10 @@
                 </div>
 
                 <div class="button-group">
+                    <multiselect @select="setFontSize" v-model="fontSize" :options="fontSizeOptions"></multiselect>
+                </div>
+
+                <div class="button-group">
 
                     <span @click="changeList" class="list" :class="{ 'active-button': isList }" title="Make a bulleted list"></span>
 
@@ -45,7 +49,6 @@
  
                 <div class="button-group" title="Insert and image into the document">
                     <span id="insertImage" @click="showImageUpload = true"></span>
-
                 </div>
 
                 <div class="button-group">
@@ -56,8 +59,9 @@
 
             <section class="section">
                 <div class="button-group">
-                    <span id="setFontSize" title="Set the font size">Use multiselect</span>
+
                     <span id="setFontFace" title="Change the font">Use multiselect</span>
+
                 </div>
             </section>
         </header>
@@ -87,16 +91,29 @@
 import linkmodal from '../components/linkmodal.vue'
 import myupload from 'vue-image-crop-upload'
 import { Chrome } from 'vue-color'
+// import Multiselect from 'vue-multiselect'
 export default {
     name: 'create',
     components: {
         linkmodal,
         myupload,
         'chrome-picker': Chrome
+        // Multiselect
     },
     data () {
 
         return {
+            fontSize: '16px',
+            fontSizeOptions: [
+                '16px',
+                '18px',
+                '20px',
+                '22px',
+                '24px',
+                '28px',
+                '32px',
+                '48px'
+            ],
             editor: null,
             base: process.env.NODE_ENV === 'development' ? 'http://localhost:8080' : 'https://welcomeqr.codes',
             isBold: false,
@@ -177,6 +194,11 @@ export default {
     
     },
     methods: {
+        setFontSize(e) {
+
+            this.editor["setFontSize"] (e)
+
+        },
         setTextColour(e) {
 
             this.editor["setTextColour"] (e.hex)
@@ -253,7 +275,7 @@ export default {
     }
 }
 </script>
-
+<style src="vue-multiselect/dist/vue-multiselect.min.css"></style>
 <style lang="sass" scoped>
 .color-picker
     position: absolute
@@ -314,7 +336,7 @@ span, .span
 #insertImage
     background: center / contain no-repeat url("../svg/image.svg")
     background-size: unset
-#removeAllFormatting
+#removeAllFormatting, .removeAllFormatting
     background: center / contain no-repeat url("../svg/cancel.svg")
     background-size: unset
 .color
