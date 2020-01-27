@@ -91,14 +91,14 @@
 import linkmodal from '../components/linkmodal.vue'
 import myupload from 'vue-image-crop-upload'
 import { Chrome } from 'vue-color'
-// import Multiselect from 'vue-multiselect'
+import Multiselect from 'vue-multiselect'
 export default {
     name: 'create',
     components: {
         linkmodal,
         myupload,
-        'chrome-picker': Chrome
-        // Multiselect
+        'chrome-picker': Chrome,
+        Multiselect
     },
     data () {
 
