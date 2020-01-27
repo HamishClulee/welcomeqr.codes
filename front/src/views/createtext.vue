@@ -57,13 +57,6 @@
                 </div>
             </section>
 
-            <section class="section">
-                <div class="button-group">
-
-                    <span id="setFontFace" title="Change the font">Use multiselect</span>
-
-                </div>
-            </section>
         </header>
 
         <div id="editor"></div>
