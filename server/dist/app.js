@@ -22,12 +22,22 @@ const mongoose_1 = __importDefault(require("mongoose"));
 const passport_1 = __importDefault(require("passport"));
 const bluebird_1 = __importDefault(require("bluebird"));
 const multer_1 = __importDefault(require("multer"));
-const morgan_1 = __importDefault(require("morgan"));
-const fs_1 = __importDefault(require("fs"));
+const winston_1 = __importDefault(require("winston"));
 const secrets_1 = require("./util/secrets");
 const history = require('connect-history-api-fallback');
 const cors = require('cors');
 const MongoStore = connect_mongo_1.default(express_session_1.default);
+if (process.env.NODE_ENV === 'production') {
+    const logger = winston_1.default.createLogger({
+        level: 'info',
+        format: winston_1.default.format.json(),
+        defaultMeta: { service: 'user-service' },
+        transports: [
+            new winston_1.default.transports.File({ filename: './logs/error.log', level: 'error' }),
+            new winston_1.default.transports.File({ filename: './logs/combined.log' })
+        ]
+    });
+}
 const userController = __importStar(require("./controllers/user"));
 // import * as apiController from './controllers/api'
 const contactController = __importStar(require("./controllers/contact"));
@@ -43,9 +53,6 @@ mongoose_1.default.connect(mongoUrl, { useNewUrlParser: true, useCreateIndex: tr
     // process.exit();
 });
 // Express configuration
-app.use(morgan_1.default('common', {
-    stream: fs_1.default.createWriteStream('./access.log', { flags: 'a' })
-}));
 app.set('port', 1980);
 app.set('views', path_1.default.join(__dirname, '../views'));
 app.set('view engine', 'pug');
