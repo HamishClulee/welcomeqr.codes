@@ -11,6 +11,7 @@ import passport from 'passport'
 import bluebird from 'bluebird'
 import multer from 'multer'
 import morgan from 'morgan'
+import fs from 'fs'
 import { MONGODB_URI, SESSION_SECRET } from './util/secrets'
 
 const history = require('connect-history-api-fallback')
@@ -42,7 +43,9 @@ mongoose.connect(mongoUrl, { useNewUrlParser: true, useCreateIndex: true, useUni
 })
 
 // Express configuration
-app.use(morgan('combined'))
+app.use(morgan('common', {
+    stream: fs.createWriteStream('./access.log', {flags: 'a'})
+}))
 app.set('port', 1980)
 app.set('views', path.join(__dirname, '../views'))
 app.set('view engine', 'pug')

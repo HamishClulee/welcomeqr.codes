@@ -23,6 +23,7 @@ const passport_1 = __importDefault(require("passport"));
 const bluebird_1 = __importDefault(require("bluebird"));
 const multer_1 = __importDefault(require("multer"));
 const morgan_1 = __importDefault(require("morgan"));
+const fs_1 = __importDefault(require("fs"));
 const secrets_1 = require("./util/secrets");
 const history = require('connect-history-api-fallback');
 const cors = require('cors');
@@ -42,7 +43,9 @@ mongoose_1.default.connect(mongoUrl, { useNewUrlParser: true, useCreateIndex: tr
     // process.exit();
 });
 // Express configuration
-app.use(morgan_1.default('combined'));
+app.use(morgan_1.default('common', {
+    stream: fs_1.default.createWriteStream('./access.log', { flags: 'a' })
+}));
 app.set('port', 1980);
 app.set('views', path_1.default.join(__dirname, '../views'));
 app.set('view engine', 'pug');
