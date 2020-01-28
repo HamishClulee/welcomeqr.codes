@@ -32,12 +32,8 @@ const logger = winston_1.default.createLogger({
     format: winston_1.default.format.json(),
     defaultMeta: { service: 'user-service' },
     transports: [
-        //
-        // - Write all logs with level `error` and below to `error.log`
-        // - Write all logs with level `info` and below to `combined.log`
-        //
         new winston_1.default.transports.File({ filename: '911911error.log', level: 'error' }),
-        new winston_1.default.transports.File({ filename: 'combined.log' })
+        new winston_1.default.transports.File({ filename: '911911combined.log' })
     ]
 });
 //
