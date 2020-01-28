@@ -21,6 +21,7 @@ const path_1 = __importDefault(require("path"));
 const mongoose_1 = __importDefault(require("mongoose"));
 const passport_1 = __importDefault(require("passport"));
 const bluebird_1 = __importDefault(require("bluebird"));
+const multer_1 = __importDefault(require("multer"));
 let history = require('connect-history-api-fallback');
 let cors = require('cors');
 const secrets_1 = require("./util/secrets");
@@ -101,6 +102,25 @@ app.get('/account', passportConfig.isAuthenticated, userController.getAccount);
 app.post('/account/profile', passportConfig.isAuthenticated, userController.postUpdateProfile);
 app.post('/account/password', passportConfig.isAuthenticated, userController.postUpdatePassword);
 app.post('/account/delete', passportConfig.isAuthenticated, userController.postDeleteAccount);
+const storage = multer_1.default.diskStorage({
+    destination: function (req, file, callback) {
+        callback(null, './uploads');
+    },
+    filename: function (req, file, callback) {
+        callback(null, file.fieldname + '-' + Date.now());
+    }
+});
+const upload = multer_1.default({ storage: storage }).single('img');
+app.post('/api/photo', (req, res) => {
+    console.log("api photo hit");
+    upload(req, res, (err) => {
+        if (err) {
+            console.log(err);
+            return res.end("Error uploading file.");
+        }
+        res.end("File is uploaded");
+    });
+});
 const _static = express_1.default.static(path_1.default.join(__dirname, 'front-end'), { maxAge: 31557600000 });
 if (process.env.NODE_ENV === 'production') {
     app.use(_static);

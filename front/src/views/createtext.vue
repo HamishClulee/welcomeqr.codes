@@ -15,13 +15,9 @@
                     <span @click="changeItalic" class="italic" :class="{ 'active-button': isItalic }"></span>
                 </div>
 
-                <div class="button-group" title="Remove all formatting from selection">
-                    <span id="removeAllFormatting"></span>
-                </div>
-
                 <div class="button-group">
 
-                    <span @click.stop="showColorPicker = !showColorPicker" :class="showColorPicker ? 'removeAllFormatting' : 'color'" title="Set the color of the selected text"></span>
+                    <span @click.stop="showColorPicker = !showColorPicker" :class="showColorPicker ? 'times' : 'color'" title="Set the color of the selected text"></span>
 
                     <chrome-picker @input="setTextColour" class="color-picker" v-if="showColorPicker" v-model="colors" />
 
@@ -55,6 +51,11 @@
                     <span id="undo" title="Undo last action"></span>
                     <span id="redo" title="Redo the last action you undid"></span>
                 </div>
+
+                <div class="button-group" title="Remove all formatting from selection">
+                    <span id="removeAllFormatting"></span>
+                </div>
+
             </section>
 
         </header>
@@ -69,7 +70,7 @@
             v-model="showImageUpload"
             :width="300"
             :height="300"
-            url="/upload"
+            url="http://localhost:1980/api/photo"
             langType="en"
             :params="params"
             :headers="headers"
@@ -274,6 +275,7 @@ export default {
     position: absolute
     left: 187px
     top: 227px
+    z-index: 9999
 .active-button
     border-bottom: 4px solid $secondary
 .header
@@ -312,6 +314,9 @@ span, .span
     background-size: unset
 #redo
     background: center / contain no-repeat url("../svg/redo.svg")
+    background-size: unset
+.times
+    background: center / contain no-repeat url("../svg/times.svg")
     background-size: unset
 #setFontSize
 
