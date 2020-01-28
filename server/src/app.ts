@@ -9,6 +9,7 @@ import path from 'path'
 import mongoose from 'mongoose'
 import passport from 'passport'
 import bluebird from 'bluebird'
+import multer from 'multer'
 let history = require('connect-history-api-fallback')
 let cors = require('cors')
 import { MONGODB_URI, SESSION_SECRET } from './util/secrets'
@@ -105,6 +106,41 @@ app.get('/account', passportConfig.isAuthenticated, userController.getAccount)
 app.post('/account/profile', passportConfig.isAuthenticated, userController.postUpdateProfile)
 app.post('/account/password', passportConfig.isAuthenticated, userController.postUpdatePassword)
 app.post('/account/delete', passportConfig.isAuthenticated, userController.postDeleteAccount)
+
+const storage = multer.diskStorage({
+
+    destination: function (req, file, callback) {
+
+        callback(null, './uploads')
+
+    },
+    filename: function (req, file, callback) {
+
+        callback(null, file.fieldname + '-' + Date.now())
+
+    }
+
+})
+
+const upload = multer({ storage : storage }).single('img')
+  
+app.post('/api/photo', (req: any, res: any): any => {
+
+    console.log("api photo hit")
+
+    upload(req, res, (err) => {
+
+        if(err) {
+
+            console.log(err)
+
+            return res.end("Error uploading file.")
+
+        }
+        res.end("File is uploaded")
+
+    })
+})
 
 const _static = express.static(path.join(__dirname, 'front-end'), { maxAge: 31557600000 })
 
