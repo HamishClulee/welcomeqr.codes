@@ -22,10 +22,33 @@ const mongoose_1 = __importDefault(require("mongoose"));
 const passport_1 = __importDefault(require("passport"));
 const bluebird_1 = __importDefault(require("bluebird"));
 const multer_1 = __importDefault(require("multer"));
-let history = require('connect-history-api-fallback');
-let cors = require('cors');
+const winston_1 = __importDefault(require("winston"));
 const secrets_1 = require("./util/secrets");
+const history = require('connect-history-api-fallback');
+const cors = require('cors');
 const MongoStore = connect_mongo_1.default(express_session_1.default);
+const logger = winston_1.default.createLogger({
+    level: 'info',
+    format: winston_1.default.format.json(),
+    defaultMeta: { service: 'user-service' },
+    transports: [
+        //
+        // - Write all logs with level `error` and below to `error.log`
+        // - Write all logs with level `info` and below to `combined.log`
+        //
+        new winston_1.default.transports.File({ filename: '911911error.log', level: 'error' }),
+        new winston_1.default.transports.File({ filename: 'combined.log' })
+    ]
+});
+//
+// If we're not in production then log to the `console` with the format:
+// `${info.level}: ${info.message} JSON.stringify({ ...rest }) `
+// 
+if (process.env.NODE_ENV !== 'production') {
+    logger.add(new winston_1.default.transports.Console({
+        format: winston_1.default.format.simple()
+    }));
+}
 const userController = __importStar(require("./controllers/user"));
 // import * as apiController from './controllers/api'
 const contactController = __importStar(require("./controllers/contact"));
