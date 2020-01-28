@@ -10,30 +10,12 @@ import mongoose from 'mongoose'
 import passport from 'passport'
 import bluebird from 'bluebird'
 import multer from 'multer'
-import winston from 'winston'
+import morgan from 'morgan'
 import { MONGODB_URI, SESSION_SECRET } from './util/secrets'
 
 const history = require('connect-history-api-fallback')
 const cors = require('cors')
 const MongoStore = mongo(session)
-const logger = winston.createLogger({
-  level: 'info',
-  format: winston.format.json(),
-  defaultMeta: { service: 'user-service' },
-  transports: [
-    new winston.transports.File({ filename: '911911error.log', level: 'error' }),
-    new winston.transports.File({ filename: '911911combined.log' })
-  ]
-})
-//
-// If we're not in production then log to the `console` with the format:
-// `${info.level}: ${info.message} JSON.stringify({ ...rest }) `
-// 
-if (process.env.NODE_ENV !== 'production') {
-  logger.add(new winston.transports.Console({
-    format: winston.format.simple()
-  }))
-}
 
 // Controllers (route handlers)
 import * as homeController from './controllers/home'
@@ -60,6 +42,7 @@ mongoose.connect(mongoUrl, { useNewUrlParser: true, useCreateIndex: true, useUni
 })
 
 // Express configuration
+app.use(morgan('combined'))
 app.set('port', 1980)
 app.set('views', path.join(__dirname, '../views'))
 app.set('view engine', 'pug')
