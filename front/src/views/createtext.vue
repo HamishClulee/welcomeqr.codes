@@ -70,7 +70,7 @@
             v-model="showImageUpload"
             :width="300"
             :height="300"
-            url="http://localhost:1980/api/photo"
+            :url="isDev ? 'http://localhost:1980/api/photo' : 'https://welcomeqr.codes/api/photo'"
             langType="en"
             :params="params"
             :headers="headers"
@@ -249,6 +249,13 @@ export default {
             
         }
 
+    },
+    computed: {
+        isDev () {
+
+            return process.env.NODE_ENV === 'development'
+
+        }
     },
     watch: {
         isBold(val) {
