@@ -174,11 +174,6 @@ export default {
                 value
             if ( id && this.editor && this.editor[ id ] ) {
 
-                if ( e.target.className === 'prompt' ) {
-
-                    value = prompt( 'Value:' )
-                
-                }
                 this.editor[ id ]( value )
             
             }
@@ -221,7 +216,7 @@ export default {
             } else {
 
                 this.imageModalShow = !this.imageModalShow
-                const html = `<a target="_blank" href="${val.url} + ">${val.name}</a>`
+                const html = `<a target="_blank" href="${val.url}">${val.name}</a>`
                 this.editor.insertHTML(html)
 
             }
@@ -239,8 +234,8 @@ export default {
         },
         cropUploadSuccess(jsonData, field){
             
-            // TODO impl
-            this.editor.insertHTML(`<img height="300" src="${this.imgDataUrl}" />`)
+            const tmp = this.imgDataUrl
+            this.editor.insertHTML(`<img height="300" src="${tmp}" />`)
             this.showImageUpload = false
             this.imgDataUrl = ''
         
