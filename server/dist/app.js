@@ -124,13 +124,12 @@ const storage = multer_1.default.diskStorage({
 });
 const upload = multer_1.default({ storage: storage }).single('img');
 app.post('/api/photo', (req, res) => {
-    console.log("api photo hit");
     upload(req, res, (err) => {
         if (err) {
             console.log(err);
             return res.end("Error uploading file.");
         }
-        res.end("File is uploaded");
+        res.end(JSON.stringify({ message: 'Upload success' }));
     });
 });
 const _static = express_1.default.static(path_1.default.join(__dirname, 'front-end'), { maxAge: 31557600000 });

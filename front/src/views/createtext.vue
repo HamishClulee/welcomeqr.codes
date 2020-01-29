@@ -76,7 +76,6 @@
             :headers="headers"
             img-format="png">
         </myupload>
-        <img :src="imgDataUrl">
 
     </main>
 </template>
@@ -239,8 +238,11 @@ export default {
         
         },
         cropUploadSuccess(jsonData, field){
-
+            
             // TODO impl
+            this.editor.insertHTML(`<img height="300" src="${this.imgDataUrl}" />`)
+            this.showImageUpload = false
+            this.imgDataUrl = ''
         
         },
         cropUploadFail(status, field){
