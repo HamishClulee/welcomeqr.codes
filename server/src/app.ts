@@ -139,8 +139,6 @@ const upload = multer({ storage : storage }).single('img')
   
 app.post('/api/photo', (req: any, res: any): any => {
 
-    console.log("api photo hit")
-
     upload(req, res, (err) => {
 
         if(err) {
@@ -150,7 +148,7 @@ app.post('/api/photo', (req: any, res: any): any => {
             return res.end("Error uploading file.")
 
         }
-        res.end("File is uploaded")
+        res.end(JSON.stringify({ message: 'Upload success' }))
 
     })
 })
