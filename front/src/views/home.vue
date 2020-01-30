@@ -77,14 +77,6 @@
             </p>
             <ctabutton text="try it for free" :do="ctaroute"></ctabutton>
         </displaysection>
-
-        <displaysection :isFooter="true" sassclass="white">
-
-            <p>
-                Write some footer content
-            </p>
-
-        </displaysection>
         
     </main>
 </template>
