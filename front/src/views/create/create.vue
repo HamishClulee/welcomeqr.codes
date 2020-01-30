@@ -1,20 +1,23 @@
 <template>
     <main class="create-con">
         <nav class="tabs-bar">
-            <router-link :to="{ path: '/create/details' }" tag="span" class="tab-item">
+            <router-link tag="span" class="tab-item" :to="{ path: '/create/details' }">
                 <div class="icon-backer details tab-member"></div>
                 <div class="tab-text tab-member">Details</div>
             </router-link>
-            <router-link :to="{ path: '/create/editor' }" tag="span" class="tab-item">
+            <router-link tag="span" class="tab-item" :to="{ path: '/create/editor' }" v-if="detailsComplete">
                 <div class="icon-backer editor tab-member"></div>
                 <div class="tab-text tab-member">Editor</div>
             </router-link>
-            <router-link :to="{ path: '/create/preview' }" tag="span" class="tab-item">
+            <router-link tag="span" class="tab-item" :to="{ path: '/create/preview' }" v-if="detailsComplete && editorSaved">
                 <div class="icon-backer preview tab-member"></div>
                 <div class="tab-text tab-member">Preview</div>
             </router-link>
         </nav>
-        <router-view></router-view>
+        <keep-alive>
+            <router-view></router-view>
+        </keep-alive>
+        
     </main>
 </template>
 
@@ -24,11 +27,18 @@ export default {
     data () {
 
         return {
-
+            detailsComplete: false,
+            editorSaved: false,
         }
     
     },
     mounted () {
+
+        this.$on('detailsgood', () => {
+
+            this.detailsComplete = true
+
+        })
 
     },
     methods: {
