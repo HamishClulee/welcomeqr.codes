@@ -1,8 +1,5 @@
 <template>
-    <main class="create-con">
-        <router-link :to="{ name: 'home'}">back</router-link>
-
-        <h5 class="h5-editor">Toolbox</h5>
+    <section class="editor-con">
 
         <header class="header">
 
@@ -77,16 +74,16 @@
             img-format="png">
         </myupload>
 
-    </main>
+    </section>
 </template>
 
 <script>
-import linkmodal from '../components/linkmodal.vue'
+import linkmodal from '../../../components/linkmodal.vue'
 import myupload from 'vue-image-crop-upload'
 import { Chrome } from 'vue-color'
 import Multiselect from 'vue-multiselect'
 export default {
-    name: 'create',
+    name: 'editor',
     components: {
         linkmodal,
         myupload,
@@ -275,6 +272,8 @@ export default {
 </script>
 <style src="vue-multiselect/dist/vue-multiselect.min.css"></style>
 <style lang="sass" scoped>
+.editor-con
+    padding: 1em
 .color-picker
     position: absolute
     left: 187px
@@ -284,8 +283,6 @@ export default {
     border-bottom: 4px solid $secondary
 .header
     margin-top: 20px    
-.create-con
-    padding: 2em
 .h5-editor
     margin-bottom: 30px
     font-size: 2em
@@ -308,44 +305,40 @@ span, .span
     padding-bottom: 10px
     margin-bottom: 20px
 .bold
-    background: center / contain no-repeat url("../svg/bold.svg")
+    background: center / contain no-repeat url("../../../svg/bold.svg")
     background-size: unset
 .italic
-    background: center / contain no-repeat url("../svg/italic.svg")
+    background: center / contain no-repeat url("../../../svg/italic.svg")
     background-size: unset
 #undo
-    background: center / contain no-repeat url("../svg/undo.svg")
+    background: center / contain no-repeat url("../../../svg/undo.svg")
     background-size: unset
 #redo
-    background: center / contain no-repeat url("../svg/redo.svg")
+    background: center / contain no-repeat url("../../../svg/redo.svg")
     background-size: unset
 .times
-    background: center / contain no-repeat url("../svg/times.svg")
+    background: center / contain no-repeat url("../../../svg/times.svg")
     background-size: unset
-#setFontSize
-
-#setFontFace
-
 .link
-    background: center / contain no-repeat url("../svg/link.svg")
+    background: center / contain no-repeat url("../../../svg/link.svg")
     background-size: unset
 .list
-    background: center / contain no-repeat url("../svg/list.svg")
+    background: center / contain no-repeat url("../../../svg/list.svg")
     background-size: unset
 #increaseListLevel
-    background: center / contain no-repeat url("../svg/list-indent.svg")
+    background: center / contain no-repeat url("../../../svg/list-indent.svg")
     background-size: unset
 #insertImage
-    background: center / contain no-repeat url("../svg/image.svg")
+    background: center / contain no-repeat url("../../../svg/image.svg")
     background-size: unset
 #removeAllFormatting, .removeAllFormatting
-    background: center / contain no-repeat url("../svg/cancel.svg")
+    background: center / contain no-repeat url("../../../svg/cancel.svg")
     background-size: unset
 .color
-    background: center / contain no-repeat url("../svg/palette.svg")
+    background: center / contain no-repeat url("../../../svg/palette.svg")
     background-size: unset
 #makeHeader
-    background: center / contain no-repeat url("../svg/text-size.svg")
+    background: center / contain no-repeat url("../../../svg/text-size.svg")
     background-size: unset
 </style>
 

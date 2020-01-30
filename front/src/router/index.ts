@@ -1,8 +1,12 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 const home = () => import('../views/home.vue')
-const create = () => import('../views/create.vue')
-const createtext = () => import('../views/createtext.vue')
+
+const create = () => import('../views/create/create.vue')
+const editor = () => import('../views/create/subs/editor.vue')
+const qrdetails = () => import('../views/create/subs/qrdetails.vue')
+const preview = () => import('../views/create/subs/preview.vue')
+
 const notfound = () => import('../views/notfound.vue')
 
 import overwritemetas from '../utils/seo'
@@ -26,7 +30,7 @@ const routes = [
     },
   },
   {
-    path: '/create-text',
+    path: '/create',
     name: 'create',
     component: create,
     beforeEnter: (to: any, from: any, next: any) => {
@@ -38,20 +42,23 @@ const routes = [
       }, next)
 
     },
-  },
-  {
-    path: '/create',
-    name: 'createtext',
-    component: createtext,
-    beforeEnter: (to: any, from: any, next: any) => {
-
-      overwritemetas({
-        title: 'Welcome QR | Create New QR',
-        description: `Where the magic happens, create a new dowmloadable QR code and associate website and content`,
-        noindex: true,
-      }, next)
-
-    },
+    children: [
+      {
+        path: '/create/details',
+        name: 'qrdetails',
+        component: qrdetails,
+      },
+      {
+        path: '/create/editor',
+        name: 'editor',
+        component: editor,
+      },
+      {
+        path: '/create/preview',
+        name: 'preview',
+        component: preview,
+      }
+    ]
   },
   {
     path: '*',
