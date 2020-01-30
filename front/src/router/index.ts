@@ -33,6 +33,7 @@ const routes = [
     path: '/create',
     name: 'create',
     component: create,
+    redirect: '/create/details',
     beforeEnter: (to: any, from: any, next: any) => {
 
       overwritemetas({
