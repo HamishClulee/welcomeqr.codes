@@ -63,6 +63,7 @@ export default {
     width: 100%
 .create-con
     flex-direction: column
+    margin-top: 150px
 .tabs-bar
     cursor: pointer
 .router-link-exact-active
