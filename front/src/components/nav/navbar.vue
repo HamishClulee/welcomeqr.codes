@@ -1,10 +1,13 @@
 <template>
     <div class="navbar-con">
-        <div class="navbar-left">
-            <div class="logo-con" @click="routehome">
-                <img src="../../svg/smallogo.svg" />
+        <transition name="fade" mode="in-out">
+            <div class="navbar-left" v-if="$route.name === 'home' || scrolledTop">
+                <div class="logo-con" @click="routehome">
+                    <img src="../../svg/smallogo.svg" />
+                </div>
             </div>
-        </div>
+        </transition>
+        <div class="spacer"></div>
         <div class="hamburger" @click="togglecanvas">
             <div class="line"></div>
             <div class="line"></div>
@@ -34,12 +37,14 @@
     </div>
 </template>
 <script>
+import { mapGetters } from 'vuex'
 export default {
     name: 'navbar',
     data() {
 
         return {
             canvasopen: false,
+            scrolledTop: true,
         }
     
     },
@@ -59,10 +64,23 @@ export default {
             return item === this.$route.name
         
         }
+    },
+    computed: {
+        ...mapGetters(['scrollY'])
+    },
+    watch: {
+        scrollY: function(val) {
+
+            // 90px from top of window
+            this.scrolledTop = val < 90
+
+        }
     }
 }
 </script>
 <style lang="sass" scoped>
+.spacer
+    width: 100%
 a
     text-decoration: none
     border-bottom: 2px solid transparent
@@ -142,7 +160,8 @@ a
 .hamburger
     display: flex
     flex-direction: column
-    width: 100%
+    width: 50px
+    height: 80px
     align-items: flex-end
     justify-content: center
     margin-right: 20px

@@ -1,7 +1,9 @@
 import { State } from './state'
 
 const getters = {
-  windowwidth: (state: State) => state.windowwidth,
+  windowWidth: (state: State) => state.windowWidth,
+  windowHeight: (state: State) => state.windowHeight,
+  scrollY: (state: State) => state.scrollY,
   isauthed: (state: State) => state.isauthed,
 }
 

@@ -6,7 +6,7 @@ const create = () => import('../views/create/create.vue')
 const editor = () => import('../views/create/subs/editor.vue')
 const qrdetails = () => import('../views/create/subs/qrdetails.vue')
 const preview = () => import('../views/create/subs/preview.vue')
-
+const pricing = () => import('../views/pricing.vue')
 const notfound = () => import('../views/notfound.vue')
 
 import overwritemetas from '../utils/seo'
@@ -21,9 +21,24 @@ const routes = [
     beforeEnter: (to: any, from: any, next: any) => {
 
       overwritemetas({
-        title: 'Welcome QR | description',
-        description: `Breif description of how the product functions. Feature list, 
+        title: 'Welcome QR | Description',
+        description: `Brief description of how the product functions. Feature list, 
         benefits, small explanation of pricing and other info`,
+        noindex: true,
+      }, next)
+
+    },
+  },
+  {
+    path: '/pricing',
+    name: 'pricing',
+    component: pricing,
+    beforeEnter: (to: any, from: any, next: any) => {
+
+      overwritemetas({
+        title: 'Welcome QR | Pricing',
+        description: `Breif description of how Welcome QR Codes is priced, what 
+        different plans and tiers are offered and the services included in each tier and plan.`,
         noindex: true,
       }, next)
 
@@ -38,7 +53,8 @@ const routes = [
 
       overwritemetas({
         title: 'Welcome QR | Create New QR',
-        description: `Where the magic happens, create a new dowmloadable QR code and associate website and content`,
+        description: `Where the magic happens, create a new dowmloadable QR code and 
+        associate website and content`,
         noindex: true,
       }, next)
 
