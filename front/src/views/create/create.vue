@@ -22,6 +22,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 export default {
     name: 'create',
     data () {
@@ -43,9 +44,6 @@ export default {
     },
     methods: {
         
-    },
-    computed: {
-
     }
 }
 </script>

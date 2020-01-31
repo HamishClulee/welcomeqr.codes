@@ -1,11 +1,15 @@
 export interface State {
-  windowwidth: number,
-  isauthed: boolean,
+	windowWidth: number,
+	windowHeight: number,
+	scrollY: number,
+	isauthed: boolean,
 }
 
 const state: State = {
-  windowwidth: 0,
-  isauthed: false,
+	windowWidth: 0,
+	windowHeight: 0,
+	scrollY: 0,
+	isauthed: false,
 }
 
 export default state
