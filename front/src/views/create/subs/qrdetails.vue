@@ -23,13 +23,19 @@
                 <button class="button primary" @click="actionDetails">LETS GET STARTED!</button>
             </div>
 
+            <whatisthis @click.native="showDetailsModal"></whatisthis>
+
         </section>
     </section>
 </template>
 
 <script>
+import whatisthis from '../../../components/whatisthis'
 export default {
     name: 'qrdetails',
+    components: {
+        whatisthis
+    },
     data () {
 
         return {
@@ -38,18 +44,18 @@ export default {
         }
     
     },
-    mounted () {
-
-    },
     methods: {
+        showDetailsModal () {
+
+
+            this.$root.$emit('opensitemodal', 'details')
+
+        },
         actionDetails () {
 
-            this.$parent.$emit('detailsgood')
-
+            this.$emit('detailsgood')
+        
         }
-    },
-    computed: {
-
     }
 }
 </script>
