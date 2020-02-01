@@ -21,15 +21,18 @@
                 </div>
                 <div
                     class="canvas-item"
-                    @click="togglecanvas"
-                    :class="checkvis('home') ? 'active-route canvas' : ''">
+                    @click="togglecanvas">
                         <router-link :to="{ path: '/'}">home</router-link>
                 </div>
                 <div
                     class="canvas-item"
-                    @click="togglecanvas"
-                    :class="checkvis('pricing') ? 'active-route canvas' : ''">
+                    @click="togglecanvas">
                         <router-link :to="{ path: '/pricing'}">pricing</router-link>
+                </div>
+                <div
+                    class="canvas-item"
+                    @click="togglecanvas">
+                        <router-link :to="{ path: '/create'}">Try For Free</router-link>
                 </div>
             </div>
             
@@ -57,11 +60,6 @@ export default {
         routehome() {
 
             this.$router.push({ path: '/'})
-        
-        },
-        checkvis(item) {
-
-            return item === this.$route.name
         
         }
     },
@@ -164,6 +162,7 @@ a
     height: 80px
     align-items: flex-end
     justify-content: center
+    cursor: pointer
     margin-right: 20px
     .line
         height: 2px

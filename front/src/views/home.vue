@@ -111,7 +111,7 @@ export default {
             animTimingFunction: Vivus.EASE_IN
         }, () => { /* fires at completed */ })
 
-        setTimeout(() => this.showheading = true, 1500)
+        this.qrtime = setTimeout(() => this.showheading = true, 1500)
 
             this.texttime = setTimeout(() => {
 
@@ -141,6 +141,7 @@ export default {
     beforeDestroy() {
 
         clearTimeout(this.qrtime)
+        clearTimeout(this.texttime)
 
     }
 }
