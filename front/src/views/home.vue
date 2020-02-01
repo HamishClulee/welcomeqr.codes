@@ -21,11 +21,11 @@
 
         <displaysection id="srcoll-pop" sassclass="primary">
 
-            <h1 class="h1">Welcome QR is the perfect solution for Airbnb and Holiday accomodation providers.</h1>
+            <h1 class="h1">Welcome QR is the perfect solution for Airbnb and Holiday accommodation providers.</h1>
             <h2 class="h2">
-                Instead of printing a physical welcome document for your guests, which is expensive 
-                time consuming, subject to damagage and loss, and requires reprints for all rooms 
-                everytime you want to make a change - Choose WelcomeQR.
+                Printing a physical welcome book for your guests is expensive, time consuming
+                and error prone. Books become untidy over time and require a reprint even for small changes.
+                There is a better solution - Choose WelcomeQR.
             </h2>
             <ctabutton text="try it for free" :do="ctaroute"></ctabutton>
 
@@ -33,10 +33,9 @@
 
         <displaysection sassclass="secondary">
             <p>
-                We provide you with eveything you need, hosting, an awesome online editor, and 
-                downloadable files to give to your printers, or print your self. Your guests simply 
-                scan the QR we provide and are directed to your personalised and custonisable web site 
-                which can be updated in seconds, as many times as you like.
+                We provide you with eveything you need; an awesome online editor and easily downloadable files.
+                Your guests simply scan the QR we provide and are directed to your fully custonisable web site.
+                Want to make a change? It'll only take a few seconds, literally!
             </p>
             <h1 class="h1">
                 We know your life is busy, and we know that saving time and increasing value is the 
@@ -47,11 +46,11 @@
 
         <displaysection sassclass="tertiary">
             <p>
-                It's a great look for your guests, the most simple and convienient solution even for 
-                non technical users, all they need is a smart phone. It makes more sence for you as a 
-                provider as well, only pay once, update as many times as you like, reduce the clutter 
-                in your rooms, and look much more professional than the Airbnb next door still 
-                using ancient technology!
+                Welcome QR is a great look for your business. 
+                It gives you the competetive edge over the Airbnb next door who is still 
+                using ancient technology! While they are still providing the same Welcome book they printed years ago, 
+                you have updated your website with the latest info about the area or about new offers with your partner 
+                businesses.
             </p>
             <p>
                 Want to inform guests of up-coming events or upload different welcome text containing 
