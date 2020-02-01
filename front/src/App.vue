@@ -1,5 +1,6 @@
 <template>
   <section class="app-main">
+	<sitemodal v-if="showsitemodal" :contains="contains"></sitemodal>
     <navbar></navbar>
     <router-view></router-view>
     <qrfooter></qrfooter>
@@ -9,6 +10,7 @@
 <script>
 import navbar from './components/nav/navbar'
 import qrfooter from './components/nav/qrfooter'
+import sitemodal from './components/sitemodal/sitemodal'
 import debounce from './utils/functions'
 import { mapMutations } from 'vuex'
 
@@ -19,9 +21,31 @@ export default {
 	name: 'app',
 	components: {
 		navbar,
-		qrfooter
+		qrfooter,
+		sitemodal
+	},
+	data () {
+
+		return {
+			showsitemodal: false,
+			contains: null
+		}
+
 	},
 	mounted () {
+
+		this.$root.$on('opensitemodal', (type) => {
+
+			this.contains = type
+			this.showsitemodal = true
+
+		})
+
+		this.$root.$on('closesitemodal', () => {
+
+			this.showsitemodal = false
+		
+		})
 
 		// useful cludge
 		__proxy = this

@@ -1,0 +1,130 @@
+<template>
+    <div class="modal-container">
+        <div class="modal-background" @click="closeModal" @keydown.esc="closeModal"></div>
+        <div class="modal-card">
+
+            <div class="modal-card-head">
+                <div class="close-icon" aria-label="close" @click="closeModal"></div>
+            </div>
+
+            <div class="modal-card-content">
+
+                <detailsmodal v-if="contains === 'details'"></detailsmodal>
+
+                <editormodal v-if="contains === 'editor'"></editormodal>
+
+                <previewmodal v-if="contains === 'preview'"></previewmodal>
+
+            </div>
+        </div>
+    </div>
+</template>
+
+<script>
+import detailsmodal from './content/detailsmodal'
+import editormodal from './content/editormodal'
+import previewmodal from './content/previewmodal'
+export default {
+    name: 'sitemodal',
+    components: {
+        detailsmodal, editormodal, previewmodal
+    },
+    props: {
+        contains: {
+            type: String || null,
+            required: true
+        }
+    },
+    methods: {
+        closeModal() {
+
+            this.$root.$emit('closesitemodal')
+        
+        }
+    }
+}
+</script>
+
+<style lang="sass" scoped>
+.modal-card-head 
+    width: 97%
+    display: flex
+    justify-content: flex-end
+    padding-right: 2em
+    padding-top: 1em
+    padding-bottom: 2em
+.modal-container 
+    position: fixed
+    overflow-y: hidden
+    overflow-x: hidden
+    top: 0
+    left: 0
+    right: 0
+    bottom: 0
+    z-index: 24
+    height: 100vh
+.modal-background 
+    position: fixed
+    overflow-y: hidden
+    overflow-x: hidden
+    background-color: black
+    opacity: 0.8
+    top: 0
+    left: 0
+    right: 0
+    bottom: 0
+    z-index: 25
+    height: 100v
+.modal-card 
+    width: 90%
+    z-index: 26
+    background-color: white
+    position: absolute
+    left: 0
+    right: 0
+    top: 0
+    bottom: 0
+    margin: auto
+    display: flex
+    flex-direction: column
+    overflow-y: auto
+    align-items: center
+    height: 85%
+    border-radius: 20px
+    @media (min-width: 0px) and (max-width: 1080px) 
+        font-size: 80%
+    @media (min-width: 0px) and (max-width: 680px) 
+        overflow-y: scroll
+.modal-card-content 
+    width: 90%
+    margin: auto
+.close-icon 
+    cursor: pointer
+    background: center / contain no-repeat url("../../svg/times.svg")
+    background-size: unset
+    height: 50px
+    width: 50px
+.button 
+    height: 40px
+    width: 300px
+    font-size: 80%
+    margin-left: 10px
+    text-transform: lowercase
+    @media (min-width: 0px) and (max-width: 800px) 
+        width: 200px
+.copy-confirm 
+    color: green
+    height: 30px
+    margin-top: 15px
+    margin-bottom: 0
+.modal-card-foot 
+    display: flex
+    flex-direction: column
+    padding: 0
+    align-items: center
+.modal-foot-button-container 
+    display: flex
+    flex-direction: row
+    @media (min-width: 0px) and (max-width: 800px) 
+        flex-direction: column
+</style>

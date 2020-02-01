@@ -22,6 +22,7 @@
                 <div class="tab-text tab-member">Preview</div>
             </span>
         </nav>
+
         <keep-alive>
             <router-view></router-view>
         </keep-alive>
