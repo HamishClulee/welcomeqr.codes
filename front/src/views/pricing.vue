@@ -44,6 +44,12 @@ export default {
 </script>
 
 <style scoped lang="sass">
+.h1
+    font-size: 2.3em
+    margin-bottom: 0px
+.h2
+    font-size: 1.8em
+    color: $medium-gray
 .pricing-con
     margin-top: 50px
     min-height: 800px
@@ -55,4 +61,16 @@ export default {
     flex-direction: column
     align-items: center
     justify-content: center
+    .pricing-item
+        margin-top: 10px
+        margin-bottom: 40px
+    .title
+        color: $primary
+    .price
+        color: $secondary
+        font-family: $heading-font
+        font-size: 2em
+    .description
+        font-family: sans-serif
+        font-size: 1em
 </style>
