@@ -45,6 +45,4 @@ export default {
 }
 </script>
 
-<style lang="sass">
-.app-main
-</style>
+<style lang="sass"></style>

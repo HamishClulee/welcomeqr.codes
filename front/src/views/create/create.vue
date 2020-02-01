@@ -9,10 +9,18 @@
                 <div class="icon-backer editor tab-member"></div>
                 <div class="tab-text tab-member">Editor</div>
             </router-link>
+            <span class="tab-item disable-item" v-else>
+                <div class="icon-backer editor tab-member"></div>
+                <div class="tab-text tab-member">Editor</div>
+            </span>
             <router-link tag="span" class="tab-item" :to="{ path: '/create/preview' }" v-if="detailsComplete && editorSaved">
                 <div class="icon-backer preview tab-member"></div>
                 <div class="tab-text tab-member">Preview</div>
             </router-link>
+            <span class="tab-item disable-item" v-else>
+                <div class="icon-backer preview tab-member"></div>
+                <div class="tab-text tab-member">Preview</div>
+            </span>
         </nav>
         <keep-alive>
             <router-view></router-view>
@@ -61,7 +69,11 @@ export default {
     width: 100%
 .create-con
     flex-direction: column
-    margin-top: 150px
+    margin-top: 100px
+    width: 90%
+    min-width: 400px
+    margin-left: auto
+    margin-right: auto
 .tabs-bar
     cursor: pointer
 .router-link-exact-active
@@ -71,7 +83,9 @@ export default {
     height: 50px
 .tab-item
     flex-grow: 1
-    border: 1px solid $light-gray
+.disable-item
+    color: $light-gray
+    cursor: not-allowed
 .tab-text
     font-family: $body-font
     text-transform: uppercase
