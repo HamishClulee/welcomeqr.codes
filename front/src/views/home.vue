@@ -46,9 +46,11 @@
 
         <displaysection sassclass="tertiary">
             <p>
-                Welcome QR is a great look for your business. 
-                It gives you the competetive edge over the Airbnb next door who is still 
-                using ancient technology! While they are still providing the same Welcome book they printed years ago, 
+                Welcome QR gives you the competitive edge over the Airbnb next door, still 
+                using ancient technology!
+            </p>
+            <p>
+                While they are still providing the same Welcome book they printed years ago, 
                 you have updated your website with the latest info about the area or about new offers with your partner 
                 businesses.
             </p>
@@ -67,11 +69,11 @@
                 Our online editor can be used from your mobile or desktop, and provides you with a 
                 large amount of freedom to make your content appear as you want it.
                 <ul>
-                    <li><span class="tilde">~</span> Upload images and video</li>
-                    <li><span class="tilde">~</span> Make multiple pages</li>
-                    <li><span class="tilde">~</span> Use your brand colors and logo</li>
-                    <li><span class="tilde">~</span> Insert Maps</li>
-                    <li><span class="tilde">~</span> Link to locations or websites</li>
+                    <li><span class="tilde">~</span>Upload images and video</li>
+                    <li><span class="tilde">~</span>Make multiple pages</li>
+                    <li><span class="tilde">~</span>Use your brand colors and logo</li>
+                    <li><span class="tilde">~</span>Insert Maps</li>
+                    <li><span class="tilde">~</span>Link to locations or websites</li>
                 </ul>
             </p>
             <ctabutton text="try it for free" :do="ctaroute"></ctabutton>

@@ -54,7 +54,11 @@ export default {
     methods: {
         togglecanvas() {
 
+            setTimeout(() => {
+
             this.canvasopen = !this.canvasopen
+
+            }, 200)
         
         },
         routehome() {

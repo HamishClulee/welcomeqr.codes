@@ -9,7 +9,7 @@
                 <div class="icon-backer editor tab-member"></div>
                 <div class="tab-text tab-member">Editor</div>
             </router-link>
-            <span class="tab-item disable-item" v-else>
+            <span class="tab-item disable-item" v-else title="Complete the details section first!">
                 <div class="icon-backer editor tab-member"></div>
                 <div class="tab-text tab-member">Editor</div>
             </span>
@@ -17,7 +17,7 @@
                 <div class="icon-backer preview tab-member"></div>
                 <div class="tab-text tab-member">Preview</div>
             </router-link>
-            <span class="tab-item disable-item" v-else>
+            <span class="tab-item disable-item" v-else title="Complete the details and editor sections first!">
                 <div class="icon-backer preview tab-member"></div>
                 <div class="tab-text tab-member">Preview</div>
             </span>
