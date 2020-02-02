@@ -3,7 +3,7 @@
 	<sitemodal v-if="showsitemodal" :contains="contains"></sitemodal>
     <navbar></navbar>
     <router-view></router-view>
-    <qrfooter></qrfooter>
+    <qrfooter v-if="loadPushed"></qrfooter>
   </section>
 </template>
 
@@ -28,7 +28,8 @@ export default {
 
 		return {
 			showsitemodal: false,
-			contains: null
+			contains: null,
+			loadPushed: false,
 		}
 
 	},
@@ -51,6 +52,8 @@ export default {
 		__proxy = this
 		window.addEventListener('resize', debounce(this.sizeChange, 500))
 		window.addEventListener('scroll', debounce(this.scrollChange, 100))
+
+		setTimeout(() => this.loadPushed = true, 200)
 
 	},
 	methods: {
