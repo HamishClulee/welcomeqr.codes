@@ -86,6 +86,7 @@
 import displaysection from '../components/displaysection'
 import ctabutton from '../components/buttons/ctabutton'
 import Vivus from 'vivus'
+import { EventBus } from '../EventBus.js'
 export default {
     name: 'home',
     components: {
@@ -129,7 +130,7 @@ export default {
     methods: {
         ctaroute () {
 
-            this.$root.$emit('opensitemodal', 'signup')
+            EventBus.$emit('opensitemodal', 'signup')
 
         },
         scrollDown() {

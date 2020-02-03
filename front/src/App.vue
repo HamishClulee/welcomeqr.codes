@@ -13,6 +13,7 @@ import qrfooter from './components/nav/qrfooter'
 import sitemodal from './components/sitemodal/sitemodal'
 import debounce from './utils/functions'
 import { mapMutations } from 'vuex'
+import { EventBus } from './EventBus.js'
 
 // useful cludge
 let __proxy
@@ -35,14 +36,14 @@ export default {
 	},
 	mounted () {
 
-		this.$root.$on('opensitemodal', (type) => {
+		EventBus.$on('opensitemodal', (type) => {
 
 			this.contains = type
 			this.showsitemodal = true
 
 		})
 
-		this.$root.$on('closesitemodal', () => {
+		EventBus.$on('closesitemodal', () => {
 
 			this.showsitemodal = false
 		
@@ -53,7 +54,7 @@ export default {
 		window.addEventListener('resize', debounce(this.sizeChange, 500))
 		window.addEventListener('scroll', debounce(this.scrollChange, 100))
 
-		setTimeout(() => this.loadPushed = true, 200)
+		setTimeout(() => this.loadPushed = true, 500)
 
 	},
 	methods: {
