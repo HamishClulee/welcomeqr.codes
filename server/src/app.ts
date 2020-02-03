@@ -1,5 +1,5 @@
 import express from 'express'
-import compression from 'compression'  // compresses requests
+import compression from 'compression'
 import session from 'express-session'
 import bodyParser from 'body-parser'
 import lusca from 'lusca'
@@ -17,6 +17,7 @@ const history = require('connect-history-api-fallback')
 const cors = require('cors')
 const MongoStore = mongo(session)
 
+/** ---------------------------------------  LOGGING  ------------------------------------------------- */
 if (process.env.NODE_ENV === 'production') {
     const logger = winston.createLogger({
         level: 'info',
@@ -29,31 +30,22 @@ if (process.env.NODE_ENV === 'production') {
     })
 }
 
-// Controllers (route handlers)
-import * as homeController from './controllers/home'
+/** ---------------------------------------  PASSPORT + MONGO CONFIG  --------------------------------- */
+// import * as homeController from './controllers/home'
 import * as userController from './controllers/user'
 // import * as apiController from './controllers/api'
 import * as contactController from './controllers/contact'
-
-
-// API keys and Passport configuration
 import * as passportConfig from './config/passport'
-
-// Create Express server
 const app = express()
-
-// Connect to MongoDB
 const mongoUrl = MONGODB_URI
 mongoose.Promise = bluebird
-
 mongoose.connect(mongoUrl, { useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true } ).then(
     () => { /** ready to use. The `mongoose.connect()` promise resolves to undefined. */ },
 ).catch(err => {
     console.log('MongoDB connection error. Please make sure MongoDB is running. ' + err)
-    // process.exit();
 })
 
-// Express configuration
+/** ---------------------------------------  APP CONFIG  ---------------------------------------------- */
 app.set('port', 1980)
 app.set('views', path.join(__dirname, '../views'))
 app.set('view engine', 'pug')
@@ -61,6 +53,11 @@ app.use(compression())
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(session({
+    cookie: {
+        sameSite: process.env.NODE_ENV === 'production',
+        maxAge: process.env.NODE_ENV === 'production' ? 86400000 : null,
+        secure: process.env.NODE_ENV === 'production',
+    },
     resave: true,
     saveUninitialized: true,
     secret: SESSION_SECRET,
@@ -69,6 +66,7 @@ app.use(session({
         autoReconnect: true
     })
 }))
+if (process.env.NODE_ENV === 'production') app.set('trust proxy', 1)
 app.use(passport.initialize())
 app.use(passport.session())
 app.use(flash())
@@ -83,26 +81,19 @@ app.use((req, res, next) => {
     next()
 })
 app.use((req, res, next) => {
-    // After successful login, redirect back to the intended page
     if (!req.user
             && req.path !== '/login'
             && req.path !== '/signup'
             && !req.path.match(/^\/auth/)
             && !req.path.match(/\./)) {
-
         req.session.returnTo = req.path
-
     } else if (req.user && req.path == '/account') {
-
         req.session.returnTo = req.path
-
     }
     next()
 })
 
-/**
- * Primary app routes.
- */
+/** ---------------------------------------  APP ROUTING  --------------------------------- */
 app.get('/user/session_challenge', userController.sessionChallenge)
 app.get('/login', userController.getLogin)
 app.post('/login', userController.postLogin)
@@ -120,50 +111,36 @@ app.post('/account/profile', passportConfig.isAuthenticated, userController.post
 app.post('/account/password', passportConfig.isAuthenticated, userController.postUpdatePassword)
 app.post('/account/delete', passportConfig.isAuthenticated, userController.postDeleteAccount)
 
+/** ---------------------------------------  IMAGE STORAGE  --------------------------------- */
 const storage = multer.diskStorage({
-
     destination: function (req, file, callback) {
-
         callback(null, './uploads')
-
     },
     filename: function (req, file, callback) {
-
         callback(null, file.fieldname + '-' + Date.now())
-
     }
-
 })
-
 const upload = multer({ storage : storage }).single('img')
-  
 app.post('/api/photo', (req: any, res: any): any => {
-
     upload(req, res, (err) => {
-
         if(err) {
-
-            console.log(err)
-
             return res.end("Error uploading file.")
-
         }
         res.end(JSON.stringify({ message: 'Upload success' }))
-
     })
 })
 
-const _static = express.static(path.join(__dirname, 'front-end'), { maxAge: 31557600000 })
 
+
+/** -------------------------------  STATIC FILES AND SPA SERVER  --------------------------------- */
+const _static = express.static(path.join(__dirname, 'front-end'), { maxAge: 31557600000 })
 if (process.env.NODE_ENV === 'production') {
     app.use(_static)
 }
-
 app.use(history({
     verbose: true,
     disableDotRule: true
 }))
-
 app.get('*', _static)
 
 export default app
