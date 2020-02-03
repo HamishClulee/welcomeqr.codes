@@ -27,6 +27,7 @@ import detailsmodal from './content/detailsmodal'
 import editormodal from './content/editormodal'
 import previewmodal from './content/previewmodal'
 import authmodal from './content/authmodal'
+import { EventBus } from '../../EventBus.js'
 export default {
     name: 'sitemodal',
     components: {
@@ -41,7 +42,7 @@ export default {
     methods: {
         closeModal() {
 
-            this.$root.$emit('closesitemodal')
+            EventBus.$emit('closesitemodal')
         
         }
     }
