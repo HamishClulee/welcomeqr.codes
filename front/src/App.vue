@@ -13,7 +13,7 @@ import qrfooter from './components/nav/qrfooter'
 import sitemodal from './components/sitemodal/sitemodal'
 import debounce from './utils/functions'
 import { mapMutations } from 'vuex'
-import { EventBus } from './EventBus.js'
+import { EventBus } from './EventBus.ts'
 
 // useful cludge
 let __proxy

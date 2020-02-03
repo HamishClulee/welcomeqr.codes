@@ -27,7 +27,7 @@ import detailsmodal from './content/detailsmodal'
 import editormodal from './content/editormodal'
 import previewmodal from './content/previewmodal'
 import authmodal from './content/authmodal'
-import { EventBus } from '../../EventBus.js'
+import { EventBus } from '../../EventBus.ts'
 export default {
     name: 'sitemodal',
     components: {
