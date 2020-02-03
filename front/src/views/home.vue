@@ -129,7 +129,7 @@ export default {
     methods: {
         ctaroute () {
 
-            this.$router.push({ path: '/create' })
+            this.$root.$emit('opensitemodal', 'signup')
 
         },
         scrollDown() {
