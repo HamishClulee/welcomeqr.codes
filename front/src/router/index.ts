@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+import { EventBus } from '../EventBus'
 const home = () => import('../views/home.vue')
 
 const create = () => import('../views/create/create.vue')
@@ -110,6 +111,27 @@ const router = new VueRouter({
     }
   
   }
+})
+
+router.beforeEach((to, from, next) => {
+
+  const publicPages = ['/', '/pricing']
+  const authRequired = !publicPages.includes(to.path)
+  
+  debugger
+
+  const loggedIn = localStorage.getItem('user')
+
+  if (authRequired && !loggedIn) {
+
+    EventBus.$emit('opensitemodal', 'login')
+
+  } else {
+
+    next()
+
+  }
+  
 })
 
 export default router

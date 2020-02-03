@@ -86,7 +86,7 @@
 import displaysection from '../components/displaysection'
 import ctabutton from '../components/buttons/ctabutton'
 import Vivus from 'vivus'
-import { EventBus } from '../EventBus.js'
+import { EventBus } from '../EventBus.ts'
 export default {
     name: 'home',
     components: {
