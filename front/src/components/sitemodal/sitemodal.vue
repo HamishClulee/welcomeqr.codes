@@ -15,6 +15,8 @@
 
                 <previewmodal v-if="contains === 'preview'"></previewmodal>
 
+                <authmodal :contains="contains" v-if="contains === 'login' || contains == 'signup'"></authmodal>
+
             </div>
         </div>
     </div>
@@ -24,10 +26,11 @@
 import detailsmodal from './content/detailsmodal'
 import editormodal from './content/editormodal'
 import previewmodal from './content/previewmodal'
+import authmodal from './content/authmodal'
 export default {
     name: 'sitemodal',
     components: {
-        detailsmodal, editormodal, previewmodal
+        detailsmodal, editormodal, previewmodal, authmodal
     },
     props: {
         contains: {
@@ -47,12 +50,9 @@ export default {
 
 <style lang="sass" scoped>
 .modal-card-head 
-    width: 97%
+    width: 100%
     display: flex
     justify-content: flex-end
-    padding-right: 2em
-    padding-top: 1em
-    padding-bottom: 2em
 .modal-container 
     position: fixed
     overflow-y: hidden
@@ -97,7 +97,6 @@ export default {
         overflow-y: scroll
 .modal-card-content 
     width: 90%
-    margin: auto
 .close-icon 
     cursor: pointer
     background: center / contain no-repeat url("../../svg/times.svg")
