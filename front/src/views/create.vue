@@ -1,44 +1,60 @@
 <template>
     <main class="create-con">
         <nav class="tabs-bar">
-            <router-link tag="span" class="tab-item" :to="{ path: '/create/details' }">
-                <div class="icon-backer details tab-member"></div>
-                <div class="tab-text tab-member">Details</div>
-            </router-link>
-            <router-link tag="span" class="tab-item" :to="{ path: '/create/editor' }" v-if="detailsComplete">
+
+            <span class="tab-item" @click="activeTab = 'details'">
                 <div class="icon-backer editor tab-member"></div>
-                <div class="tab-text tab-member">Editor</div>
-            </router-link>
-            <span class="tab-item disable-item" v-else title="Complete the details section first!">
+                <div class="tab-text tab-member">Details</div>
+            </span>
+
+            <span class="tab-item" @click="activeTab = 'editor'">
                 <div class="icon-backer editor tab-member"></div>
                 <div class="tab-text tab-member">Editor</div>
             </span>
-            <router-link tag="span" class="tab-item" :to="{ path: '/create/preview' }" v-if="detailsComplete && editorSaved">
-                <div class="icon-backer preview tab-member"></div>
-                <div class="tab-text tab-member">Preview</div>
-            </router-link>
-            <span class="tab-item disable-item" v-else title="Complete the details and editor sections first!">
+
+            <span class="tab-item" @click="activeTab = 'preview'">
                 <div class="icon-backer preview tab-member"></div>
                 <div class="tab-text tab-member">Preview</div>
             </span>
         </nav>
 
-        <keep-alive>
-            <router-view></router-view>
-        </keep-alive>
-        
+        <section class="content-container">
+
+            <createsidebar></createsidebar>
+
+            <section>
+
+                <qrdetails v-show="activeTab === 'details'"></qrdetails>
+
+                <editor v-show="activeTab === 'editor'"></editor>
+
+                <preview v-show="activeTab === 'preview'"></preview>
+
+            </section>
+
+        </section>
     </main>
 </template>
 
 <script>
+import qrdetails from '../components/create/qrdetails'
+import editor from '../components/create/editor'
+import preview from '../components/create/preview'
+import createsidebar from '../components/create/createsidebar'
 import { mapGetters } from 'vuex'
 export default {
     name: 'create',
+    components: {
+        qrdetails,
+        editor,
+        preview,
+    },
     data () {
 
         return {
             detailsComplete: false,
             editorSaved: false,
+            activeTab: 'details'
         }
     
     },
@@ -57,9 +73,9 @@ export default {
 }
 </script>
 <style lang="sass" scoped>
-.create-con, .tabs-bar, .tab-item, .tab-member, .tab-text
+.create-con, .tabs-bar, .tab-item, .tab-member, .tab-text, .content-container
     display: flex
-.tabs-bar, .tab-item, .tab-member, .tab-text
+.tabs-bar, .tab-item, .tab-member, .tab-text, .content-container
     flex-direction: row
 .tab-text, .tab-item
     align-items: center
@@ -75,6 +91,10 @@ export default {
     min-width: 400px
     margin-left: auto
     margin-right: auto
+.content-container
+    width: 100%
+    align-items: flex-start
+    justify-content: flex-start
 .tabs-bar
     cursor: pointer
 .router-link-exact-active
@@ -91,13 +111,13 @@ export default {
     font-family: $body-font
     text-transform: uppercase
 .details
-    background: center / contain no-repeat url("../../svg/details.svg")
+    background: center / contain no-repeat url("../svg/details.svg")
     background-size: unset
 .editor
-    background: center / contain no-repeat url("../../svg/edit.svg")
+    background: center / contain no-repeat url("../svg/edit.svg")
     background-size: unset
 .preview
-    background: center / contain no-repeat url("../../svg/eye.svg")
+    background: center / contain no-repeat url("../svg/eye.svg")
     background-size: unset
 </style>
 

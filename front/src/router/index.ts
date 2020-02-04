@@ -2,11 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import { EventBus } from '../EventBus'
 const home = () => import('../views/home.vue')
-
-const create = () => import('../views/create/create.vue')
-const editor = () => import('../views/create/subs/editor.vue')
-const qrdetails = () => import('../views/create/subs/qrdetails.vue')
-const preview = () => import('../views/create/subs/preview.vue')
+const create = () => import('../views/create.vue')
 const pricing = () => import('../views/pricing.vue')
 const notfound = () => import('../views/notfound.vue')
 
@@ -49,7 +45,6 @@ const routes = [
     path: '/create',
     name: 'create',
     component: create,
-    redirect: '/create/details',
     beforeEnter: (to: any, from: any, next: any) => {
 
       overwritemetas({
@@ -60,23 +55,6 @@ const routes = [
       }, next)
 
     },
-    children: [
-      {
-        path: '/create/details',
-        name: 'qrdetails',
-        component: qrdetails,
-      },
-      {
-        path: '/create/editor',
-        name: 'editor',
-        component: editor,
-      },
-      {
-        path: '/create/preview',
-        name: 'preview',
-        component: preview,
-      }
-    ]
   },
   {
     path: '*',
@@ -106,32 +84,11 @@ const router = new VueRouter({
     
     } else {
 
-          return { x: 0, y: 0 }
+      return { x: 0, y: 0 }
         
     }
   
   }
-})
-
-router.beforeEach((to, from, next) => {
-
-  const publicPages = ['/', '/pricing']
-  const authRequired = !publicPages.includes(to.path)
-  
-  debugger
-
-  const loggedIn = localStorage.getItem('user')
-
-  if (authRequired && !loggedIn) {
-
-    EventBus.$emit('opensitemodal', 'login')
-
-  } else {
-
-    next()
-
-  }
-  
 })
 
 export default router

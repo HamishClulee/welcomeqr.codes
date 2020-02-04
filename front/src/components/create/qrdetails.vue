@@ -30,7 +30,7 @@
 </template>
 
 <script>
-import whatisthis from '../../../components/whatisthis'
+import whatisthis from '../whatisthis'
 export default {
     name: 'qrdetails',
     components: {
