@@ -12,6 +12,8 @@ export default {
 
 <style lang="sass" scoped>
 .create-sidebar-con
-    width: 200px
-    background: $light-gray
+    width: 300px
+    padding: 20px
+    font-family: $body-font
+    height: 100vh
 </style>

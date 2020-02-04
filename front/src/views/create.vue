@@ -20,7 +20,7 @@
 
         <section class="content-container">
 
-            <createsidebar></createsidebar>
+            <createsidebar v-show="activeTab === 'details'"></createsidebar>
 
             <section>
 
@@ -48,6 +48,7 @@ export default {
         qrdetails,
         editor,
         preview,
+        createsidebar,
     },
     data () {
 
@@ -86,11 +87,8 @@ export default {
     width: 100%
 .create-con
     flex-direction: column
-    margin-top: 100px
-    width: 90%
-    min-width: 400px
-    margin-left: auto
-    margin-right: auto
+    margin-top: 60px
+    width: 100%
 .content-container
     width: 100%
     align-items: flex-start
