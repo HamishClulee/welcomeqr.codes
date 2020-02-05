@@ -3,6 +3,8 @@ import VueRouter from 'vue-router'
 
 import isAuthed from '../api/auth'
 
+import { EventBus } from '../EventBus'
+
 const home = () => import('../views/home.vue')
 const create = () => import('../views/create.vue')
 const pricing = () => import('../views/pricing.vue')
@@ -54,11 +56,12 @@ const routes = [
     name: 'create',
     component: create,
     beforeEnter: (to: any, from: any, next: any) => {
-
-      const app = document.getElementById('app')
-      if (app) app.innerHTML = '<h1 style="font-size: 10em;">FUCK YEAH G</h1>'
+      
+      EventBus.$emit('globalspinner', true)
 
       const yup = () => {
+
+        EventBus.$emit('globalspinner', false)
 
         overwritemetas({
           title: 'Welcome QR | Create New QR',
@@ -66,12 +69,13 @@ const routes = [
           associate website and content`,
           noindex: true,
         }, next)
-
+        
       }
 
       const nup = () => {
 
         next('/auth')
+        EventBus.$emit('globalspinner', false)
 
       }
 
