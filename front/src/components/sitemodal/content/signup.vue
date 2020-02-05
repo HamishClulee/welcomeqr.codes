@@ -100,5 +100,5 @@ export default {
     font-family: $body-font
     padding: 2em
     color: $primary
-    font-size: 4em
+    font-size: 2em
 </style>

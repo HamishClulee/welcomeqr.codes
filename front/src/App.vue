@@ -1,16 +1,35 @@
 <template>
-  <section class="app-main">
-	<sitemodal v-if="showsitemodal" :contains="contains"></sitemodal>
-    <navbar></navbar>
-    <router-view></router-view>
-    <qrfooter v-if="loadPushed"></qrfooter>
-  </section>
+	<section class="app-main">
+
+		<!-- GLOBAL SPINNER -->
+		<template v-if="showGlobalSpinner">
+			<div class="global-spinner-con">
+				<loading></loading>
+			</div>
+		</template>
+
+
+		<!-- APP ACTUAL -->
+		<template v-else>
+
+			<sitemodal v-if="showsitemodal" :contains="contains"></sitemodal>
+
+			<navbar></navbar>
+
+			<router-view></router-view>
+
+			<qrfooter v-if="loadPushed"></qrfooter>
+
+		</template>
+
+	</section>
 </template>
 
 <script>
 import navbar from './components/nav/navbar'
 import qrfooter from './components/nav/qrfooter'
 import sitemodal from './components/sitemodal/sitemodal'
+import loading from './components/loading'
 import debounce from './utils/functions'
 import { mapMutations } from 'vuex'
 import { EventBus } from './EventBus.ts'
@@ -23,12 +42,14 @@ export default {
 	components: {
 		navbar,
 		qrfooter,
-		sitemodal
+        sitemodal,
+        loading
 	},
 	data () {
 
 		return {
 			showsitemodal: false,
+			showGlobalSpinner: false,
 			contains: null,
 			loadPushed: false,
 		}
@@ -36,17 +57,25 @@ export default {
 	},
 	mounted () {
 
-		EventBus.$on('opensitemodal', (type) => {
+		EventBus.$on('globalspinner', (isit) => {
 
-			this.contains = type
-			this.showsitemodal = true
+			this.showGlobalSpinner = isit
 
 		})
 
-		EventBus.$on('closesitemodal', () => {
+		EventBus.$on('opensitemodal', (type = null) => {
 
-			this.showsitemodal = false
-		
+			if (type) {
+
+				this.contains = type
+				this.showsitemodal = true
+
+			} else {
+
+				this.showsitemodal = false
+
+			}
+
 		})
 
 		// useful cludge
@@ -54,7 +83,8 @@ export default {
 		window.addEventListener('resize', debounce(this.sizeChange, 500))
 		window.addEventListener('scroll', debounce(this.scrollChange, 100))
 
-		setTimeout(() => this.loadPushed = true, 500)
+        // another useful cludge to prevent the footer from flashing
+		setTimeout(() => this.loadPushed = true, 1500)  
 
 	},
 	methods: {
@@ -73,4 +103,14 @@ export default {
 }
 </script>
 
-<style lang="sass"></style>
+<style lang="sass">
+.app-main
+    min-height: 100vh !important
+.global-spinner-con
+    height: 100vh
+    min-height: 800px
+    display: flex
+    align-items: center
+    justify-content: center
+    width: 100%
+</style>
