@@ -20,7 +20,7 @@ const User_1 = require("../models/User");
 const express_validator_1 = require("express-validator");
 require("../config/passport");
 /**
- * GET /user/session_challenge
+ * POST /session_challenge
  * Check if the user is authed
  */
 exports.sessionChallenge = (req, res) => {
@@ -39,29 +39,22 @@ exports.sessionChallenge = (req, res) => {
                 });
             }
             if (user) {
-                return res.status(200).send({ userContent: 'you are a premium user' });
+                let { email, _id } = user;
+                return res.status(200).send({ userContent: 'you are a premium user', user: { email, id: _id } });
             }
             else {
                 return res.status(401).send({
                     'status': 401,
-                    'message': 'You are not authenticated.'
+                    'message': 'You do not exist.'
                 });
             }
         });
     }
 };
-/**
- * GET /login
- * Login page.
- */
-exports.getLogin = (req, res) => {
-    if (req.user) {
-        return res.redirect('/');
-    }
-    res.render('account/login', {
-        title: 'Login'
-    });
-};
+exports.postLogout = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    req.logout();
+    return res.status(200).send({ userContent: 'see you later, aligator' });
+});
 /**
  * POST /login
  * Sign in using email and password.
@@ -69,50 +62,26 @@ exports.getLogin = (req, res) => {
 exports.postLogin = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     yield express_validator_1.check('email', 'Email is not valid').isEmail().run(req);
     yield express_validator_1.check('password', 'Password cannot be blank').isLength({ min: 1 }).run(req);
-    // eslint-disable-next-line @typescript-eslint/camelcase
     yield express_validator_1.sanitize('email').normalizeEmail({ gmail_remove_dots: false }).run(req);
     const errors = express_validator_1.validationResult(req);
     if (!errors.isEmpty()) {
-        req.flash('errors', errors.array());
-        return res.redirect('/login');
+        return res.status(400).send({ errors: errors.array(), userContent: 'signup deets bad' });
     }
     passport_1.default.authenticate('local', (err, user, info) => {
         if (err) {
             return next(err);
         }
         if (!user) {
-            req.flash('errors', { msg: info.message });
-            return res.redirect('/login');
+            return res.status(400).send({ userContent: 'no user exists' });
         }
         req.logIn(user, (err) => {
             if (err) {
                 return next(err);
             }
-            req.flash('success', { msg: 'Success! You are logged in.' });
-            res.redirect(req.session.returnTo || '/');
+            return res.status(200).send({ userContent: 'you sexy beast, welcome home' });
         });
     })(req, res, next);
 });
-/**
- * GET /logout
- * Log out.
- */
-exports.logout = (req, res) => {
-    req.logout();
-    res.redirect('/');
-};
-/**
- * GET /signup
- * Signup page.
- */
-exports.getSignup = (req, res) => {
-    if (req.user) {
-        return res.redirect('/');
-    }
-    res.render('account/signup', {
-        title: 'Create Account'
-    });
-};
 /**
  * POST /signup
  * Create a new local account.
@@ -121,12 +90,10 @@ exports.postSignup = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
     yield express_validator_1.check('email', 'Email is not valid').isEmail().run(req);
     yield express_validator_1.check('password', 'Password must be at least 4 characters long').isLength({ min: 4 }).run(req);
     yield express_validator_1.check('confirmPassword', 'Passwords do not match').equals(req.body.password).run(req);
-    // eslint-disable-next-line @typescript-eslint/camelcase
     yield express_validator_1.sanitize('email').normalizeEmail({ gmail_remove_dots: false }).run(req);
     const errors = express_validator_1.validationResult(req);
     if (!errors.isEmpty()) {
-        req.flash('errors', errors.array());
-        return res.redirect('/signup');
+        return res.status(400).send({ errors: errors.array(), userContent: 'signup deets bad' });
     }
     const user = new User_1.User({
         email: req.body.email,
@@ -137,8 +104,7 @@ exports.postSignup = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
             return next(err);
         }
         if (existingUser) {
-            req.flash('errors', { msg: 'Account with that email address already exists.' });
-            return res.redirect('/signup');
+            return res.status(403).send({ userContent: 'account already exists!' });
         }
         user.save((err) => {
             if (err) {
@@ -148,7 +114,7 @@ exports.postSignup = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
                 if (err) {
                     return next(err);
                 }
-                res.redirect('/');
+                return res.status(200).send({ userContent: 'Hi dude man' });
             });
         });
     });

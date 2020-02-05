@@ -11,7 +11,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
-const compression_1 = __importDefault(require("compression")); // compresses requests
+const compression_1 = __importDefault(require("compression"));
 const express_session_1 = __importDefault(require("express-session"));
 const body_parser_1 = __importDefault(require("body-parser"));
 const lusca_1 = __importDefault(require("lusca"));
@@ -27,6 +27,7 @@ const secrets_1 = require("./util/secrets");
 const history = require('connect-history-api-fallback');
 const cors = require('cors');
 const MongoStore = connect_mongo_1.default(express_session_1.default);
+/** ---------------------------------------  LOGGING  ------------------------------------------------- */
 if (process.env.NODE_ENV === 'production') {
     const logger = winston_1.default.createLogger({
         level: 'info',
@@ -38,21 +39,16 @@ if (process.env.NODE_ENV === 'production') {
         ]
     });
 }
+/** ---------------------------------------  PASSPORT + MONGO CONFIG  --------------------------------- */
+// import * as homeController from './controllers/home'
 const userController = __importStar(require("./controllers/user"));
-// import * as apiController from './controllers/api'
-const contactController = __importStar(require("./controllers/contact"));
-// API keys and Passport configuration
-const passportConfig = __importStar(require("./config/passport"));
-// Create Express server
 const app = express_1.default();
-// Connect to MongoDB
 const mongoUrl = secrets_1.MONGODB_URI;
 mongoose_1.default.Promise = bluebird_1.default;
 mongoose_1.default.connect(mongoUrl, { useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true }).then(() => { }).catch(err => {
     console.log('MongoDB connection error. Please make sure MongoDB is running. ' + err);
-    // process.exit();
 });
-// Express configuration
+/** ---------------------------------------  APP CONFIG  ---------------------------------------------- */
 app.set('port', 1980);
 app.set('views', path_1.default.join(__dirname, '../views'));
 app.set('view engine', 'pug');
@@ -60,6 +56,11 @@ app.use(compression_1.default());
 app.use(body_parser_1.default.json());
 app.use(body_parser_1.default.urlencoded({ extended: true }));
 app.use(express_session_1.default({
+    cookie: {
+        sameSite: process.env.NODE_ENV === 'production',
+        maxAge: process.env.NODE_ENV === 'production' ? 86400000 : null,
+        secure: process.env.NODE_ENV === 'production',
+    },
     resave: true,
     saveUninitialized: true,
     secret: secrets_1.SESSION_SECRET,
@@ -68,6 +69,8 @@ app.use(express_session_1.default({
         autoReconnect: true
     })
 }));
+if (process.env.NODE_ENV === 'production')
+    app.set('trust proxy', 1);
 app.use(passport_1.default.initialize());
 app.use(passport_1.default.session());
 app.use(express_flash_1.default());
@@ -82,7 +85,6 @@ app.use((req, res, next) => {
     next();
 });
 app.use((req, res, next) => {
-    // After successful login, redirect back to the intended page
     if (!req.user
         && req.path !== '/login'
         && req.path !== '/signup'
@@ -95,25 +97,17 @@ app.use((req, res, next) => {
     }
     next();
 });
-/**
- * Primary app routes.
- */
-app.get('/user/session_challenge', userController.sessionChallenge);
-app.get('/login', userController.getLogin);
+/** ---------------------------------------  APP ROUTING  --------------------------------- */
+app.post('/session_challenge', userController.sessionChallenge);
 app.post('/login', userController.postLogin);
-app.get('/logout', userController.logout);
-app.get('/forgot', userController.getForgot);
+app.post('/logout', userController.postLogout);
 app.post('/forgot', userController.postForgot);
-app.get('/reset/:token', userController.getReset);
 app.post('/reset/:token', userController.postReset);
-app.get('/signup', userController.getSignup);
 app.post('/signup', userController.postSignup);
-app.get('/contact', contactController.getContact);
-app.post('/contact', contactController.postContact);
-app.get('/account', passportConfig.isAuthenticated, userController.getAccount);
-app.post('/account/profile', passportConfig.isAuthenticated, userController.postUpdateProfile);
-app.post('/account/password', passportConfig.isAuthenticated, userController.postUpdatePassword);
-app.post('/account/delete', passportConfig.isAuthenticated, userController.postDeleteAccount);
+// app.post('/account/profile', passportConfig.isAuthenticated, userController.postUpdateProfile)
+// app.post('/account/password', passportConfig.isAuthenticated, userController.postUpdatePassword)
+// app.post('/account/delete', passportConfig.isAuthenticated, userController.postDeleteAccount)
+/** ---------------------------------------  IMAGE STORAGE  --------------------------------- */
 const storage = multer_1.default.diskStorage({
     destination: function (req, file, callback) {
         callback(null, './uploads');
@@ -126,12 +120,13 @@ const upload = multer_1.default({ storage: storage }).single('img');
 app.post('/api/photo', (req, res) => {
     upload(req, res, (err) => {
         if (err) {
-            console.log(err);
             return res.end("Error uploading file.");
         }
         res.end(JSON.stringify({ message: 'Upload success' }));
     });
 });
+app.post('/tester', userController.postSignup);
+/** -------------------------------  STATIC FILES AND SPA SERVER  --------------------------------- */
 const _static = express_1.default.static(path_1.default.join(__dirname, 'front-end'), { maxAge: 31557600000 });
 if (process.env.NODE_ENV === 'production') {
     app.use(_static);
