@@ -51,7 +51,7 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(session({
     cookie: {
-        // sameSite: process.env.NODE_ENV === 'production',
+        sameSite: process.env.NODE_ENV === 'production',
         maxAge: process.env.NODE_ENV === 'production' ? 86400000 : null,
         secure: process.env.NODE_ENV === 'production',
     },
