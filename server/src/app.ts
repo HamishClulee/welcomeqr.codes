@@ -94,22 +94,21 @@ app.use((req, res, next) => {
 })
 
 /** ---------------------------------------  APP ROUTING  --------------------------------- */
-app.get('/user/session_challenge', userController.sessionChallenge)
-// app.get('/login', userController.getLogin)
-// app.post('/login', userController.postLogin)
-app.get('/logout', userController.logout)
-app.get('/forgot', userController.getForgot)
+app.post('/session_challenge', userController.sessionChallenge)
+
+app.post('/login', userController.postLogin)
+
+app.post('/logout', userController.postLogout)
+
 app.post('/forgot', userController.postForgot)
-app.get('/reset/:token', userController.getReset)
+
 app.post('/reset/:token', userController.postReset)
-// app.get('/signup', userController.getSignup)
-// app.post('/signup', userController.postSignup)
-app.get('/contact', contactController.getContact)
-app.post('/contact', contactController.postContact)
-app.get('/account', passportConfig.isAuthenticated, userController.getAccount)
-app.post('/account/profile', passportConfig.isAuthenticated, userController.postUpdateProfile)
-app.post('/account/password', passportConfig.isAuthenticated, userController.postUpdatePassword)
-app.post('/account/delete', passportConfig.isAuthenticated, userController.postDeleteAccount)
+
+app.post('/signup', userController.postSignup)
+
+// app.post('/account/profile', passportConfig.isAuthenticated, userController.postUpdateProfile)
+// app.post('/account/password', passportConfig.isAuthenticated, userController.postUpdatePassword)
+// app.post('/account/delete', passportConfig.isAuthenticated, userController.postDeleteAccount)
 
 /** ---------------------------------------  IMAGE STORAGE  --------------------------------- */
 const storage = multer.diskStorage({
@@ -130,7 +129,7 @@ app.post('/api/photo', (req: any, res: any): any => {
     })
 })
 
-
+app.post('/tester', userController.postSignup)
 
 /** -------------------------------  STATIC FILES AND SPA SERVER  --------------------------------- */
 const _static = express.static(path.join(__dirname, 'front-end'), { maxAge: 31557600000 })
