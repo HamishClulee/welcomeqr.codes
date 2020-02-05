@@ -19,7 +19,7 @@ const MongoStore = mongo(session)
 
 /** ---------------------------------------  LOGGING  ------------------------------------------------- */
 if (process.env.NODE_ENV === 'production') {
-    const logger = winston.createLogger({
+    winston.createLogger({
         level: 'info',
         format: winston.format.json(),
         defaultMeta: { service: 'user-service' },
@@ -31,11 +31,8 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 /** ---------------------------------------  PASSPORT + MONGO CONFIG  --------------------------------- */
-// import * as homeController from './controllers/home'
 import * as userController from './controllers/user'
-// import * as apiController from './controllers/api'
-import * as contactController from './controllers/contact'
-import * as passportConfig from './config/passport'
+
 const app = express()
 const mongoUrl = MONGODB_URI
 mongoose.Promise = bluebird
@@ -53,11 +50,11 @@ app.use(compression())
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(session({
-    cookie: {
-        sameSite: process.env.NODE_ENV === 'production',
-        maxAge: process.env.NODE_ENV === 'production' ? 86400000 : null,
-        secure: process.env.NODE_ENV === 'production',
-    },
+    // cookie: {
+    //     sameSite: process.env.NODE_ENV === 'production',
+    //     maxAge: process.env.NODE_ENV === 'production' ? 86400000 : null,
+    //     secure: process.env.NODE_ENV === 'production',
+    // },
     resave: true,
     saveUninitialized: true,
     secret: SESSION_SECRET,
@@ -78,18 +75,6 @@ app.use(lusca.xframe('SAMEORIGIN'))
 app.use(lusca.xssProtection(true))
 app.use((req, res, next) => {
     res.locals.user = req.user
-    next()
-})
-app.use((req, res, next) => {
-    if (!req.user
-            && req.path !== '/login'
-            && req.path !== '/signup'
-            && !req.path.match(/^\/auth/)
-            && !req.path.match(/\./)) {
-        req.session.returnTo = req.path
-    } else if (req.user && req.path == '/account') {
-        req.session.returnTo = req.path
-    }
     next()
 })
 

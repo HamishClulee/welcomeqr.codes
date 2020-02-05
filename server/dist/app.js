@@ -29,7 +29,7 @@ const cors = require('cors');
 const MongoStore = connect_mongo_1.default(express_session_1.default);
 /** ---------------------------------------  LOGGING  ------------------------------------------------- */
 if (process.env.NODE_ENV === 'production') {
-    const logger = winston_1.default.createLogger({
+    winston_1.default.createLogger({
         level: 'info',
         format: winston_1.default.format.json(),
         defaultMeta: { service: 'user-service' },
@@ -40,7 +40,6 @@ if (process.env.NODE_ENV === 'production') {
     });
 }
 /** ---------------------------------------  PASSPORT + MONGO CONFIG  --------------------------------- */
-// import * as homeController from './controllers/home'
 const userController = __importStar(require("./controllers/user"));
 const app = express_1.default();
 const mongoUrl = secrets_1.MONGODB_URI;
@@ -56,11 +55,11 @@ app.use(compression_1.default());
 app.use(body_parser_1.default.json());
 app.use(body_parser_1.default.urlencoded({ extended: true }));
 app.use(express_session_1.default({
-    cookie: {
-        sameSite: process.env.NODE_ENV === 'production',
-        maxAge: process.env.NODE_ENV === 'production' ? 86400000 : null,
-        secure: process.env.NODE_ENV === 'production',
-    },
+    // cookie: {
+    //     sameSite: process.env.NODE_ENV === 'production',
+    //     maxAge: process.env.NODE_ENV === 'production' ? 86400000 : null,
+    //     secure: process.env.NODE_ENV === 'production',
+    // },
     resave: true,
     saveUninitialized: true,
     secret: secrets_1.SESSION_SECRET,
@@ -82,19 +81,6 @@ app.use(lusca_1.default.xframe('SAMEORIGIN'));
 app.use(lusca_1.default.xssProtection(true));
 app.use((req, res, next) => {
     res.locals.user = req.user;
-    next();
-});
-app.use((req, res, next) => {
-    if (!req.user
-        && req.path !== '/login'
-        && req.path !== '/signup'
-        && !req.path.match(/^\/auth/)
-        && !req.path.match(/\./)) {
-        req.session.returnTo = req.path;
-    }
-    else if (req.user && req.path == '/account') {
-        req.session.returnTo = req.path;
-    }
     next();
 });
 /** ---------------------------------------  APP ROUTING  --------------------------------- */
