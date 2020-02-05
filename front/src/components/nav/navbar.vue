@@ -1,5 +1,6 @@
 <template>
     <div class="navbar-con">
+
         <transition name="fade" mode="in-out">
             <div class="navbar-left" v-if="$route.name === 'home' || scrolledTop">
                 <div class="logo-con" @click="routehome">
@@ -7,36 +8,43 @@
                 </div>
             </div>
         </transition>
+
         <div class="spacer"></div>
+
         <div class="hamburger" @click="togglecanvas">
             <div class="line"></div>
             <div class="line"></div>
             <div class="line"></div>
         </div>
-        <div v-if="canvasopen" class="canvas-nav">
-            <div class="canvas-text-con">
-                <div class="big-x" @click="togglecanvas">
-                    <div class="line"></div>
-                    <div class="line"></div>
-                </div>
-                <div
-                    class="canvas-item"
-                    @click="togglecanvas">
-                        <router-link :to="{ path: '/'}">home</router-link>
-                </div>
-                <div
-                    class="canvas-item"
-                    @click="togglecanvas">
-                        <router-link :to="{ path: '/pricing'}">pricing</router-link>
-                </div>
-                <div
-                    class="canvas-item"
-                    @click="togglecanvas">
-                        <router-link :to="{ path: '/create'}">Try For Free</router-link>
+
+        <transition name="fade" mode="in-out">
+
+            <div v-if="canvasopen" class="canvas-nav">
+                <div class="canvas-text-con">
+                    <div class="big-x" @click="togglecanvas">
+                        <div class="line"></div>
+                        <div class="line"></div>
+                    </div>
+                    <div
+                        class="canvas-item"
+                        @click="togglecanvas">
+                            <router-link :to="{ path: '/'}">home</router-link>
+                    </div>
+                    <div
+                        class="canvas-item"
+                        @click="togglecanvas">
+                            <router-link :to="{ path: '/pricing'}">pricing</router-link>
+                    </div>
+                    <div
+                        class="canvas-item"
+                        @click="togglecanvas">
+                            <router-link :to="{ path: '/create'}">Try For Free</router-link>
+                    </div>
                 </div>
             </div>
             
-        </div>
+        </transition>
+
     </div>
 </template>
 <script>

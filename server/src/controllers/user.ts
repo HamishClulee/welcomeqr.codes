@@ -35,13 +35,14 @@ export const sessionChallenge = (req: Request, res: Response) => {
 
             if (user) {
 
-                return res.status(200).send({ userContent: 'you are a premium user' })
+                let { email, _id } = user
+                return res.status(200).send({ userContent: 'you are a premium user', user: { email, id: _id } })
 
             } else {
 
                 return res.status(401).send({
                     'status': 401,
-                    'message': 'You are not authenticated.'
+                    'message': 'You do not exist.'
                 })
                 
             }

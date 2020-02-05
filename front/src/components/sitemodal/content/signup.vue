@@ -62,7 +62,7 @@ export default {
         test(path) {
 
             SERVER.post(`/${path}`, {
-                'email': 'ham2@ham.com',
+                'email': 'ham9999@ham.com',
                 'password': 'testtest',
                 'confirmPassword': 'testtest'
             })
@@ -78,9 +78,10 @@ export default {
             })
 
         },
-        yup () {
+        yup (data) {
 
             this.auth = true
+            this.message = data.data.user.email
 
         },
         nup () {
