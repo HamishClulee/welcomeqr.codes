@@ -130,7 +130,7 @@ export default {
     methods: {
         ctaroute () {
 
-            EventBus.$emit('opensitemodal', 'signup')
+            this.$router.push({ name: 'create' })
 
         },
         scrollDown() {

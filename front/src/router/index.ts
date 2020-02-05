@@ -1,9 +1,12 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import { EventBus } from '../EventBus'
+
+import isAuthed from '../api/auth'
+
 const home = () => import('../views/home.vue')
 const create = () => import('../views/create.vue')
 const pricing = () => import('../views/pricing.vue')
+const auth = () => import('../views/auth.vue')
 const notfound = () => import('../views/notfound.vue')
 
 import overwritemetas from '../utils/seo'
@@ -27,6 +30,11 @@ const routes = [
     },
   },
   {
+    path: '/auth',
+    name: 'auth',
+    component: auth
+  },
+  {
     path: '/pricing',
     name: 'pricing',
     component: pricing,
@@ -47,12 +55,27 @@ const routes = [
     component: create,
     beforeEnter: (to: any, from: any, next: any) => {
 
-      overwritemetas({
-        title: 'Welcome QR | Create New QR',
-        description: `Where the magic happens, create a new dowmloadable QR code and 
-        associate website and content`,
-        noindex: true,
-      }, next)
+      const app = document.getElementById('app')
+      if (app) app.innerHTML = '<h1 style="font-size: 10em;">FUCK YEAH G</h1>'
+
+      const yup = () => {
+
+        overwritemetas({
+          title: 'Welcome QR | Create New QR',
+          description: `Where the magic happens, create a new dowmloadable QR code and 
+          associate website and content`,
+          noindex: true,
+        }, next)
+
+      }
+
+      const nup = () => {
+
+        next('/auth')
+
+      }
+
+      isAuthed(yup, nup)
 
     },
   },
