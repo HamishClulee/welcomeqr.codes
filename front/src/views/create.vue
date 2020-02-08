@@ -7,7 +7,9 @@
         <section class="content-container">
 
             <createsidebar
-                @changebold="changeBold">
+                @changebold="changeBold"
+                :isBold="isBold"
+                :editor="editor">
             </createsidebar>
 
             <!-- ---- EDITOR WINDOW MAIN PANEL ---- -->
@@ -46,6 +48,7 @@ import linkmodal from '../components/linkmodal.vue'
 import myupload from 'vue-image-crop-upload'
 import { Chrome } from 'vue-color'
 import { mapGetters } from 'vuex'
+import isAuthed from '../api/auth'
 export default {
     name: 'create',
     components: {
@@ -95,6 +98,13 @@ export default {
         }
     
     },
+    beforeRouteUpdate (to, from, next) {
+
+        const nup = () => { this.$router.push({ path: '/auth' }) }
+        isAuthed(() => {}, nup, this)
+        next()
+        
+    },
     mounted () {
 
         const edel = document.getElementById( 'editor' )
@@ -124,14 +134,6 @@ export default {
                 return output
             })
         }
-
-        document.addEventListener( 'click', ( e ) => {
-            let id = e.target.id,
-                value
-            if ( id && this.editor && this.editor[ id ] ) {
-                this.editor[ id ]( value )
-            }
-        }, false )
     
     },
     methods: {

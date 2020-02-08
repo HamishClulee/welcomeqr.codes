@@ -27,7 +27,8 @@ exports.sessionChallenge = (req, res) => {
     if (!req.session.passport) {
         return res.status(401).send({
             'status': 401,
-            'message': 'No user logged in.'
+            'message': 'No user logged in.',
+            user: { email: null, _id: null, authed: false },
         });
     }
     else {
@@ -35,17 +36,19 @@ exports.sessionChallenge = (req, res) => {
             if (err) {
                 return res.status(401).send({
                     'status': 401,
-                    'message': 'You are not authenticated.'
+                    'message': 'You are not authenticated.',
+                    user: { email: null, _id: null, authed: false },
                 });
             }
             if (user) {
                 let { email, _id } = user;
-                return res.status(200).send({ userContent: 'you are a premium user', user: { email, id: _id } });
+                return res.status(200).send({ msg: 'you are a premium user', user: { email, id: _id, authed: true } });
             }
             else {
                 return res.status(401).send({
                     'status': 401,
-                    'message': 'You do not exist.'
+                    'message': 'You do not exist.',
+                    user: { email: null, _id: null, authed: false },
                 });
             }
         });
@@ -53,7 +56,7 @@ exports.sessionChallenge = (req, res) => {
 };
 exports.postLogout = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     req.logout();
-    return res.status(200).send({ userContent: 'see you later, aligator' });
+    return res.status(200).send({ userContent: 'see you later, aligator', user: { email: null, _id: null, authed: false } });
 });
 /**
  * POST /login
@@ -65,20 +68,21 @@ exports.postLogin = (req, res, next) => __awaiter(void 0, void 0, void 0, functi
     yield express_validator_1.sanitize('email').normalizeEmail({ gmail_remove_dots: false }).run(req);
     const errors = express_validator_1.validationResult(req);
     if (!errors.isEmpty()) {
-        return res.status(400).send({ errors: errors.array(), userContent: 'signup deets bad' });
+        return res.status(400).send({ errors: errors.array(), userContent: 'signup deets bad', user: { email: null, _id: null, authed: false } });
     }
     passport_1.default.authenticate('local', (err, user, info) => {
         if (err) {
             return next(err);
         }
         if (!user) {
-            return res.status(400).send({ userContent: 'no user exists' });
+            return res.status(400).send({ userContent: 'no user exists', user: { email: null, _id: null, authed: false } });
         }
+        let { email, _id } = user;
         req.logIn(user, (err) => {
             if (err) {
                 return next(err);
             }
-            return res.status(200).send({ userContent: 'you sexy beast, welcome home' });
+            return res.status(200).send({ userContent: 'you sexy beast, welcome home', user: { email, id: _id, authed: true } });
         });
     })(req, res, next);
 });
@@ -93,7 +97,7 @@ exports.postSignup = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
     yield express_validator_1.sanitize('email').normalizeEmail({ gmail_remove_dots: false }).run(req);
     const errors = express_validator_1.validationResult(req);
     if (!errors.isEmpty()) {
-        return res.status(400).send({ errors: errors.array(), userContent: 'signup deets bad' });
+        return res.status(400).send({ errors: errors.array(), userContent: 'signup deets bad', user: { email: null, _id: null, authed: false } });
     }
     const user = new User_1.User({
         email: req.body.email,
@@ -104,17 +108,18 @@ exports.postSignup = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
             return next(err);
         }
         if (existingUser) {
-            return res.status(403).send({ userContent: 'account already exists!' });
+            return res.status(403).send({ userContent: 'account already exists!', user: { email: null, _id: null, authed: false } });
         }
         user.save((err) => {
             if (err) {
                 return next(err);
             }
+            let { email, _id } = user;
             req.logIn(user, (err) => {
                 if (err) {
                     return next(err);
                 }
-                return res.status(200).send({ userContent: 'Hi dude man' });
+                return res.status(200).send({ userContent: 'Hi dude man', user: { email, id: _id, authed: true } });
             });
         });
     });

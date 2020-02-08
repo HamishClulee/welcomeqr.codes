@@ -1,8 +1,5 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import isAuthed from '../api/auth'
-import { EventBus } from '../EventBus'
-import app from '../main'
 
 const home = () => import('../views/home.vue')
 const create = () => import('../views/create.vue')
@@ -49,21 +46,11 @@ const routes = [
         name: 'create',
         component: create,
         beforeEnter: (to: any, from: any, next: any) => {
-            EventBus.$emit('globalspinner', true)
-            const yup = () => {
-                EventBus.$emit('globalspinner', false)
-                overwritemetas({
-                    title: 'Welcome QR | Create New QR',
-                    description: `Where the magic happens, create a new dowmloadable QR code and associate website and content`,
-                    noindex: true,
-                }, next)
-        
-            }
-            const nup = () => {
-                next('/auth')
-                EventBus.$emit('globalspinner', false)
-            }
-            isAuthed(yup, nup, app)
+            overwritemetas({
+                title: 'Welcome QR | Create New QR',
+                description: `Where the magic happens, create a new dowmloadable QR code and associate website and content`,
+                noindex: true,
+            }, next)
         },
     },
     {

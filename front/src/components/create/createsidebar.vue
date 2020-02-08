@@ -1,7 +1,7 @@
 <template>
     <aside class="create-sidebar-con">
 
-        <span @click="changebold" class="bold" :class="isBold ? 'active-button' : 'inactive-button'"></span>
+        <span @click="$emit('changebold')" class="bold" :class="isBold ? 'active-button' : 'inactive-button'"></span>
 
         <span @click="changeItalic" class="italic" :class="{ 'active-button': isItalic }"></span>
 
@@ -31,16 +31,24 @@
 <script>
 export default {
     name: 'createsidebar',
-    data() {
-        return {
-            isBold: false,
-        }
-    },
-    methods: {
-        changebold() {
-            this.$emit('changebold')
-            this.isBold = !this.isBold
+    props: {
+        editor: {
+            type: Object,
+            required: true,
         },
+        isBold: {
+            type: Boolean,
+            required: true,
+        },
+    },
+    mounted () {
+        document.addEventListener( 'click', ( e ) => {
+            let id = e.target.id,
+                value
+            if ( id && this.editor && this.editor[ id ] ) {
+                this.editor[ id ]( value )
+            }
+        }, false )
     },
 }
 </script>
