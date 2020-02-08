@@ -38,25 +38,19 @@ import loading from '../../loading'
 export default {
     name: 'signup',
     components: {
-        loading
+        loading,
     },
     data () {
 
         return {
             message: '',
             auth: false,
-            loading: true
+            loading: true,
         }
 
     },
     mounted () {
-
-        isAuthed(this.yup, this.nup).then(() => {
-
-            this.loading = false
-
-        })
-
+        isAuthed(this.yup, this.nup, this).then(() => {this.loading = false})
     },
     methods: {
         test(path) {
@@ -64,32 +58,26 @@ export default {
             SERVER.post(`/${path}`, {
                 'email': 'ham9999@ham.com',
                 'password': 'testtest',
-                'confirmPassword': 'testtest'
+                'confirmPassword': 'testtest',
             })
-            .then(yup => { 
+                .then(yup => { 
                 
-                this.message = yup 
+                    this.message = yup 
                 
-            })
-            .catch(nup => { 
+                })
+                .catch(nup => { 
                 
-                this.message = nup 
+                    this.message = nup 
                 
-            })
+                })
 
         },
         yup (data) {
-
             this.auth = true
             this.message = data.data.user.email
-
         },
-        nup () {
-
-            this.auth = false
-
-        }
-    }
+        nup () { this.auth = false },
+    },
 }
 </script>
 

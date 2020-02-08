@@ -20,7 +20,7 @@
 
 <script>
 export default {
-    name: 'qrfooter'
+    name: 'qrfooter',
 }
 </script>
 

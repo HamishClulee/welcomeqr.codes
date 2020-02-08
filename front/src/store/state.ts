@@ -1,15 +1,16 @@
-export interface State {
-	windowWidth: number,
-	windowHeight: number,
-	scrollY: number,
-	isauthed: boolean,
-}
+import { State, UI } from '@I/IState'
 
 const state: State = {
-	windowWidth: 0,
-	windowHeight: 0,
-	scrollY: 0,
-	isauthed: false,
+    user: {
+        email: null,
+        id: null,
+        authed: false,
+    },
+    ui: {
+        windowWidth: 0,
+        windowHeight: 0,
+        scrollY: 0,
+    },
 }
 
 export default state

@@ -1,10 +1,10 @@
-import { State } from './state'
+import { State } from '@I/IState'
 
 const getters = {
-  windowWidth: (state: State) => state.windowWidth,
-  windowHeight: (state: State) => state.windowHeight,
-  scrollY: (state: State) => state.scrollY,
-  isauthed: (state: State) => state.isauthed,
+    windowWidth: (state: State) => state.ui.windowWidth,
+    windowHeight: (state: State) => state.ui.windowHeight,
+    scrollY: (state: State) => state.ui.scrollY,
+    isauthed: (state: State) => state.user.authed,
 }
 
 export default getters

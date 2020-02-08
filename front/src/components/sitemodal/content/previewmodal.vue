@@ -4,7 +4,7 @@
 
 <script>
 export default {
-    name: 'previewmodal'
+    name: 'previewmodal',
 }
 </script>
 

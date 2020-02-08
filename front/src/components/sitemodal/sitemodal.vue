@@ -31,21 +31,21 @@ import { EventBus } from '../../EventBus.ts'
 export default {
     name: 'sitemodal',
     components: {
-        detailsmodal, editormodal, previewmodal, authmodal
+        detailsmodal, editormodal, previewmodal, authmodal,
     },
     props: {
         contains: {
             type: String || null,
-            required: true
-        }
+            required: true,
+        },
     },
     methods: {
         closeModal() {
 
             EventBus.$emit('closesitemodal')
         
-        }
-    }
+        },
+    },
 }
 </script>
 

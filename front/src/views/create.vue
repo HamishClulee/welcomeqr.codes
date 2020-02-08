@@ -1,76 +1,179 @@
 <template>
     <main class="create-con">
-        <nav class="tabs-bar">
 
-            <span class="tab-item" @click="activeTab = 'details'">
-                <div class="icon-backer editor tab-member"></div>
-                <div class="tab-text tab-member">Details</div>
-            </span>
-
-            <span class="tab-item" @click="activeTab = 'editor'">
-                <div class="icon-backer editor tab-member"></div>
-                <div class="tab-text tab-member">Editor</div>
-            </span>
-
-            <span class="tab-item" @click="activeTab = 'preview'">
-                <div class="icon-backer preview tab-member"></div>
-                <div class="tab-text tab-member">Preview</div>
-            </span>
-        </nav>
+        <createtopbar>
+        </createtopbar>
 
         <section class="content-container">
 
-            <createsidebar v-show="activeTab === 'details'"></createsidebar>
+            <createsidebar
+                @changebold="changeBold">
+            </createsidebar>
 
-            <section>
+            <!-- ---- EDITOR WINDOW MAIN PANEL ---- -->
 
-                <qrdetails v-show="activeTab === 'details'"></qrdetails>
+            <div id="editor"></div>
 
-                <editor v-show="activeTab === 'editor'"></editor>
+            <!-- ---- EDITOR WINDOW MAIN PANEL ENDS -->
 
-                <preview v-show="activeTab === 'preview'"></preview>
+            <myupload
+                field="img"
+                @crop-success="cropSuccess"
+                @crop-upload-success="cropUploadSuccess"
+                @crop-upload-fail="cropUploadFail"
+                v-model="showImageUpload"
+                :width="300"
+                :height="300"
+                :url="isDev ? 'http://localhost:1980/api/photo' : 'https://welcomeqr.codes/api/photo'"
+                langType="en"
+                :params="params"
+                :headers="headers"
+                img-format="png">
+            </myupload>
 
-            </section>
+            <chrome-picker @input="setTextColour" class="color-picker" v-if="showColorPicker" v-model="colors" />
+
+            <linkmodal :show="showLinkModal" @callback="insertLink" @closemodal="showLinkModal = false"></linkmodal>
 
         </section>
     </main>
 </template>
 
 <script>
-import qrdetails from '../components/create/qrdetails'
-import editor from '../components/create/editor'
-import preview from '../components/create/preview'
+import createtopbar from '../components/create/createtopbar'
 import createsidebar from '../components/create/createsidebar'
+import linkmodal from '../components/linkmodal.vue'
+import myupload from 'vue-image-crop-upload'
+import { Chrome } from 'vue-color'
 import { mapGetters } from 'vuex'
 export default {
     name: 'create',
     components: {
-        qrdetails,
-        editor,
-        preview,
         createsidebar,
+        createtopbar,
+        linkmodal,
+        myupload,
+        'chrome-picker': Chrome,
     },
     data () {
 
         return {
-            detailsComplete: false,
-            editorSaved: false,
-            activeTab: 'details'
+            fontSize: '16px',
+            fontSizeOptions: [
+                '16px',
+                '18px',
+                '20px',
+                '22px',
+                '24px',
+                '28px',
+                '32px',
+                '48px',
+            ],
+            editor: null,
+            base: process.env.NODE_ENV === 'development' ? 'http://localhost:8080' : 'https://welcomeqr.codes',
+            isBold: false,
+            isItalic: false,
+            isList: false,
+            showLinkModal: false,
+            showImageUpload: false,
+            showColorPicker: false,
+            colors: {
+                hex: '#194d33',
+                hsl: { h: 150, s: 0.5, l: 0.2, a: 1 },
+                hsv: { h: 150, s: 0.66, v: 0.30, a: 1 },
+                rgba: { r: 25, g: 77, b: 51, a: 1 },
+                a: 1,
+            },
+            params: {
+                token: '123456798',
+                name: 'avatar',
+            },
+            headers: {
+                smail: '*_~',
+            },
+            imgDataUrl: '',
         }
     
     },
     mounted () {
 
-        this.$on('detailsgood', () => {
-
-            this.detailsComplete = true
-
+        const edel = document.getElementById( 'editor' )
+        this.editor = new Squire( edel, {
+            blockTag: 'p',
+            blockAttributes: {'class': 'paragraph'},
+            tagAttributes: {
+                ul: {'class': 'UL'},
+                ol: {'class': 'OL'},
+                li: {'class': 'listItem'},
+                a: {'target': '_blank'},
+            },
         })
 
+        Squire.prototype.makeHeader = function () {
+            return this.modifyBlocks( function( frag ) {
+
+                let output = this._doc.createDocumentFragment()
+                let block = frag
+
+                while ( block = Squire.getNextBlock( block ) ) {
+
+                    output.appendChild(this.createElement( 'h2', [Squire.empty(block)]))
+                
+                }
+
+                return output
+            })
+        }
+
+        document.addEventListener( 'click', ( e ) => {
+            let id = e.target.id,
+                value
+            if ( id && this.editor && this.editor[ id ] ) {
+                this.editor[ id ]( value )
+            }
+        }, false )
+    
     },
     methods: {
+        setFontSize(e) { this.editor['setFontSize'] (e) },
+        setTextColour(e) { this.editor['setTextColour'] (e.hex) },
+        changeBold() { this.isBold = !this.isBold },
+        changeItalic() { this.isItalic = !this.isItalic },
+        changeList() { this.isList = !this.isList },
+        insertLink(val){
+
+            if (!val.name || !val.url) {
+                this.imageModalShow = !this.imageModalShow
+            } else {
+                this.imageModalShow = !this.imageModalShow
+                const html = `<a target="_blank" href="${val.url}">${val.name}</a>`
+                this.editor.insertHTML(html)
+            }
+
+        },
+        toggleShow() { this.showImageUpload = !this.showImageUpload },
+        cropSuccess(imgDataUrl, field){ this.imgDataUrl = imgDataUrl },
+        cropUploadSuccess(jsonData, field){
+            
+            const tmp = this.imgDataUrl
+            this.editor.insertHTML(`<img height="300" src="${tmp}" />`)
+            this.showImageUpload = false
+            this.imgDataUrl = ''
         
-    }
+        },
+        cropUploadFail(status, field){
+            // TODO impl
+        },
+
+    },
+    computed: {
+        isDev () { return process.env.NODE_ENV === 'development' },
+    },
+    watch: {
+        isBold(val) { val ? this.editor['bold'](null) : this.editor['removeBold'](null) },
+        isItalic(val) { val ? this.editor['italic'](null) : this.editor['removeItalic'](null) },
+        isList(val) { val ? this.editor['makeUnorderedList'](null) : this.editor['removeList'](null) },
+    },
 }
 </script>
 <style lang="sass" scoped>
@@ -87,7 +190,6 @@ export default {
     width: 100%
 .create-con
     flex-direction: column
-    margin-top: 60px
     width: 100%
 .content-container
     width: 100%
@@ -110,9 +212,6 @@ export default {
     text-transform: uppercase
 .details
     background: center / contain no-repeat url("../svg/details.svg")
-    background-size: unset
-.editor
-    background: center / contain no-repeat url("../svg/edit.svg")
     background-size: unset
 .preview
     background: center / contain no-repeat url("../svg/eye.svg")

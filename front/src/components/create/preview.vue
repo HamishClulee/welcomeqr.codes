@@ -22,7 +22,7 @@ export default {
     },
     computed: {
 
-    }
+    },
 }
 </script>
 <style lang="sass" scoped>

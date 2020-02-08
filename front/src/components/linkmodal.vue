@@ -33,13 +33,13 @@
 <script>
 export default {
     props: [
-        'show'
+        'show',
     ],
     data () {
 
         return {
-            name: "",
-            url: "",
+            name: '',
+            url: '',
         }
     
     },
@@ -48,11 +48,11 @@ export default {
 
             const data = {
                 'name': this.name,
-                'url': this.url
+                'url': this.url,
             }
             this.$emit('callback', data)
-            this.name = ""
-            this.url = ""
+            this.name = ''
+            this.url = ''
             this.$emit('closemodal')
 
         },
@@ -60,8 +60,8 @@ export default {
 
             this.$emit('closemodal')
 
-        }
-    }
+        },
+    },
 }
 </script>
 

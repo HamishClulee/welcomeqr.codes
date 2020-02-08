@@ -13,14 +13,14 @@ export default {
     props: {
         sassclass: {
             required: true,
-            type: String
+            type: String,
         },
         isFooter: {
             required: false,
             default: false,
-            type: Boolean
-        }
-    }
+            type: Boolean,
+        },
+    },
 }
 </script>
 

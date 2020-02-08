@@ -21,10 +21,10 @@ export default {
         contains: {
             type: String,
             required: true,
-        }
+        },
     },
     components: {
-        login, signup
+        login, signup,
     },
     created () {
 
@@ -34,10 +34,10 @@ export default {
     data () {
 
         return {
-            isSignup: true
+            isSignup: true,
         }
 
-    }
+    },
 }
 </script>
 

@@ -20,10 +20,12 @@
 
 <script>
 export default {
-    name: 'login'
+    name: 'login',
 }
 </script>
 
 <style lang="sass" scoped>
 .login-container
+    height: 100vh
+    min-height: 800px
 </style>

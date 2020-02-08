@@ -8,20 +8,20 @@ export default {
     props: {
         text: {
             required: true,
-            type: String
+            type: String,
         },
         do: {
             required: true,
-            type: Function
-        }
+            type: Function,
+        },
     },
     methods: {
         donow () {
 
             this.do()
 
-        }
-    }
+        },
+    },
 }
 </script>
 

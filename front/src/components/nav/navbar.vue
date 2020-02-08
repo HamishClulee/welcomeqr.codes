@@ -64,7 +64,7 @@ export default {
 
             setTimeout(() => {
 
-            this.canvasopen = !this.canvasopen
+                this.canvasopen = !this.canvasopen
 
             }, 200)
         
@@ -73,10 +73,10 @@ export default {
 
             this.$router.push({ path: '/'})
         
-        }
+        },
     },
     computed: {
-        ...mapGetters(['scrollY'])
+        ...mapGetters(['scrollY']),
     },
     watch: {
         scrollY: function(val) {
@@ -84,8 +84,8 @@ export default {
             // 90px from top of window
             this.scrolledTop = val < 90
 
-        }
-    }
+        },
+    },
 }
 </script>
 <style lang="sass" scoped>

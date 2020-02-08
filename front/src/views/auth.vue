@@ -9,8 +9,8 @@ import signup from '../components/sitemodal/content/signup'
 export default {
     name: 'auth',
     components: {
-        signup
-    }
+        signup,
+    },
 }
 </script>
 

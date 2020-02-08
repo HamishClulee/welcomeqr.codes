@@ -86,12 +86,15 @@
 import displaysection from '../components/displaysection'
 import ctabutton from '../components/buttons/ctabutton'
 import Vivus from 'vivus'
-import { EventBus } from '../EventBus.ts'
+import { 
+    EventBus,
+} from '../EventBus.ts'
+
 export default {
     name: 'home',
     components: {
         displaysection,
-        ctabutton
+        ctabutton,
     },
     data () {
 
@@ -101,7 +104,7 @@ export default {
             qrviv: null,
             textviv: null,
             qrtime: null,
-            texttime: null
+            texttime: null,
         }
 
     },
@@ -110,12 +113,12 @@ export default {
         this.qrviv = new Vivus('qr-svg',   {
             type: 'delayed',
             duration: 800,
-            animTimingFunction: Vivus.EASE_IN
+            animTimingFunction: Vivus.EASE_IN,
         }, () => { /* fires at completed */ })
 
         this.qrtime = setTimeout(() => this.showheading = true, 1500)
 
-            this.texttime = setTimeout(() => {
+        this.texttime = setTimeout(() => {
 
             this.showtext = true
 
@@ -130,22 +133,26 @@ export default {
     methods: {
         ctaroute () {
 
-            this.$router.push({ name: 'create' })
+            this.$router.push({
+                name: 'create',
+            })
 
         },
         scrollDown() {
 
             const el = document.getElementById('srcoll-pop')
-            el.scrollIntoView({ alignToTop: true, behavior: 'smooth' })
+            el.scrollIntoView({
+                alignToTop: true, behavior: 'smooth',
+            })
         
-        }
+        },
     },
     beforeDestroy() {
 
         clearTimeout(this.qrtime)
         clearTimeout(this.texttime)
 
-    }
+    },
 }
 </script>
 

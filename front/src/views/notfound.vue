@@ -7,7 +7,7 @@
 
 <script>
 export default {
-  name: 'notfound',
+    name: 'notfound',
 }
 </script>
 <style scoped lang="sass">

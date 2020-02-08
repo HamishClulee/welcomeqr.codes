@@ -39,7 +39,7 @@
 
 <script>
 export default {
-    name: 'pricing'
+    name: 'pricing',
 }
 </script>
 

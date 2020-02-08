@@ -1,0 +1,2 @@
+(window["webpackJsonp"]=window["webpackJsonp"]||[]).push([["chunk-04c8ae28"],{"610d":function(n,t,c){},"6ecd":function(n,t,c){"use strict";c.r(t);var e=function(){var n=this,t=n.$createElement,c=n._self._c||t;return c("div",{staticClass:"auth-container"},[c("signup")],1)},a=[],s=c("840b"),u={name:"auth",components:{signup:s["a"]}},i=u,o=(c("fcfe"),c("2877")),r=Object(o["a"])(i,e,a,!1,null,"735c94d8",null);t["default"]=r.exports},fcfe:function(n,t,c){"use strict";var e=c("610d"),a=c.n(e);a.a}}]);
+//# sourceMappingURL=chunk-04c8ae28.04133a62.js.map

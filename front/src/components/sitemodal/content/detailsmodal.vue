@@ -4,7 +4,7 @@
 
 <script>
 export default {
-    name: 'detailsmodal'
+    name: 'detailsmodal',
 }
 </script>
 

@@ -14,7 +14,7 @@
 
 			<sitemodal v-if="showsitemodal" :contains="contains"></sitemodal>
 
-			<navbar></navbar>
+			<navbar v-if="$route.name !== 'create'"></navbar>
 
 			<router-view></router-view>
 
@@ -38,68 +38,68 @@ import { EventBus } from './EventBus.ts'
 let __proxy
 
 export default {
-	name: 'app',
-	components: {
-		navbar,
-		qrfooter,
+    name: 'app',
+    components: {
+        navbar,
+        qrfooter,
         sitemodal,
-        loading
-	},
-	data () {
+        loading,
+    },
+    data () {
 
-		return {
-			showsitemodal: false,
-			showGlobalSpinner: false,
-			contains: null,
-			loadPushed: false,
-		}
+        return {
+            showsitemodal: false,
+            showGlobalSpinner: false,
+            contains: null,
+            loadPushed: false,
+        }
 
-	},
-	mounted () {
+    },
+    mounted () {
 
-		EventBus.$on('globalspinner', (isit) => {
+        EventBus.$on('globalspinner', (isit) => {
 
-			this.showGlobalSpinner = isit
+            this.showGlobalSpinner = isit
 
-		})
+        })
 
-		EventBus.$on('opensitemodal', (type = null) => {
+        EventBus.$on('opensitemodal', (type = null) => {
 
-			if (type) {
+            if (type) {
 
-				this.contains = type
-				this.showsitemodal = true
+                this.contains = type
+                this.showsitemodal = true
 
-			} else {
+            } else {
 
-				this.showsitemodal = false
+                this.showsitemodal = false
 
-			}
+            }
 
-		})
+        })
 
-		// useful cludge
-		__proxy = this
-		window.addEventListener('resize', debounce(this.sizeChange, 500))
-		window.addEventListener('scroll', debounce(this.scrollChange, 100))
+        // useful cludge
+        __proxy = this
+        window.addEventListener('resize', debounce(this.sizeChange, 500))
+        window.addEventListener('scroll', debounce(this.scrollChange, 100))
 
         // another useful cludge to prevent the footer from flashing
-		setTimeout(() => this.loadPushed = true, 1500)  
+        setTimeout(() => this.loadPushed = true, 1500)  
 
-	},
-	methods: {
-		...mapMutations(['SET_WINDOW_SIZE', 'SET_SCROLL_LOCATION']),
-		sizeChange: () => {
+    },
+    methods: {
+        ...mapMutations(['SET_WINDOW_SIZE', 'SET_SCROLL_LOCATION']),
+        sizeChange: () => {
 
-			__proxy.SET_WINDOW_SIZE()
+            __proxy.SET_WINDOW_SIZE()
 		
-		},
-		scrollChange: () => {
+        },
+        scrollChange: () => {
 
-			__proxy.SET_SCROLL_LOCATION()
+            __proxy.SET_SCROLL_LOCATION()
 
-		}
-	},
+        },
+    },
 }
 </script>
 

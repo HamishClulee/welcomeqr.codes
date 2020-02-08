@@ -34,7 +34,7 @@ import whatisthis from '../whatisthis'
 export default {
     name: 'qrdetails',
     components: {
-        whatisthis
+        whatisthis,
     },
     data () {
 
@@ -55,8 +55,8 @@ export default {
 
             this.$emit('detailsgood')
         
-        }
-    }
+        },
+    },
 }
 </script>
 <style lang="sass" scoped>
