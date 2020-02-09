@@ -7,9 +7,15 @@
         <section class="content-container">
 
             <createsidebar
-                @changebold="changeBold"
-                :isBold="isBold"
-                :editor="editor">
+                v-bind="{ editor, isBold, isItalic, showColorPicker, showFontSize, isList, showImageModal }"
+                @bold="changeBold"
+                @italic="changeItalic"
+                @colorpicker="showColorPicker = !showColorPicker"
+                @linkmodal="showLinkModal = true"
+                @fontsize="showFontSize = !showFontSize"
+                @list="changeList"
+                @showimagemodal="showImageModal = !showImageModal"
+                @removeallformats="removeAllFormats">
             </createsidebar>
 
             <!-- ---- EDITOR WINDOW MAIN PANEL ---- -->
@@ -23,7 +29,7 @@
                 @crop-success="cropSuccess"
                 @crop-upload-success="cropUploadSuccess"
                 @crop-upload-fail="cropUploadFail"
-                v-model="showImageUpload"
+                v-model="showImageModal"
                 :width="300"
                 :height="300"
                 :url="isDev ? 'http://localhost:1980/api/photo' : 'https://welcomeqr.codes/api/photo'"
@@ -37,6 +43,10 @@
 
             <linkmodal :show="showLinkModal" @callback="insertLink" @closemodal="showLinkModal = false"></linkmodal>
 
+            <div class="font-size-container" v-if="showFontSize">
+                <multiselect class="font-size" @select="setFontSize" v-model="fontSize" :options="fontSizeOptions"></multiselect>
+            </div>
+
         </section>
     </main>
 </template>
@@ -47,6 +57,7 @@ import createsidebar from '../components/create/createsidebar'
 import linkmodal from '../components/linkmodal.vue'
 import myupload from 'vue-image-crop-upload'
 import { Chrome } from 'vue-color'
+import multiselect from 'vue-multiselect'
 import { mapGetters } from 'vuex'
 import isAuthed from '../api/auth'
 export default {
@@ -56,12 +67,14 @@ export default {
         createtopbar,
         linkmodal,
         myupload,
+        multiselect,
         'chrome-picker': Chrome,
     },
     data () {
 
         return {
             fontSize: '16px',
+            showFontSize: false,
             fontSizeOptions: [
                 '16px',
                 '18px',
@@ -78,7 +91,7 @@ export default {
             isItalic: false,
             isList: false,
             showLinkModal: false,
-            showImageUpload: false,
+            showImageModal: false,
             showColorPicker: false,
             colors: {
                 hex: '#194d33',
@@ -103,7 +116,7 @@ export default {
         const nup = () => { this.$router.push({ path: '/auth' }) }
         isAuthed(() => {}, nup, this)
         next()
-        
+
     },
     mounted () {
 
@@ -118,23 +131,6 @@ export default {
                 a: {'target': '_blank'},
             },
         })
-
-        Squire.prototype.makeHeader = function () {
-            return this.modifyBlocks( function( frag ) {
-
-                let output = this._doc.createDocumentFragment()
-                let block = frag
-
-                while ( block = Squire.getNextBlock( block ) ) {
-
-                    output.appendChild(this.createElement( 'h2', [Squire.empty(block)]))
-                
-                }
-
-                return output
-            })
-        }
-    
     },
     methods: {
         setFontSize(e) { this.editor['setFontSize'] (e) },
@@ -153,20 +149,23 @@ export default {
             }
 
         },
-        toggleShow() { this.showImageUpload = !this.showImageUpload },
         cropSuccess(imgDataUrl, field){ this.imgDataUrl = imgDataUrl },
         cropUploadSuccess(jsonData, field){
             
             const tmp = this.imgDataUrl
             this.editor.insertHTML(`<img height="300" src="${tmp}" />`)
-            this.showImageUpload = false
+            this.showImageModal = false
             this.imgDataUrl = ''
         
         },
         cropUploadFail(status, field){
             // TODO impl
         },
-
+        removeAllFormats() {
+            this.isBold = false
+            this.isItalic = false
+            this.isList = false
+        },
     },
     computed: {
         isDev () { return process.env.NODE_ENV === 'development' },
@@ -178,6 +177,7 @@ export default {
     },
 }
 </script>
+<style src="vue-multiselect/dist/vue-multiselect.min.css"></style>
 <style lang="sass" scoped>
 .create-con, .tabs-bar, .tab-item, .tab-member, .tab-text, .content-container
     display: flex
@@ -212,6 +212,14 @@ export default {
 .tab-text
     font-family: $body-font
     text-transform: uppercase
+.color-picker
+    position: absolute
+    top: 214px
+    left: 10px
+.font-size-container
+    position: absolute
+    top: 274px
+    left: 51px
 .details
     background: center / contain no-repeat url("../svg/details.svg")
     background-size: unset

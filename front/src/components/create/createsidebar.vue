@@ -1,29 +1,31 @@
 <template>
     <aside class="create-sidebar-con">
 
-        <span @click="$emit('changebold')" class="bold" :class="isBold ? 'active-button' : 'inactive-button'"></span>
+        <template v-if="editor !== null">
+            <span @click="$emit('bold')" class="bold" :class="isBold ? 'active-button' : 'inactive-button'"></span>
 
-        <span @click="changeItalic" class="italic" :class="{ 'active-button': isItalic }"></span>
+            <span @click="$emit('italic')" class="italic" :class="isItalic ? 'active-button' : 'inactive-button'"></span>
 
-        <span @click.stop="showColorPicker = !showColorPicker" :class="showColorPicker ? 'times' : 'color'" title="Set the color of the selected text"></span>
+            <span @click.stop="$emit('colorpicker')" :class="showColorPicker ? 'times' : 'color'" title="Set the color of the selected text"></span>
 
-        <span @click="showLinkModal = true" class="link" title="Insert and internal or external link"></span>
+            <span @click="$emit('linkmodal')" class="link" title="Insert and internal or external link"></span>
 
-        <span id="makeHeader" title="Set selection to be a heading"></span>
+            <span @click="$emit('fontsize')" :class="showFontSize ? 'times' : 'fontsize'" title="Set selection to be a heading"></span>
 
-        <!-- <multiselect @select="setFontSize" v-model="fontSize" :options="fontSizeOptions"></multiselect> -->
+            
 
-        <span @click="changeList" class="list" :class="{ 'active-button': isList }" title="Make a bulleted list"></span>
+            <span @click="$emit('list')" class="list" :class="isList ? 'active-button': 'inactive-button'" title="Make a bulleted list"></span>
 
-        <span id="increaseListLevel" title="Indent the bulleted list"></span>
+            <span id="increaseListLevel" title="Indent the bulleted list"></span>
 
-        <span id="insertImage" @click="showImageUpload = true"></span>
+            <span @click="$emit('showimagemodal')" :class="showImageModal ? 'times' : 'image'"></span>
 
-        <span id="undo" title="Undo last action"></span>
+            <span id="undo" title="Undo last action"></span>
 
-        <span id="redo" title="Redo the last action you undid"></span>
+            <span id="redo" title="Redo the last action you undid"></span>
 
-        <span id="removeAllFormatting"></span>
+            <span id="removeAllFormatting" @click="$emit('removeallformat')"></span>
+        </template>
 
     </aside>
 </template>
@@ -33,16 +35,36 @@ export default {
     name: 'createsidebar',
     props: {
         editor: {
-            type: Object,
+            validator: prop => typeof prop === 'object' || prop === null,
             required: true,
         },
         isBold: {
             type: Boolean,
             required: true,
         },
+        isItalic: {
+            type: Boolean,
+            required: true,
+        },
+        isList: {
+            type: Boolean,
+            required: true,
+        },
+        showColorPicker: {
+            type: Boolean,
+            required: true,
+        },
+        showFontSize: {
+            type: Boolean,
+            required: true,
+        },
+        showImageModal: {
+            type: Boolean,
+            required: true,
+        },
     },
     mounted () {
-        document.addEventListener( 'click', ( e ) => {
+        this.$el.addEventListener( 'click', ( e ) => {
             let id = e.target.id,
                 value
             if ( id && this.editor && this.editor[ id ] ) {
@@ -71,9 +93,10 @@ span, .span
     padding: 20px
     font-family: $body-font
 .active-button
-    border-bottom: 4px solid $secondary 
+    border-bottom: 2px solid $secondary 
 .inactive-button
     display: flex
+    border-bottom: 2px solid $light-gray
 .bold
     background: center / contain no-repeat url("../../svg/bold.svg")
     background-size: unset
@@ -89,6 +112,7 @@ span, .span
 .times
     background: center / contain no-repeat url("../../svg/times.svg")
     background-size: unset
+    border-bottom: 2px solid $secondary
 .link
     background: center / contain no-repeat url("../../svg/link.svg")
     background-size: unset
@@ -98,7 +122,7 @@ span, .span
 #increaseListLevel
     background: center / contain no-repeat url("../../svg/list-indent.svg")
     background-size: unset
-#insertImage
+.image
     background: center / contain no-repeat url("../../svg/image.svg")
     background-size: unset
 #removeAllFormatting, .removeAllFormatting
@@ -107,7 +131,8 @@ span, .span
 .color
     background: center / contain no-repeat url("../../svg/palette.svg")
     background-size: unset
-#makeHeader
+    border-bottom: 2px solid $light-gray
+.fontsize
     background: center / contain no-repeat url("../../svg/text-size.svg")
     background-size: unset
 </style>

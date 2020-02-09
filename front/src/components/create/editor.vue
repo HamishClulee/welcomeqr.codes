@@ -17,15 +17,9 @@ export default {
     },
 }
 </script>
-<style src="vue-multiselect/dist/vue-multiselect.min.css"></style>
 <style lang="sass" scoped>
 .editor-con
     padding: 1em
-.color-picker
-    position: absolute
-    left: 187px
-    top: 227px
-    z-index: 9999
 .active-button
     border-bottom: 4px solid $secondary
 .header
