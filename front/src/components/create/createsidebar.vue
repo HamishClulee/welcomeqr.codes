@@ -12,8 +12,6 @@
 
             <span @click="$emit('fontsize')" :class="showFontSize ? 'times' : 'fontsize'" title="Set selection to be a heading"></span>
 
-            
-
             <span @click="$emit('list')" class="list" :class="isList ? 'active-button': 'inactive-button'" title="Make a bulleted list"></span>
 
             <span id="increaseListLevel" title="Indent the bulleted list"></span>
@@ -24,7 +22,7 @@
 
             <span id="redo" title="Redo the last action you undid"></span>
 
-            <span id="removeAllFormatting" @click="$emit('removeallformat')"></span>
+            <span class="remove-formatting" @click="$emit('removeallformat')"></span>
         </template>
 
     </aside>
@@ -125,7 +123,7 @@ span, .span
 .image
     background: center / contain no-repeat url("../../svg/image.svg")
     background-size: unset
-#removeAllFormatting, .removeAllFormatting
+.remove-formatting
     background: center / contain no-repeat url("../../svg/cancel.svg")
     background-size: unset
 .color

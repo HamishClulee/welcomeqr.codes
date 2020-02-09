@@ -5,6 +5,24 @@
                 <img src="../../svg/smallogo.svg" />
             </div>
         </div>
+
+        <div class="spacer"></div>
+
+        <div class="top-bar-left">
+            <button class="button">
+                OPTIONS
+            </button>
+            <button class="button">
+                SAVE
+            </button>
+            <button class="button">
+                PREVIEW
+            </button>
+            <button class="button">
+                PUBLISH
+            </button>
+        </div>
+
     </nav>
 </template>
 
@@ -22,9 +40,22 @@ export default {
 </script>
 
 <style lang="sass" scoped>
+.button
+    margin: 0 10px
+.spacer
+    width: 20%
+.top-bar-left
+    display: flex
+    flex-direction: row
+    align-items: center
+    width: 100%
+    justify-content: flex-end
 .create-topbar-container
     height: 60px
     border-bottom: 1px solid $light-gray
+    display: flex
+    flex-direction: row
+    align-items: center
     background-color: white
     z-index: 9
     position: fixed
