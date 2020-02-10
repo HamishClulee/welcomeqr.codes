@@ -5,17 +5,25 @@
 </template>
 
 <script>
-import { EventBus } from '../EventBus'
+import { EventBus, LOADING } from '../EventBus'
 import isAuthed from '../api/auth'
 export default {
     name: 'wapp',
     created () {
-        // EventBus.$emit('globalspinner', true)
-        // isAuthed(() => {
-        //     EventBus.$emit('globalspinner', false)
-        // }, () => {
-        //     EventBus.$emit('globalspinner', false)
-        // }, this)
+        EventBus.$emit('globalspinner', true)
+    },
+    mounted() {
+        isAuthed(this.yup, this.nup, this)
+    },
+    methods: {
+        yup() {
+            this.$router.replace({ name: 'manage' })
+            EventBus.$emit(LOADING, false)
+        },
+        nup() {
+            this.$router.replace({ name: 'auth' })
+            EventBus.$emit(LOADING, false)
+        },
     },
 }
 </script>

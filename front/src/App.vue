@@ -3,18 +3,20 @@
 
 		<!-- GLOBAL SPINNER -->
 		<template v-if="showGlobalSpinner">
+
 			<div class="global-spinner-con">
 				<loading></loading>
 			</div>
+
 		</template>
 
 
 		<!-- APP ACTUAL -->
 		<template v-else>
 
-			<sitemodal v-if="showsitemodal" :contains="contains"></sitemodal>
+			<sitemodal v-if="showsitemodal" v-bind="{ contains }"></sitemodal>
 
-			<navbar v-if="$route.name !== 'create'"></navbar>
+			<navbar v-if="checkroute"></navbar>
 
 			<router-view></router-view>
 
@@ -22,6 +24,8 @@
 
 		</template>
 
+        <usermessages v-bind="{ msg, black, sass }" v-if="showUserMessage"></usermessages>
+        
 	</section>
 </template>
 
@@ -29,10 +33,16 @@
 import navbar from './components/nav/navbar'
 import qrfooter from './components/nav/qrfooter'
 import sitemodal from './components/sitemodal/sitemodal'
+import usermessages from './components/usermessages'
 import loading from './components/loading'
 import debounce from './utils/functions'
 import { mapMutations } from 'vuex'
-import { EventBus } from './EventBus.ts'
+import { 
+    EventBus,
+    LOADING,
+    MESSAGES,
+    SITEMODAL,
+} from './EventBus.ts'
 
 // useful cludge
 let __proxy
@@ -44,6 +54,7 @@ export default {
         qrfooter,
         sitemodal,
         loading,
+        usermessages,
     },
     data () {
 
@@ -52,30 +63,29 @@ export default {
             showGlobalSpinner: false,
             contains: null,
             loadPushed: false,
+            showUserMessage: false,
+            msg: '',
+            sass: '',
+            black: '',
         }
 
     },
     mounted () {
-
-        EventBus.$on('globalspinner', (isit) => {
-
-            this.showGlobalSpinner = isit
-
+        // EventBus handling global loading spinner, user message pop up and site wide modals
+        EventBus.$on(LOADING, is => { this.showGlobalSpinner = is })
+        EventBus.$on(MESSAGES, deets => {
+            this.showUserMessage = deets.is
+            this.msg = deets.msg || ''
+            this.sass = deets.color || ''
+            this.black = deets.black || false
         })
-
-        EventBus.$on('opensitemodal', (type = null) => {
-
+        EventBus.$on(SITEMODAL, (type = null) => {
             if (type) {
-
                 this.contains = type
                 this.showsitemodal = true
-
             } else {
-
                 this.showsitemodal = false
-
             }
-
         })
 
         // useful cludge
@@ -98,6 +108,11 @@ export default {
 
             __proxy.SET_SCROLL_LOCATION()
 
+        },
+    },
+    computed: {
+        checkroute() {
+            return ['create', 'wapp', 'preview'].indexOf(this.$route.name) === -1
         },
     },
 }
