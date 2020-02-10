@@ -2,23 +2,23 @@
     <nav class="create-topbar-container">
         <div class="navbar-left">
             <div class="logo-con" @click="routehome">
-                <img src="../../svg/smallogo.svg" />
+                <img src="/svg/smallogo.svg" />
             </div>
         </div>
 
         <div class="spacer"></div>
 
         <div class="top-bar-left">
-            <button class="button">
+            <router-link class="button options" :to="{ path: '/'}">
                 OPTIONS
-            </button>
-            <button class="button">
+            </router-link>
+            <button class="button save">
                 SAVE
             </button>
-            <button class="button">
+            <button class="button preview">
                 PREVIEW
             </button>
-            <button class="button">
+            <button class="button publish">
                 PUBLISH
             </button>
         </div>
@@ -40,6 +40,11 @@ export default {
 </script>
 
 <style lang="sass" scoped>
+.save
+.preview
+.publish
+.options
+    border: none
 .button
     margin: 0 10px
 .spacer

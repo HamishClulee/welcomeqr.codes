@@ -1,10 +1,20 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 
+/** Website routes */
 const home = () => import('../views/home.vue')
-const create = () => import('../views/create.vue')
 const pricing = () => import('../views/pricing.vue')
+
+/** Auth routes */
 const auth = () => import('../views/auth.vue')
+
+/** Create App routes */
+const wapp = () => import('../views/wapp.vue')
+const create = () => import('../views/wapp/create.vue')
+const manage = () => import('../views/wapp/manage.vue')
+const preview = () => import('../views/wapp/preview.vue')
+
+/** Notfound and plumbing routes */
 const notfound = () => import('../views/notfound.vue')
 
 import overwritemetas from '../utils/seo'
@@ -42,9 +52,9 @@ const routes = [
         },
     },
     {
-        path: '/create',
-        name: 'create',
-        component: create,
+        path: '/app',
+        name: 'wapp',
+        component: wapp,
         beforeEnter: (to: any, from: any, next: any) => {
             overwritemetas({
                 title: 'Welcome QR | Create New QR',
@@ -52,6 +62,44 @@ const routes = [
                 noindex: true,
             }, next)
         },
+        children: [
+            {
+                path: '/app/manage',
+                name: 'manage',
+                component: manage,
+                beforeEnter: (to: any, from: any, next: any) => {
+                    overwritemetas({
+                        title: 'Welcome QR | Manage',
+                        description: `Where the magic happens, create a new down loadable QR code and associate website and content.`,
+                        noindex: true,
+                    }, next)
+                },
+            },
+            {
+                path: '/app/create',
+                name: 'create',
+                component: create,
+                beforeEnter: (to: any, from: any, next: any) => {
+                    overwritemetas({
+                        title: 'Welcome QR | Create Your Site',
+                        description: `Where the magic happens, create a new down loadable QR code and associate website and content.`,
+                        noindex: true,
+                    }, next)
+                },
+            },
+            {
+                path: '/app/preview',
+                name: 'preview',
+                component: preview,
+                beforeEnter: (to: any, from: any, next: any) => {
+                    overwritemetas({
+                        title: 'Welcome QR | Preview',
+                        description: `Where the magic happens, create a new down loadable QR code and associate website and content.`,
+                        noindex: true,
+                    }, next)
+                },
+            },
+        ],
     },
     {
         path: '*',

@@ -4,7 +4,7 @@
         <transition name="fade" mode="in-out">
             <div class="navbar-left" v-if="$route.name === 'home' || scrolledTop">
                 <div class="logo-con" @click="routehome">
-                    <img src="../../svg/smallogo.svg" />
+                    <img src="/svg/smallogo.svg" />
                 </div>
             </div>
         </transition>

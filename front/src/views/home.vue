@@ -4,11 +4,11 @@
         <displaysection sassclass="white">
 
             <div class="landing-con">
-                <object id="qr-svg" type="image/svg+xml" :data="require('../svg/qrcode.svg')"></object>
+                <object id="qr-svg" type="image/svg+xml" data="/svg/qrcode.svg"></object>
         
                 <div class="heading-con">
                     <h1 class="main-h1" :class="showheading ? 'fadein' : 'hidden'">Don't waste your time with welcome booklets!</h1>
-                    <object :class="showtext ? 'fadein' : 'hidden'" id="text-svg" type="image/svg+xml" :data="require('../svg/text.svg')"></object>
+                    <object :class="showtext ? 'fadein' : 'hidden'" id="text-svg" type="image/svg+xml" data="/svg/text.svg"></object>
                 </div>
             </div>
 
@@ -158,7 +158,7 @@ export default {
 
 <style lang="sass" scoped>
 .icon-backer
-    background: center / contain no-repeat url("../svg/arrow-circle-down.svg")
+    background: center / contain no-repeat url("/svg/arrow-circle-down.svg")
     height: 50px
     width: 50px
 .landing-con

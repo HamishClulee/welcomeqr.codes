@@ -23,7 +23,7 @@ export default {
     cursor: pointer
     font-family: $body-font
 .info
-    background: center / contain no-repeat url("../svg/info-circle.svg")
+    background: center / contain no-repeat url("/svg/info-circle.svg")
     background-size: unset
     height: 50px
     width: 50px

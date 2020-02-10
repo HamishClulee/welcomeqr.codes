@@ -52,14 +52,14 @@
 </template>
 
 <script>
-import createtopbar from '../components/create/createtopbar'
-import createsidebar from '../components/create/createsidebar'
-import linkmodal from '../components/linkmodal.vue'
+import createtopbar from '../../components/create/createtopbar'
+import createsidebar from '../../components/create/createsidebar'
+import linkmodal from '../../components/linkmodal.vue'
 import myupload from 'vue-image-crop-upload'
 import { Chrome } from 'vue-color'
 import multiselect from 'vue-multiselect'
 import { mapGetters } from 'vuex'
-import isAuthed from '../api/auth'
+import isAuthed from '../../api/auth'
 export default {
     name: 'create',
     components: {
@@ -221,10 +221,10 @@ export default {
     top: 274px
     left: 51px
 .details
-    background: center / contain no-repeat url("../svg/details.svg")
+    background: center / contain no-repeat url("/svg/details.svg")
     background-size: unset
 .preview
-    background: center / contain no-repeat url("../svg/eye.svg")
+    background: center / contain no-repeat url("/svg/eye.svg")
     background-size: unset
 </style>
 

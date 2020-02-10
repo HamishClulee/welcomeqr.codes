@@ -96,41 +96,41 @@ span, .span
     display: flex
     border-bottom: 2px solid $light-gray
 .bold
-    background: center / contain no-repeat url("../../svg/bold.svg")
+    background: center / contain no-repeat url("/svg/bold.svg")
     background-size: unset
 .italic
-    background: center / contain no-repeat url("../../svg/italic.svg")
+    background: center / contain no-repeat url("/svg/italic.svg")
     background-size: unset
 #undo
-    background: center / contain no-repeat url("../../svg/undo.svg")
+    background: center / contain no-repeat url("/svg/undo.svg")
     background-size: unset
 #redo
-    background: center / contain no-repeat url("../../svg/redo.svg")
+    background: center / contain no-repeat url("/svg/redo.svg")
     background-size: unset
 .times
-    background: center / contain no-repeat url("../../svg/times.svg")
+    background: center / contain no-repeat url("/svg/times.svg")
     background-size: unset
     border-bottom: 2px solid $secondary
 .link
-    background: center / contain no-repeat url("../../svg/link.svg")
+    background: center / contain no-repeat url("/svg/link.svg")
     background-size: unset
 .list
-    background: center / contain no-repeat url("../../svg/list.svg")
+    background: center / contain no-repeat url("/svg/list.svg")
     background-size: unset
 #increaseListLevel
-    background: center / contain no-repeat url("../../svg/list-indent.svg")
+    background: center / contain no-repeat url("/svg/list-indent.svg")
     background-size: unset
 .image
-    background: center / contain no-repeat url("../../svg/image.svg")
+    background: center / contain no-repeat url("/svg/image.svg")
     background-size: unset
 .remove-formatting
-    background: center / contain no-repeat url("../../svg/cancel.svg")
+    background: center / contain no-repeat url("/svg/cancel.svg")
     background-size: unset
 .color
-    background: center / contain no-repeat url("../../svg/palette.svg")
+    background: center / contain no-repeat url("/svg/palette.svg")
     background-size: unset
     border-bottom: 2px solid $light-gray
 .fontsize
-    background: center / contain no-repeat url("../../svg/text-size.svg")
+    background: center / contain no-repeat url("/svg/text-size.svg")
     background-size: unset
 </style>

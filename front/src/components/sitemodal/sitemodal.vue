@@ -100,7 +100,7 @@ export default {
     width: 90%
 .close-icon 
     cursor: pointer
-    background: center / contain no-repeat url("../../svg/times.svg")
+    background: center / contain no-repeat url("/svg/times.svg")
     background-size: unset
     height: 50px
     width: 50px

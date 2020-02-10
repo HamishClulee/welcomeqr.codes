@@ -2,7 +2,7 @@
     <footer class="qr-footer">
         <figure class="logo-container">
             <img
-                src="../../svg/largelogo.svg"
+                src="/svg/largelogo.svg"
                 alt="Welcome QR logo"
                 width="100%"
             />
