@@ -9,15 +9,15 @@
         <div class="spacer"></div>
 
         <div class="top-bar-left">
-            <router-link class="button options" :to="{ path: '/'}">
+            <router-link class="button options" :to="{ name: 'manage'}">
                 OPTIONS
             </router-link>
             <button class="button save">
                 SAVE
             </button>
-            <button class="button preview">
+            <router-link tag="button" class="button preview" :to="{ name: 'preview' }">
                 PREVIEW
-            </button>
+            </router-link>
             <button class="button publish">
                 PUBLISH
             </button>

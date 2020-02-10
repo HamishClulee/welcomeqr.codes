@@ -10,14 +10,12 @@ import isAuthed from '../api/auth'
 export default {
     name: 'wapp',
     created () {
-        EventBus.$emit('globalspinner', true)
-        isAuthed(() => {
-            this.$router.push({ path: '/app/manage' })
-            EventBus.$emit('globalspinner', false)
-        }, () => {
-            this.router.push({ path: '/auth' })
-            EventBus.$emit('globalspinner', false)
-        }, this)
+        // EventBus.$emit('globalspinner', true)
+        // isAuthed(() => {
+        //     EventBus.$emit('globalspinner', false)
+        // }, () => {
+        //     EventBus.$emit('globalspinner', false)
+        // }, this)
     },
 }
 </script>

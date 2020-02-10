@@ -38,7 +38,7 @@
                     <div
                         class="canvas-item"
                         @click="togglecanvas">
-                            <router-link :to="{ path: '/create'}">Try For Free</router-link>
+                            <router-link :to="{ path: '/app'}">Try For Free</router-link>
                     </div>
                 </div>
             </div>

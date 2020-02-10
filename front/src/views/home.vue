@@ -109,49 +109,39 @@ export default {
 
     },
     mounted () {
-
-        this.qrviv = new Vivus('qr-svg',   {
+    /*  
+        this block manages the animations seen at the top of the home route
+        Two time outs to manage the timing of the animations, two animations
+        one for the qr code svg, one for the sub text svg
+    */
+        this.qrviv = new Vivus('qr-svg', {
             type: 'delayed',
             duration: 800,
             animTimingFunction: Vivus.EASE_IN,
         }, () => { /* fires at completed */ })
-
         this.qrtime = setTimeout(() => this.showheading = true, 1500)
-
         this.texttime = setTimeout(() => {
-
             this.showtext = true
-
             this.textviv = new Vivus('text-svg',   {
                 type: 'sync',
                 duration: 100,
             }, () => { /* fires at completed */ })
-
         }, 3000)
-    
+
+        /* END */
     },
     methods: {
-        ctaroute () {
-
-            this.$router.push({
-                name: 'create',
-            })
-
-        },
+        ctaroute () { this.$router.push({name: 'manage'}) },
         scrollDown() {
-
             const el = document.getElementById('srcoll-pop')
             el.scrollIntoView({
                 alignToTop: true, behavior: 'smooth',
             })
-        
         },
     },
     beforeDestroy() {
-
         clearTimeout(this.qrtime)
         clearTimeout(this.texttime)
-
     },
 }
 </script>
