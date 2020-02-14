@@ -40,9 +40,6 @@ export default {
 </script>
 
 <style lang="sass" scoped>
-.save
-.preview
-.publish
 .options
     border: none
 .button

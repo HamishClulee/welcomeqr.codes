@@ -59,7 +59,7 @@ import myupload from 'vue-image-crop-upload'
 import { Chrome } from 'vue-color'
 import multiselect from 'vue-multiselect'
 import { mapGetters } from 'vuex'
-import isAuthed from '../../api/auth'
+import qAuth from '../../main'
 export default {
     name: 'create',
     components: {
@@ -111,14 +111,9 @@ export default {
         }
     
     },
-    beforeRouteUpdate (to, from, next) {
-
-        const nup = () => { this.$router.push({ path: '/auth' }) }
-        isAuthed(() => {}, nup, this)
-        next()
-
-    },
     mounted () {
+
+        // qAuth.authenticate()
 
         const edel = document.getElementById( 'editor' )
         this.editor = new Squire( edel, {

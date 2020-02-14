@@ -29,8 +29,7 @@
 
 <script>
 import SERVER from '../../../api'
-import isAuthed from '../../../api/auth'
-import { EventBus, MESSAGES } from '../../../EventBus.ts'
+import { EventBus, MESSAGES } from '../../../EventBus'
 export default {
     name: 'signup',
     data() {
@@ -43,7 +42,7 @@ export default {
 
     },
     mounted() {
-        isAuthed(this.yup, this.nup, this)
+        
     },
     methods: {
         test(path) {

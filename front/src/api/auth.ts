@@ -1,61 +1,56 @@
-import SERVER from './index'
-import { SignUpPayload, LoginPayload } from '@I/IUser'
+import axios, { AxiosError, AxiosResponse, AxiosInstance, AxiosPromise } from 'axios'
 
-const isAuthed = (yup: Function, nup: Function, ctx: Vue) => {
+import { SignUpPayload, LoginPayload, QUser } from '@I/IUser'
 
-    SERVER.post('/session_challenge').then(res => {
-
-        ctx.$store.commit('IS_AUTHED', res.data.user)
-        yup(res)
-
-    }).catch((err) => {
-
-        ctx.$store.commit('IS_AUTHED', err.response.data.user)
-        nup(err)
-
-    })
-}
-const login = (yup: Function, nup: Function, ctx: Vue, payload: LoginPayload) => {
-
-    SERVER.post('/login', payload).then(res => {
-
-        ctx.$store.commit('IS_AUTHED', res.data.user)
-        yup(res)
-
-    }).catch(err => {
-
-        ctx.$store.commit('IS_AUTHED', err.response.data.user)
-        nup(err)
-
-    })
-}
-const signup = (yup: Function, nup: Function, ctx: Vue, payload: SignUpPayload) => {
-
-    SERVER.post('/signup', payload).then(res => {
-
-        ctx.$store.commit('IS_AUTHED', res.data.user)
-        yup(res)
-
-    }).catch(err => {
-
-        ctx.$store.commit('IS_AUTHED', err.response.data.user)
-        nup(err)
-
-    })
-}
-const logout = async (yup: Function, nup: Function, ctx: Vue) => {
-
-    SERVER.post('/logout').then(res => {
-
-        ctx.$store.commit('IS_AUTHED', res.data.user)
-        yup(res)
-
-    }).catch(err => {
-
-        ctx.$store.commit('IS_AUTHED', err.response.data.user)
-        nup(err)
-        
-    })
+export function ErrStr(error: AxiosError): string {
+    if (error.response && error.response.data.status) {
+        return error.response.data.status
+    }
+    return 'Something went wrong - please try again.'
 }
 
-export default isAuthed
+export class QAuth {
+
+    private BASE_URL = process.env.NODE_ENV === 'development' ? 'http://localhost:1980' : 'https://welcomeqr.codes'
+    private AUTH_URL = process.env.NODE_ENV === 'development' ? 'http://localhost:8080/auth?redirect=true' : 'https://welcomeqr.codes/auth?redirect=true'
+
+    ax: AxiosInstance;
+
+    constructor() {
+
+        this.ax = axios.create({
+            baseURL: this.BASE_URL,
+            withCredentials: true,
+        })
+
+        this.ax.interceptors.response.use(res => res, (error: AxiosError ) => {
+            if (error.response && error.response.status === 401) window.location.href = this.AUTH_URL
+            return Promise.reject(error)
+        })
+    }
+
+    authenticate(): AxiosPromise<QUser> {
+        return this.ax.post('/session_challenge')
+    }
+    confirm(email: string, token: string): AxiosPromise<QUser> {
+        return this.ax.post('/confirm', { email, token })
+    }
+    logout(): AxiosPromise<QUser> {
+        return this.ax.post('/logout')
+    }
+    info(): AxiosPromise<QUser> {
+        return this.ax.post('/info')
+    }
+    signup(email: string, password: string, confirm: string): AxiosPromise<QUser> {
+        return this.ax.post('/signup', { email, password, confirm })
+    }
+    reconfirm(email: string): AxiosPromise<QUser> {
+        return this.ax.post('/reconfirm', { email })
+    }
+    startrecovery(email: string): AxiosPromise<QUser> {
+        return this.ax.post('/startrecovery', { email })
+    }
+    recover(email: string, token: string, password: string): AxiosPromise<QUser> {
+        return this.ax.post('/recover', { email, token, password })
+    }
+}

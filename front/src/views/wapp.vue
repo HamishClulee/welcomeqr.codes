@@ -6,24 +6,17 @@
 
 <script>
 import { EventBus, LOADING } from '../EventBus'
-import isAuthed from '../api/auth'
+import qAuth from '../main'
 export default {
     name: 'wapp',
     created () {
-        EventBus.$emit('globalspinner', true)
+        EventBus.$emit(LOADING, true)
     },
     mounted() {
-        isAuthed(this.yup, this.nup, this)
+        qAuth.authenticate()
     },
-    methods: {
-        yup() {
-            this.$router.replace({ name: 'manage' })
-            EventBus.$emit(LOADING, false)
-        },
-        nup() {
-            this.$router.replace({ name: 'auth' })
-            EventBus.$emit(LOADING, false)
-        },
+    beforeDestroy() {
+        EventBus.$emit(LOADING, false)
     },
 }
 </script>
