@@ -15,7 +15,7 @@
 
                 <previewmodal v-if="contains === 'preview'"></previewmodal>
 
-                <authmodal :contains="contains" v-if="contains === 'login' || contains == 'signup'"></authmodal>
+                <!-- <authmodal :contains="contains" v-if="contains === 'login' || contains == 'signup'"></authmodal> -->
 
             </div>
         </div>
@@ -26,12 +26,11 @@
 import detailsmodal from './content/detailsmodal'
 import editormodal from './content/editormodal'
 import previewmodal from './content/previewmodal'
-import authmodal from './content/authmodal'
 import { EventBus, SITEMODAL } from '../../EventBus.ts'
 export default {
     name: 'sitemodal',
     components: {
-        detailsmodal, editormodal, previewmodal, authmodal,
+        detailsmodal, editormodal, previewmodal,
     },
     props: {
         contains: {

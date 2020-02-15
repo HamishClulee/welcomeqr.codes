@@ -40,6 +40,11 @@
                         @click="togglecanvas">
                             <router-link :to="{ path: '/app'}">Try For Free</router-link>
                     </div>
+                    <div
+                        class="canvas-item"
+                        @click="togglecanvas">
+                            <router-link :to="{ path: '/auth'}">Login / SignUp</router-link>
+                    </div>
                 </div>
             </div>
             

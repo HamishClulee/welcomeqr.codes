@@ -5,16 +5,15 @@
             <div class="tab-member" :class="!isSignup ? 'active-tab' : 'non-active-tab'" @click="isSignup = !isSignup">LOGIN</div>
         </div>
         <div class="content-container">
-            <signup v-show="isSignup"></signup>
-            <login v-show="!isSignup"></login>
+            <!-- <signup v-show="isSignup"></signup>
+            <login v-show="!isSignup"></login> -->
         </div>
 
     </div>
 </template>
 
 <script>
-import signup from './signup'
-import login from './login'
+
 export default {
     name: 'authmodal',
     props: {
@@ -22,9 +21,6 @@ export default {
             type: String,
             required: true,
         },
-    },
-    components: {
-        login, signup,
     },
     created () {
 
