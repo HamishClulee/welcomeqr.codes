@@ -4,7 +4,6 @@ import session from 'express-session'
 import bodyParser from 'body-parser'
 import lusca from 'lusca'
 import mongo from 'connect-mongo'
-import flash from 'express-flash'
 import path from 'path'
 import mongoose from 'mongoose'
 import passport from 'passport'
@@ -43,30 +42,36 @@ mongoose.connect(mongoUrl, { useNewUrlParser: true, useCreateIndex: true, useUni
 })
 
 /** ---------------------------------------  APP CONFIG  ---------------------------------------------- */
+const MINS_15 = 90000
 app.set('port', 1980)
 app.set('views', path.join(__dirname, '../views'))
 app.set('view engine', 'pug')
 app.use(compression())
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
+
 app.use(session({
     cookie: {
-        sameSite: process.env.NODE_ENV === 'production',
-        maxAge: process.env.NODE_ENV === 'production' ? 86400000 : null,
-        secure: process.env.NODE_ENV === 'production',
+        // sameSite: process.env.NODE_ENV === 'production',
+        maxAge: process.env.NODE_ENV === 'production' ? MINS_15 : null,
+        // secure: process.env.NODE_ENV === 'production',
     },
-    resave: true,
-    saveUninitialized: true,
+    saveUninitialized: false,
+    resave: false,
     secret: SESSION_SECRET,
     store: new MongoStore({
         url: mongoUrl,
-        autoReconnect: true
+        autoReconnect: true,
+        ttl: MINS_15,
+        autoRemove: 'native'
     })
 }))
+
 if (process.env.NODE_ENV === 'production') app.set('trust proxy', 1)
+
 app.use(passport.initialize())
 app.use(passport.session())
-app.use(flash())
+
 app.use(cors({
     origin: process.env.NODE_ENV !== 'production' ? 'http://localhost:8080' : 'https://welcomeqr.codes',
     credentials: true

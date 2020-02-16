@@ -16,7 +16,6 @@ const express_session_1 = __importDefault(require("express-session"));
 const body_parser_1 = __importDefault(require("body-parser"));
 const lusca_1 = __importDefault(require("lusca"));
 const connect_mongo_1 = __importDefault(require("connect-mongo"));
-const express_flash_1 = __importDefault(require("express-flash"));
 const path_1 = __importDefault(require("path"));
 const mongoose_1 = __importDefault(require("mongoose"));
 const passport_1 = __importDefault(require("passport"));
@@ -48,6 +47,7 @@ mongoose_1.default.connect(mongoUrl, { useNewUrlParser: true, useCreateIndex: tr
     console.log('MongoDB connection error. Please make sure MongoDB is running. ' + err);
 });
 /** ---------------------------------------  APP CONFIG  ---------------------------------------------- */
+const MINS_15 = 90000;
 app.set('port', 1980);
 app.set('views', path_1.default.join(__dirname, '../views'));
 app.set('view engine', 'pug');
@@ -56,23 +56,23 @@ app.use(body_parser_1.default.json());
 app.use(body_parser_1.default.urlencoded({ extended: true }));
 app.use(express_session_1.default({
     cookie: {
-        sameSite: process.env.NODE_ENV === 'production',
-        maxAge: process.env.NODE_ENV === 'production' ? 86400000 : null,
-        secure: process.env.NODE_ENV === 'production',
+        // sameSite: process.env.NODE_ENV === 'production',
+        maxAge: process.env.NODE_ENV === 'production' ? MINS_15 : null,
     },
-    resave: true,
-    saveUninitialized: true,
+    saveUninitialized: false,
+    resave: false,
     secret: secrets_1.SESSION_SECRET,
     store: new MongoStore({
         url: mongoUrl,
-        autoReconnect: true
+        autoReconnect: true,
+        ttl: MINS_15,
+        autoRemove: 'native'
     })
 }));
 if (process.env.NODE_ENV === 'production')
     app.set('trust proxy', 1);
 app.use(passport_1.default.initialize());
 app.use(passport_1.default.session());
-app.use(express_flash_1.default());
 app.use(cors({
     origin: process.env.NODE_ENV !== 'production' ? 'http://localhost:8080' : 'https://welcomeqr.codes',
     credentials: true
