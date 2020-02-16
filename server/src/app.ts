@@ -52,9 +52,9 @@ app.use(bodyParser.urlencoded({ extended: true }))
 
 app.use(session({
     cookie: {
-        sameSite: false,
+        sameSite: true,
         maxAge: MINS_15,
-        secure: true,
+        secure: false,
     },
     saveUninitialized: false,
     resave: false,

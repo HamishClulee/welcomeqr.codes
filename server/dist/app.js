@@ -56,9 +56,9 @@ app.use(body_parser_1.default.json());
 app.use(body_parser_1.default.urlencoded({ extended: true }));
 app.use(express_session_1.default({
     cookie: {
-        sameSite: false,
+        sameSite: true,
         maxAge: MINS_15,
-        secure: true,
+        secure: false,
     },
     saveUninitialized: false,
     resave: false,
