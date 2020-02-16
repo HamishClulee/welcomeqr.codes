@@ -1,11 +1,7 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "f26b8e30fc68515892b7",
-    "url": "/css/app.c556da6c.css"
-  },
-  {
-    "revision": "44b778097322ef31de41",
-    "url": "/css/chunk-00572c16.86b819e7.css"
+    "revision": "72cffd3ac909d274b3d1",
+    "url": "/css/app.a70d765d.css"
   },
   {
     "revision": "fbd757e360d4be142f69",
@@ -16,8 +12,12 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/css/chunk-2580372a.5f6aab36.css"
   },
   {
-    "revision": "9dcfa71b0f6462618f34",
-    "url": "/css/chunk-3c5215da.8c93c1fd.css"
+    "revision": "44d6275f1b21bbacd43f",
+    "url": "/css/chunk-5ac80a43.051afc62.css"
+  },
+  {
+    "revision": "99bd06424f437d8b001f",
+    "url": "/css/chunk-792f1b8a.8c93c1fd.css"
   },
   {
     "revision": "0d8b2b2f80926febab05",
@@ -32,16 +32,12 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/css/chunk-bd3af8f6.4603629b.css"
   },
   {
-    "revision": "b5f5d3748c881e8a763911b0195c7bb8",
+    "revision": "8aba33be4ae21f78fbc6157f42872676",
     "url": "/index.html"
   },
   {
-    "revision": "f26b8e30fc68515892b7",
-    "url": "/js/app.4051cbcf.js"
-  },
-  {
-    "revision": "44b778097322ef31de41",
-    "url": "/js/chunk-00572c16.6ddaa98f.js"
+    "revision": "72cffd3ac909d274b3d1",
+    "url": "/js/app.faa39391.js"
   },
   {
     "revision": "fbd757e360d4be142f69",
@@ -56,8 +52,12 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/js/chunk-2d0daf4e.b4fd3a54.js"
   },
   {
-    "revision": "9dcfa71b0f6462618f34",
-    "url": "/js/chunk-3c5215da.fe3027a2.js"
+    "revision": "44d6275f1b21bbacd43f",
+    "url": "/js/chunk-5ac80a43.d518072a.js"
+  },
+  {
+    "revision": "99bd06424f437d8b001f",
+    "url": "/js/chunk-792f1b8a.f3d54c6e.js"
   },
   {
     "revision": "0d8b2b2f80926febab05",
@@ -162,6 +162,10 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
     "revision": "9323bd9daa241a09d688ca28f801e8ba",
     "url": "/svg/smallogo.svg"
+  },
+  {
+    "revision": "7063f698dd230c8ce3aa316a99ddd9f6",
+    "url": "/svg/test.svg"
   },
   {
     "revision": "8274e81158590c447f860122f4621f95",

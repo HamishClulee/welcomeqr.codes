@@ -33,7 +33,7 @@ export default {
     mounted() {
         setTimeout(() => {
             EventBus.$emit(MESSAGES, { is: false })
-        }, 3000)
+        }, 7000)
     },
 }
 </script>

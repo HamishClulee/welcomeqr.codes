@@ -93,7 +93,7 @@ exports.postLogin = (req, res, next) => __awaiter(void 0, void 0, void 0, functi
 exports.postSignup = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     yield express_validator_1.check('email', 'Email is not valid').isEmail().run(req);
     yield express_validator_1.check('password', 'Password must be at least 4 characters long').isLength({ min: 4 }).run(req);
-    yield express_validator_1.check('confirmPassword', 'Passwords do not match').equals(req.body.password).run(req);
+    yield express_validator_1.check('confirm', 'Passwords do not match').equals(req.body.password).run(req);
     yield express_validator_1.sanitize('email').normalizeEmail({ gmail_remove_dots: false }).run(req);
     const errors = express_validator_1.validationResult(req);
     if (!errors.isEmpty()) {
@@ -108,7 +108,8 @@ exports.postSignup = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
             return next(err);
         }
         if (existingUser) {
-            return res.status(403).send({ userContent: 'account already exists!', user: { email: null, _id: null, authed: false } });
+            let { email, _id } = existingUser;
+            return res.status(200).send({ userContent: 'account already exists!', user: { email, id: _id, authed: true } });
         }
         user.save((err) => {
             if (err) {

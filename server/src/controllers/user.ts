@@ -91,7 +91,7 @@ export const postSignup = async (req: Request, res: Response, next: NextFunction
 
     await check('email', 'Email is not valid').isEmail().run(req)
     await check('password', 'Password must be at least 4 characters long').isLength({ min: 4 }).run(req)
-    await check('confirmPassword', 'Passwords do not match').equals(req.body.password).run(req)
+    await check('confirm', 'Passwords do not match').equals(req.body.password).run(req)
     await sanitize('email').normalizeEmail({ gmail_remove_dots: false }).run(req)
 
     const errors = validationResult(req)
@@ -108,7 +108,8 @@ export const postSignup = async (req: Request, res: Response, next: NextFunction
     User.findOne({ email: req.body.email }, (err, existingUser) => {
         if (err) { return next(err) }
         if (existingUser) {
-            return res.status(403).send({ userContent: 'account already exists!', user: { email: null, _id: null, authed: false }  })
+            let { email, _id } = existingUser
+            return res.status(200).send({ userContent: 'account already exists!', user: { email, id: _id, authed: true }  })
         }
         user.save((err) => {
             if (err) { return next(err) }

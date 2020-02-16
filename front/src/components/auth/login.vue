@@ -6,9 +6,9 @@
         <qinput
             inptype="email"
             placey="Email"
-            :errortxt="emailerror"
+            errortxt=""
             eventname="emailinput"
-            @emailinput="validateEmail"
+            @emailinput="(e) => email = e"
             :isrequired="true"
             :hasautocomplete="true">
         </qinput>
@@ -16,14 +16,15 @@
         <qinput
             inptype="password"
             placey="Password"
-            :errortxt="passworderror"
+            errortxt=""
             eventname="passwordinput"
-            @passwordinput="validatePassword"
+            @passwordinput="(e) => password = e"
             :isrequired="true"
             :hasautocomplete="true">
         </qinput>
 
         <div class="button-container">
+
             <div class="google-btn" style="width: 100%;">
                 <div class="google-icon-wrapper">
                     <img class="google-icon-svg" src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg"/>
@@ -31,9 +32,9 @@
                 <p class="btn-text"><b>Continue with Google</b></p>
             </div>
 
-            <button class="button submit">SUBMIT</button>
+            <button class="button submit" @click="submit">SUBMIT</button>
 
-            <p @click="$emit('wantssignup')">Don't have an account? <a>Signup here.</a></p>
+            <p @click="$emit('wantssignup')">Don't have an account? <a>Sign Up here.</a></p>
 
         </div>
 
@@ -42,6 +43,7 @@
 
 <script>
 import qinput from '../forms/qinput'
+import qAuth from '../../main'
 export default {
     name: 'login',
     components: {
@@ -49,31 +51,21 @@ export default {
     },
     data() {
         return {
-            emailerror: '',
-            passworderror: '',
             email: '',
             password: '',
         }
     },
     methods: {
-        validateEmail(e) {
-            const re = /.+@.+/
-            this.email = e
-            if (e === '') {
-                this.emailerror = 'Sorry, email is a required field.'
-            } else if (!re.test(String(e).toLowerCase())) {
-                this.emailerror = 'That email address looks strange, try again.'
-            } else {
-                this.emailerror = ''
-            }
-        },
-        validatePassword(e) {
-            this.password = e
-            if (e && e.length < 6) {
-                this.passworderror = 'Looks a bit short bruv.'
-            } else {
-                this.passworderror = ''
-            }
+        submit () {
+            qAuth.login(this.email, this.password).then(res => {
+                this.$store.commit('IS_AUTHED', res.data.user)
+                EventBus.$emit(MESSAGES, {
+                    is: true,
+                    msg: `You are now logged in! Welcome ${res.data.user.email}!`,
+                    color: 'secondary',
+                    black: false,
+                })
+            })
         },
     },
 }

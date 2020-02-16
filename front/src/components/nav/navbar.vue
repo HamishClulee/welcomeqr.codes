@@ -11,6 +11,13 @@
 
         <div class="spacer"></div>
 
+        <div class="account-active-indic">
+            <div class="avatar-icon">
+                <img src="/svg/test.svg" />
+            </div>
+            <!-- <h6 class="small-6">ACCOUNT</h6> -->
+        </div>
+
         <div class="hamburger" @click="togglecanvas">
             <div class="line"></div>
             <div class="line"></div>
@@ -57,43 +64,43 @@ import { mapGetters } from 'vuex'
 export default {
     name: 'navbar',
     data() {
-
         return {
             canvasopen: false,
             scrolledTop: true,
         }
-    
     },
     methods: {
         togglecanvas() {
-
             setTimeout(() => {
-
                 this.canvasopen = !this.canvasopen
-
             }, 200)
-        
         },
-        routehome() {
-
-            this.$router.push({ path: '/'})
-        
-        },
+        routehome() { this.$router.push({ path: '/'})},
     },
     computed: {
         ...mapGetters(['scrollY']),
     },
     watch: {
         scrollY: function(val) {
-
             // 90px from top of window
             this.scrolledTop = val < 90
-
         },
     },
 }
 </script>
 <style lang="sass" scoped>
+.account-active-indic
+    width: 50px
+.small-6
+    font-size: 0.7em
+    font-family: $heading-font
+    text-transform: uppercase
+.avatar-icon
+    padding: 11px
+    background-size: unset
+    margin: 4px
+    border: 1px solid #adadad
+    padding: 20px
 .spacer
     width: 100%
 a

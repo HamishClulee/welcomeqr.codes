@@ -41,7 +41,7 @@
                 <p class="btn-text"><b>Continue with Google</b></p>
             </div>
 
-            <button class="button submit">SUBMIT</button>
+            <button class="button submit" @click="submit">SUBMIT</button>
 
             <p @click="$emit('wantslogin')">Already have an account? <a>Login here.</a></p>
 
@@ -54,11 +54,14 @@
 import SERVER from '../../api'
 import qinput from '../forms/qinput'
 import { EventBus, MESSAGES } from '../../EventBus'
+import { vEmail, vPass, vConfirm } from '../../mixins.js'
+import qAuth from '../../main'
 export default {
     name: 'signup',
     components: {
         qinput,
     },
+    mixins: [ vEmail, vPass, vConfirm ],
     data() {
         return {
             emailerror: '',
@@ -70,27 +73,16 @@ export default {
         }
     },
     methods: {
-        validateEmail(e) {
-            const re = /.+@.+/
-            this.email = e
-            if (e === '') {
-                this.emailerror = 'Sorry, email is a required field.'
-            } else if (!re.test(String(e).toLowerCase())) {
-                this.emailerror = 'That email address looks strange, try again.'
-            } else {
-                this.emailerror = ''
-            }
-        },
-        validatePassword(e) {
-            this.password = e
-            if (e && e.length < 6) {
-                this.passworderror = 'Looks a bit short bruv.'
-            } else {
-                this.passworderror = ''
-            }
-        },
-        validateConfirm(e) {
-            this.confirm = e
+        submit() {
+            qAuth.signup(this.email, this.password, this.confirm).then(res => {
+                this.$store.commit('IS_AUTHED', res.data.user)
+                EventBus.$emit(MESSAGES, {
+                    is: true,
+                    msg: `You are now logged in! Welcome ${res.data.user.email}!`,
+                    color: 'secondary',
+                    black: false,
+                })
+            })
         },
     },
 }
