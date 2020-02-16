@@ -56,8 +56,9 @@ app.use(body_parser_1.default.json());
 app.use(body_parser_1.default.urlencoded({ extended: true }));
 app.use(express_session_1.default({
     cookie: {
-        // sameSite: process.env.NODE_ENV === 'production',
-        maxAge: process.env.NODE_ENV === 'production' ? MINS_15 : null,
+        sameSite: false,
+        maxAge: MINS_15,
+        secure: false,
     },
     saveUninitialized: false,
     resave: false,

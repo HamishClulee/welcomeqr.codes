@@ -52,9 +52,9 @@ app.use(bodyParser.urlencoded({ extended: true }))
 
 app.use(session({
     cookie: {
-        // sameSite: process.env.NODE_ENV === 'production',
-        maxAge: process.env.NODE_ENV === 'production' ? MINS_15 : null,
-        // secure: process.env.NODE_ENV === 'production',
+        sameSite: false,
+        maxAge: MINS_15,
+        secure: false,
     },
     saveUninitialized: false,
     resave: false,
