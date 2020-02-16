@@ -7,6 +7,7 @@ const pricing = () => import('../views/pricing.vue')
 
 /** Auth routes */
 const auth = () => import('../views/auth.vue')
+const account = () => import('../views/account.vue')
 
 /** Create App routes */
 const wapp = () => import('../views/wapp.vue')
@@ -38,6 +39,11 @@ const routes = [
         path: '/auth',
         name: 'auth',
         component: auth,
+    },
+    {
+        path: '/account',
+        name: 'account',
+        component: account,
     },
     {
         path: '/pricing',

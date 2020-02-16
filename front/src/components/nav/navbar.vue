@@ -11,11 +11,11 @@
 
         <div class="spacer"></div>
 
-        <div class="account-active-indic">
+        <div class="account-active-indic" @click="togglecanvas">
             <div class="avatar-icon">
-                <img src="/svg/test.svg" />
+                <img src="/svg/avatar.svg" />
             </div>
-            <!-- <h6 class="small-6">ACCOUNT</h6> -->
+            <h6 class="small-6">ACCOUNT</h6>
         </div>
 
         <div class="hamburger" @click="togglecanvas">
@@ -51,6 +51,16 @@
                         class="canvas-item"
                         @click="togglecanvas">
                             <router-link :to="{ path: '/auth'}">Login / SignUp</router-link>
+                    </div>
+                    <div class="account-settings">
+                        <div
+                            class="canvas-item account"
+                            @click="togglecanvas">
+                                <div class="avatar-icon">
+                                    <img width="40" src="/svg/avatar.svg" />
+                                </div>
+                                <router-link :to="{ path: '/account'}">Account</router-link>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -89,18 +99,24 @@ export default {
 }
 </script>
 <style lang="sass" scoped>
+.account-settings
+    margin-top: 30px
+    padding-top: 30px
+    border-top: 1px solid $primary
 .account-active-indic
-    width: 50px
+    display: flex
+    flex-direction: column
+    align-items: center
+    justify-content: center
+    margin-right: 10px
+    cursor: pointer
 .small-6
     font-size: 0.7em
     font-family: $heading-font
     text-transform: uppercase
+    margin: 0
 .avatar-icon
-    padding: 11px
-    background-size: unset
-    margin: 4px
-    border: 1px solid #adadad
-    padding: 20px
+    
 .spacer
     width: 100%
 a
@@ -226,4 +242,13 @@ a
             height: 30px
 .text-item
     padding: 0 20px
+.account
+    img
+        position: relative
+        top: 4px
+        margin-right: 10px
+    display: flex
+    flex-direction: row
+    align-items: center
+    justify-content: flex-end
 </style>

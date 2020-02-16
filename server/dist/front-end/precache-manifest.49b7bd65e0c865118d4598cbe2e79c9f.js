@@ -1,7 +1,7 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "72cffd3ac909d274b3d1",
-    "url": "/css/app.a70d765d.css"
+    "revision": "f9607c8c2a5b275add37",
+    "url": "/css/app.2aae2ae8.css"
   },
   {
     "revision": "fbd757e360d4be142f69",
@@ -10,6 +10,10 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
     "revision": "97c226b7edd923773918",
     "url": "/css/chunk-2580372a.5f6aab36.css"
+  },
+  {
+    "revision": "49814dc2e3168e4c5df8",
+    "url": "/css/chunk-2f715beb.48f9a5bb.css"
   },
   {
     "revision": "44d6275f1b21bbacd43f",
@@ -32,12 +36,12 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/css/chunk-bd3af8f6.4603629b.css"
   },
   {
-    "revision": "8aba33be4ae21f78fbc6157f42872676",
+    "revision": "80f2c4c091f13be05ffc45de9069ec62",
     "url": "/index.html"
   },
   {
-    "revision": "72cffd3ac909d274b3d1",
-    "url": "/js/app.faa39391.js"
+    "revision": "f9607c8c2a5b275add37",
+    "url": "/js/app.41cb42fa.js"
   },
   {
     "revision": "fbd757e360d4be142f69",
@@ -50,6 +54,10 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
     "revision": "4c6966018c1767f0cd10",
     "url": "/js/chunk-2d0daf4e.b4fd3a54.js"
+  },
+  {
+    "revision": "49814dc2e3168e4c5df8",
+    "url": "/js/chunk-2f715beb.934cf628.js"
   },
   {
     "revision": "44d6275f1b21bbacd43f",
@@ -94,6 +102,10 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
     "revision": "5538fddcd5199faec7ab928cf3c0f58a",
     "url": "/svg/arrow-circle-down.svg"
+  },
+  {
+    "revision": "148d58dee2e80199af56c487c99e1849",
+    "url": "/svg/avatar.svg"
   },
   {
     "revision": "16926d77f1bf8af905200b5874424e62",
@@ -162,10 +174,6 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
     "revision": "9323bd9daa241a09d688ca28f801e8ba",
     "url": "/svg/smallogo.svg"
-  },
-  {
-    "revision": "7063f698dd230c8ce3aa316a99ddd9f6",
-    "url": "/svg/test.svg"
   },
   {
     "revision": "8274e81158590c447f860122f4621f95",
