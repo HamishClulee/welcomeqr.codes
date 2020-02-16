@@ -61,6 +61,7 @@ const routes = [
         path: '/app',
         name: 'wapp',
         component: wapp,
+        redirect: '/app/manage',
         beforeEnter: (to: any, from: any, next: any) => {
             overwritemetas({
                 title: 'Welcome QR | Create New QR',

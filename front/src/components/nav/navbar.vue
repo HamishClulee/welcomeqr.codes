@@ -11,7 +11,7 @@
 
         <div class="spacer"></div>
 
-        <div class="account-active-indic" @click="togglecanvas">
+        <div class="account-active-indic" @click="togglecanvas" v-if="isauthed">
             <div class="avatar-icon">
                 <img src="/svg/avatar.svg" />
             </div>
@@ -52,7 +52,7 @@
                         @click="togglecanvas">
                             <router-link :to="{ path: '/auth'}">Login / SignUp</router-link>
                     </div>
-                    <div class="account-settings">
+                    <div class="account-settings" v-if="isauthed">
                         <div
                             class="canvas-item account"
                             @click="togglecanvas">
@@ -60,6 +60,11 @@
                                     <img width="40" src="/svg/avatar.svg" />
                                 </div>
                                 <router-link :to="{ path: '/account'}">Account</router-link>
+                        </div>
+                        <div
+                            class="canvas-item account"
+                            @click="togglecanvas">
+                                <button class="button" @click="logout">LOGOUT</button>
                         </div>
                     </div>
                 </div>
@@ -71,6 +76,8 @@
 </template>
 <script>
 import { mapGetters } from 'vuex'
+import qAuth from '../../main'
+import { EventBus, MESSAGES } from '../../EventBus'
 export default {
     name: 'navbar',
     data() {
@@ -86,9 +93,20 @@ export default {
             }, 200)
         },
         routehome() { this.$router.push({ path: '/'})},
+        logout() {
+            qAuth.logout().then(res => {
+                this.$store.commit('IS_AUTHED', res.data.user)
+                EventBus.$emit(MESSAGES, {
+                    is: true,
+                    msg: `You are now logged out!`,
+                    color: 'secondary',
+                    black: false,
+                })
+            })
+        },
     },
     computed: {
-        ...mapGetters(['scrollY']),
+        ...mapGetters(['scrollY', 'isauthed']),
     },
     watch: {
         scrollY: function(val) {
@@ -99,6 +117,9 @@ export default {
 }
 </script>
 <style lang="sass" scoped>
+.logout
+    color: $primary
+    border-color: $primary
 .account-settings
     margin-top: 30px
     padding-top: 30px

@@ -29,6 +29,18 @@ export class QAuth {
         })
     }
 
+    settoken(token: string): void {
+        localStorage.setItem('QToken', token)
+    }
+
+    removetoken():void {
+        localStorage.removeItem('QToken')
+    }
+
+    checktoken(): Boolean {
+        return !!localStorage.getItem('QToken') && localStorage.getItem('QToken') !== ''
+    }
+
     authenticate(): AxiosPromise<QUser> {
         return this.ax.post('/session_challenge')
     }
@@ -43,6 +55,9 @@ export class QAuth {
     }
     signup(email: string, password: string, confirm: string): AxiosPromise<QUser> {
         return this.ax.post('/signup', { email, password, confirm })
+    }
+    login(email: string, password: string): AxiosPromise<QUser> {
+        return this.ax.post('/login', { email, password })
     }
     reconfirm(email: string): AxiosPromise<QUser> {
         return this.ax.post('/reconfirm', { email })

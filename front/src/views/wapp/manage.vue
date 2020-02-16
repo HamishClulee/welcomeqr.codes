@@ -16,8 +16,12 @@
 </template>
 
 <script>
+import qAuth from '../../main'
 export default {
     name: 'manage',
+    created() {
+        qAuth.authenticate().then(res => { this.$store.commit('IS_AUTHED', res.data.user) })
+    },
 }
 </script>
 

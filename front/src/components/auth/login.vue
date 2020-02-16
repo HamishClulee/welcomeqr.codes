@@ -44,6 +44,7 @@
 <script>
 import qinput from '../forms/qinput'
 import qAuth from '../../main'
+import { EventBus, MESSAGES } from '../../EventBus'
 export default {
     name: 'login',
     components: {

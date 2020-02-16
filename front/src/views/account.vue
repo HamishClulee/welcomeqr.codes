@@ -1,10 +1,40 @@
 <template>
-  <main class="account-container"><h3 class="h3">Account view place holder</h3></main>
+  <main class="account-container">
+    <h3 class="h3">Account view place holder</h3>
+    <button class="button" @click="logout">LOGOUT</button>
+  </main>
 </template>
 
 <script>
+import qAuth from '../main'
+import { mapGetters } from 'vuex'
+import { EventBus, MESSAGES } from '../EventBus'
 export default {
     name: 'account',
+    created() {
+        qAuth.authenticate()
+    },
+    methods: {
+        logout() {
+            qAuth.logout().then(res => {
+                this.$store.commit('IS_AUTHED', res.data.user)
+                EventBus.$emit(MESSAGES, {
+                    is: true,
+                    msg: `You are now logged out!`,
+                    color: 'secondary',
+                    black: false,
+                })
+            })
+        },
+    },
+    computed: {
+        ...mapGetters(['isauthed'],),
+    },
+    watch: {
+        isauthed: function(v) {
+            if (!v) this.$router.push({ name: 'home'})
+        },
+    },
 }
 </script>
 

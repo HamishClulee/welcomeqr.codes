@@ -111,6 +111,11 @@ export default {
         }
     
     },
+    created() {
+        qAuth.authenticate().then(res => {
+            this.$store.commit('IS_AUTHED', res.data.user)
+        })
+    },
     mounted () {
 
         // qAuth.authenticate()
