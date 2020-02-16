@@ -58,7 +58,7 @@ app.use(express_session_1.default({
     cookie: {
         sameSite: false,
         maxAge: MINS_15,
-        secure: false,
+        secure: true,
     },
     saveUninitialized: false,
     resave: false,

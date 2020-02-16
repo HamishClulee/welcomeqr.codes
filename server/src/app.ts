@@ -54,7 +54,7 @@ app.use(session({
     cookie: {
         sameSite: false,
         maxAge: MINS_15,
-        secure: false,
+        secure: true,
     },
     saveUninitialized: false,
     resave: false,
