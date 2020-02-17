@@ -17,6 +17,10 @@ const history = require('connect-history-api-fallback')
 const cors = require('cors')
 const MongoStore = mongo(session)
 
+console.log('firing up.............')
+console.warn('firing up.............')
+console.error('firing up.............')
+
 /** ---------------------------------------  LOGGING  ------------------------------------------------- */
 if (process.env.NODE_ENV === 'production') {
     // winston.createLogger({
