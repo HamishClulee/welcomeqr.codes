@@ -144,7 +144,7 @@ exports.postUpdateProfile = (req, res, next) => __awaiter(void 0, void 0, void 0
     yield express_validator_1.sanitize('email').normalizeEmail({ gmail_remove_dots: false }).run(req);
     const errors = express_validator_1.validationResult(req);
     if (!errors.isEmpty()) {
-        req.flash('errors', errors.array());
+        // req.flash('errors', errors.array())
         return res.redirect('/account');
     }
     const user = req.user;
@@ -160,12 +160,12 @@ exports.postUpdateProfile = (req, res, next) => __awaiter(void 0, void 0, void 0
         user.save((err) => {
             if (err) {
                 if (err.code === 11000) {
-                    req.flash('errors', { msg: 'The email address you have entered is already associated with an account.' });
+                    // req.flash('errors', { msg: 'The email address you have entered is already associated with an account.' })
                     return res.redirect('/account');
                 }
                 return next(err);
             }
-            req.flash('success', { msg: 'Profile information has been updated.' });
+            // req.flash('success', { msg: 'Profile information has been updated.' })
             res.redirect('/account');
         });
     });
@@ -179,7 +179,7 @@ exports.postUpdatePassword = (req, res, next) => __awaiter(void 0, void 0, void 
     yield express_validator_1.check('confirmPassword', 'Passwords do not match').equals(req.body.password).run(req);
     const errors = express_validator_1.validationResult(req);
     if (!errors.isEmpty()) {
-        req.flash('errors', errors.array());
+        // req.flash('errors', errors.array())
         return res.redirect('/account');
     }
     const user = req.user;
@@ -192,7 +192,7 @@ exports.postUpdatePassword = (req, res, next) => __awaiter(void 0, void 0, void 
             if (err) {
                 return next(err);
             }
-            req.flash('success', { msg: 'Password has been changed.' });
+            // req.flash('success', { msg: 'Password has been changed.' })
             res.redirect('/account');
         });
     });
@@ -208,7 +208,7 @@ exports.postDeleteAccount = (req, res, next) => {
             return next(err);
         }
         req.logout();
-        req.flash('info', { msg: 'Your account has been deleted.' });
+        // req.flash('info', { msg: 'Your account has been deleted.' })
         res.redirect('/');
     });
 };
@@ -229,7 +229,7 @@ exports.getOauthUnlink = (req, res, next) => {
             if (err) {
                 return next(err);
             }
-            req.flash('info', { msg: `${provider} account has been unlinked.` });
+            // req.flash('info', { msg: `${provider} account has been unlinked.` })
             res.redirect('/account');
         });
     });
@@ -250,7 +250,7 @@ exports.getReset = (req, res, next) => {
             return next(err);
         }
         if (!user) {
-            req.flash('errors', { msg: 'Password reset token is invalid or has expired.' });
+            // req.flash('errors', { msg: 'Password reset token is invalid or has expired.' })
             return res.redirect('/forgot');
         }
         res.render('account/reset', {
@@ -267,7 +267,7 @@ exports.postReset = (req, res, next) => __awaiter(void 0, void 0, void 0, functi
     yield express_validator_1.check('confirm', 'Passwords must match.').equals(req.body.password).run(req);
     const errors = express_validator_1.validationResult(req);
     if (!errors.isEmpty()) {
-        req.flash('errors', errors.array());
+        // req.flash('errors', errors.array())
         return res.redirect('back');
     }
     async_1.default.waterfall([
@@ -280,7 +280,7 @@ exports.postReset = (req, res, next) => __awaiter(void 0, void 0, void 0, functi
                     return next(err);
                 }
                 if (!user) {
-                    req.flash('errors', { msg: 'Password reset token is invalid or has expired.' });
+                    // req.flash('errors', { msg: 'Password reset token is invalid or has expired.' })
                     return res.redirect('back');
                 }
                 user.password = req.body.password;
@@ -311,7 +311,7 @@ exports.postReset = (req, res, next) => __awaiter(void 0, void 0, void 0, functi
                 text: `Hello,\n\nThis is a confirmation that the password for your account ${user.email} has just been changed.\n`
             };
             transporter.sendMail(mailOptions, (err) => {
-                req.flash('success', { msg: 'Success! Your password has been changed.' });
+                // req.flash('success', { msg: 'Success! Your password has been changed.' })
                 done(err);
             });
         }
@@ -344,7 +344,7 @@ exports.postForgot = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
     yield express_validator_1.sanitize('email').normalizeEmail({ gmail_remove_dots: false }).run(req);
     const errors = express_validator_1.validationResult(req);
     if (!errors.isEmpty()) {
-        req.flash('errors', errors.array());
+        // req.flash('errors', errors.array())
         return res.redirect('/forgot');
     }
     async_1.default.waterfall([
@@ -360,7 +360,7 @@ exports.postForgot = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
                     return done(err);
                 }
                 if (!user) {
-                    req.flash('errors', { msg: 'Account with that email address does not exist.' });
+                    // req.flash('errors', { msg: 'Account with that email address does not exist.' })
                     return res.redirect('/forgot');
                 }
                 user.passwordResetToken = token;
@@ -380,15 +380,15 @@ exports.postForgot = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
             });
             const mailOptions = {
                 to: user.email,
-                from: 'hackathon@starter.com',
+                from: 'donotreply@welcomeqr.codes',
                 subject: 'Reset your password on Hackathon Starter',
                 text: `You are receiving this email because you (or someone else) have requested the reset of the password for your account.\n\n
-          Please click on the following link, or paste this into your browser to complete the process:\n\n
-          http://${req.headers.host}/reset/${token}\n\n
-          If you did not request this, please ignore this email and your password will remain unchanged.\n`
+                        Please click on the following link, or paste this into your browser to complete the process:\n\n
+                        http://${req.headers.host}/reset/${token}\n\n
+                        If you did not request this, please ignore this email and your password will remain unchanged.\n`
             };
             transporter.sendMail(mailOptions, (err) => {
-                req.flash('info', { msg: `An e-mail has been sent to ${user.email} with further instructions.` });
+                // req.flash('info', { msg: `An e-mail has been sent to ${user.email} with further instructions.` })
                 done(err);
             });
         }

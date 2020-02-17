@@ -9,7 +9,8 @@ import mongoose from 'mongoose'
 import passport from 'passport'
 import bluebird from 'bluebird'
 import multer from 'multer'
-import winston from 'winston'
+import fs from 'fs'
+// import winston from 'winston'
 import { MONGODB_URI, SESSION_SECRET } from './util/secrets'
 
 const history = require('connect-history-api-fallback')
@@ -18,14 +19,20 @@ const MongoStore = mongo(session)
 
 /** ---------------------------------------  LOGGING  ------------------------------------------------- */
 if (process.env.NODE_ENV === 'production') {
-    winston.createLogger({
-        level: 'info',
-        format: winston.format.json(),
-        defaultMeta: { service: 'user-service' },
-        transports: [
-          new winston.transports.File({ filename: './logs/error.log', level: 'error' }),
-          new winston.transports.File({ filename: './logs/combined.log' })
-        ]
+    // winston.createLogger({
+    //     level: 'info',
+    //     format: winston.format.json(),
+    //     defaultMeta: { service: 'user-service' },
+    //     transports: [
+    //       new winston.transports.File({ filename: './logs/error.log', level: 'error' }),
+    //       new winston.transports.File({ filename: './logs/combined.log' })
+    //     ]
+    // })
+    const access = fs.createWriteStream('/var/log/node/welcomeqr/all.log')
+    process.stdout.write = process.stderr.write = access.write.bind(access)
+
+    process.on('uncaughtException', function(err) {
+        console.error((err && err.stack) ? err.stack : err);
     })
 }
 

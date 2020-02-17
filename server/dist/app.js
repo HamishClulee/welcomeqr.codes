@@ -21,21 +21,27 @@ const mongoose_1 = __importDefault(require("mongoose"));
 const passport_1 = __importDefault(require("passport"));
 const bluebird_1 = __importDefault(require("bluebird"));
 const multer_1 = __importDefault(require("multer"));
-const winston_1 = __importDefault(require("winston"));
+const fs_1 = __importDefault(require("fs"));
+// import winston from 'winston'
 const secrets_1 = require("./util/secrets");
 const history = require('connect-history-api-fallback');
 const cors = require('cors');
 const MongoStore = connect_mongo_1.default(express_session_1.default);
 /** ---------------------------------------  LOGGING  ------------------------------------------------- */
 if (process.env.NODE_ENV === 'production') {
-    winston_1.default.createLogger({
-        level: 'info',
-        format: winston_1.default.format.json(),
-        defaultMeta: { service: 'user-service' },
-        transports: [
-            new winston_1.default.transports.File({ filename: './logs/error.log', level: 'error' }),
-            new winston_1.default.transports.File({ filename: './logs/combined.log' })
-        ]
+    // winston.createLogger({
+    //     level: 'info',
+    //     format: winston.format.json(),
+    //     defaultMeta: { service: 'user-service' },
+    //     transports: [
+    //       new winston.transports.File({ filename: './logs/error.log', level: 'error' }),
+    //       new winston.transports.File({ filename: './logs/combined.log' })
+    //     ]
+    // })
+    const access = fs_1.default.createWriteStream('/var/log/node/welcomeqr/all.log');
+    process.stdout.write = process.stderr.write = access.write.bind(access);
+    process.on('uncaughtException', function (err) {
+        console.error((err && err.stack) ? err.stack : err);
     });
 }
 /** ---------------------------------------  PASSPORT + MONGO CONFIG  --------------------------------- */
