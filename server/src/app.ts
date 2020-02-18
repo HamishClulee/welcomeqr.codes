@@ -13,11 +13,15 @@ import fs from 'fs'
 // import winston from 'winston'
 import { MONGODB_URI, SESSION_SECRET } from './util/secrets'
 
+export const QLogger = (log: string) => {
+    return console.log(log)
+}
+
 const history = require('connect-history-api-fallback')
 const cors = require('cors')
 const MongoStore = mongo(session)
 
-console.log('firing up.............log')
+QLogger('firing up.............log')
 console.warn('firing up.............warn')
 console.error('firing up.............error')
 

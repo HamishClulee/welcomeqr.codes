@@ -24,10 +24,13 @@ const multer_1 = __importDefault(require("multer"));
 const fs_1 = __importDefault(require("fs"));
 // import winston from 'winston'
 const secrets_1 = require("./util/secrets");
+exports.QLogger = (log) => {
+    return console.log(log);
+};
 const history = require('connect-history-api-fallback');
 const cors = require('cors');
 const MongoStore = connect_mongo_1.default(express_session_1.default);
-console.log('firing up.............log');
+exports.QLogger('firing up.............log');
 console.warn('firing up.............warn');
 console.error('firing up.............error');
 /** ---------------------------------------  LOGGING  ------------------------------------------------- */
