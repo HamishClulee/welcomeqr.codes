@@ -32,11 +32,11 @@ if (process.env.NODE_ENV === 'production') {
     //       new winston.transports.File({ filename: './logs/combined.log' })
     //     ]
     // })
-    const access = fs.createWriteStream('/var/www/welcomeqr/logs/all.log')
+    const access = fs.createWriteStream('/var/www/welcomeqr.codes/logs/all.log')
     process.stdout.write = process.stderr.write = access.write.bind(access)
 
     process.on('uncaughtException', function(err) {
-        console.error((err && err.stack) ? err.stack : err);
+        console.error((err && err.stack) ? err.stack : err)
     })
 }
 
