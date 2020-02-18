@@ -27,9 +27,9 @@ const secrets_1 = require("./util/secrets");
 const history = require('connect-history-api-fallback');
 const cors = require('cors');
 const MongoStore = connect_mongo_1.default(express_session_1.default);
-console.log('firing up.............');
-console.warn('firing up.............');
-console.error('firing up.............');
+console.log('firing up.............log');
+console.warn('firing up.............warn');
+console.error('firing up.............error');
 /** ---------------------------------------  LOGGING  ------------------------------------------------- */
 if (process.env.NODE_ENV === 'production') {
     // winston.createLogger({
