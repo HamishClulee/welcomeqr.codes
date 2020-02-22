@@ -6,17 +6,17 @@
 </template>
 
 <script>
-import qAuth from '../main'
 import { mapGetters } from 'vuex'
-import { EventBus, MESSAGES } from '../EventBus'
+import { EventBus, MESSAGES, LOADING } from '../EventBus'
 export default {
     name: 'account',
     created() {
-        qAuth.authenticate()
+        EventBus.$emit(LOADING, true)
+        this.$QAuth.authenticate()
     },
     methods: {
         logout() {
-            qAuth.logout().then(res => {
+            this.$QAuth.logout().then(res => {
                 this.$store.commit('IS_AUTHED', res.data.user)
                 EventBus.$emit(MESSAGES, {
                     is: true,

@@ -16,6 +16,8 @@ import QLog from '../logger'
  */
 export const sessionChallenge = (req: Request, res: Response) => {
 
+    // console.log('sess: \n => ', JSON.stringify(req.body.intercept, null, 2))
+
     QLog.log(`[${new Date()}] New session challenge from ${req.session ? req.session : '=> no session exists!'}`)
 
     if (!req.session.passport) {
@@ -23,8 +25,9 @@ export const sessionChallenge = (req: Request, res: Response) => {
         QLog.log(`[${new Date()}] Failed session challenge from ${req.hostname}`)
 
         return res.status(401).send({
-            'status': 401,
-            'message': 'No user logged in.',
+            status: 401,
+            message: 'No user logged in.',
+            intercept: req.body.intercept,
             user: { email: null, _id: null, authed: false },
         })
 
@@ -35,8 +38,9 @@ export const sessionChallenge = (req: Request, res: Response) => {
             if (err) {
                 QLog.log(`[${new Date()}] Mongo failed user look up with details ${req.session.passport.user}`)
                 return res.status(401).send({
-                    'status': 401,
-                    'message': 'You are not authenticated.',
+                    status: 401,
+                    message: 'You are not authenticated.',
+                    intercept: req.body.intercept,
                     user: { email: null, _id: null, authed: false },
                 })
             }
@@ -44,15 +48,20 @@ export const sessionChallenge = (req: Request, res: Response) => {
             if (user) {
                 QLog.log(`[${new Date()}] New session challenge from ${user.email}`)
                 let { email, _id } = user
-                return res.status(200).send({ msg: 'you are a premium user', user: { email, id: _id, authed: true } })
+                return res.status(200).send({
+                    msg: 'you are a premium user',
+                    intercept: req.body.intercept,
+                    user: { email, id: _id, authed: true }
+                })
 
             } else {
 
                 QLog.log(`[${new Date()}] New session challenge from non-existent user`)
 
                 return res.status(401).send({
-                    'status': 401,
-                    'message': 'You do not exist.',
+                    status: 401,
+                    message: 'You do not exist.',
+                    intercept: req.body.intercept,
                     user: { email: null, _id: null, authed: false },
                 })
                 

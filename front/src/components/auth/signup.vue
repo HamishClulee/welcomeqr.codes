@@ -55,7 +55,6 @@ import SERVER from '../../api'
 import qinput from '../forms/qinput'
 import { EventBus, MESSAGES } from '../../EventBus'
 import { vEmail, vPass, vConfirm } from '../../mixins.js'
-import qAuth from '../../main'
 export default {
     name: 'signup',
     components: {
@@ -74,7 +73,7 @@ export default {
     },
     methods: {
         submit() {
-            qAuth.signup(this.email, this.password, this.confirm).then(res => {
+            this.$QAuth.signup(this.email, this.password, this.confirm).then(res => {
                 this.$store.commit('IS_AUTHED', res.data.user)
                 EventBus.$emit(MESSAGES, {
                     is: true,

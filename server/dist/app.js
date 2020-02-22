@@ -23,6 +23,10 @@ const bluebird_1 = __importDefault(require("bluebird"));
 const multer_1 = __importDefault(require("multer"));
 const logger_1 = __importDefault(require("./logger"));
 const secrets_1 = require("./util/secrets");
+const MINS_15 = 90000;
+const PORT = 1980;
+const DEV_URL = 'http://localhost:8080';
+const PROD_URL = 'https://welcomeqr.codes';
 const history = require('connect-history-api-fallback');
 const cors = require('cors');
 const MongoStore = connect_mongo_1.default(express_session_1.default);
@@ -31,12 +35,11 @@ const userController = __importStar(require("./controllers/user"));
 const app = express_1.default();
 const mongoUrl = secrets_1.MONGODB_URI;
 mongoose_1.default.Promise = bluebird_1.default;
-mongoose_1.default.connect(mongoUrl, { useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true }).then(() => { logger_1.default.log('Mongo connected!'); }).catch(err => {
+mongoose_1.default.connect(mongoUrl, { useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true }).then(() => { logger_1.default.log(`[${new Date()}] Mongo is now connected!`); }).catch(err => {
     console.log('MongoDB connection error. Please make sure MongoDB is running. ' + err);
 });
 /** ---------------------------------------  APP CONFIG  ---------------------------------------------- */
-const MINS_15 = 90000;
-app.set('port', 1980);
+app.set('port', PORT);
 app.set('views', path_1.default.join(__dirname, '../views'));
 app.set('view engine', 'pug');
 app.use(compression_1.default());
@@ -63,7 +66,7 @@ if (process.env.NODE_ENV === 'production')
 app.use(passport_1.default.initialize());
 app.use(passport_1.default.session());
 app.use(cors({
-    origin: process.env.NODE_ENV !== 'production' ? 'http://localhost:8080' : 'https://welcomeqr.codes',
+    origin: process.env.NODE_ENV !== 'production' ? DEV_URL : PROD_URL,
     credentials: true
 }));
 app.use(lusca_1.default.xframe('SAMEORIGIN'));
@@ -97,7 +100,6 @@ app.post('/api/photo', (req, res) => {
         res.end(JSON.stringify({ message: 'Upload success' }));
     });
 });
-app.post('/tester', userController.postSignup);
 /** -------------------------------  STATIC FILES AND SPA SERVER  --------------------------------- */
 const _static = express_1.default.static(path_1.default.join(__dirname, 'front-end'), { maxAge: 31557600000 });
 if (process.env.NODE_ENV === 'production') {

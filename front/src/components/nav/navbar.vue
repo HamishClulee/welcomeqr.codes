@@ -45,7 +45,7 @@
                     <div
                         class="canvas-item"
                         @click="togglecanvas">
-                            <router-link :to="{ path: '/app'}">Try For Free</router-link>
+                            <router-link :to="{ path: '/app'}">{{ isauthed ? 'Your Websites' : 'Try For Free'}}</router-link>
                     </div>
                     <div
                         class="canvas-item"
@@ -76,7 +76,6 @@
 </template>
 <script>
 import { mapGetters } from 'vuex'
-import qAuth from '../../main'
 import { EventBus, MESSAGES } from '../../EventBus'
 export default {
     name: 'navbar',
@@ -94,7 +93,7 @@ export default {
         },
         routehome() { this.$router.push({ path: '/'})},
         logout() {
-            qAuth.logout().then(res => {
+            this.$QAuth.logout().then(res => {
                 this.$store.commit('IS_AUTHED', res.data.user)
                 EventBus.$emit(MESSAGES, {
                     is: true,
@@ -135,9 +134,7 @@ export default {
     font-size: 0.7em
     font-family: $heading-font
     text-transform: uppercase
-    margin: 0
-.avatar-icon
-    
+    margin: 0 
 .spacer
     width: 100%
 a

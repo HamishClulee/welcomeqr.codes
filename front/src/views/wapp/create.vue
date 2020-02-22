@@ -59,7 +59,7 @@ import myupload from 'vue-image-crop-upload'
 import { Chrome } from 'vue-color'
 import multiselect from 'vue-multiselect'
 import { mapGetters } from 'vuex'
-import qAuth from '../../main'
+import { EventBus, LOADING } from '../../EventBus'
 export default {
     name: 'create',
     components: {
@@ -112,14 +112,12 @@ export default {
     
     },
     created() {
-        qAuth.authenticate().then(res => {
+        EventBus.$emit(LOADING, true)
+        this.$QAuth.authenticate().then(res => {
             this.$store.commit('IS_AUTHED', res.data.user)
         })
     },
     mounted () {
-
-        // qAuth.authenticate()
-
         const edel = document.getElementById( 'editor' )
         this.editor = new Squire( edel, {
             blockTag: 'p',

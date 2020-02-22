@@ -1,5 +1,4 @@
 import { State } from '@I/IState'
-import qAuth from '../main'
 
 const getters = {
     windowWidth: (state: State) => state.ui.windowWidth,

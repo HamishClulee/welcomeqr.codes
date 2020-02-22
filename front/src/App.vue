@@ -20,7 +20,7 @@
 
 			<router-view></router-view>
 
-			<qrfooter v-if="loadPushed"></qrfooter>
+			<qrfooter v-if="loadPushed && showfooter"></qrfooter>
 
 		</template>
 
@@ -70,6 +70,17 @@ export default {
         }
 
     },
+    beforeCreate() {
+        // if token exists, maybe user already has a session, pass false so auth failure doesnt redirect user to /auth
+        if(this.$QAuth.checktoken()) this.$QAuth.authenticate(false).then(res => {
+            this.$store.commit('IS_AUTHED', res.data.user)
+        })
+    },
+    created() {
+        // set state ui vars
+        this.SET_WINDOW_SIZE()
+        this.SET_SCROLL_LOCATION()
+    },
     mounted () {
         // EventBus handling global loading spinner, user message pop up and site wide modals
         EventBus.$on(LOADING, is => { this.showGlobalSpinner = is })
@@ -113,6 +124,9 @@ export default {
     computed: {
         checkroute() {
             return ['create', 'wapp', 'preview'].indexOf(this.$route.name) === -1
+        },
+        showfooter() {
+            return ['auth'].indexOf(this.$route.name) === -1
         },
     },
 }

@@ -16,11 +16,12 @@
 </template>
 
 <script>
-import qAuth from '../../main'
+import { EventBus, LOADING } from '../../EventBus'
 export default {
     name: 'manage',
     created() {
-        qAuth.authenticate().then(res => { this.$store.commit('IS_AUTHED', res.data.user) })
+        EventBus.$emit(LOADING, true)
+        this.$QAuth.authenticate().then(res => { this.$store.commit('IS_AUTHED', res.data.user) })
     },
 }
 </script>

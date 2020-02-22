@@ -43,7 +43,6 @@
 
 <script>
 import qinput from '../forms/qinput'
-import qAuth from '../../main'
 import { EventBus, MESSAGES } from '../../EventBus'
 export default {
     name: 'login',
@@ -58,7 +57,7 @@ export default {
     },
     methods: {
         submit () {
-            qAuth.login(this.email, this.password).then(res => {
+            this.$QAuth.login(this.email, this.password).then(res => {
                 this.$store.commit('IS_AUTHED', res.data.user)
                 EventBus.$emit(MESSAGES, {
                     is: true,

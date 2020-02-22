@@ -1,6 +1,6 @@
 import axios, { AxiosError, AxiosResponse, AxiosInstance, AxiosPromise } from 'axios'
-
 import { SignUpPayload, LoginPayload, QUser } from '@I/IUser'
+import { EventBus, LOADING } from '../EventBus'
 
 export function ErrStr(error: AxiosError): string {
     if (error.response && error.response.data.status) {
@@ -24,7 +24,17 @@ export class QAuth {
         })
 
         this.ax.interceptors.response.use(res => res, (error: AxiosError ) => {
-            if (error.response && error.response.status === 401) window.location.href = this.AUTH_URL
+            if (
+                error.response
+                && error.response.status > 400
+                && error.response.data.intercept
+            ) 
+            {
+                window.location.href = this.AUTH_URL
+                EventBus.$emit(LOADING, false)
+            }
+
+            this.removetoken()
             return Promise.reject(error)
         })
     }
@@ -41,8 +51,9 @@ export class QAuth {
         return !!localStorage.getItem('QToken') && localStorage.getItem('QToken') !== ''
     }
 
-    authenticate(): AxiosPromise<QUser> {
-        return this.ax.post('/session_challenge')
+    authenticate(intercept = true): AxiosPromise<QUser> {
+        // if intercept is set to false failed responses > 400 will not redirect the user to /auth
+        return this.ax.post('/session_challenge', { intercept })
     }
     confirm(email: string, token: string): AxiosPromise<QUser> {
         return this.ax.post('/confirm', { email, token })

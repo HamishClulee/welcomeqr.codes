@@ -8,6 +8,7 @@ import { QAuth } from './api/auth'
 Vue.config.productionTip = false
 
 const qAuth = new QAuth()
+Vue.prototype.$QAuth = qAuth
 
 new Vue({
     router,
