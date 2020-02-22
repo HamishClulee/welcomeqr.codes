@@ -9,24 +9,16 @@ import mongoose from 'mongoose'
 import passport from 'passport'
 import bluebird from 'bluebird'
 import multer from 'multer'
-import fs from 'fs'
+import logger from './logger'
 // import winston from 'winston'
 import { MONGODB_URI, SESSION_SECRET } from './util/secrets'
-
-export const QLogger = (log: string) => {
-    return console.log(log)
-}
 
 const history = require('connect-history-api-fallback')
 const cors = require('cors')
 const MongoStore = mongo(session)
 
-QLogger('firing up.............log')
-console.warn('firing up.............warn')
-console.error('firing up.............error')
-
 /** ---------------------------------------  LOGGING  ------------------------------------------------- */
-if (process.env.NODE_ENV === 'production') {
+// if (process.env.NODE_ENV === 'production') {
     // winston.createLogger({
     //     level: 'info',
     //     format: winston.format.json(),
@@ -36,22 +28,25 @@ if (process.env.NODE_ENV === 'production') {
     //       new winston.transports.File({ filename: './logs/combined.log' })
     //     ]
     // })
-    const access = fs.createWriteStream('/var/www/welcomeqr.codes/logs/all.log')
-    process.stdout.write = process.stderr.write = access.write.bind(access)
+    // const access = fs.createWriteStream('/var/www/welcomeqr.codes/logs/all.log')
+    // process.stdout.write = process.stderr.write = access.write.bind(access)
 
-    process.on('uncaughtException', function(err) {
-        console.error((err && err.stack) ? err.stack : err)
-    })
-}
+    // process.on('uncaughtException', function(err) {
+    //     console.error((err && err.stack) ? err.stack : err)
+    // }
+// tslint:disable-next-line
+// logger = new console.Console({ stdout: output, stderr: errorOutput });
+// }
 
 /** ---------------------------------------  PASSPORT + MONGO CONFIG  --------------------------------- */
 import * as userController from './controllers/user'
+// import { getLogger } from 'nodemailer/lib/shared'
 
 const app = express()
 const mongoUrl = MONGODB_URI
 mongoose.Promise = bluebird
 mongoose.connect(mongoUrl, { useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true } ).then(
-    () => { /** ready to use. The `mongoose.connect()` promise resolves to undefined. */ },
+    () => { logger.log('Mongo connected!') },
 ).catch(err => {
     console.log('MongoDB connection error. Please make sure MongoDB is running. ' + err)
 })
