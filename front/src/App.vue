@@ -2,7 +2,7 @@
 	<section class="app-main">
 
 		<!-- GLOBAL SPINNER -->
-		<template v-if="showGlobalSpinner">
+		<template v-show="showGlobalSpinner">
 
 			<div class="global-spinner-con">
 				<loading></loading>
@@ -12,7 +12,7 @@
 
 
 		<!-- APP ACTUAL -->
-		<template v-else>
+		<template v-show="!showGlobalSpinner">
 
 			<sitemodal v-if="showsitemodal" v-bind="{ contains }"></sitemodal>
 
