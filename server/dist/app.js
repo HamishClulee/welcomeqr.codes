@@ -22,33 +22,12 @@ const passport_1 = __importDefault(require("passport"));
 const bluebird_1 = __importDefault(require("bluebird"));
 const multer_1 = __importDefault(require("multer"));
 const logger_1 = __importDefault(require("./logger"));
-// import winston from 'winston'
 const secrets_1 = require("./util/secrets");
 const history = require('connect-history-api-fallback');
 const cors = require('cors');
 const MongoStore = connect_mongo_1.default(express_session_1.default);
-/** ---------------------------------------  LOGGING  ------------------------------------------------- */
-// if (process.env.NODE_ENV === 'production') {
-// winston.createLogger({
-//     level: 'info',
-//     format: winston.format.json(),
-//     defaultMeta: { service: 'user-service' },
-//     transports: [
-//       new winston.transports.File({ filename: './logs/error.log', level: 'error' }),
-//       new winston.transports.File({ filename: './logs/combined.log' })
-//     ]
-// })
-// const access = fs.createWriteStream('/var/www/welcomeqr.codes/logs/all.log')
-// process.stdout.write = process.stderr.write = access.write.bind(access)
-// process.on('uncaughtException', function(err) {
-//     console.error((err && err.stack) ? err.stack : err)
-// }
-// tslint:disable-next-line
-// logger = new console.Console({ stdout: output, stderr: errorOutput });
-// }
 /** ---------------------------------------  PASSPORT + MONGO CONFIG  --------------------------------- */
 const userController = __importStar(require("./controllers/user"));
-// import { getLogger } from 'nodemailer/lib/shared'
 const app = express_1.default();
 const mongoUrl = secrets_1.MONGODB_URI;
 mongoose_1.default.Promise = bluebird_1.default;
@@ -100,9 +79,6 @@ app.post('/logout', userController.postLogout);
 app.post('/forgot', userController.postForgot);
 app.post('/reset/:token', userController.postReset);
 app.post('/signup', userController.postSignup);
-// app.post('/account/profile', passportConfig.isAuthenticated, userController.postUpdateProfile)
-// app.post('/account/password', passportConfig.isAuthenticated, userController.postUpdatePassword)
-// app.post('/account/delete', passportConfig.isAuthenticated, userController.postDeleteAccount)
 /** ---------------------------------------  IMAGE STORAGE  --------------------------------- */
 const storage = multer_1.default.diskStorage({
     destination: function (req, file, callback) {

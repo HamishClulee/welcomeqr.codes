@@ -8,6 +8,7 @@ import { IVerifyOptions } from 'passport-local'
 import { WriteError } from 'mongodb'
 import { check, sanitize, validationResult } from 'express-validator'
 import '../config/passport'
+import logger from '../logger'
 
 /**
  * POST /session_challenge
@@ -15,7 +16,11 @@ import '../config/passport'
  */
 export const sessionChallenge = (req: Request, res: Response) => {
 
+    logger.log(`[${new Date()}] New session challenge from ${req.session ? req.session : '=> no session exists!'}`)
+
     if (!req.session.passport) {
+
+        logger.log(`[${new Date()}] Failed session challenge from ${req.hostname}`)
 
         return res.status(401).send({
             'status': 401,
@@ -28,6 +33,7 @@ export const sessionChallenge = (req: Request, res: Response) => {
         User.findOne({ _id: req.session.passport.user }, (err, user) => {
 
             if (err) {
+                logger.log(`[${new Date()}] Mongo failed user look up with details ${req.session.passport.user}`)
                 return res.status(401).send({
                     'status': 401,
                     'message': 'You are not authenticated.',
@@ -36,11 +42,13 @@ export const sessionChallenge = (req: Request, res: Response) => {
             }
 
             if (user) {
-
+                logger.log(`[${new Date()}] New session challenge from ${user.email}`)
                 let { email, _id } = user
                 return res.status(200).send({ msg: 'you are a premium user', user: { email, id: _id, authed: true } })
 
             } else {
+
+                logger.log(`[${new Date()}] New session challenge from non-existent user`)
 
                 return res.status(401).send({
                     'status': 401,
@@ -161,6 +169,7 @@ export const postUpdateProfile = async (req: Request, res: Response, next: NextF
         user.save((err: WriteError) => {
             if (err) {
                 if (err.code === 11000) {
+                    
                     // req.flash('errors', { msg: 'The email address you have entered is already associated with an account.' })
                     return res.redirect('/account')
                 }

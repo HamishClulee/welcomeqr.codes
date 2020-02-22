@@ -19,12 +19,15 @@ const passport_1 = __importDefault(require("passport"));
 const User_1 = require("../models/User");
 const express_validator_1 = require("express-validator");
 require("../config/passport");
+const logger_1 = __importDefault(require("../logger"));
 /**
  * POST /session_challenge
  * Check if the user is authed
  */
 exports.sessionChallenge = (req, res) => {
+    logger_1.default.log(`[${new Date()}] New session challenge from ${req.session ? req.session : '=> no session exists!'}`);
     if (!req.session.passport) {
+        logger_1.default.log(`[${new Date()}] Failed session challenge from ${req.hostname}`);
         return res.status(401).send({
             'status': 401,
             'message': 'No user logged in.',
@@ -34,6 +37,7 @@ exports.sessionChallenge = (req, res) => {
     else {
         User_1.User.findOne({ _id: req.session.passport.user }, (err, user) => {
             if (err) {
+                logger_1.default.log(`[${new Date()}] Mongo failed user look up with details ${req.session.passport.user}`);
                 return res.status(401).send({
                     'status': 401,
                     'message': 'You are not authenticated.',
@@ -41,10 +45,12 @@ exports.sessionChallenge = (req, res) => {
                 });
             }
             if (user) {
+                logger_1.default.log(`[${new Date()}] New session challenge from ${user.email}`);
                 let { email, _id } = user;
                 return res.status(200).send({ msg: 'you are a premium user', user: { email, id: _id, authed: true } });
             }
             else {
+                logger_1.default.log(`[${new Date()}] New session challenge from non-existent user`);
                 return res.status(401).send({
                     'status': 401,
                     'message': 'You do not exist.',

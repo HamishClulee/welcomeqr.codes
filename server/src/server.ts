@@ -11,7 +11,10 @@ const server = app.listen(app.get('port'), () => {
         app.get('env')
     )
     console.log('  Press CTRL-C to stop\n')
-    logger.log('Things have been set in motion that cannot be undone!')
+
+    logger.log(`=========================================================================\n
+                [${new Date()}] Restarted on http://localhost:${app.get('port')}\n
+                =========================================================================`)
 })
 
 export default server

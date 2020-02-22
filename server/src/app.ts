@@ -10,37 +10,14 @@ import passport from 'passport'
 import bluebird from 'bluebird'
 import multer from 'multer'
 import logger from './logger'
-// import winston from 'winston'
 import { MONGODB_URI, SESSION_SECRET } from './util/secrets'
 
 const history = require('connect-history-api-fallback')
 const cors = require('cors')
 const MongoStore = mongo(session)
 
-/** ---------------------------------------  LOGGING  ------------------------------------------------- */
-// if (process.env.NODE_ENV === 'production') {
-    // winston.createLogger({
-    //     level: 'info',
-    //     format: winston.format.json(),
-    //     defaultMeta: { service: 'user-service' },
-    //     transports: [
-    //       new winston.transports.File({ filename: './logs/error.log', level: 'error' }),
-    //       new winston.transports.File({ filename: './logs/combined.log' })
-    //     ]
-    // })
-    // const access = fs.createWriteStream('/var/www/welcomeqr.codes/logs/all.log')
-    // process.stdout.write = process.stderr.write = access.write.bind(access)
-
-    // process.on('uncaughtException', function(err) {
-    //     console.error((err && err.stack) ? err.stack : err)
-    // }
-// tslint:disable-next-line
-// logger = new console.Console({ stdout: output, stderr: errorOutput });
-// }
-
 /** ---------------------------------------  PASSPORT + MONGO CONFIG  --------------------------------- */
 import * as userController from './controllers/user'
-// import { getLogger } from 'nodemailer/lib/shared'
 
 const app = express()
 const mongoUrl = MONGODB_URI
@@ -105,10 +82,6 @@ app.post('/forgot', userController.postForgot)
 app.post('/reset/:token', userController.postReset)
 
 app.post('/signup', userController.postSignup)
-
-// app.post('/account/profile', passportConfig.isAuthenticated, userController.postUpdateProfile)
-// app.post('/account/password', passportConfig.isAuthenticated, userController.postUpdatePassword)
-// app.post('/account/delete', passportConfig.isAuthenticated, userController.postDeleteAccount)
 
 /** ---------------------------------------  IMAGE STORAGE  --------------------------------- */
 const storage = multer.diskStorage({
