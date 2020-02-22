@@ -9,9 +9,13 @@ import mongoose from 'mongoose'
 import passport from 'passport'
 import bluebird from 'bluebird'
 import multer from 'multer'
-import logger from './logger'
+import QLog from './logger'
 import { MONGODB_URI, SESSION_SECRET } from './util/secrets'
 
+const MINS_15 = 90000
+const PORT = 1980
+const DEV_URL = 'http://localhost:8080'
+const PROD_URL = 'https://welcomeqr.codes'
 const history = require('connect-history-api-fallback')
 const cors = require('cors')
 const MongoStore = mongo(session)
@@ -23,14 +27,13 @@ const app = express()
 const mongoUrl = MONGODB_URI
 mongoose.Promise = bluebird
 mongoose.connect(mongoUrl, { useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true } ).then(
-    () => { logger.log('Mongo connected!') },
+    () => { QLog.log(`[${new Date()}] Mongo is now connected!`) },
 ).catch(err => {
     console.log('MongoDB connection error. Please make sure MongoDB is running. ' + err)
 })
 
 /** ---------------------------------------  APP CONFIG  ---------------------------------------------- */
-const MINS_15 = 90000
-app.set('port', 1980)
+app.set('port', PORT)
 app.set('views', path.join(__dirname, '../views'))
 app.set('view engine', 'pug')
 app.use(compression())
@@ -60,7 +63,7 @@ app.use(passport.initialize())
 app.use(passport.session())
 
 app.use(cors({
-    origin: process.env.NODE_ENV !== 'production' ? 'http://localhost:8080' : 'https://welcomeqr.codes',
+    origin: process.env.NODE_ENV !== 'production' ? DEV_URL : PROD_URL,
     credentials: true
 }))
 app.use(lusca.xframe('SAMEORIGIN'))
@@ -72,15 +75,10 @@ app.use((req, res, next) => {
 
 /** ---------------------------------------  APP ROUTING  --------------------------------- */
 app.post('/session_challenge', userController.sessionChallenge)
-
 app.post('/login', userController.postLogin)
-
 app.post('/logout', userController.postLogout)
-
 app.post('/forgot', userController.postForgot)
-
 app.post('/reset/:token', userController.postReset)
-
 app.post('/signup', userController.postSignup)
 
 /** ---------------------------------------  IMAGE STORAGE  --------------------------------- */
@@ -101,8 +99,6 @@ app.post('/api/photo', (req: any, res: any): any => {
         res.end(JSON.stringify({ message: 'Upload success' }))
     })
 })
-
-app.post('/tester', userController.postSignup)
 
 /** -------------------------------  STATIC FILES AND SPA SERVER  --------------------------------- */
 const _static = express.static(path.join(__dirname, 'front-end'), { maxAge: 31557600000 })
