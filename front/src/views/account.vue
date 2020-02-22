@@ -12,7 +12,10 @@ export default {
     name: 'account',
     created() {
         EventBus.$emit(LOADING, true)
-        this.$QAuth.authenticate()
+        this.$QAuth.authenticate().then(res => {
+            this.$store.commit('IS_AUTHED', res.data.user)
+            EventBus.$emit(LOADING, false)
+        })
     },
     methods: {
         logout() {

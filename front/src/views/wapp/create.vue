@@ -115,6 +115,7 @@ export default {
         EventBus.$emit(LOADING, true)
         this.$QAuth.authenticate().then(res => {
             this.$store.commit('IS_AUTHED', res.data.user)
+            EventBus.$emit(LOADING, false)
         })
     },
     mounted () {
