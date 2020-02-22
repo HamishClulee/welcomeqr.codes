@@ -2,9 +2,9 @@
 	<section class="app-main">
 
 		<!-- GLOBAL SPINNER -->
-		<template v-show="showGlobalSpinner">
+		<template>
 
-			<div class="global-spinner-con">
+			<div v-show="showGlobalSpinner" class="global-spinner-con">
 				<loading></loading>
 			</div>
 
