@@ -1,7 +1,8 @@
 <template>
     <main class="create-con">
 
-        <createtopbar>
+        <createtopbar
+            @save="usersaved">
         </createtopbar>
 
         <section class="content-container">
@@ -71,7 +72,6 @@ export default {
         'chrome-picker': Chrome,
     },
     data () {
-
         return {
             fontSize: '16px',
             showFontSize: false,
@@ -117,6 +117,7 @@ export default {
             this.$store.commit('IS_AUTHED', res.data.user)
             EventBus.$emit(LOADING, false)
         })
+        // console.log(this.$route)
     },
     mounted () {
         const edel = document.getElementById( 'editor' )
@@ -132,6 +133,13 @@ export default {
         })
     },
     methods: {
+        usersaved() { 
+            this.$QEdit.submitnew(this.editor.getHTML(), this.getuser, false)
+                .then(res => {
+                    // console.log(res)
+                    // loading spinner false
+                })
+        },
         setFontSize(e) { this.editor['setFontSize'] (e) },
         setTextColour(e) { this.editor['setTextColour'] (e.hex) },
         changeBold() { this.isBold = !this.isBold },
@@ -167,6 +175,7 @@ export default {
         },
     },
     computed: {
+        ...mapGetters(['getuser']),
         isDev () { return process.env.NODE_ENV === 'development' },
     },
     watch: {

@@ -77,7 +77,7 @@ const routes = [
                 beforeEnter: (to: any, from: any, next: any) => {
                     overwritemetas({
                         title: 'Welcome QR | Manage',
-                        description: `Where the magic happens, create a new down loadable QR code and associate website and content.`,
+                        description: `Where the magic happens, create a new downloadable QR code and associate website and content.`,
                         noindex: true,
                     }, next)
                 },
@@ -89,7 +89,7 @@ const routes = [
                 beforeEnter: (to: any, from: any, next: any) => {
                     overwritemetas({
                         title: 'Welcome QR | Create Your Site',
-                        description: `Where the magic happens, create a new down loadable QR code and associate website and content.`,
+                        description: `Where the magic happens, create a new downloadable QR code and associate website and content.`,
                         noindex: true,
                     }, next)
                 },
@@ -101,7 +101,7 @@ const routes = [
                 beforeEnter: (to: any, from: any, next: any) => {
                     overwritemetas({
                         title: 'Welcome QR | Preview',
-                        description: `Where the magic happens, create a new down loadable QR code and associate website and content.`,
+                        description: `Where the magic happens, create a new downloadable QR code and associate website and content.`,
                         noindex: true,
                     }, next)
                 },

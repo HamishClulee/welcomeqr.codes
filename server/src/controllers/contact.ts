@@ -32,7 +32,7 @@ export const postContact = async (req: Request, res: Response) => {
     const errors = validationResult(req)
 
     if (!errors.isEmpty()) {
-        req.flash('errors', errors.array())
+        // req.flash('errors', errors.array())
         return res.redirect('/contact')
     }
 
@@ -45,10 +45,10 @@ export const postContact = async (req: Request, res: Response) => {
 
     transporter.sendMail(mailOptions, (err) => {
         if (err) {
-            req.flash('errors', { msg: err.message })
+            // req.flash('errors', { msg: err.message })
             return res.redirect('/contact')
         }
-        req.flash('success', { msg: 'Email has been sent successfully!' })
+        // req.flash('success', { msg: 'Email has been sent successfully!' })
         res.redirect('/contact')
     })
 }

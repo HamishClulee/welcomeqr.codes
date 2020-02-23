@@ -40,7 +40,7 @@ exports.postContact = (req, res) => __awaiter(void 0, void 0, void 0, function* 
     yield express_validator_1.check('message', 'Message cannot be blank').not().isEmpty().run(req);
     const errors = express_validator_1.validationResult(req);
     if (!errors.isEmpty()) {
-        req.flash('errors', errors.array());
+        // req.flash('errors', errors.array())
         return res.redirect('/contact');
     }
     const mailOptions = {
@@ -51,10 +51,10 @@ exports.postContact = (req, res) => __awaiter(void 0, void 0, void 0, function* 
     };
     transporter.sendMail(mailOptions, (err) => {
         if (err) {
-            req.flash('errors', { msg: err.message });
+            // req.flash('errors', { msg: err.message })
             return res.redirect('/contact');
         }
-        req.flash('success', { msg: 'Email has been sent successfully!' });
+        // req.flash('success', { msg: 'Email has been sent successfully!' })
         res.redirect('/contact');
     });
 });

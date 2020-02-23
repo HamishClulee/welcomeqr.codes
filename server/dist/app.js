@@ -31,7 +31,6 @@ const history = require('connect-history-api-fallback');
 const cors = require('cors');
 const MongoStore = connect_mongo_1.default(express_session_1.default);
 /** ---------------------------------------  PASSPORT + MONGO CONFIG  --------------------------------- */
-const userController = __importStar(require("./controllers/user"));
 const app = express_1.default();
 const mongoUrl = secrets_1.MONGODB_URI;
 mongoose_1.default.Promise = bluebird_1.default;
@@ -76,12 +75,21 @@ app.use((req, res, next) => {
     next();
 });
 /** ---------------------------------------  APP ROUTING  --------------------------------- */
+/** Auth */
+const userController = __importStar(require("./controllers/user"));
 app.post('/session_challenge', userController.sessionChallenge);
 app.post('/login', userController.postLogin);
 app.post('/logout', userController.postLogout);
 app.post('/forgot', userController.postForgot);
 app.post('/reset/:token', userController.postReset);
 app.post('/signup', userController.postSignup);
+/** Editor */
+const editorController = __importStar(require("./controllers/editor"));
+app.post('/api/submitnew', editorController.postSubmitNew);
+app.post('/api/getallforuser', editorController.postGetAllEditorsForUser);
+app.post('/api/checksubdom', editorController.postCheckSubdom);
+app.post('/api/submitsubdom', editorController.postSubmitSubdom);
+editorController.precaching();
 /** ---------------------------------------  IMAGE STORAGE  --------------------------------- */
 const storage = multer_1.default.diskStorage({
     destination: function (req, file, callback) {

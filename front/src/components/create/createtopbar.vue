@@ -12,7 +12,7 @@
             <router-link class="button options" :to="{ name: 'manage'}">
                 OPTIONS
             </router-link>
-            <button class="button save">
+            <button class="button save" @click="$emit('save')">
                 SAVE
             </button>
             <router-link tag="button" class="button preview" :to="{ name: 'preview' }">

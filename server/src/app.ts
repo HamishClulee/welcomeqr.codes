@@ -21,8 +21,6 @@ const cors = require('cors')
 const MongoStore = mongo(session)
 
 /** ---------------------------------------  PASSPORT + MONGO CONFIG  --------------------------------- */
-import * as userController from './controllers/user'
-
 const app = express()
 const mongoUrl = MONGODB_URI
 mongoose.Promise = bluebird
@@ -74,12 +72,22 @@ app.use((req, res, next) => {
 })
 
 /** ---------------------------------------  APP ROUTING  --------------------------------- */
+/** Auth */
+import * as userController from './controllers/user'
 app.post('/session_challenge', userController.sessionChallenge)
 app.post('/login', userController.postLogin)
 app.post('/logout', userController.postLogout)
 app.post('/forgot', userController.postForgot)
 app.post('/reset/:token', userController.postReset)
 app.post('/signup', userController.postSignup)
+
+/** Editor */
+import * as editorController from './controllers/editor'
+app.post('/api/submitnew', editorController.postSubmitNew)
+app.post('/api/getallforuser', editorController.postGetAllEditorsForUser)
+app.post('/api/checksubdom', editorController.postCheckSubdom)
+app.post('/api/submitsubdom', editorController.postSubmitSubdom)
+editorController.precaching()
 
 /** ---------------------------------------  IMAGE STORAGE  --------------------------------- */
 const storage = multer.diskStorage({

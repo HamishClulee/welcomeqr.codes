@@ -1,7 +1,8 @@
 <template>
-    <div class="field-container">
+    <div class="field-container" :style="{ 'width': fullwidth ? '100%' : 'auto'}">
 
         <input
+            :style="{ 'width': setwidth}"
             @focus="touched = true"
             @blur="touched = false"
             class="form-input"
@@ -32,6 +33,14 @@
 export default {
     name: 'qinput',
     props: {
+        fullwidth: {
+            default: true,
+            type: Boolean,
+        },
+        setwidth: {
+            default: '100%',
+            type: String,
+        },
         placey: {
             type: String,
             required: true,
@@ -109,7 +118,6 @@ export default {
         background: center / contain no-repeat url("/svg/error.svg")
         background-size: unset
 .field-container
-    width: 100%
     position: relative
     display: flex
     flex-direction: column
@@ -135,7 +143,6 @@ export default {
         border-left: none
         border-right: none
         box-shadow: none
-
 .stay-active
     transform: translateY(-24px)
     transition: all 0.5s ease
