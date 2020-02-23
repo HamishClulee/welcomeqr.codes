@@ -4,9 +4,9 @@
 
         <section class="active-component-container">
 
-            <signup @wantslogin="active = 'login'" v-show="active === 'signup'"></signup>
-
             <login @wantssignup="active = 'signup'" v-show="active === 'login'"></login>
+
+            <signup @wantslogin="active = 'login'" v-show="active === 'signup'"></signup>
 
             <forgot v-show="active === 'forgot'"></forgot>
 
@@ -30,7 +30,7 @@ export default {
     },
     data () {
         return {
-            active: 'signup',
+            active: 'login',
         }
     },
     created() {
@@ -43,10 +43,6 @@ export default {
                 black: false,
             })
         }
-    },
-    mounted() {
-        this.$on('wantslogin', this.active = 'login')
-        this.$on('wantssignup', this.active = 'signup')
     },
 }
 </script>

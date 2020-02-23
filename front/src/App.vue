@@ -2,27 +2,30 @@
 	<section class="app-main">
 
 		<!-- GLOBAL SPINNER -->
-		<template>
+        <transition name="fade" mode="out-in">
 
-			<div v-show="showGlobalSpinner" class="global-spinner-con">
-				<loading></loading>
-			</div>
+            <div v-show="showGlobalSpinner" class="global-spinner-con">
+                <loading></loading>
+            </div>
 
-		</template>
+        </transition>
 
 
 		<!-- APP ACTUAL -->
-		<template v-show="!showGlobalSpinner">
+        <transition-group name="fade" mode="out-in">
+            <template v-show="!showGlobalSpinner">
 
-			<sitemodal v-if="showsitemodal" v-bind="{ contains }"></sitemodal>
+                <sitemodal :key="1" v-if="showsitemodal" v-bind="{ contains }"></sitemodal>
 
-			<navbar v-if="checkroute"></navbar>
+                <navbar :key="2" v-if="checkroute"></navbar>
 
-			<router-view></router-view>
+                <router-view :key="3"></router-view>
 
-			<qrfooter v-if="loadPushed && showfooter"></qrfooter>
+                <qrfooter :key="4" v-if="loadPushed && showfooter"></qrfooter>
 
-		</template>
+            </template>
+        </transition-group>
+
 
         <usermessages v-bind="{ msg, black, sass }" v-if="showUserMessage"></usermessages>
         
