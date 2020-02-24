@@ -50,7 +50,6 @@ export const postSubmitSubdom = (req: Request, res: Response) => {
     } else {
         return res.status(501).send({ userContent: 'Cant clone that crazy chicken bro!', intercept: false})
     }
-
 }
 
 export const postCheckSubdom = (req: Request, res: Response) => {

@@ -1,12 +1,12 @@
 <template>
   <section class="manage-container">
 
-    <template v-if="proceed">
+    <!-- <template v-if="proceed">
         <router-link class="button" tag="button" :to="{ name: 'create'}">create</router-link>
         <router-link class="button" tag="button" :to="{ name: 'preview'}">preview</router-link>
-    </template>
+    </template> -->
 
-    <h2 class="h2">We need some details before you can get started</h2>
+    <h6 class="h6">We need some details before you can get started</h6>
 
     <div class="subdom-input-container">
         <span class="pre">https://</span>
@@ -22,9 +22,11 @@
             :hasautocomplete="false"> 
         </qinput>
         <span class="suf">.welcomeqr.codes</span>
+        <span class="icon tick" v-if="subdomok"></span>
+        <span class="icon bigx" v-else></span>
+        <loadinginline class="icon" v-if="checking"></loadinginline>
     </div>
-    {{ subdomok ? 'tick' : 'big ass x' }}
-    <button class="button" @click="submitsubdom">I'm Happy With My Sub Domain!</button>
+    <button class="button-small subsubmit" @click="submitsubdom">I'm Happy With My Sub Domain!</button>
 
     <div v-for="(ed, ind) in editors" :key="ind">
         <router-link :to="{ path: '/app/create'}">
@@ -39,10 +41,12 @@
 import { EventBus, LOADING } from '../../EventBus'
 import { mapGetters } from 'vuex'
 import qinput from '../../components/forms/qinput'
+import loadinginline from '../../components/loadinginline'
 export default {
     name: 'manage',
     components: {
         qinput,
+        loadinginline,
     },
     data() {
         return {
@@ -87,6 +91,8 @@ export default {
 </script>
 
 <style lang="sass" scoped>
+.subsubmit
+    width: 100%
 .manage-container
     margin-top: 80px
     min-height: 500px
@@ -98,14 +104,27 @@ export default {
 .subdom-input-container
     display: flex
     flex-direction: row
+    align-items: center
     .pre, .suf
         font-size: 1.3em
         display: flex
         align-items: center
-        margin-bottom: 10px
+        margin-bottom: 8px
         color: $medium-gray
     .pre
         margin-right: 5px
     .suf
         margin-left: 5px
+    .icon
+        display: flex
+        align-items: center
+        height: 40px
+        width: 40px
+        margin-bottom: 6px
+    .bigx
+        background: center / contain no-repeat url("/svg/times.svg")
+        background-size: unset
+    .tick
+        background: center / contain no-repeat url("/svg/tick.svg")
+        background-size: unset
 </style>
