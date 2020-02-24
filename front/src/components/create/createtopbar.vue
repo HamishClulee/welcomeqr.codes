@@ -5,7 +5,7 @@
                 <img src="/svg/smallogo.svg" />
             </div>
         </div>
-
+        <h6 class="h6">https://{{ getuser.subdom }}.welcomeqr.codes</h6>
         <div class="spacer"></div>
 
         <div class="top-bar-left">
@@ -27,14 +27,16 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 export default {
     name: 'createtopbar',
     methods: {
         routehome () {
-
             this.$router.push({ name: 'home'})
-
         },
+    },
+    computed: {
+        ...mapGetters(['getuser']),
     },
 }
 </script>
@@ -44,6 +46,11 @@ export default {
     border: none
 .button
     margin: 0 10px
+.h6
+    color: $medium-gray
+    margin-left: 20px
+    font-size: 1em
+    margin-bottom: 5px
 .spacer
     width: 20%
 .top-bar-left

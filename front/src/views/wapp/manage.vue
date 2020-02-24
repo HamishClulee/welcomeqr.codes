@@ -6,27 +6,38 @@
         <router-link class="button" tag="button" :to="{ name: 'preview'}">preview</router-link>
     </template> -->
 
-    <h6 class="h6">We need some details before you can get started</h6>
+    <h6 v-if="!getuser.subdom" class="h6">We need some details before you can get started</h6>
 
-    <div class="subdom-input-container">
-        <span class="pre">https://</span>
-        <qinput
-            :fullwidth="false"
-            setwidth="250px"
-            inptype="text"
-            placey="Your unique sub domain..."
-            errortxt=""
-            eventname="subdominput"
-            @subdominput="checksubdom"
-            :isrequired="true"
-            :hasautocomplete="false"> 
-        </qinput>
-        <span class="suf">.welcomeqr.codes</span>
-        <span class="icon tick" v-if="subdomok"></span>
-        <span class="icon bigx" v-else></span>
-        <loadinginline class="icon" v-if="checking"></loadinginline>
-    </div>
-    <button class="button-small subsubmit" @click="submitsubdom">I'm Happy With My Sub Domain!</button>
+    <template v-if="!getuser.subdom">
+        <div class="subdom-input-container" >
+            <span class="pre">https://</span>
+            <qinput
+                v-if="!getuser.subdom"
+                :fullwidth="false"
+                setwidth="250px"
+                inptype="text"
+                placey="Your unique sub domain..."
+                errortxt=""
+                eventname="subdominput"
+                @subdominput="checksubdom"
+                :isrequired="true"
+                :hasautocomplete="false"> 
+            </qinput>
+            <span class="suf">.welcomeqr.codes</span>
+            <span class="icon tick" v-if="subdomok"></span>
+            <span class="icon bigx" v-else></span>
+            <loadinginline class="icon" v-if="checking"></loadinginline>
+        </div>
+        <button class="button-small subsubmit" @click="submitsubdom">I'm Happy With My Sub Domain!</button>
+    </template>
+    <template v-else>
+        <h4 class="h4">Your subdomain is</h4>
+        <h5 class="h5">https://{{ getuser.subdom }}.welcomeqr.codes</h5>
+        <h6 class="h6">Any websites you publish will be hosted at that address</h6>
+        <router-link class="button" tag="button" :to="{ path: '/app/create'}">Start editing</router-link>
+    </template>
+    
+
 
     <div v-for="(ed, ind) in editors" :key="ind">
         <router-link :to="{ path: '/app/create'}">
@@ -61,6 +72,9 @@ export default {
         EventBus.$emit(LOADING, true)
         this.$QAuth.authenticate().then(res => { 
             this.$store.commit('IS_AUTHED', res.data.user)
+            if (res.data.user.subdom) {
+                this.subdom = res.data.user.subdom
+            }
             EventBus.$emit(LOADING, false)
         })
     },
@@ -80,7 +94,10 @@ export default {
         },
         submitsubdom() {
             this.$QEdit.submitsubdom(this.subdom, this.getuser.id).then(res => {
-                this.proceed = true
+                if (res.data.user.subdom) {
+                    this.proceed = true
+                    this.$store.commit('IS_AUTHED', res.data.user)
+                }
             })
         },
     },

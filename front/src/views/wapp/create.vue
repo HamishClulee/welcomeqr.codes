@@ -116,6 +116,9 @@ export default {
         this.$QAuth.authenticate().then(res => {
             this.$store.commit('IS_AUTHED', res.data.user)
             EventBus.$emit(LOADING, false)
+            this.$QEdit.getHTML().then(res => {
+                this.editor.setHTML(res.data.html)
+            })
         })
     },
     mounted () {

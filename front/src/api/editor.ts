@@ -52,4 +52,8 @@ export class QEdit {
     submitsubdom(subdom: string, userid: string): AxiosPromise<APIResponse> {
         return this.ax.post('/submitsubdom', { subdom, userid })
     }
+
+    getHTML(): AxiosPromise<APIResponse> {
+        return this.ax.post('/gethtmlforuser')
+    }
 }
