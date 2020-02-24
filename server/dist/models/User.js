@@ -4,11 +4,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const bcrypt_nodejs_1 = __importDefault(require("bcrypt-nodejs"));
-const crypto_1 = __importDefault(require("crypto"));
 const mongoose_1 = __importDefault(require("mongoose"));
 const userSchema = new mongoose_1.default.Schema({
     email: { type: String, unique: true },
     password: String,
+    subdom: { type: String || null, default: null },
     passwordResetToken: String,
     passwordResetExpires: Date,
     facebook: String,
@@ -23,9 +23,6 @@ const userSchema = new mongoose_1.default.Schema({
         picture: String
     }
 }, { timestamps: true });
-/**
- * Password hash middleware.
- */
 userSchema.pre('save', function save(next) {
     const user = this;
     if (!user.isModified('password')) {
@@ -50,15 +47,5 @@ const comparePassword = function (candidatePassword, cb) {
     });
 };
 userSchema.methods.comparePassword = comparePassword;
-/**
- * Helper method for getting user's gravatar.
- */
-userSchema.methods.gravatar = function (size = 200) {
-    if (!this.email) {
-        return `https://gravatar.com/avatar/?s=${size}&d=retro`;
-    }
-    const md5 = crypto_1.default.createHash('md5').update(this.email).digest('hex');
-    return `https://gravatar.com/avatar/${md5}?s=${size}&d=retro`;
-};
 exports.User = mongoose_1.default.model('User', userSchema);
 //# sourceMappingURL=User.js.map

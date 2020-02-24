@@ -117,7 +117,6 @@ export default {
             this.$store.commit('IS_AUTHED', res.data.user)
             EventBus.$emit(LOADING, false)
         })
-        // console.log(this.$route)
     },
     mounted () {
         const edel = document.getElementById( 'editor' )
@@ -136,8 +135,7 @@ export default {
         usersaved() { 
             this.$QEdit.submitnew(this.editor.getHTML(), this.getuser, false)
                 .then(res => {
-                    // console.log(res)
-                    // loading spinner false
+
                 })
         },
         setFontSize(e) { this.editor['setFontSize'] (e) },
@@ -166,7 +164,7 @@ export default {
         
         },
         cropUploadFail(status, field){
-            // TODO impl
+            // TODO implement
         },
         removeAllFormats() {
             this.isBold = false

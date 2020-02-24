@@ -7,6 +7,7 @@ const mongoose_1 = __importDefault(require("mongoose"));
 const editor = new mongoose_1.default.Schema({
     userid: String,
     useremail: String,
+    subdom: String || null,
     html: String,
     name: String,
 }, { timestamps: true });

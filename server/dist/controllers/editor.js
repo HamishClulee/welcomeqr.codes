@@ -1,8 +1,11 @@
 'use strict';
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const Editor_1 = require("../models/Editor");
 const Suddom_1 = require("../models/Suddom");
-const SUBDOMS_IDENTIFIER = 'stay-unique-subdoms';
+const logger_1 = __importDefault(require("../logger"));
 const SUBDOMS_ID = '5e52678609948c1e0ec9994f';
 let SUBDOMS = [];
 exports.postSubmitNew = (req, res) => {
@@ -14,7 +17,7 @@ exports.postSubmitNew = (req, res) => {
     });
     editor.save(function (err) {
         if (err) {
-            console.log(err);
+            logger_1.default.log(err);
             return res.status(501).send({ userContent: 'Ice cream machine broke, ok, have a nice day' });
         }
         else {
@@ -25,7 +28,7 @@ exports.postSubmitNew = (req, res) => {
 exports.postGetAllEditorsForUser = (req, res) => {
     Editor_1.Editor.find({ userid: req.body.userid }, function (err, editors) {
         if (err) {
-            console.log(err);
+            logger_1.default.log(err);
             return res.status(501).send({ userContent: 'Ice cream machine broke, ok, have a nice day' });
         }
         else {
@@ -36,9 +39,9 @@ exports.postGetAllEditorsForUser = (req, res) => {
 exports.postSubmitSubdom = (req, res) => {
     if (SUBDOMS.indexOf(req.body.subdom) === -1) {
         SUBDOMS.push(req.body.subdom);
-        Suddom_1.Subdom.update({ '_id': SUBDOMS_ID }, { subdoms: SUBDOMS }, { upsert: true }, function (err) {
+        Suddom_1.Subdom.updateOne({ '_id': SUBDOMS_ID }, { subdoms: SUBDOMS }, { upsert: true }, function (err) {
             if (err) {
-                console.log(err);
+                logger_1.default.log(err);
                 return res.status(502).send({ userContent: 'Ice cream machine broke, ok, have a nice day', intercept: false });
             }
             else {

@@ -6,7 +6,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const passport_1 = __importDefault(require("passport"));
 const passport_local_1 = __importDefault(require("passport-local"));
 const lodash_1 = __importDefault(require("lodash"));
-// import { User, UserType } from '../models/User';
 const User_1 = require("../models/User");
 const LocalStrategy = passport_local_1.default.Strategy;
 passport_1.default.serializeUser((user, done) => {
@@ -17,9 +16,6 @@ passport_1.default.deserializeUser((id, done) => {
         done(err, user);
     });
 });
-/**
- * Sign in using Email and Password.
- */
 passport_1.default.use(new LocalStrategy({ usernameField: 'email' }, (email, password, done) => {
     User_1.User.findOne({ email: email.toLowerCase() }, (err, user) => {
         if (err) {
@@ -53,26 +49,17 @@ passport_1.default.use(new LocalStrategy({ usernameField: 'email' }, (email, pas
  *       - If there is, return an error message.
  *       - Else create a new account.
  */
-/**
- * Login Required middleware.
- */
 exports.isAuthenticated = (req, res, next) => {
-    if (req.isAuthenticated()) {
+    if (req.isAuthenticated())
         return next();
-    }
-    res.redirect('/login');
+    res.redirect('/?authRedirect=true');
 };
-/**
- * Authorization Required middleware.
- */
 exports.isAuthorized = (req, res, next) => {
     const provider = req.path.split('/').slice(-1)[0];
     const user = req.user;
-    if (lodash_1.default.find(user.tokens, { kind: provider })) {
+    if (lodash_1.default.find(user.tokens, { kind: provider }))
         next();
-    }
-    else {
+    else
         res.redirect(`/auth/${provider}`);
-    }
 };
 //# sourceMappingURL=passport.js.map

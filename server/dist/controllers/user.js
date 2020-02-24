@@ -26,34 +26,34 @@ const logger_1 = __importDefault(require("../logger"));
  */
 exports.sessionChallenge = (req, res) => {
     // console.log('sess: \n => ', JSON.stringify(req.body.intercept, null, 2))
-    logger_1.default.log(`[${new Date()}] New session challenge from ${req.session ? req.session : '=> no session exists!'}`);
+    logger_1.default.log(`[${new Date()}] New session challenge from ${req.session ? JSON.stringify(req.session) : '=> no session exists!'}`);
     if (!req.session.passport) {
         logger_1.default.log(`[${new Date()}] Failed session challenge from ${req.hostname}`);
         return res.status(401).send({
             status: 401,
             message: 'No user logged in.',
             intercept: req.body.intercept,
-            user: { email: null, _id: null, authed: false },
+            user: { email: null, _id: null, authed: false, subdom: null },
         });
     }
     else {
         User_1.User.findOne({ _id: req.session.passport.user }, (err, user) => {
             if (err) {
-                logger_1.default.log(`[${new Date()}] Mongo failed user look up with details ${req.session.passport.user}`);
+                logger_1.default.log(`[${new Date()}] Mongo failed user look up with details ${JSON.stringify(req.session.passport.user)}`);
                 return res.status(401).send({
                     status: 401,
                     message: 'You are not authenticated.',
                     intercept: req.body.intercept,
-                    user: { email: null, _id: null, authed: false },
+                    user: { email: null, _id: null, authed: false, subdom: null },
                 });
             }
             if (user) {
                 logger_1.default.log(`[${new Date()}] New session challenge from ${user.email}`);
-                let { email, _id } = user;
+                let { email, _id, subdom } = user;
                 return res.status(200).send({
                     msg: 'you are a premium user',
                     intercept: req.body.intercept,
-                    user: { email, id: _id, authed: true }
+                    user: { email, id: _id, authed: true, subdom }
                 });
             }
             else {
@@ -62,7 +62,7 @@ exports.sessionChallenge = (req, res) => {
                     status: 401,
                     message: 'You do not exist.',
                     intercept: req.body.intercept,
-                    user: { email: null, _id: null, authed: false },
+                    user: { email: null, _id: null, authed: false, subdom: null },
                 });
             }
         });
@@ -72,38 +72,30 @@ exports.postLogout = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
     req.logout();
     return res.status(200).send({ userContent: 'see you later, aligator', user: { email: null, _id: null, authed: false } });
 });
-/**
- * POST /login
- * Sign in using email and password.
- */
 exports.postLogin = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     yield express_validator_1.check('email', 'Email is not valid').isEmail().run(req);
     yield express_validator_1.check('password', 'Password cannot be blank').isLength({ min: 1 }).run(req);
     yield express_validator_1.sanitize('email').normalizeEmail({ gmail_remove_dots: false }).run(req);
     const errors = express_validator_1.validationResult(req);
     if (!errors.isEmpty()) {
-        return res.status(400).send({ errors: errors.array(), userContent: 'signup deets bad', user: { email: null, _id: null, authed: false } });
+        return res.status(400).send({ errors: errors.array(), userContent: 'signup deets bad', user: { email: null, _id: null, authed: false, subdom: null } });
     }
     passport_1.default.authenticate('local', (err, user, info) => {
         if (err) {
             return next(err);
         }
         if (!user) {
-            return res.status(400).send({ userContent: 'no user exists', user: { email: null, _id: null, authed: false } });
+            return res.status(400).send({ userContent: 'no user exists', user: { email: null, _id: null, authed: false, subdom: null } });
         }
-        let { email, _id } = user;
+        let { email, _id, subdom } = user;
         req.logIn(user, (err) => {
             if (err) {
                 return next(err);
             }
-            return res.status(200).send({ userContent: 'you sexy beast, welcome home', user: { email, id: _id, authed: true } });
+            return res.status(200).send({ userContent: 'you sexy beast, welcome home', user: { email, id: _id, authed: true, subdom } });
         });
     })(req, res, next);
 });
-/**
- * POST /signup
- * Create a new local account.
- */
 exports.postSignup = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     yield express_validator_1.check('email', 'Email is not valid').isEmail().run(req);
     yield express_validator_1.check('password', 'Password must be at least 4 characters long').isLength({ min: 4 }).run(req);
@@ -111,7 +103,7 @@ exports.postSignup = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
     yield express_validator_1.sanitize('email').normalizeEmail({ gmail_remove_dots: false }).run(req);
     const errors = express_validator_1.validationResult(req);
     if (!errors.isEmpty()) {
-        return res.status(400).send({ errors: errors.array(), userContent: 'signup deets bad', user: { email: null, _id: null, authed: false } });
+        return res.status(400).send({ errors: errors.array(), userContent: 'signup deets bad', user: { email: null, _id: null, authed: false, subdom: null } });
     }
     const user = new User_1.User({
         email: req.body.email,
@@ -122,36 +114,28 @@ exports.postSignup = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
             return next(err);
         }
         if (existingUser) {
-            let { email, _id } = existingUser;
-            return res.status(200).send({ userContent: 'account already exists!', user: { email, id: _id, authed: true } });
+            let { email, _id, subdom } = existingUser;
+            return res.status(200).send({ userContent: 'account already exists!', user: { email, id: _id, authed: true, subdom } });
         }
         user.save((err) => {
             if (err) {
                 return next(err);
             }
-            let { email, _id } = user;
+            let { email, _id, subdom } = user;
             req.logIn(user, (err) => {
                 if (err) {
                     return next(err);
                 }
-                return res.status(200).send({ userContent: 'Hi dude man', user: { email, id: _id, authed: true } });
+                return res.status(200).send({ userContent: 'Hi dude man', user: { email, id: _id, authed: true, subdom } });
             });
         });
     });
 });
-/**
- * GET /account
- * Profile page.
- */
 exports.getAccount = (req, res) => {
     res.render('account/profile', {
         title: 'Account Management'
     });
 };
-/**
- * POST /account/profile
- * Update profile information.
- */
 exports.postUpdateProfile = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     yield express_validator_1.check('email', 'Please enter a valid email address.').isEmail().run(req);
     // eslint-disable-next-line @typescript-eslint/camelcase
@@ -184,10 +168,6 @@ exports.postUpdateProfile = (req, res, next) => __awaiter(void 0, void 0, void 0
         });
     });
 });
-/**
- * POST /account/password
- * Update current password.
- */
 exports.postUpdatePassword = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     yield express_validator_1.check('password', 'Password must be at least 4 characters long').isLength({ min: 4 }).run(req);
     yield express_validator_1.check('confirmPassword', 'Passwords do not match').equals(req.body.password).run(req);
@@ -211,10 +191,6 @@ exports.postUpdatePassword = (req, res, next) => __awaiter(void 0, void 0, void 
         });
     });
 });
-/**
- * POST /account/delete
- * Delete user account.
- */
 exports.postDeleteAccount = (req, res, next) => {
     const user = req.user;
     User_1.User.remove({ _id: user.id }, (err) => {
@@ -226,10 +202,6 @@ exports.postDeleteAccount = (req, res, next) => {
         res.redirect('/');
     });
 };
-/**
- * GET /account/unlink/:provider
- * Unlink OAuth provider.
- */
 exports.getOauthUnlink = (req, res, next) => {
     const provider = req.params.provider;
     const user = req.user;
@@ -248,10 +220,6 @@ exports.getOauthUnlink = (req, res, next) => {
         });
     });
 };
-/**
- * GET /reset/:token
- * Reset Password page.
- */
 exports.getReset = (req, res, next) => {
     if (req.isAuthenticated()) {
         return res.redirect('/');
@@ -272,10 +240,6 @@ exports.getReset = (req, res, next) => {
         });
     });
 };
-/**
- * POST /reset/:token
- * Process the reset password request.
- */
 exports.postReset = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     yield express_validator_1.check('password', 'Password must be at least 4 characters long.').isLength({ min: 4 }).run(req);
     yield express_validator_1.check('confirm', 'Passwords must match.').equals(req.body.password).run(req);
@@ -333,13 +297,9 @@ exports.postReset = (req, res, next) => __awaiter(void 0, void 0, void 0, functi
         if (err) {
             return next(err);
         }
-        res.redirect('/');
+        // res.redirect('/')
     });
 });
-/**
- * GET /forgot
- * Forgot Password page.
- */
 exports.getForgot = (req, res) => {
     if (req.isAuthenticated()) {
         return res.redirect('/');
@@ -348,10 +308,6 @@ exports.getForgot = (req, res) => {
         title: 'Forgot Password'
     });
 };
-/**
- * POST /forgot
- * Create a random token, then the send user an email with a reset link.
- */
 exports.postForgot = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     yield express_validator_1.check('email', 'Please enter a valid email address.').isEmail().run(req);
     // eslint-disable-next-line @typescript-eslint/camelcase
@@ -396,10 +352,12 @@ exports.postForgot = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
                 to: user.email,
                 from: 'donotreply@welcomeqr.codes',
                 subject: 'Reset your password on Hackathon Starter',
-                text: `You are receiving this email because you (or someone else) have requested the reset of the password for your account.\n\n
-                        Please click on the following link, or paste this into your browser to complete the process:\n\n
-                        http://${req.headers.host}/reset/${token}\n\n
-                        If you did not request this, please ignore this email and your password will remain unchanged.\n`
+                text: `
+You are receiving this email because you (or someone else) have requested the reset of the password for your account.\n\n
+Please click on the following link, or paste this into your browser to complete the process:\n\n
+http://${req.headers.host}/reset/${token}\n\n
+If you did not request this, please ignore this email and your password will remain unchanged.\n
+`
             };
             transporter.sendMail(mailOptions, (err) => {
                 // req.flash('info', { msg: `An e-mail has been sent to ${user.email} with further instructions.` })

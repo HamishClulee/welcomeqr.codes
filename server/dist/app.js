@@ -85,10 +85,11 @@ app.post('/reset/:token', userController.postReset);
 app.post('/signup', userController.postSignup);
 /** Editor */
 const editorController = __importStar(require("./controllers/editor"));
-app.post('/api/submitnew', editorController.postSubmitNew);
-app.post('/api/getallforuser', editorController.postGetAllEditorsForUser);
-app.post('/api/checksubdom', editorController.postCheckSubdom);
-app.post('/api/submitsubdom', editorController.postSubmitSubdom);
+const passportConfig = __importStar(require("./config/passport"));
+app.post('/api/submitnew', passportConfig.isAuthenticated, editorController.postSubmitNew);
+app.post('/api/getallforuser', passportConfig.isAuthenticated, editorController.postGetAllEditorsForUser);
+app.post('/api/checksubdom', passportConfig.isAuthenticated, editorController.postCheckSubdom);
+app.post('/api/submitsubdom', passportConfig.isAuthenticated, editorController.postSubmitSubdom);
 editorController.precaching();
 /** ---------------------------------------  IMAGE STORAGE  --------------------------------- */
 const storage = multer_1.default.diskStorage({
