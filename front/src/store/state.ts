@@ -5,6 +5,7 @@ const state: State = {
         email: null,
         id: null,
         authed: false,
+        subdom: null,
     },
     ui: {
         windowWidth: 0,

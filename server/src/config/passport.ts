@@ -2,7 +2,6 @@ import passport from 'passport'
 import passportLocal from 'passport-local'
 import _ from 'lodash'
 
-// import { User, UserType } from '../models/User';
 import { User, UserDocument } from '../models/User'
 import { Request, Response, NextFunction } from 'express'
 
@@ -18,10 +17,6 @@ passport.deserializeUser((id, done) => {
     })
 })
 
-
-/**
- * Sign in using Email and Password.
- */
 passport.use(new LocalStrategy({ usernameField: 'email' }, (email, password, done) => {
     User.findOne({ email: email.toLowerCase() }, (err, user: any) => {
         if (err) { return done(err) }
@@ -54,27 +49,14 @@ passport.use(new LocalStrategy({ usernameField: 'email' }, (email, password, don
  *       - Else create a new account.
  */
 
-
-/**
- * Login Required middleware.
- */
 export const isAuthenticated = (req: Request, res: Response, next: NextFunction) => {
-    if (req.isAuthenticated()) {
-        return next()
-    }
-    res.redirect('/login')
+    if (req.isAuthenticated()) return next()
+    res.redirect('/?authRedirect=true')
 }
 
-/**
- * Authorization Required middleware.
- */
 export const isAuthorized = (req: Request, res: Response, next: NextFunction) => {
     const provider = req.path.split('/').slice(-1)[0]
-
     const user = req.user as UserDocument
-    if (_.find(user.tokens, { kind: provider })) {
-        next()
-    } else {
-        res.redirect(`/auth/${provider}`)
-    }
+    if (_.find(user.tokens, { kind: provider })) next()
+    else res.redirect(`/auth/${provider}`)
 }

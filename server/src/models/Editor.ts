@@ -3,6 +3,7 @@ import mongoose from 'mongoose'
 export type EditorDocument = mongoose.Document & {
     userid: string;
     useremail: string;
+    subdom: string | null;
     html: string;
     name: string;
 };
@@ -10,6 +11,7 @@ export type EditorDocument = mongoose.Document & {
 const editor = new mongoose.Schema({
     userid: String,
     useremail: String,
+    subdom: String || null,
     html: String,
     name: String,
 }, { timestamps: true })

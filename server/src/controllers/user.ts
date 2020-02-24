@@ -18,7 +18,7 @@ export const sessionChallenge = (req: Request, res: Response) => {
 
     // console.log('sess: \n => ', JSON.stringify(req.body.intercept, null, 2))
 
-    QLog.log(`[${new Date()}] New session challenge from ${req.session ? req.session : '=> no session exists!'}`)
+    QLog.log(`[${new Date()}] New session challenge from ${req.session ? JSON.stringify(req.session) : '=> no session exists!'}`)
 
     if (!req.session.passport) {
 
@@ -28,7 +28,7 @@ export const sessionChallenge = (req: Request, res: Response) => {
             status: 401,
             message: 'No user logged in.',
             intercept: req.body.intercept,
-            user: { email: null, _id: null, authed: false },
+            user: { email: null, _id: null, authed: false, subdom: null },
         })
 
     } else {
@@ -36,22 +36,22 @@ export const sessionChallenge = (req: Request, res: Response) => {
         User.findOne({ _id: req.session.passport.user }, (err, user) => {
 
             if (err) {
-                QLog.log(`[${new Date()}] Mongo failed user look up with details ${req.session.passport.user}`)
+                QLog.log(`[${new Date()}] Mongo failed user look up with details ${JSON.stringify(req.session.passport.user)}`)
                 return res.status(401).send({
                     status: 401,
                     message: 'You are not authenticated.',
                     intercept: req.body.intercept,
-                    user: { email: null, _id: null, authed: false },
+                    user: { email: null, _id: null, authed: false, subdom: null },
                 })
             }
 
             if (user) {
                 QLog.log(`[${new Date()}] New session challenge from ${user.email}`)
-                let { email, _id } = user
+                let { email, _id, subdom } = user
                 return res.status(200).send({
                     msg: 'you are a premium user',
                     intercept: req.body.intercept,
-                    user: { email, id: _id, authed: true }
+                    user: { email, id: _id, authed: true, subdom }
                 })
 
             } else {
@@ -62,21 +62,19 @@ export const sessionChallenge = (req: Request, res: Response) => {
                     status: 401,
                     message: 'You do not exist.',
                     intercept: req.body.intercept,
-                    user: { email: null, _id: null, authed: false },
+                    user: { email: null, _id: null, authed: false, subdom: null },
                 })
                 
             }
         })
     }
 }
+
 export const postLogout = async (req: Request, res: Response, next: NextFunction) => {
     req.logout()
     return res.status(200).send({ userContent: 'see you later, aligator', user: { email: null, _id: null, authed: false } })
 }
-/**
- * POST /login
- * Sign in using email and password.
- */
+
 export const postLogin = async (req: Request, res: Response, next: NextFunction) => {
     await check('email', 'Email is not valid').isEmail().run(req)
     await check('password', 'Password cannot be blank').isLength({min: 1}).run(req)
@@ -85,25 +83,22 @@ export const postLogin = async (req: Request, res: Response, next: NextFunction)
     const errors = validationResult(req)
 
     if (!errors.isEmpty()) {
-        return res.status(400).send({ errors: errors.array(), userContent: 'signup deets bad', user: { email: null, _id: null, authed: false } })
+        return res.status(400).send({ errors: errors.array(), userContent: 'signup deets bad', user: { email: null, _id: null, authed: false, subdom: null } })
     }
 
     passport.authenticate('local', (err: Error, user: UserDocument, info: IVerifyOptions) => {
         if (err) { return next(err) }
         if (!user) {
-            return res.status(400).send({ userContent: 'no user exists', user: { email: null, _id: null, authed: false } })
+            return res.status(400).send({ userContent: 'no user exists', user: { email: null, _id: null, authed: false, subdom: null } })
         }
-        let { email, _id } = user
+        let { email, _id, subdom } = user
         req.logIn(user, (err) => {
             if (err) { return next(err) }
-            return res.status(200).send({ userContent: 'you sexy beast, welcome home', user: { email, id: _id, authed: true } })
+            return res.status(200).send({ userContent: 'you sexy beast, welcome home', user: { email, id: _id, authed: true, subdom } })
         })
     })(req, res, next)
 }
-/**
- * POST /signup
- * Create a new local account.
- */
+
 export const postSignup = async (req: Request, res: Response, next: NextFunction) => {
 
     await check('email', 'Email is not valid').isEmail().run(req)
@@ -114,7 +109,7 @@ export const postSignup = async (req: Request, res: Response, next: NextFunction
     const errors = validationResult(req)
 
     if (!errors.isEmpty()) {
-        return res.status(400).send({ errors: errors.array(), userContent: 'signup deets bad', user: { email: null, _id: null, authed: false }  })
+        return res.status(400).send({ errors: errors.array(), userContent: 'signup deets bad', user: { email: null, _id: null, authed: false, subdom: null }  })
     }
 
     const user = new User({
@@ -125,36 +120,28 @@ export const postSignup = async (req: Request, res: Response, next: NextFunction
     User.findOne({ email: req.body.email }, (err, existingUser) => {
         if (err) { return next(err) }
         if (existingUser) {
-            let { email, _id } = existingUser
-            return res.status(200).send({ userContent: 'account already exists!', user: { email, id: _id, authed: true }  })
+            let { email, _id, subdom } = existingUser
+            return res.status(200).send({ userContent: 'account already exists!', user: { email, id: _id, authed: true, subdom }  })
         }
         user.save((err) => {
             if (err) { return next(err) }
-            let { email, _id } = user
+            let { email, _id, subdom } = user
             req.logIn(user, (err) => {
                 if (err) {
                     return next(err)
                 }
-                return res.status(200).send({ userContent: 'Hi dude man', user: { email, id: _id, authed: true }  })
+                return res.status(200).send({ userContent: 'Hi dude man', user: { email, id: _id, authed: true, subdom }  })
             })
         })
     })
 }
 
-/**
- * GET /account
- * Profile page.
- */
 export const getAccount = (req: Request, res: Response) => {
     res.render('account/profile', {
         title: 'Account Management'
     })
 }
 
-/**
- * POST /account/profile
- * Update profile information.
- */
 export const postUpdateProfile = async (req: Request, res: Response, next: NextFunction) => {
     await check('email', 'Please enter a valid email address.').isEmail().run(req)
     // eslint-disable-next-line @typescript-eslint/camelcase
@@ -190,10 +177,6 @@ export const postUpdateProfile = async (req: Request, res: Response, next: NextF
     })
 }
 
-/**
- * POST /account/password
- * Update current password.
- */
 export const postUpdatePassword = async (req: Request, res: Response, next: NextFunction) => {
     await check('password', 'Password must be at least 4 characters long').isLength({ min: 4 }).run(req)
     await check('confirmPassword', 'Passwords do not match').equals(req.body.password).run(req)
@@ -217,10 +200,6 @@ export const postUpdatePassword = async (req: Request, res: Response, next: Next
     })
 }
 
-/**
- * POST /account/delete
- * Delete user account.
- */
 export const postDeleteAccount = (req: Request, res: Response, next: NextFunction) => {
     const user = req.user as UserDocument
     User.remove({ _id: user.id }, (err) => {
@@ -231,10 +210,6 @@ export const postDeleteAccount = (req: Request, res: Response, next: NextFunctio
     })
 }
 
-/**
- * GET /account/unlink/:provider
- * Unlink OAuth provider.
- */
 export const getOauthUnlink = (req: Request, res: Response, next: NextFunction) => {
     const provider = req.params.provider
     const user = req.user as UserDocument
@@ -250,10 +225,6 @@ export const getOauthUnlink = (req: Request, res: Response, next: NextFunction) 
     })
 }
 
-/**
- * GET /reset/:token
- * Reset Password page.
- */
 export const getReset = (req: Request, res: Response, next: NextFunction) => {
     if (req.isAuthenticated()) {
         return res.redirect('/')
@@ -273,10 +244,6 @@ export const getReset = (req: Request, res: Response, next: NextFunction) => {
         })
 }
 
-/**
- * POST /reset/:token
- * Process the reset password request.
- */
 export const postReset = async (req: Request, res: Response, next: NextFunction) => {
     await check('password', 'Password must be at least 4 characters long.').isLength({ min: 4 }).run(req)
     await check('confirm', 'Passwords must match.').equals(req.body.password).run(req)
@@ -308,7 +275,8 @@ export const postReset = async (req: Request, res: Response, next: NextFunction)
                             done(err, user)
                         })
                     })
-                })
+                }
+            )
         },
         function sendResetPasswordEmail(user: UserDocument, done: Function) {
             const transporter = nodemailer.createTransport({
@@ -331,14 +299,10 @@ export const postReset = async (req: Request, res: Response, next: NextFunction)
         }
     ], (err) => {
         if (err) { return next(err) }
-        res.redirect('/')
+        // res.redirect('/')
     })
 }
 
-/**
- * GET /forgot
- * Forgot Password page.
- */
 export const getForgot = (req: Request, res: Response) => {
     if (req.isAuthenticated()) {
         return res.redirect('/')
@@ -348,10 +312,6 @@ export const getForgot = (req: Request, res: Response) => {
     })
 }
 
-/**
- * POST /forgot
- * Create a random token, then the send user an email with a reset link.
- */
 export const postForgot = async (req: Request, res: Response, next: NextFunction) => {
     await check('email', 'Please enter a valid email address.').isEmail().run(req)
     // eslint-disable-next-line @typescript-eslint/camelcase
@@ -397,10 +357,12 @@ export const postForgot = async (req: Request, res: Response, next: NextFunction
                 to: user.email,
                 from: 'donotreply@welcomeqr.codes',
                 subject: 'Reset your password on Hackathon Starter',
-                text: `You are receiving this email because you (or someone else) have requested the reset of the password for your account.\n\n
-                        Please click on the following link, or paste this into your browser to complete the process:\n\n
-                        http://${req.headers.host}/reset/${token}\n\n
-                        If you did not request this, please ignore this email and your password will remain unchanged.\n`
+                text: `
+You are receiving this email because you (or someone else) have requested the reset of the password for your account.\n\n
+Please click on the following link, or paste this into your browser to complete the process:\n\n
+http://${req.headers.host}/reset/${token}\n\n
+If you did not request this, please ignore this email and your password will remain unchanged.\n
+`
             }
             transporter.sendMail(mailOptions, (err) => {
                 // req.flash('info', { msg: `An e-mail has been sent to ${user.email} with further instructions.` })

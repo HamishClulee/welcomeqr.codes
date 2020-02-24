@@ -1,5 +1,6 @@
 export interface AuthResponse {
-    email: string,
-    id: string,
+    email: string | null,
+    id: string | null,
     authed: boolean,
+    subdom: string | null,
 }

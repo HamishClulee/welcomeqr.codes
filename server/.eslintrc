@@ -7,7 +7,9 @@
   },
   "rules": {
     "semi": ["error", "never"],
-    "quotes": ["error", "single"],
+    "quotes": ["error", "single", { "allowTemplateLiterals": true }],
+    "indent": ["error", 4],
+    "comma-dangle": ["error", "always-multiline"],
     "@typescript-eslint/explicit-function-return-type": "off",
     "@typescript-eslint/no-explicit-any": 1,
     "@typescript-eslint/no-inferrable-types": [

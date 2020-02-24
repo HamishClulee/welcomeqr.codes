@@ -83,10 +83,11 @@ app.post('/signup', userController.postSignup)
 
 /** Editor */
 import * as editorController from './controllers/editor'
-app.post('/api/submitnew', editorController.postSubmitNew)
-app.post('/api/getallforuser', editorController.postGetAllEditorsForUser)
-app.post('/api/checksubdom', editorController.postCheckSubdom)
-app.post('/api/submitsubdom', editorController.postSubmitSubdom)
+import * as passportConfig from './config/passport'
+app.post('/api/submitnew', passportConfig.isAuthenticated, editorController.postSubmitNew)
+app.post('/api/getallforuser', passportConfig.isAuthenticated, editorController.postGetAllEditorsForUser)
+app.post('/api/checksubdom', passportConfig.isAuthenticated, editorController.postCheckSubdom)
+app.post('/api/submitsubdom', passportConfig.isAuthenticated, editorController.postSubmitSubdom)
 editorController.precaching()
 
 /** ---------------------------------------  IMAGE STORAGE  --------------------------------- */
