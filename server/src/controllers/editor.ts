@@ -39,7 +39,7 @@ export const postGetAllEditorsForUser = (req: Request, res: Response) => {
 export const postSubmitSubdom = (req: Request, res: Response) => {
     if (SUBDOMS.indexOf(req.body.subdom) === -1) {
         SUBDOMS.push(req.body.subdom)
-        Subdom.update({'_id': SUBDOMS_ID}, {subdoms: SUBDOMS}, {upsert: true}, function(err) {
+        Subdom.updateOne({'_id': SUBDOMS_ID}, {subdoms: SUBDOMS}, {upsert: true}, function(err) {
             if (err) {
                 console.log(err)
                 return res.status(502).send({ userContent: 'Ice cream machine broke, ok, have a nice day', intercept: false})

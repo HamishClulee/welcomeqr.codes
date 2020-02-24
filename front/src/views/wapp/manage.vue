@@ -91,6 +91,8 @@ export default {
 </script>
 
 <style lang="sass" scoped>
+.h6
+    margin-bottom: 25px
 .subsubmit
     width: 100%
 .manage-container
