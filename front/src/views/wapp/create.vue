@@ -138,7 +138,7 @@ export default {
         })
     },
     methods: {
-        usersaved() { 
+        usersaved() {
             this.$QEdit.submitnew(this.editor.getHTML(), this.getuser, false)
                 .then(res => {
                     // implement user feedback to display that changes are save

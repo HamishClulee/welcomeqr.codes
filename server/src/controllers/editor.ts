@@ -8,21 +8,17 @@ import QLog from '../logger'
 const SUBDOMS_ID = '5e52678609948c1e0ec9994f'
 let SUBDOMS: string[] = []
 
-export const postSubmitNew = (req: Request, res: Response) => {
-    let editor = new Editor({
-        html: req.body.html,
-        useremail: req.body.user.email,
-        userid: req.body.user.id,
-        name: req.body.name,
-    })
-    editor.save(function (err) {
-        if (err) {
-            QLog.log(err)
-            return res.status(501).send({ userContent: 'Ice cream machine broke, ok, have a nice day' })
-        } else {
-            return res.status(200).send({ userContent: 'El poho loco! You just submitted your html!' })
-        }
-    })
+export const postSubmitNew = async (req: Request, res: Response) => {
+    try {
+        let query = { 'userid': req.session.passport.user }
+        let update = { html: req.body.html };
+        let options = { upsert: true, new: true, setDefaultsOnInsert: true }
+        await Editor.findOneAndUpdate(query, update, options)
+        return res.status(200).send({ userContent: 'El poho loco! You just submitted your html!' })
+    } catch(e) {
+        QLog.log('[ERROR]', e)
+        return res.status(501).send({ userContent: 'Ice cream machine broke, ok, have a nice day' })
+    }
 }
 
 export const postGetAllEditorsForUser = (req: Request, res: Response) => {
