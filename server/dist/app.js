@@ -24,6 +24,7 @@ const multer_1 = __importDefault(require("multer"));
 const logger_1 = __importDefault(require("./logger"));
 const secrets_1 = require("./util/secrets");
 const MINS_15 = 90000;
+const DAYS_5 = 1000 * 60 * 60 * 24 * 5;
 const PORT = 1980;
 const DEV_URL = 'http://localhost:8080';
 const PROD_URL = 'https://welcomeqr.codes';
@@ -47,7 +48,7 @@ app.use(body_parser_1.default.urlencoded({ extended: true }));
 app.use(express_session_1.default({
     cookie: {
         sameSite: true,
-        maxAge: MINS_15,
+        maxAge: DAYS_5,
         secure: false,
     },
     saveUninitialized: false,
@@ -56,7 +57,7 @@ app.use(express_session_1.default({
     store: new MongoStore({
         url: mongoUrl,
         autoReconnect: true,
-        ttl: MINS_15,
+        ttl: DAYS_5,
         autoRemove: 'native'
     })
 }));

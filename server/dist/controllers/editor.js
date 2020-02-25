@@ -1,4 +1,13 @@
 'use strict';
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -9,23 +18,19 @@ const User_1 = require("../models/User");
 const logger_1 = __importDefault(require("../logger"));
 const SUBDOMS_ID = '5e52678609948c1e0ec9994f';
 let SUBDOMS = [];
-exports.postSubmitNew = (req, res) => {
-    let editor = new Editor_1.Editor({
-        html: req.body.html,
-        useremail: req.body.user.email,
-        userid: req.body.user.id,
-        name: req.body.name,
-    });
-    editor.save(function (err) {
-        if (err) {
-            logger_1.default.log(err);
-            return res.status(501).send({ userContent: 'Ice cream machine broke, ok, have a nice day' });
-        }
-        else {
-            return res.status(200).send({ userContent: 'El poho loco! You just submitted your html!' });
-        }
-    });
-};
+exports.postSubmitNew = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        let query = { 'userid': req.session.passport.user };
+        let update = { html: req.body.html };
+        let options = { upsert: true, new: true, setDefaultsOnInsert: true };
+        yield Editor_1.Editor.findOneAndUpdate(query, update, options);
+        return res.status(200).send({ userContent: 'El poho loco! You just submitted your html!' });
+    }
+    catch (e) {
+        logger_1.default.log('[ERROR]', e);
+        return res.status(501).send({ userContent: 'Ice cream machine broke, ok, have a nice day' });
+    }
+});
 exports.postGetAllEditorsForUser = (req, res) => {
     Editor_1.Editor.find({ userid: req.body.userid }, function (err, editors) {
         if (err) {
@@ -90,8 +95,8 @@ exports.postGetHTML = (req, res) => {
                 return res.status(502).send({ userContent: 'Couldnt find user from session info', intercept: true });
             }
             else {
-                let html = editor.html || '';
-                return res.status(200).send({ userContent: 'Here is your HTML', html });
+                console.log(editor);
+                return res.status(200).send({ userContent: 'Here is your HTML', editor });
             }
         });
     }
