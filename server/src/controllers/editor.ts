@@ -86,8 +86,8 @@ export const postGetHTML = (req: Request, res: Response) => {
                 QLog.log(err)
                 return res.status(502).send({ userContent: 'Couldnt find user from session info', intercept: true })
             } else {
-                let html = editor.html || ''
-                return res.status(200).send({ userContent: 'Here is your HTML', html })
+                console.log(editor)
+                return res.status(200).send({ userContent: 'Here is your HTML', editor })
             }
         })
     }

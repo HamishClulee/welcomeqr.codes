@@ -117,7 +117,10 @@ export default {
             this.$store.commit('IS_AUTHED', res.data.user)
             EventBus.$emit(LOADING, false)
             this.$QEdit.getHTML().then(res => {
-                this.editor.setHTML(res.data.html)
+                if (res.data.editor && res.data.editor.html) {
+                    this.editor.setHTML(res.data.editor.html)
+                }
+                
             })
         })
     },
@@ -138,7 +141,9 @@ export default {
         usersaved() { 
             this.$QEdit.submitnew(this.editor.getHTML(), this.getuser, false)
                 .then(res => {
-
+                    // implement user feedback to display that changes are save
+                    // TODO: on user input implement user feeb back to show that
+                    // there are unsaved changes
                 })
         },
         setFontSize(e) { this.editor['setFontSize'] (e) },

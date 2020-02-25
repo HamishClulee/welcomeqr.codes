@@ -13,6 +13,7 @@ import QLog from './logger'
 import { MONGODB_URI, SESSION_SECRET } from './util/secrets'
 
 const MINS_15 = 90000
+const DAYS_5 = 1000 * 60 * 60 * 24 * 5
 const PORT = 1980
 const DEV_URL = 'http://localhost:8080'
 const PROD_URL = 'https://welcomeqr.codes'
@@ -41,7 +42,7 @@ app.use(bodyParser.urlencoded({ extended: true }))
 app.use(session({
     cookie: {
         sameSite: true,
-        maxAge: MINS_15,
+        maxAge: DAYS_5,
         secure: false,
     },
     saveUninitialized: false,
@@ -50,7 +51,7 @@ app.use(session({
     store: new MongoStore({
         url: mongoUrl,
         autoReconnect: true,
-        ttl: MINS_15,
+        ttl: DAYS_5,
         autoRemove: 'native'
     })
 }))
