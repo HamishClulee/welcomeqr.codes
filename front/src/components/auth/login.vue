@@ -80,7 +80,6 @@ export default {
                     color: 'secondary',
                     black: false,
                 })
-                this.$router.push({ path: '/app/manage' })
             })
         },
         validateemail(e) {
