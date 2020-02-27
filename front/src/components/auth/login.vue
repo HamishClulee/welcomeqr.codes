@@ -61,7 +61,6 @@ export default {
         EventBus.$emit(LOADING, true)
         this.$QAuth.authenticate().then(res => { 
             this.$store.commit('IS_AUTHED', res.data.user)
-            this.$router.push({ path: '/app/manage' })
             EventBus.$emit(MESSAGES, {
                 is: true,
                 msg: `You are now already logged in as ${res.data.user.email}!`,
