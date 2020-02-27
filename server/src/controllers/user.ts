@@ -8,93 +8,44 @@ import { IVerifyOptions } from 'passport-local'
 import { WriteError } from 'mongodb'
 import { check, sanitize, validationResult } from 'express-validator'
 import '../config/passport'
-import QLog from '../logger'
+import QAuth from './qauth'
+import { QAuthError } from './errors'
 
-/**
- * POST /session_challenge
- * Check if the user is authed
- */
-export const sessionChallenge = (req: Request, res: Response) => {
-
-    // console.log('sess: \n => ', JSON.stringify(req.body.intercept, null, 2))
-
-    QLog.log(`[${new Date()}] New session challenge from ${req.session ? JSON.stringify(req.session) : '=> no session exists!'}`)
-
-    if (!req.session.passport) {
-
-        QLog.log(`[${new Date()}] Failed session challenge from ${req.hostname}`)
-
-        return res.status(401).send({
-            status: 401,
-            message: 'No user logged in.',
-            intercept: req.body.intercept,
-            user: { email: null, _id: null, authed: false, subdom: null },
-        })
-
-    } else {
-
-        User.findOne({ _id: req.session.passport.user }, (err, user) => {
-
-            if (err) {
-                QLog.log(`[${new Date()}] Mongo failed user look up with details ${JSON.stringify(req.session.passport.user)}`)
-                return res.status(401).send({
-                    status: 401,
-                    message: 'You are not authenticated.',
-                    intercept: req.body.intercept,
-                    user: { email: null, _id: null, authed: false, subdom: null },
-                })
-            }
-
-            if (user) {
-                QLog.log(`[${new Date()}] New session challenge from ${user.email}`)
-                let { email, _id, subdom } = user
-                return res.status(200).send({
-                    msg: 'you are a premium user',
-                    intercept: req.body.intercept,
-                    user: { email, id: _id, authed: true, subdom }
-                })
-
-            } else {
-
-                QLog.log(`[${new Date()}] New session challenge from non-existent user`)
-
-                return res.status(401).send({
-                    status: 401,
-                    message: 'You do not exist.',
-                    intercept: req.body.intercept,
-                    user: { email: null, _id: null, authed: false, subdom: null },
-                })
-                
-            }
-        })
+export const sessionChallenge = async (req: Request, res: Response) => {
+    try {
+        const user = await User.findOne({ _id: req.session.passport.user })
+        let { email, _id, subdom } = user
+        return res.status(200).send({intercept: req.body.intercept, user: QAuth.approve({ email, id: _id, authed: true, subdom })})
+    } catch (e) {
+        QAuthError('sessionChallenge', e, res)
     }
 }
 
 export const postLogout = async (req: Request, res: Response, next: NextFunction) => {
     req.logout()
-    return res.status(200).send({ userContent: 'see you later, aligator', user: { email: null, _id: null, authed: false } })
+    return res.status(200).send({ userContent: 'see you later, aligator', user: QAuth.deny() })
 }
 
 export const postLogin = async (req: Request, res: Response, next: NextFunction) => {
     await check('email', 'Email is not valid').isEmail().run(req)
-    await check('password', 'Password cannot be blank').isLength({min: 1}).run(req)
+    await check('password', 'Password cannot be blank').isLength({ min: 1 }).run(req)
     await sanitize('email').normalizeEmail({ gmail_remove_dots: false }).run(req)
 
     const errors = validationResult(req)
 
     if (!errors.isEmpty()) {
-        return res.status(400).send({ errors: errors.array(), userContent: 'signup deets bad', user: { email: null, _id: null, authed: false, subdom: null } })
+        return res.status(403).send({ errors: errors.array(), userContent: 'signup deets bad', user: QAuth.deny() })
     }
 
     passport.authenticate('local', (err: Error, user: UserDocument, info: IVerifyOptions) => {
         if (err) { return next(err) }
         if (!user) {
-            return res.status(400).send({ userContent: 'no user exists', user: { email: null, _id: null, authed: false, subdom: null } })
+            return res.status(400).send({ userContent: 'no user exists', user: QAuth.deny() })
         }
         let { email, _id, subdom } = user
         req.logIn(user, (err) => {
             if (err) { return next(err) }
-            return res.status(200).send({ userContent: 'you sexy beast, welcome home', user: { email, id: _id, authed: true, subdom } })
+            return res.status(200).send({ userContent: 'you sexy beast, welcome home', user: QAuth.approve({ email, id: _id, authed: true, subdom })})
         })
     })(req, res, next)
 }
@@ -109,7 +60,7 @@ export const postSignup = async (req: Request, res: Response, next: NextFunction
     const errors = validationResult(req)
 
     if (!errors.isEmpty()) {
-        return res.status(400).send({ errors: errors.array(), userContent: 'signup deets bad', user: { email: null, _id: null, authed: false, subdom: null }  })
+        return res.status(403).send({ errors: errors.array(), userContent: 'signup deets bad', user: QAuth.deny()  })
     }
 
     const user = new User({
@@ -121,7 +72,7 @@ export const postSignup = async (req: Request, res: Response, next: NextFunction
         if (err) { return next(err) }
         if (existingUser) {
             let { email, _id, subdom } = existingUser
-            return res.status(200).send({ userContent: 'account already exists!', user: { email, id: _id, authed: true, subdom }  })
+            return res.status(200).send({ userContent: 'account already exists!', user: QAuth.approve({ email, id: _id, authed: true, subdom })})
         }
         user.save((err) => {
             if (err) { return next(err) }
@@ -130,7 +81,7 @@ export const postSignup = async (req: Request, res: Response, next: NextFunction
                 if (err) {
                     return next(err)
                 }
-                return res.status(200).send({ userContent: 'Hi dude man', user: { email, id: _id, authed: true, subdom }  })
+                return res.status(200).send({ userContent: 'Hi dude man', user: QAuth.approve({ email, id: _id, authed: true, subdom })})
             })
         })
     })
