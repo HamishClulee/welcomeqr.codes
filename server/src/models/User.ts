@@ -1,11 +1,13 @@
 import bcrypt from 'bcrypt-nodejs'
 import crypto from 'crypto'
 import mongoose from 'mongoose'
+import { EditorDocument } from './Editor';
 
 export type UserDocument = mongoose.Document & {
     email: string;
     password: string;
     subdom: string | null;
+    editors: EditorDocument[],
 
     passwordResetToken: string;
     passwordResetExpires: Date;
@@ -35,6 +37,7 @@ const userSchema = new mongoose.Schema({
     email: { type: String, unique: true },
     password: String,
     subdom: { type: String || null, default: null },
+    editors: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Editor' }],
 
     passwordResetToken: String,
     passwordResetExpires: Date,
