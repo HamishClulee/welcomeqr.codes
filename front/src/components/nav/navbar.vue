@@ -101,6 +101,7 @@ export default {
                     color: 'secondary',
                     black: false,
                 })
+                this.$router.push({ path: '/auth' })
             })
         },
     },

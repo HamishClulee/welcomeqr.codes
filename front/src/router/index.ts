@@ -39,11 +39,13 @@ const routes = [
         path: '/auth',
         name: 'auth',
         component: auth,
-    },
-    {
-        path: '/account',
-        name: 'account',
-        component: account,
+        beforeEnter: (to: any, from: any, next: any) => {
+            overwritemetas({
+                title: 'Login ~ Signup',
+                description: `Login and Signup here!`,
+                noindex: true,
+            }, next)
+        },
     },
     {
         path: '/pricing',
@@ -102,6 +104,18 @@ const routes = [
                     overwritemetas({
                         title: 'Welcome QR | Preview',
                         description: `Where the magic happens, create a new downloadable QR code and associate website and content.`,
+                        noindex: true,
+                    }, next)
+                },
+            },
+            {
+                path: '/account',
+                name: 'account',
+                component: account,
+                beforeEnter: (to: any, from: any, next: any) => {
+                    overwritemetas({
+                        title: 'Welcome QR | Account',
+                        description: `Manage all the information we need to keep your account working as intened`,
                         noindex: true,
                     }, next)
                 },

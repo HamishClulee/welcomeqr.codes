@@ -53,7 +53,7 @@
 <script>
 import SERVER from '../../api'
 import qinput from '../forms/qinput'
-import { EventBus, MESSAGES } from '../../EventBus'
+import { EventBus, MESSAGES, LOADING } from '../../EventBus'
 export default {
     name: 'signup',
     components: {
@@ -68,6 +68,19 @@ export default {
             password: '',
             confirm: '',
         }
+    },
+    created () {
+        EventBus.$emit(LOADING, true)
+        this.$QAuth.authenticate().then(res => { 
+            this.$store.commit('IS_AUTHED', res.data.user)
+            EventBus.$emit(MESSAGES, {
+                is: true,
+                msg: `You are now already logged in as ${res.data.user.email}!`,
+                color: 'secondary',
+                black: false,
+            })
+            EventBus.$emit(LOADING, false)
+        })
     },
     methods: {
         submit() {
