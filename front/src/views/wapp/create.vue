@@ -139,7 +139,7 @@ export default {
         })
     },
     methods: {
-        usersaved(cb) {
+        usersaved(cb = () => {}) {
             this.$QEdit.submitnew(this.editor.getHTML(), this.getuser, false)
                 .then(res => {
                     cb()

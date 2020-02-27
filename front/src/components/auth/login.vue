@@ -88,11 +88,13 @@ export default {
             const reg = /^\S+@\S+$/
             this.email = e
             if (!reg.test(this.email)) this.emailerror = 'That email address looks funny, did you type if correctly?'
+            else if (this.email === '') this.emailerror = ''
             else this.emailerror = ''
         },
         validatepassword(e) {
             this.password = e
             if (this.password.length < 8) this.passerror = 'Password needs to be at least 8 characters long...'
+            else if (this.password === '') this.passerror = ''
             else this.passerror = ''
         },
     },

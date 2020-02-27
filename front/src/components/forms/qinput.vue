@@ -4,7 +4,8 @@
         <input
             :style="{ 'width': setwidth}"
             @focus="touched = true"
-            @blur="touched = false"
+            @blur="onBlur"
+            @input="touched = true"
             class="form-input"
             placeholder=" "
             v-model="val"
@@ -84,6 +85,10 @@ export default {
             this.touched = true
             this.$el.firstChild.focus()
         },
+        onBlur (event) {
+            this.touched = false
+            if (event && this.email !== event.target.value) this.email = event.target.value
+        },
     },
     computed: {
         stayactive () {
@@ -92,7 +97,7 @@ export default {
     },
     watch: {
         val: function (v, o) {
-            if (v.length > 2 && o === '') {
+            if (v.length - o.length > 5) {
                 this.touched = true
             }
             this.$emit(this.eventname, this.val)
