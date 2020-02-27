@@ -1,12 +1,9 @@
 <template>
   <section class="manage-container">
 
-    <!-- <template v-if="proceed">
-        <router-link class="button" tag="button" :to="{ name: 'create'}">create</router-link>
-        <router-link class="button" tag="button" :to="{ name: 'preview'}">preview</router-link>
-    </template> -->
-
     <h6 v-if="!getuser.subdom" class="h6">We need some details before you can get started</h6>
+
+    <!-- USER HASNT ENTERED A SUBDOM YET -->
 
     <template v-if="!getuser.subdom">
         <div class="subdom-input-container" >
@@ -38,7 +35,7 @@
     </template>
     
 
-
+    <!-- USER HAS A SUBDOM -->
     <div v-for="(ed, ind) in editors" :key="ind">
         <router-link :to="{ path: '/app/create'}">
             {{ ed._id }}
@@ -76,11 +73,6 @@ export default {
                 this.subdom = res.data.user.subdom
             }
             EventBus.$emit(LOADING, false)
-        })
-    },
-    mounted() {
-        this.$QEdit.getall(this.getuser.id).then(res => {
-            this.editors = res.data.editors
         })
     },
     methods: {

@@ -86,7 +86,6 @@ app.post('/signup', userController.postSignup)
 import * as editorController from './controllers/editor'
 import * as passportConfig from './config/passport'
 app.post('/api/submitnew', passportConfig.isAuthenticated, editorController.postSubmitNew)
-app.post('/api/getallforuser', passportConfig.isAuthenticated, editorController.postGetAllEditorsForUser)
 app.post('/api/checksubdom', passportConfig.isAuthenticated, editorController.postCheckSubdom)
 app.post('/api/submitsubdom', passportConfig.isAuthenticated, editorController.postSubmitSubdom)
 app.post('/api/gethtmlforuser', passportConfig.isAuthenticated, editorController.postGetHTML)
