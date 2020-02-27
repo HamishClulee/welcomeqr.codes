@@ -8,7 +8,7 @@
             placey="Email"
             :errortxt="emailerror"
             eventname="emailinput"
-            @emailinput="validateEmail"
+            @emailinput="validateemail"
             :isrequired="true"
             :hasautocomplete="true">
         </qinput>
@@ -16,9 +16,9 @@
         <qinput
             inptype="password"
             placey="Password"
-            :errortxt="passworderror"
+            :errortxt="passerror"
             eventname="passwordinput"
-            @passwordinput="validatePassword"
+            @passwordinput="validatepassword"
             :isrequired="true"
             :hasautocomplete="true">
         </qinput>
@@ -28,7 +28,7 @@
             placey="Confirm Password"
             :errortxt="confirmerror"
             eventname="confirminput"
-            @confirminput="validateConfirm"
+            @confirminput="validateconfirm"
             :isrequired="true"
             :hasautocomplete="true">
         </qinput>
@@ -41,7 +41,7 @@
                 <p class="btn-text"><b>Continue with Google</b></p>
             </div>
 
-            <button class="button submit" @click="submit">SUBMIT</button>
+            <button type="submit" class="button submit" @click="submit">SUBMIT</button>
 
             <p @click="$emit('wantslogin')">Already have an account? <a>Login here.</a></p>
 
@@ -54,17 +54,15 @@
 import SERVER from '../../api'
 import qinput from '../forms/qinput'
 import { EventBus, MESSAGES } from '../../EventBus'
-import { vEmail, vPass, vConfirm } from '../../mixins.js'
 export default {
     name: 'signup',
     components: {
         qinput,
     },
-    mixins: [ vEmail, vPass, vConfirm ],
     data() {
         return {
             emailerror: '',
-            passworderror: '',
+            passerror: '',
             confirmerror: '',
             email: '',
             password: '',
@@ -81,7 +79,24 @@ export default {
                     color: 'secondary',
                     black: false,
                 })
+                this.$router.push({ path: '/app/manage' })
             })
+        },
+        validateemail(e) {
+            const reg = /^\S+@\S+$/
+            this.email = e
+            if (!reg.test(this.email)) this.emailerror = 'That email address looks funny, did you type if correctly?'
+            else this.emailerror = ''
+        },
+        validatepassword(e) {
+            this.password = e
+            if (this.password.length < 8) this.passerror = 'Password needs to be at least 8 characters long...'
+            else this.passerror = ''
+        },
+        validateconfirm(e) {
+            this.confirm = e
+            if (this.password !== this.confirm) this.confirmerror = 'Passwords don\'t match...'
+            else this.confirmerror = ''
         },
     },
 }

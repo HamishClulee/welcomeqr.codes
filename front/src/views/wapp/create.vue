@@ -2,7 +2,8 @@
     <main class="create-con">
 
         <createtopbar
-            @save="usersaved">
+            @save="usersaved"
+            @preview="usersaved(() => { $router.push({ path: '/app/preview' })})">
         </createtopbar>
 
         <section class="content-container">
@@ -138,12 +139,10 @@ export default {
         })
     },
     methods: {
-        usersaved() {
+        usersaved(cb) {
             this.$QEdit.submitnew(this.editor.getHTML(), this.getuser, false)
                 .then(res => {
-                    // implement user feedback to display that changes are save
-                    // TODO: on user input implement user feeb back to show that
-                    // there are unsaved changes
+                    cb()
                 })
         },
         setFontSize(e) { this.editor['setFontSize'] (e) },

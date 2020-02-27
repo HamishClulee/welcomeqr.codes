@@ -15,9 +15,9 @@
             <button class="button save" @click="$emit('save')">
                 SAVE
             </button>
-            <router-link tag="button" class="button preview" :to="{ name: 'preview' }">
+            <button class="button preview" @click="$emit('preview')">
                 PREVIEW
-            </router-link>
+            </button>
             <button class="button publish">
                 PUBLISH
             </button>

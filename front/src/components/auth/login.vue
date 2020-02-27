@@ -6,9 +6,9 @@
         <qinput
             inptype="email"
             placey="Email"
-            errortxt=""
+            :errortxt="emailerror"
             eventname="emailinput"
-            @emailinput="(e) => email = e"
+            @emailinput="validateemail"
             :isrequired="true"
             :hasautocomplete="true">
         </qinput>
@@ -16,9 +16,9 @@
         <qinput
             inptype="password"
             placey="Password"
-            errortxt=""
+            :errortxt="passerror"
             eventname="passwordinput"
-            @passwordinput="(e) => password = e"
+            @passwordinput="validatepassword"
             :isrequired="true"
             :hasautocomplete="true">
         </qinput>
@@ -53,6 +53,8 @@ export default {
         return {
             email: '',
             password: '',
+            emailerror: '',
+            passerror: '',
         }
     },
     methods: {
@@ -65,7 +67,19 @@ export default {
                     color: 'secondary',
                     black: false,
                 })
+                this.$router.push({ path: '/app/manage' })
             })
+        },
+        validateemail(e) {
+            const reg = /^\S+@\S+$/
+            this.email = e
+            if (!reg.test(this.email)) this.emailerror = 'That email address looks funny, did you type if correctly?'
+            else this.emailerror = ''
+        },
+        validatepassword(e) {
+            this.password = e
+            if (this.password.length < 8) this.passerror = 'Password needs to be at least 8 characters long...'
+            else this.passerror = ''
         },
     },
 }
