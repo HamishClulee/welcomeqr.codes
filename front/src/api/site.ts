@@ -15,9 +15,9 @@ export class QSite {
     }
 
     terms(): AxiosPromise<HTMLResponse> {
-        return this.ax.post('/terms-html')
+        return this.ax.post('/terms')
     }
     privacy(): AxiosPromise<HTMLResponse> {
-        return this.ax.post('/privacy-html')
+        return this.ax.post('/privacy')
     }
 }
