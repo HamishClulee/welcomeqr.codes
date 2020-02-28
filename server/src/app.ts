@@ -82,6 +82,11 @@ app.post('/forgot', user.forgot)
 app.post('/reset/:token', user.reset)
 app.post('/signup', user.signup)
 
+/** Site */
+import * as site from './controllers/site'
+app.post('/site/terms', site.terms)
+app.post('/site/privacy', site.privacy)
+
 /** Editor */
 import * as editor from './controllers/editor'
 import * as passportConfig from './config/passport'
@@ -90,11 +95,6 @@ app.post('/api/checksubdom', passportConfig.isAuthenticated, editor.checkSubdom)
 app.post('/api/submitsubdom', passportConfig.isAuthenticated, editor.submitSubdom)
 app.post('/api/gethtmlforuser', passportConfig.isAuthenticated, editor.getHTML)
 editor.precaching()
-
-/** Site */
-import * as site from './controllers/site'
-app.post('/site/terms', site.terms)
-app.post('/site/privacy', site.privacy)
 
 /** ---------------------------------------  IMAGE STORAGE  --------------------------------- */
 const storage = multer.diskStorage({

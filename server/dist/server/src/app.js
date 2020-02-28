@@ -84,6 +84,10 @@ app.post('/logout', user.logout);
 app.post('/forgot', user.forgot);
 app.post('/reset/:token', user.reset);
 app.post('/signup', user.signup);
+/** Site */
+const site = __importStar(require("./controllers/site"));
+app.post('/site/terms', site.terms);
+app.post('/site/privacy', site.privacy);
 /** Editor */
 const editor = __importStar(require("./controllers/editor"));
 const passportConfig = __importStar(require("./config/passport"));
@@ -92,10 +96,6 @@ app.post('/api/checksubdom', passportConfig.isAuthenticated, editor.checkSubdom)
 app.post('/api/submitsubdom', passportConfig.isAuthenticated, editor.submitSubdom);
 app.post('/api/gethtmlforuser', passportConfig.isAuthenticated, editor.getHTML);
 editor.precaching();
-/** Site */
-const site = __importStar(require("./controllers/site"));
-app.post('/site/terms', site.terms);
-app.post('/site/privacy', site.privacy);
 /** ---------------------------------------  IMAGE STORAGE  --------------------------------- */
 const storage = multer_1.default.diskStorage({
     destination: function (req, file, callback) {
