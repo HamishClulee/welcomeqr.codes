@@ -3,7 +3,7 @@ import { HTMLResponse } from '@I/IApi'
 
 export class QSite {
 
-    private BASE_URL = process.env.NODE_ENV === 'development' ? 'http://localhost:1980' : 'https://welcomeqr.codes'
+    private BASE_URL = process.env.NODE_ENV === 'development' ? 'http://localhost:1980/site' : 'https://welcomeqr.codes/site'
     ax: AxiosInstance;
 
     constructor() {

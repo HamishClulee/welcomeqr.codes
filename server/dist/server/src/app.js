@@ -94,8 +94,8 @@ app.post('/api/gethtmlforuser', passportConfig.isAuthenticated, editor.getHTML);
 editor.precaching();
 /** Site */
 const site = __importStar(require("./controllers/site"));
-app.post('/terms-html', site.terms);
-app.post('/privacy-html', site.privacy);
+app.post('/site/terms-html', site.terms);
+app.post('/site/privacy-html', site.privacy);
 /** ---------------------------------------  IMAGE STORAGE  --------------------------------- */
 const storage = multer_1.default.diskStorage({
     destination: function (req, file, callback) {

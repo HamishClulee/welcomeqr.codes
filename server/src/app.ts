@@ -93,8 +93,8 @@ editor.precaching()
 
 /** Site */
 import * as site from './controllers/site'
-app.post('/terms-html', site.terms)
-app.post('/privacy-html', site.privacy)
+app.post('/site/terms-html', site.terms)
+app.post('/site/privacy-html', site.privacy)
 
 /** ---------------------------------------  IMAGE STORAGE  --------------------------------- */
 const storage = multer.diskStorage({
