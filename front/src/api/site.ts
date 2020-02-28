@@ -12,13 +12,6 @@ export class QSite {
             baseURL: this.BASE_URL,
             withCredentials: true,
         })
-
-        this.ax.interceptors.response.use(res => res, (error: AxiosError ) => {
-            if (error.response && error.response.status > 400) {
-
-            }
-            return Promise.reject(error)
-        })
     }
 
     terms(): AxiosPromise<HTMLResponse> {
