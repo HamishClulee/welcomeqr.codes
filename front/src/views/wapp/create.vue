@@ -1,5 +1,5 @@
 <template>
-    <main class="create-con">
+    <main class="create-con" @click="checkWhatsOpen">
 
         <createtopbar
             @save="usersaved"
@@ -41,11 +41,11 @@
                 img-format="png">
             </myupload>
 
-            <chrome-picker @input="setTextColour" class="color-picker" v-if="showColorPicker" v-model="colors" />
+            <chrome-picker @input="setTextColour" id="color-picker-parent-target" class="color-picker" v-if="showColorPicker" v-model="colors" />
 
             <linkmodal :show="showLinkModal" @callback="insertLink" @closemodal="showLinkModal = false"></linkmodal>
 
-            <div class="font-size-container" v-if="showFontSize">
+            <div class="font-size-container" v-show="showFontSize">
                 <multiselect class="font-size" @select="setFontSize" v-model="fontSize" :options="fontSizeOptions"></multiselect>
             </div>
 
@@ -139,13 +139,17 @@ export default {
         })
     },
     methods: {
-        usersaved(cb = () => {}) {
-            this.$QEdit.submitnew(this.editor.getHTML(), this.getuser, false)
-                .then(res => {
-                    cb()
-                })
+        checkWhatsOpen(e) {
+            const el = document.getElementById('color-picker-parent-target')
+            if (this.showColorPicker && !el.contains(e.target)) this.showColorPicker = false
         },
-        setFontSize(e) { this.editor['setFontSize'] (e) },
+        usersaved(cb = () => {}) {
+            this.$QEdit.submitnew(this.editor.getHTML(), this.getuser, false).then(res => cb())
+        },
+        setFontSize(e) { 
+            this.editor['setFontSize'] (e)
+            this.showFontSize = false 
+        },
         setTextColour(e) { this.editor['setTextColour'] (e.hex) },
         changeBold() { this.isBold = !this.isBold },
         changeItalic() { this.isItalic = !this.isItalic },
