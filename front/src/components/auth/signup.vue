@@ -3,6 +3,8 @@
 
         <h2 class="h2">Sign Up</h2>
 
+        <h6 class="error-h6">{{ servermsg }}</h6>
+
         <qinput
             inptype="email"
             placey="Email"
@@ -36,12 +38,19 @@
         <div class="button-container">
             <div class="google-btn" style="width: 100%;">
                 <div class="google-icon-wrapper">
-                    <img class="google-icon-svg" src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg"/>
+                    <img class="google-icon-svg" src="/svg/google.svg"/>
                 </div>
                 <p class="btn-text"><b>Continue with Google</b></p>
             </div>
 
-            <button type="submit" class="button submit" @click="submit">SUBMIT</button>
+            <button
+                :disabled="!validated"
+                type="submit"
+                :class="{ 'disabled' : !validated }"
+                class="button submit"
+                @click="submit">
+                    SUBMIT
+            </button>
 
             <p @click="$emit('wantslogin')">Already have an account? <a>Login here.</a></p>
 
@@ -53,7 +62,7 @@
 <script>
 import SERVER from '../../api'
 import qinput from '../forms/qinput'
-import { EventBus, MESSAGES, LOADING } from '../../EventBus'
+import { EventBus, MESSAGES, LOADING, SERVER_AUTH_ERROR_MESSAGE } from '../../EventBus'
 export default {
     name: 'signup',
     components: {
@@ -67,10 +76,16 @@ export default {
             email: '',
             password: '',
             confirm: '',
+            servermsg: '',
         }
     },
+    mounted() {
+        EventBus.$on(SERVER_AUTH_ERROR_MESSAGE, msg => {
+            this.servermsg = msg
+        })
+    },
     created () {
-        this.$QAuth.authenticate(false).then(res => { 
+        this.$QAuth.authenticate(false).then(res => {
             this.$store.commit('IS_AUTHED', res.data.user)
             EventBus.$emit(MESSAGES, {
                 is: true,
@@ -82,17 +97,25 @@ export default {
         })
     },
     methods: {
-        submit() {
-            this.$QAuth.signup(this.email, this.password, this.confirm).then(res => {
-                this.$store.commit('IS_AUTHED', res.data.user)
-                EventBus.$emit(MESSAGES, {
-                    is: true,
-                    msg: `You are now logged in! Welcome ${res.data.user.email}!`,
-                    color: 'secondary',
-                    black: false,
+        submit(e) {
+            e.preventDefault()
+            if (this.validated) {
+                this.servermsg = ''
+                this.$QAuth.signup(this.email, this.password, this.confirm).then(res => {
+                    if (res.data.userError) {
+                        this.servermsg = res.data.userError
+                    } else {
+                        this.$store.commit('IS_AUTHED', res.data.user)
+                        EventBus.$emit(MESSAGES, {
+                            is: true,
+                            msg: `You are now logged in! Welcome ${res.data.user.email}!`,
+                            color: 'secondary',
+                            black: false,
+                        })
+                        this.$router.push({ path: '/app/manage' })
+                    }
                 })
-                this.$router.push({ path: '/app/manage' })
-            })
+            }
         },
         validateemail(e) {
             const reg = /^\S+@\S+$/
@@ -102,19 +125,33 @@ export default {
         },
         validatepassword(e) {
             this.password = e
-            if (this.password.length < 8) this.passerror = 'Password needs to be at least 8 characters long...'
+            if (this.password.length < 8) this.passerror = 'Password needs to be at least 8 characters long'
             else this.passerror = ''
         },
         validateconfirm(e) {
             this.confirm = e
-            if (this.password !== this.confirm) this.confirmerror = 'Passwords don\'t match...'
+            if (this.password !== this.confirm) this.confirmerror = 'Passwords don\'t match'
             else this.confirmerror = ''
+        },
+    },
+    computed: {
+        validated() {
+            return this.emailerror === '' 
+                && this.passerror === '' 
+                && this.confirmerror === ''
+                && this.email !== ''
+                && this.password !== ''
+                && this.confirm !== ''
         },
     },
 }
 </script>
 
 <style lang="sass" scoped>
+.error-h6
+    color: $primary
+    font-size: 1.1em
+    font-family: $body-font
 .h2
     margin-bottom: 40px
 .auth-item-container
@@ -123,6 +160,10 @@ export default {
 .submit
     width: 100%
     margin: 5px 0
+.disabled
+    border-color: $light-gray
+    cursor: not-allowed
+    color: $light-gray
 .google-btn 
     height: 42px
     background-color: white

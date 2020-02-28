@@ -25,10 +25,10 @@ exports.sessionChallenge = (req, res) => __awaiter(void 0, void 0, void 0, funct
     try {
         const user = yield User_1.User.findOne({ _id: req.session.passport.user });
         let { email, _id, subdom } = user;
-        return res.status(200).send({ intercept: req.body.intercept, user: qauth_1.default.approve({ email, id: _id, authed: true, subdom }) });
+        return res.status(200).send({ user: qauth_1.default.approve({ email, id: _id, authed: true, subdom }) });
     }
     catch (e) {
-        errors_1.QAuthError('sessionChallenge', e, res);
+        errors_1.QAuthError('sessionChallenge', e, res, req.body.intercept);
     }
 });
 exports.postLogout = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
@@ -37,48 +37,67 @@ exports.postLogout = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
 });
 exports.postLogin = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     yield express_validator_1.check('email', 'Email is not valid').isEmail().run(req);
-    yield express_validator_1.check('password', 'Password cannot be blank').isLength({ min: 1 }).run(req);
+    yield express_validator_1.check('password', 'Password must be at least 8 characters').isLength({ min: 8 }).run(req);
     yield express_validator_1.sanitize('email').normalizeEmail({ gmail_remove_dots: false }).run(req);
     const errors = express_validator_1.validationResult(req);
+    const status = req.body.intercept ? 403 : 200;
     if (!errors.isEmpty()) {
-        return res.status(403).send({ errors: errors.array(), userContent: 'signup deets bad', user: qauth_1.default.deny() });
+        return res.status(status).send({
+            errors: errors.array(),
+            userError: 'Something is wrong with those login details, try again.',
+            user: qauth_1.default.deny()
+        });
     }
     passport_1.default.authenticate('local', (err, user, info) => {
         if (err) {
             return next(err);
         }
         if (!user) {
-            return res.status(400).send({ userContent: 'no user exists', user: qauth_1.default.deny() });
+            return res.status(status).send({
+                userError: 'Email and password do not match.',
+                user: qauth_1.default.deny()
+            });
         }
         let { email, _id, subdom } = user;
         req.logIn(user, (err) => {
             if (err) {
                 return next(err);
             }
-            return res.status(200).send({ userContent: 'you sexy beast, welcome home', user: qauth_1.default.approve({ email, id: _id, authed: true, subdom }) });
+            return res.status(200).send({
+                user: qauth_1.default.approve({ email, id: _id, authed: true, subdom })
+            });
         });
     })(req, res, next);
 });
 exports.postSignup = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     yield express_validator_1.check('email', 'Email is not valid').isEmail().run(req);
-    yield express_validator_1.check('password', 'Password must be at least 4 characters long').isLength({ min: 4 }).run(req);
+    yield express_validator_1.check('password', 'Password must be at least 8 characters long').isLength({ min: 8 }).run(req);
     yield express_validator_1.check('confirm', 'Passwords do not match').equals(req.body.password).run(req);
     yield express_validator_1.sanitize('email').normalizeEmail({ gmail_remove_dots: false }).run(req);
     const errors = express_validator_1.validationResult(req);
+    const status = req.body.intercept ? 403 : 200;
     if (!errors.isEmpty()) {
-        return res.status(403).send({ errors: errors.array(), userContent: 'signup deets bad', user: qauth_1.default.deny() });
+        return res.status(403).send({
+            errors: errors.array(),
+            userError: 'Something is wrong with those login details, try again.',
+            user: qauth_1.default.deny()
+        });
     }
     const user = new User_1.User({
         email: req.body.email,
         password: req.body.password
     });
+    console.log(user);
     User_1.User.findOne({ email: req.body.email }, (err, existingUser) => {
         if (err) {
             return next(err);
         }
         if (existingUser) {
-            let { email, _id, subdom } = existingUser;
-            return res.status(200).send({ userContent: 'account already exists!', user: qauth_1.default.approve({ email, id: _id, authed: true, subdom }) });
+            console.log('inside existing user');
+            return res.status(403).send({
+                user: qauth_1.default.deny(),
+                userError: 'That email already exists, did you forget your password?'
+            });
         }
         user.save((err) => {
             if (err) {
@@ -89,7 +108,9 @@ exports.postSignup = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
                 if (err) {
                     return next(err);
                 }
-                return res.status(200).send({ userContent: 'Hi dude man', user: qauth_1.default.approve({ email, id: _id, authed: true, subdom }) });
+                return res.status(200).send({
+                    user: qauth_1.default.approve({ email, id: _id, authed: true, subdom })
+                });
             });
         });
     });

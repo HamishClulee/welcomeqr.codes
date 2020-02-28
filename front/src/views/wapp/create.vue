@@ -1,5 +1,5 @@
 <template>
-    <main class="create-con" @click="checkWhatsOpen">
+    <main class="create-con" @click="checkWhatsOpen" v-show="!authinprog">
 
         <createtopbar
             @save="usersaved"
@@ -74,6 +74,7 @@ export default {
     },
     data () {
         return {
+            authinprog: true,
             fontSize: '16px',
             showFontSize: false,
             fontSizeOptions: [
@@ -117,6 +118,7 @@ export default {
         this.$QAuth.authenticate().then(res => {
             this.$store.commit('IS_AUTHED', res.data.user)
             EventBus.$emit(LOADING, false)
+            this.authinprog = false
             this.$QEdit.getHTML().then(res => {
                 if (res.data.editor && res.data.editor.html) {
                     this.editor.setHTML(res.data.editor.html)

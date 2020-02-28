@@ -1,6 +1,6 @@
 import axios, { AxiosError, AxiosResponse, AxiosInstance, AxiosPromise } from 'axios'
 import { SignUpPayload, LoginPayload, QUser } from '@I/IUser'
-import { EventBus, LOADING } from '../EventBus'
+import { EventBus, LOADING, SERVER_AUTH_ERROR_MESSAGE } from '../EventBus'
 
 export function ErrStr(error: AxiosError): string {
     if (error.response && error.response.data.status) {
@@ -24,6 +24,9 @@ export class QAuth {
         })
 
         this.ax.interceptors.response.use(res => res, (error: AxiosError ) => {
+            if (error.response && error.response.data.userError) {
+                EventBus.$emit(SERVER_AUTH_ERROR_MESSAGE, error.response.data.userError)
+            }
             if (
                 error.response
                 && error.response.status > 400
@@ -64,11 +67,11 @@ export class QAuth {
     info(): AxiosPromise<QUser> {
         return this.ax.post('/info')
     }
-    signup(email: string, password: string, confirm: string): AxiosPromise<QUser> {
-        return this.ax.post('/signup', { email, password, confirm })
+    signup(email: string, password: string, confirm: string, intercept = false): AxiosPromise<QUser> {
+        return this.ax.post('/signup', { email, password, confirm, intercept })
     }
-    login(email: string, password: string): AxiosPromise<QUser> {
-        return this.ax.post('/login', { email, password })
+    login(email: string, password: string, intercept = false): AxiosPromise<QUser> {
+        return this.ax.post('/login', { email, password, intercept })
     }
     reconfirm(email: string): AxiosPromise<QUser> {
         return this.ax.post('/reconfirm', { email })

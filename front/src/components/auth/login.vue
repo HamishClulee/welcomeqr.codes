@@ -1,7 +1,9 @@
 <template>
     <div class="auth-item-container">
-
+        
         <h2 class="h2">Login</h2>
+
+        <h6 class="error-h6">{{ servermsg }}</h6>
 
         <qinput
             inptype="email"
@@ -27,12 +29,19 @@
 
             <div class="google-btn" style="width: 100%;">
                 <div class="google-icon-wrapper">
-                    <img class="google-icon-svg" src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg"/>
+                    <img class="google-icon-svg" src="/svg/google.svg"/>
                 </div>
                 <p class="btn-text"><b>Continue with Google</b></p>
             </div>
 
-            <button class="button submit" @click="submit">SUBMIT</button>
+            <button
+                :disabled="!validated"
+                type="submit"
+                :class="{ 'disabled' : !validated }"
+                class="button submit"
+                @click="submit">
+                    SUBMIT
+            </button>
 
             <p @click="$emit('wantssignup')">Don't have an account? <a>Sign Up here.</a></p>
 
@@ -43,7 +52,7 @@
 
 <script>
 import qinput from '../forms/qinput'
-import { EventBus, MESSAGES, LOADING } from '../../EventBus'
+import { EventBus, MESSAGES, LOADING, SERVER_AUTH_ERROR_MESSAGE } from '../../EventBus'
 export default {
     name: 'login',
     components: {
@@ -55,6 +64,7 @@ export default {
             password: '',
             emailerror: '',
             passerror: '',
+            servermsg: '',
         }
     },
     created () {
@@ -69,18 +79,31 @@ export default {
             this.$router.push({ path: '/app/manage' })
         })
     },
+    mounted() {
+        EventBus.$on(SERVER_AUTH_ERROR_MESSAGE, msg => {
+            this.servermsg = msg
+        })
+    },
     methods: {
-        submit () {
-            this.$QAuth.login(this.email, this.password).then(res => {
-                this.$store.commit('IS_AUTHED', res.data.user)
-                EventBus.$emit(MESSAGES, {
-                    is: true,
-                    msg: `You are now logged in! Welcome ${res.data.user.email}!`,
-                    color: 'secondary',
-                    black: false,
+        submit (e) {
+            e.preventDefault()
+            if (this.validated) {
+                this.servermsg = ''
+                this.$QAuth.login(this.email, this.password).then(res => {
+                    if (res.data.userError) {
+                        this.servermsg = res.data.userError
+                    } else {
+                        this.$store.commit('IS_AUTHED', res.data.user)
+                        EventBus.$emit(MESSAGES, {
+                            is: true,
+                            msg: `You are now logged in! Welcome ${res.data.user.email}!`,
+                            color: 'secondary',
+                            black: false,
+                        })
+                        this.$router.push({ path: '/app/manage' })
+                    }
                 })
-                this.$router.push({ path: '/app/manage' })
-            })
+            }
         },
         validateemail(e) {
             const reg = /^\S+@\S+$/
@@ -96,12 +119,25 @@ export default {
             else this.passerror = ''
         },
     },
+    computed: {
+        validated() {
+            return this.emailerror === '' 
+                && this.passerror === '' 
+                && this.email !== ''
+                && this.password !== ''
+        },
+    },
 }
 </script>
 
 <style lang="sass" scoped>
+.error-h6
+    color: $primary
+    font-size: 1.1em
+    font-family: $body-font
 .h2
     margin-bottom: 40px
+    margin-left: -5px
 .auth-item-container
     width: 100%
     max-width: 500px

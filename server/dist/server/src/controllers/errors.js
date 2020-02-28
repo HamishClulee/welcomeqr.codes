@@ -11,10 +11,10 @@ exports.QApiError = (funcname, e, res) => {
     logger_1.default.log('[ERROR END ------------------------------------------------------------------------- ]');
     return res.status(501).send({ userContent: 'Ice cream machine broke, ok, have a nice day', e });
 };
-exports.QAuthError = (funcname, e, res) => {
+exports.QAuthError = (funcname, e, res, intercept) => {
     logger_1.default.log(`[AUTH ERROR] ${new Date()}`);
     logger_1.default.log(`[AUTH ERROR] Function Name: ${funcname}`, JSON.stringify(e, null, 2));
     logger_1.default.log('[AUTH ERROR END ------------------------------------------------------------------------- ]');
-    return res.status(403).send({ userContent: 'Ice cream machine broke, ok, have a nice day', e, user: qauth_1.default.deny() });
+    return res.status(403).send({ userContent: 'Ice cream machine broke, ok, have a nice day', e, user: qauth_1.default.deny(), intercept });
 };
 //# sourceMappingURL=errors.js.map

@@ -123,9 +123,7 @@ export default {
     justify-content: center
     img
         cursor: pointer
-        padding: 5px
-        position: relative
-        top: 2px
+        padding: 7px
         &:hover
             background-color: $very-light-gray
             opacity: 0.8

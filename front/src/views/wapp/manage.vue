@@ -1,5 +1,5 @@
 <template>
-  <section class="manage-container">
+  <section class="manage-container" v-show="!authinprog">
 
     <h6 v-if="!getuser.subdom" class="h6">We need some details before you can get started</h6>
 
@@ -63,16 +63,18 @@ export default {
             checking: false,
             subdomok: false,
             proceed: false,
+            authinprog: true,
         }
     },
     created() {
         EventBus.$emit(LOADING, true)
-        this.$QAuth.authenticate().then(res => { 
+        this.$QAuth.authenticate().then(res => {
             this.$store.commit('IS_AUTHED', res.data.user)
             if (res.data.user.subdom) {
                 this.subdom = res.data.user.subdom
             }
             EventBus.$emit(LOADING, false)
+            this.authinprog = false
         })
     },
     methods: {

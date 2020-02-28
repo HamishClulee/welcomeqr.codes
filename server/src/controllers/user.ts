@@ -15,9 +15,9 @@ export const sessionChallenge = async (req: Request, res: Response) => {
     try {
         const user = await User.findOne({ _id: req.session.passport.user })
         let { email, _id, subdom } = user
-        return res.status(200).send({intercept: req.body.intercept, user: QAuth.approve({ email, id: _id, authed: true, subdom })})
+        return res.status(200).send({user: QAuth.approve({ email, id: _id, authed: true, subdom })})
     } catch (e) {
-        QAuthError('sessionChallenge', e, res)
+        QAuthError('sessionChallenge', e, res, req.body.intercept)
     }
 }
 
@@ -28,24 +28,34 @@ export const postLogout = async (req: Request, res: Response, next: NextFunction
 
 export const postLogin = async (req: Request, res: Response, next: NextFunction) => {
     await check('email', 'Email is not valid').isEmail().run(req)
-    await check('password', 'Password cannot be blank').isLength({ min: 1 }).run(req)
+    await check('password', 'Password must be at least 8 characters').isLength({ min: 8 }).run(req)
     await sanitize('email').normalizeEmail({ gmail_remove_dots: false }).run(req)
 
     const errors = validationResult(req)
-
+    const status = req.body.intercept ? 403 : 200
     if (!errors.isEmpty()) {
-        return res.status(403).send({ errors: errors.array(), userContent: 'signup deets bad', user: QAuth.deny() })
+        
+        return res.status(status).send({
+            errors: errors.array(),
+            userError: 'Something is wrong with those login details, try again.',
+            user: QAuth.deny()
+        })
     }
 
     passport.authenticate('local', (err: Error, user: UserDocument, info: IVerifyOptions) => {
         if (err) { return next(err) }
         if (!user) {
-            return res.status(400).send({ userContent: 'no user exists', user: QAuth.deny() })
+            return res.status(status).send({
+                userError: 'Email and password do not match.',
+                user: QAuth.deny()
+            })
         }
         let { email, _id, subdom } = user
         req.logIn(user, (err) => {
             if (err) { return next(err) }
-            return res.status(200).send({ userContent: 'you sexy beast, welcome home', user: QAuth.approve({ email, id: _id, authed: true, subdom })})
+            return res.status(200).send({
+                user: QAuth.approve({ email, id: _id, authed: true, subdom })
+            })
         })
     })(req, res, next)
 }
@@ -53,14 +63,19 @@ export const postLogin = async (req: Request, res: Response, next: NextFunction)
 export const postSignup = async (req: Request, res: Response, next: NextFunction) => {
 
     await check('email', 'Email is not valid').isEmail().run(req)
-    await check('password', 'Password must be at least 4 characters long').isLength({ min: 4 }).run(req)
+    await check('password', 'Password must be at least 8 characters long').isLength({ min: 8 }).run(req)
     await check('confirm', 'Passwords do not match').equals(req.body.password).run(req)
     await sanitize('email').normalizeEmail({ gmail_remove_dots: false }).run(req)
 
     const errors = validationResult(req)
+    const status = req.body.intercept ? 403 : 200
 
     if (!errors.isEmpty()) {
-        return res.status(403).send({ errors: errors.array(), userContent: 'signup deets bad', user: QAuth.deny()  })
+        return res.status(403).send({
+            errors: errors.array(),
+            userError: 'Something is wrong with those login details, try again.',
+            user: QAuth.deny()
+        })
     }
 
     const user = new User({
@@ -68,11 +83,16 @@ export const postSignup = async (req: Request, res: Response, next: NextFunction
         password: req.body.password
     })
 
+    console.log(user)
+
     User.findOne({ email: req.body.email }, (err, existingUser) => {
         if (err) { return next(err) }
         if (existingUser) {
-            let { email, _id, subdom } = existingUser
-            return res.status(200).send({ userContent: 'account already exists!', user: QAuth.approve({ email, id: _id, authed: true, subdom })})
+            console.log('inside existing user')
+            return res.status(403).send({
+                user: QAuth.deny(),
+                userError: 'That email already exists, did you forget your password?'
+            })
         }
         user.save((err) => {
             if (err) { return next(err) }
@@ -81,7 +101,9 @@ export const postSignup = async (req: Request, res: Response, next: NextFunction
                 if (err) {
                     return next(err)
                 }
-                return res.status(200).send({ userContent: 'Hi dude man', user: QAuth.approve({ email, id: _id, authed: true, subdom })})
+                return res.status(200).send({
+                    user: QAuth.approve({ email, id: _id, authed: true, subdom })
+                })
             })
         })
     })

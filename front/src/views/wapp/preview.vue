@@ -1,5 +1,5 @@
 <template>
-    <main class="preview-container">
+    <main class="preview-container" v-show="!authinprog">
         <section class="preview-html-container" v-html="html">
 
         </section>
@@ -13,6 +13,7 @@ export default {
     name: 'preview',
     data () {
         return {
+            authinprog: true,
             html: `<h1 class='h1'>Nothing saved yet</h1>`,
         }
     },
@@ -21,6 +22,7 @@ export default {
         this.$QAuth.authenticate().then(res => {
             this.$store.commit('IS_AUTHED', res.data.user)
             EventBus.$emit(LOADING, false)
+            this.authinprog = false
             this.$QEdit.getHTML().then(htmlRes => {
                 if (htmlRes.data.editor && htmlRes.data.editor.html) {
                     this.html = htmlRes.data.editor.html
