@@ -1,18 +1,21 @@
 <template>
     <div class="field-container" :style="{ 'width': fullwidth ? '100%' : 'auto'}">
 
-        <input
-            :style="{ 'width': setwidth}"
-            @focus="touched = true"
-            @blur="onBlur"
-            @input="touched = true"
-            class="form-input"
-            placeholder=" "
-            v-model="val"
-            :type="inptype"
-            :autocomplete="hasautocomplete"
-            :required="isrequired"
-        >
+        <span class="input-row">
+            <input
+                :style="{ 'width': setwidth}"
+                @focus="touched = true"
+                @blur="onBlur"
+                @input="touched = true"
+                class="form-input"
+                placeholder=" "
+                v-model="val"
+                :type="localtype"
+                :autocomplete="hasautocomplete"
+                :required="isrequired"
+            >
+            <img @click="toggletype" v-if="inptype === 'password'" :src="localtype === 'password' ? '/svg/eye.svg' : '/svg/eye-slash.svg'"/>
+        </span>
 
         <label
             @click="setInputActive"
@@ -21,7 +24,6 @@
         </label>
 
         <div class="error-text-con">
-
             <div v-if="errortxt !== ''" class="error-icon"></div>
             <p class="error-text">{{ errortxt }}</p>
 
@@ -73,25 +75,32 @@ export default {
         return {
             val: '',
             touched: false,
+            localtype: '',
         }
+    },
+    created() {
+        this.localtype = this.inptype
     },
     mounted() {
         this.$nextTick(() => {
-            this.$el.firstChild.focus()
+            this.$el.firstChild.firstChild.focus()
         })
     },
     methods: {
         setInputActive() {
             this.touched = true
-            this.$el.firstChild.focus()
+            this.$el.firstChild.firstChild.focus()
         },
-        onBlur (event) {
+        onBlur(event) {
             this.touched = false
             if (event && this.email !== event.target.value) this.email = event.target.value
         },
+        toggletype() {
+            this.localtype = this.localtype === 'password' ? 'text' : 'password'
+        },
     },
     computed: {
-        stayactive () {
+        stayactive() {
             return this.val !== '' || this.touched
         },
     },
@@ -107,6 +116,19 @@ export default {
 </script>
 
 <style lang="sass" scoped>
+.input-row
+    display: flex
+    flex-direction: row
+    align-items: center
+    justify-content: center
+    img
+        cursor: pointer
+        padding: 5px
+        position: relative
+        top: 2px
+        &:hover
+            background-color: $very-light-gray
+            opacity: 0.8
 .error-text-con
     display: flex
     flex-direction: row
