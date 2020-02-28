@@ -19,7 +19,7 @@ const errors_1 = require("./errors");
 const qauth_1 = __importDefault(require("./qauth"));
 const SUBDOMS_ID = '5e52678609948c1e0ec9994f';
 let SUBDOMS = [];
-exports.postSubmitNew = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.submitNew = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         let query = { 'userid': req.session.passport.user };
         let update = { html: req.body.html };
@@ -31,7 +31,7 @@ exports.postSubmitNew = (req, res) => __awaiter(void 0, void 0, void 0, function
         errors_1.QApiError('postSubmitNew', e, res);
     }
 });
-exports.postSubmitSubdom = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.submitSubdom = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         if (SUBDOMS.indexOf(req.body.subdom) === -1) {
             SUBDOMS.push(req.body.subdom);
@@ -48,11 +48,11 @@ exports.postSubmitSubdom = (req, res) => __awaiter(void 0, void 0, void 0, funct
         errors_1.QApiError('postSubmitSubdom', e, res);
     }
 });
-exports.postCheckSubdom = (req, res) => {
+exports.checkSubdom = (req, res) => {
     let okay = SUBDOMS.indexOf(req.body.subdom) === -1;
     return res.status(200).send({ intercept: false, okay });
 };
-exports.postGetHTML = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.getHTML = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const editor = yield Editor_1.Editor.findOne({ 'userid': req.session.passport.user });
         return res.status(200).send({ userContent: 'Here is your HTML', editor });

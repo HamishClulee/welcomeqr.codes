@@ -77,21 +77,25 @@ app.use((req, res, next) => {
 });
 /** ---------------------------------------  APP ROUTING  --------------------------------- */
 /** Auth */
-const userController = __importStar(require("./controllers/user"));
-app.post('/session_challenge', userController.sessionChallenge);
-app.post('/login', userController.postLogin);
-app.post('/logout', userController.postLogout);
-app.post('/forgot', userController.postForgot);
-app.post('/reset/:token', userController.postReset);
-app.post('/signup', userController.postSignup);
+const user = __importStar(require("./controllers/user"));
+app.post('/session_challenge', user.sessionChallenge);
+app.post('/login', user.login);
+app.post('/logout', user.logout);
+app.post('/forgot', user.forgot);
+app.post('/reset/:token', user.reset);
+app.post('/signup', user.signup);
 /** Editor */
-const editorController = __importStar(require("./controllers/editor"));
+const editor = __importStar(require("./controllers/editor"));
 const passportConfig = __importStar(require("./config/passport"));
-app.post('/api/submitnew', passportConfig.isAuthenticated, editorController.postSubmitNew);
-app.post('/api/checksubdom', passportConfig.isAuthenticated, editorController.postCheckSubdom);
-app.post('/api/submitsubdom', passportConfig.isAuthenticated, editorController.postSubmitSubdom);
-app.post('/api/gethtmlforuser', passportConfig.isAuthenticated, editorController.postGetHTML);
-editorController.precaching();
+app.post('/api/submitnew', passportConfig.isAuthenticated, editor.submitNew);
+app.post('/api/checksubdom', passportConfig.isAuthenticated, editor.checkSubdom);
+app.post('/api/submitsubdom', passportConfig.isAuthenticated, editor.submitSubdom);
+app.post('/api/gethtmlforuser', passportConfig.isAuthenticated, editor.getHTML);
+editor.precaching();
+/** Site */
+const site = __importStar(require("./controllers/site"));
+app.post('/terms-html', site.terms);
+app.post('/privacy-html', site.privacy);
 /** ---------------------------------------  IMAGE STORAGE  --------------------------------- */
 const storage = multer_1.default.diskStorage({
     destination: function (req, file, callback) {

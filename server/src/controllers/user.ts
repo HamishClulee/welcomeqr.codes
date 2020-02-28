@@ -21,12 +21,12 @@ export const sessionChallenge = async (req: Request, res: Response) => {
     }
 }
 
-export const postLogout = async (req: Request, res: Response, next: NextFunction) => {
+export const logout = async (req: Request, res: Response, next: NextFunction) => {
     req.logout()
     return res.status(200).send({ userContent: 'see you later, aligator', user: QAuth.deny() })
 }
 
-export const postLogin = async (req: Request, res: Response, next: NextFunction) => {
+export const login = async (req: Request, res: Response, next: NextFunction) => {
     await check('email', 'Email is not valid').isEmail().run(req)
     await check('password', 'Password must be at least 8 characters').isLength({ min: 8 }).run(req)
     await sanitize('email').normalizeEmail({ gmail_remove_dots: false }).run(req)
@@ -60,7 +60,7 @@ export const postLogin = async (req: Request, res: Response, next: NextFunction)
     })(req, res, next)
 }
 
-export const postSignup = async (req: Request, res: Response, next: NextFunction) => {
+export const signup = async (req: Request, res: Response, next: NextFunction) => {
 
     await check('email', 'Email is not valid').isEmail().run(req)
     await check('password', 'Password must be at least 8 characters long').isLength({ min: 8 }).run(req)
@@ -83,12 +83,9 @@ export const postSignup = async (req: Request, res: Response, next: NextFunction
         password: req.body.password
     })
 
-    console.log(user)
-
     User.findOne({ email: req.body.email }, (err, existingUser) => {
         if (err) { return next(err) }
         if (existingUser) {
-            console.log('inside existing user')
             return res.status(403).send({
                 user: QAuth.deny(),
                 userError: 'That email already exists, did you forget your password?'
@@ -109,13 +106,7 @@ export const postSignup = async (req: Request, res: Response, next: NextFunction
     })
 }
 
-export const getAccount = (req: Request, res: Response) => {
-    res.render('account/profile', {
-        title: 'Account Management'
-    })
-}
-
-export const postUpdateProfile = async (req: Request, res: Response, next: NextFunction) => {
+export const updateProfile = async (req: Request, res: Response, next: NextFunction) => {
     await check('email', 'Please enter a valid email address.').isEmail().run(req)
     // eslint-disable-next-line @typescript-eslint/camelcase
     await sanitize('email').normalizeEmail({ gmail_remove_dots: false }).run(req)
@@ -150,7 +141,7 @@ export const postUpdateProfile = async (req: Request, res: Response, next: NextF
     })
 }
 
-export const postUpdatePassword = async (req: Request, res: Response, next: NextFunction) => {
+export const updatePassword = async (req: Request, res: Response, next: NextFunction) => {
     await check('password', 'Password must be at least 4 characters long').isLength({ min: 4 }).run(req)
     await check('confirmPassword', 'Passwords do not match').equals(req.body.password).run(req)
 
@@ -173,7 +164,7 @@ export const postUpdatePassword = async (req: Request, res: Response, next: Next
     })
 }
 
-export const postDeleteAccount = (req: Request, res: Response, next: NextFunction) => {
+export const deleteAccount = (req: Request, res: Response, next: NextFunction) => {
     const user = req.user as UserDocument
     User.remove({ _id: user.id }, (err) => {
         if (err) { return next(err) }
@@ -183,7 +174,7 @@ export const postDeleteAccount = (req: Request, res: Response, next: NextFunctio
     })
 }
 
-export const getOauthUnlink = (req: Request, res: Response, next: NextFunction) => {
+export const oAuthUnlink = (req: Request, res: Response, next: NextFunction) => {
     const provider = req.params.provider
     const user = req.user as UserDocument
     User.findById(user.id, (err, user: any) => {
@@ -198,7 +189,7 @@ export const getOauthUnlink = (req: Request, res: Response, next: NextFunction) 
     })
 }
 
-export const getReset = (req: Request, res: Response, next: NextFunction) => {
+export const _reset = (req: Request, res: Response, next: NextFunction) => {
     if (req.isAuthenticated()) {
         return res.redirect('/')
     }
@@ -217,7 +208,7 @@ export const getReset = (req: Request, res: Response, next: NextFunction) => {
         })
 }
 
-export const postReset = async (req: Request, res: Response, next: NextFunction) => {
+export const reset = async (req: Request, res: Response, next: NextFunction) => {
     await check('password', 'Password must be at least 4 characters long.').isLength({ min: 4 }).run(req)
     await check('confirm', 'Passwords must match.').equals(req.body.password).run(req)
 
@@ -276,7 +267,7 @@ export const postReset = async (req: Request, res: Response, next: NextFunction)
     })
 }
 
-export const getForgot = (req: Request, res: Response) => {
+export const _forgot = (req: Request, res: Response) => {
     if (req.isAuthenticated()) {
         return res.redirect('/')
     }
@@ -285,7 +276,7 @@ export const getForgot = (req: Request, res: Response) => {
     })
 }
 
-export const postForgot = async (req: Request, res: Response, next: NextFunction) => {
+export const forgot = async (req: Request, res: Response, next: NextFunction) => {
     await check('email', 'Please enter a valid email address.').isEmail().run(req)
     // eslint-disable-next-line @typescript-eslint/camelcase
     await sanitize('email').normalizeEmail({ gmail_remove_dots: false }).run(req)

@@ -10,7 +10,7 @@ import QAuth from './qauth'
 const SUBDOMS_ID = '5e52678609948c1e0ec9994f'
 let SUBDOMS: string[] = []
 
-export const postSubmitNew = async (req: Request, res: Response) => {
+export const submitNew = async (req: Request, res: Response) => {
     try {
         let query = { 'userid': req.session.passport.user }
         let update = { html: req.body.html };
@@ -22,7 +22,7 @@ export const postSubmitNew = async (req: Request, res: Response) => {
     }
 }
 
-export const postSubmitSubdom = async (req: Request, res: Response) => {
+export const submitSubdom = async (req: Request, res: Response) => {
     try {
         if (SUBDOMS.indexOf(req.body.subdom) === -1) {
             SUBDOMS.push(req.body.subdom)
@@ -39,12 +39,12 @@ export const postSubmitSubdom = async (req: Request, res: Response) => {
     }
 }
 
-export const postCheckSubdom = (req: Request, res: Response) => {
+export const checkSubdom = (req: Request, res: Response) => {
     let okay = SUBDOMS.indexOf(req.body.subdom) === -1
     return res.status(200).send({ intercept: false, okay })
 }
 
-export const postGetHTML = async (req: Request, res: Response) => {
+export const getHTML = async (req: Request, res: Response) => {
     try {
         const editor = await Editor.findOne({ 'userid': req.session.passport.user })
         return res.status(200).send({ userContent: 'Here is your HTML', editor })

@@ -4,3 +4,7 @@ export interface AuthResponse {
     authed: boolean,
     subdom: string | null,
 }
+
+export interface HTMLResponse {
+    html: String,
+}

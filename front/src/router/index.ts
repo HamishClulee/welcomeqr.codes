@@ -15,6 +15,10 @@ const create = () => import('../views/wapp/create.vue')
 const manage = () => import('../views/wapp/manage.vue')
 const preview = () => import('../views/wapp/preview.vue')
 
+/** Site routes */
+const terms = () => import('../views/terms.vue')
+const privacy = () => import('../views/privacy.vue')
+
 /** Notfound and plumbing routes */
 const notfound = () => import('../views/notfound.vue')
 
@@ -121,6 +125,30 @@ const routes = [
                 },
             },
         ],
+    },
+    {
+        path: '/privacy',
+        name: 'privacy',
+        component: privacy,
+        beforeEnter: (to: any, from: any, next: any) => {
+            overwritemetas({
+                title: 'Welcome QR |Privacy Policy',
+                description: `Brief description of how Welcome QR Codesmanages and takes care of your data and your datas security.`,
+                noindex: true,
+            }, next)
+        },
+    },
+    {
+        path: '/terms-and-conditions',
+        name: 'terms',
+        component: terms,
+        beforeEnter: (to: any, from: any, next: any) => {
+            overwritemetas({
+                title: 'Welcome QR | Terms and Conditions',
+                description: `Brief description of how Welcome QR Codes does business in a legal sense, information on your rights and our methods of operation`,
+                noindex: true,
+            }, next)
+        },
     },
     {
         path: '*',

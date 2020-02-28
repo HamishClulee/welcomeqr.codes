@@ -31,11 +31,11 @@ exports.sessionChallenge = (req, res) => __awaiter(void 0, void 0, void 0, funct
         errors_1.QAuthError('sessionChallenge', e, res, req.body.intercept);
     }
 });
-exports.postLogout = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+exports.logout = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     req.logout();
     return res.status(200).send({ userContent: 'see you later, aligator', user: qauth_1.default.deny() });
 });
-exports.postLogin = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+exports.login = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     yield express_validator_1.check('email', 'Email is not valid').isEmail().run(req);
     yield express_validator_1.check('password', 'Password must be at least 8 characters').isLength({ min: 8 }).run(req);
     yield express_validator_1.sanitize('email').normalizeEmail({ gmail_remove_dots: false }).run(req);
@@ -69,7 +69,7 @@ exports.postLogin = (req, res, next) => __awaiter(void 0, void 0, void 0, functi
         });
     })(req, res, next);
 });
-exports.postSignup = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+exports.signup = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     yield express_validator_1.check('email', 'Email is not valid').isEmail().run(req);
     yield express_validator_1.check('password', 'Password must be at least 8 characters long').isLength({ min: 8 }).run(req);
     yield express_validator_1.check('confirm', 'Passwords do not match').equals(req.body.password).run(req);
@@ -87,13 +87,11 @@ exports.postSignup = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
         email: req.body.email,
         password: req.body.password
     });
-    console.log(user);
     User_1.User.findOne({ email: req.body.email }, (err, existingUser) => {
         if (err) {
             return next(err);
         }
         if (existingUser) {
-            console.log('inside existing user');
             return res.status(403).send({
                 user: qauth_1.default.deny(),
                 userError: 'That email already exists, did you forget your password?'
@@ -115,12 +113,7 @@ exports.postSignup = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
         });
     });
 });
-exports.getAccount = (req, res) => {
-    res.render('account/profile', {
-        title: 'Account Management'
-    });
-};
-exports.postUpdateProfile = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+exports.updateProfile = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     yield express_validator_1.check('email', 'Please enter a valid email address.').isEmail().run(req);
     // eslint-disable-next-line @typescript-eslint/camelcase
     yield express_validator_1.sanitize('email').normalizeEmail({ gmail_remove_dots: false }).run(req);
@@ -152,7 +145,7 @@ exports.postUpdateProfile = (req, res, next) => __awaiter(void 0, void 0, void 0
         });
     });
 });
-exports.postUpdatePassword = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+exports.updatePassword = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     yield express_validator_1.check('password', 'Password must be at least 4 characters long').isLength({ min: 4 }).run(req);
     yield express_validator_1.check('confirmPassword', 'Passwords do not match').equals(req.body.password).run(req);
     const errors = express_validator_1.validationResult(req);
@@ -175,7 +168,7 @@ exports.postUpdatePassword = (req, res, next) => __awaiter(void 0, void 0, void 
         });
     });
 });
-exports.postDeleteAccount = (req, res, next) => {
+exports.deleteAccount = (req, res, next) => {
     const user = req.user;
     User_1.User.remove({ _id: user.id }, (err) => {
         if (err) {
@@ -186,7 +179,7 @@ exports.postDeleteAccount = (req, res, next) => {
         res.redirect('/');
     });
 };
-exports.getOauthUnlink = (req, res, next) => {
+exports.oAuthUnlink = (req, res, next) => {
     const provider = req.params.provider;
     const user = req.user;
     User_1.User.findById(user.id, (err, user) => {
@@ -204,7 +197,7 @@ exports.getOauthUnlink = (req, res, next) => {
         });
     });
 };
-exports.getReset = (req, res, next) => {
+exports._reset = (req, res, next) => {
     if (req.isAuthenticated()) {
         return res.redirect('/');
     }
@@ -224,7 +217,7 @@ exports.getReset = (req, res, next) => {
         });
     });
 };
-exports.postReset = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+exports.reset = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     yield express_validator_1.check('password', 'Password must be at least 4 characters long.').isLength({ min: 4 }).run(req);
     yield express_validator_1.check('confirm', 'Passwords must match.').equals(req.body.password).run(req);
     const errors = express_validator_1.validationResult(req);
@@ -284,7 +277,7 @@ exports.postReset = (req, res, next) => __awaiter(void 0, void 0, void 0, functi
         // res.redirect('/')
     });
 });
-exports.getForgot = (req, res) => {
+exports._forgot = (req, res) => {
     if (req.isAuthenticated()) {
         return res.redirect('/');
     }
@@ -292,7 +285,7 @@ exports.getForgot = (req, res) => {
         title: 'Forgot Password'
     });
 };
-exports.postForgot = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+exports.forgot = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     yield express_validator_1.check('email', 'Please enter a valid email address.').isEmail().run(req);
     // eslint-disable-next-line @typescript-eslint/camelcase
     yield express_validator_1.sanitize('email').normalizeEmail({ gmail_remove_dots: false }).run(req);
