@@ -70,8 +70,7 @@ export default {
         }
     },
     created () {
-        EventBus.$emit(LOADING, true)
-        this.$QAuth.authenticate().then(res => { 
+        this.$QAuth.authenticate(false).then(res => { 
             this.$store.commit('IS_AUTHED', res.data.user)
             EventBus.$emit(MESSAGES, {
                 is: true,
@@ -79,7 +78,7 @@ export default {
                 color: 'secondary',
                 black: false,
             })
-            EventBus.$emit(LOADING, false)
+            this.$router.push({ path: '/app/manage' })
         })
     },
     methods: {
@@ -92,6 +91,7 @@ export default {
                     color: 'secondary',
                     black: false,
                 })
+                this.$router.push({ path: '/app/manage' })
             })
         },
         validateemail(e) {

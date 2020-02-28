@@ -145,4 +145,8 @@ const router = new VueRouter({
     },
 })
 
+// router.beforeEach((to, from, next) => {
+//     debugger
+// })
+
 export default router
