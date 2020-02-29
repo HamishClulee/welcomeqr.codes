@@ -1,16 +1,7 @@
 <template>
-    <section class="terms-master-container" v-html="terms">
-
-    </section>
-</template>
-
-<script>
-import { EventBus, LOADING } from '../EventBus'
-export default {
-    name: 'terms',
-    data() {
-        return {
-            terms: `<div class="main">
+    <section class="terms-master-container">
+        <h1 class="h1">Terms and Conditions</h1>
+        <div class="main">
     <h2><strong>Terms and Conditions</strong></h2>
     <p>Welcome to https://welcomeqr.codes!</p>
     <p>These terms and conditions outline the rules and regulations for the use of Welcome QR's Website, located at <a href="https://welcomeqr.codes">welcomeqr.codes</a>.</p>
@@ -90,18 +81,17 @@ export default {
     </ul>
     <p>The limitations and prohibitions of liability set in this Section and elsewhere in this disclaimer: (a) are subject to the preceding paragraph; and (b) govern all liabilities arising under the disclaimer, including liabilities arising in contract, in tort and for breach of statutory duty.</p>
     <p>As long as the website and the information and services on the website are provided free of charge, we will not be liable for any loss or damage of any nature.</p> </div>
-    </div>`,
+    </section>
+</template>
+
+<script>
+import { EventBus, LOADING } from '../EventBus'
+export default {
+    name: 'terms',
+    data() {
+        return {
+            terms: ``,
         }
-    },
-    mounted() {
-        // EventBus.$emit(LOADING, true)
-        // this.$QSite.terms().then(res => {
-        //     this.terms = `<p>${JSON.stringify(res, null, 2)}</p>`
-        //     // this.terms = res.data.html
-        //     EventBus.$emit(LOADING, false)
-        // }).catch(err => {
-        //     this.terms = `<p>${JSON.stringify(err, null, 2)}</p>`
-        // })
     },
 }
 </script>

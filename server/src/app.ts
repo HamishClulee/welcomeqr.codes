@@ -82,11 +82,6 @@ app.post('/forgot', user.forgot)
 app.post('/reset/:token', user.reset)
 app.post('/signup', user.signup)
 
-/** Site */
-import * as site from './controllers/site'
-app.get('/site/terms', site.terms)
-app.get('/site/privacy', site.privacy)
-
 /** Editor */
 import * as editor from './controllers/editor'
 import * as passportConfig from './config/passport'
