@@ -73,10 +73,6 @@ app.use((req, res, next) => {
 })
 
 /** ---------------------------------------  APP ROUTING  --------------------------------- */
-/** Google Domain Verification */
-app.get('/google4d9d74b6d7c786e5.html', function(req, res) {
-    res.sendFile('google4d9d74b6d7c786e5.html')
-})
 /** Auth */
 import * as user from './controllers/user'
 app.post('/session_challenge', user.sessionChallenge)
