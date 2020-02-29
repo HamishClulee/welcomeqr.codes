@@ -84,8 +84,8 @@ app.post('/signup', user.signup)
 
 /** Site */
 import * as site from './controllers/site'
-app.post('/site/terms', site.terms)
-app.post('/site/privacy', site.privacy)
+app.get('/site/terms', site.terms)
+app.get('/site/privacy', site.privacy)
 
 /** Editor */
 import * as editor from './controllers/editor'

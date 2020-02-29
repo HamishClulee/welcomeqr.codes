@@ -13,11 +13,14 @@ export default {
             terms: '',
         }
     },
-    created() {
+    mounted() {
         EventBus.$emit(LOADING, true)
         this.$QSite.terms().then(res => {
-            this.terms = res.data.html
+            this.terms = `<p>${JSON.stringify(res, null, 2)}</p>`
+            // this.terms = res.data.html
             EventBus.$emit(LOADING, false)
+        }).catch(err => {
+            this.terms = `<p>${JSON.stringify(err, null, 2)}</p>`
         })
     },
 }

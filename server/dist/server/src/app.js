@@ -86,8 +86,8 @@ app.post('/reset/:token', user.reset);
 app.post('/signup', user.signup);
 /** Site */
 const site = __importStar(require("./controllers/site"));
-app.post('/site/terms', site.terms);
-app.post('/site/privacy', site.privacy);
+app.get('/site/terms', site.terms);
+app.get('/site/privacy', site.privacy);
 /** Editor */
 const editor = __importStar(require("./controllers/editor"));
 const passportConfig = __importStar(require("./config/passport"));
