@@ -93,6 +93,7 @@ export default {
             this.sass = deets.color || ''
             this.black = deets.black || false
         })
+
         EventBus.$on(SITEMODAL, (type = null) => {
             if (type) {
                 this.contains = type
@@ -101,6 +102,18 @@ export default {
                 this.showsitemodal = false
             }
         })
+
+        // For auth failure redirects from ExpressJS
+        const para = new URLSearchParams(window.location.search)
+        if (para.get('redirect') === 'true') {
+            EventBus.$emit(MESSAGES, {
+                is: true,
+                msg: 'You need to be logged in to view that page!',
+                color: 'tertiary',
+                black: false,
+            })
+            this.$router.push({ path: '/auth' })
+        }
 
         // useful cludge
         __proxy = this

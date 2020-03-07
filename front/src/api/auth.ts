@@ -11,7 +11,7 @@ export function ErrStr(error: AxiosError): string {
 
 export class QAuth {
 
-    private BASE_URL = process.env.NODE_ENV === 'development' ? 'http://localhost:1980' : 'https://welcomeqr.codes'
+    private BASE_URL = process.env.NODE_ENV === 'development' ? 'http://localhost:1980/auth' : 'https://welcomeqr.codes/auth'
     private AUTH_URL = process.env.NODE_ENV === 'development' ? 'http://localhost:8080/auth?redirect=true' : 'https://welcomeqr.codes/auth?redirect=true'
 
     ax: AxiosInstance;
@@ -81,5 +81,8 @@ export class QAuth {
     }
     recover(email: string, token: string, password: string): AxiosPromise<QUser> {
         return this.ax.post('/recover', { email, token, password })
+    }
+    google(): AxiosPromise<QUser> {
+        return this.ax.post('/google', {})
     }
 }

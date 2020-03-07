@@ -5,6 +5,8 @@ import _ from 'lodash'
 import { User, UserDocument } from '../models/User'
 import { Request, Response, NextFunction } from 'express'
 
+import { DEV_URL, PROD_URL } from '../app'
+
 const LocalStrategy = passportLocal.Strategy
 
 passport.serializeUser<any, any>((user, done) => {
@@ -48,6 +50,17 @@ passport.use(new LocalStrategy({ usernameField: 'email' }, (email, password, don
  *       - If there is, return an error message.
  *       - Else create a new account.
  */
+
+var GoogleStrategy = require('passport-google-oauth20').Strategy;
+
+passport.use(new GoogleStrategy({
+    clientID: process.env.GOOGLE_OAUTH_ID,
+    clientSecret: process.env.GOOGLE_OAUTH_SECRET,
+    callbackURL: `${ process.env.NODE_ENV === 'production' ? PROD_URL : DEV_URL }/auth/google/callback`
+  }, async (access: any, refresh: any, profile: any, done: any) => {
+      console.log(access, refresh, profile, done)
+  }
+));
 
 export const isAuthenticated = (req: Request, res: Response, next: NextFunction) => {
     if (req.isAuthenticated()) return next()

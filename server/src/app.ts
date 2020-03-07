@@ -15,8 +15,8 @@ import { MONGODB_URI, SESSION_SECRET } from './util/secrets'
 const MINS_15 = 90000
 const DAYS_5 = 1000 * 60 * 60 * 24 * 5
 const PORT = 1980
-const DEV_URL = 'http://localhost:8080'
-const PROD_URL = 'https://welcomeqr.codes'
+export const DEV_URL = 'http://localhost:8080'
+export const PROD_URL = 'https://welcomeqr.codes'
 const history = require('connect-history-api-fallback')
 const cors = require('cors')
 const MongoStore = mongo(session)
@@ -75,12 +75,17 @@ app.use((req, res, next) => {
 /** ---------------------------------------  APP ROUTING  --------------------------------- */
 /** Auth */
 import * as user from './controllers/user'
-app.post('/session_challenge', user.sessionChallenge)
-app.post('/login', user.login)
-app.post('/logout', user.logout)
-app.post('/forgot', user.forgot)
-app.post('/reset/:token', user.reset)
-app.post('/signup', user.signup)
+app.post('/auth/session_challenge', user.sessionChallenge)
+app.post('/auth/login', user.login)
+app.post('/auth/logout', user.logout)
+app.post('/auth/forgot', user.forgot)
+app.post('/auth/reset/:token', user.reset)
+app.post('/auth/signup', user.signup)
+app.post('/auth/google', passport.authenticate('google', { scope: ['profile'] }))
+app.post('/auth/google/callback', passport.authenticate('google', { failureRedirect: '/?redirect=true' }), (req, res) => {
+    console.log(res)
+    res.redirect('/')
+})
 
 /** Editor */
 import * as editor from './controllers/editor'

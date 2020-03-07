@@ -27,7 +27,7 @@
 
         <div class="button-container">
 
-            <div class="google-btn" style="width: 100%;">
+            <div class="google-btn" style="width: 100%;" @click="google">
                 <div class="google-icon-wrapper">
                     <img class="google-icon-svg" src="/svg/google.svg"/>
                 </div>
@@ -85,24 +85,11 @@ export default {
         })
     },
     methods: {
-        submit (e) {
+        submit(e) {
             e.preventDefault()
             if (this.validated) {
                 this.servermsg = ''
-                this.$QAuth.login(this.email, this.password).then(res => {
-                    if (res.data.userError) {
-                        this.servermsg = res.data.userError
-                    } else {
-                        this.$store.commit('IS_AUTHED', res.data.user)
-                        EventBus.$emit(MESSAGES, {
-                            is: true,
-                            msg: `You are now logged in! Welcome ${res.data.user.email}!`,
-                            color: 'secondary',
-                            black: false,
-                        })
-                        this.$router.push({ path: '/app/manage' })
-                    }
-                })
+                this.$QAuth.login(this.email, this.password).then(res => { this.success(res) })
             }
         },
         validateemail(e) {
@@ -117,6 +104,23 @@ export default {
             if (this.password.length < 8) this.passerror = 'Password needs to be at least 8 characters long...'
             else if (this.password === '') this.passerror = ''
             else this.passerror = ''
+        },
+        google() {
+            this.$QAuth.google().then(res => { this.success(res) })
+        },
+        success(res) {
+            if (res.data.userError) {
+                this.servermsg = res.data.userError
+            } else {
+                this.$store.commit('IS_AUTHED', res.data.user)
+                EventBus.$emit(MESSAGES, {
+                    is: true,
+                    msg: `You are now logged in! Welcome ${res.data.user.email}!`,
+                    color: 'secondary',
+                    black: false,
+                })
+                this.$router.push({ path: '/app/manage' })
+            }
         },
     },
     computed: {

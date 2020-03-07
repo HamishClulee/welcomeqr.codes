@@ -17,17 +17,18 @@ const ENVIRONMENT = process.env.NODE_ENV;
 const prod = ENVIRONMENT === 'production';
 exports.SESSION_SECRET = process.env['SESSION_SECRET'];
 exports.MONGODB_URI = process.env['MONGODB_URI_LOCAL'];
+exports.GOOGLE_OAUTH_ID = process.env['GOOGLE_OAUTH_ID'];
+exports.GOOGLE_OAUTH_SECRET = process.env['GOOGLE_OAUTH_SECRET'];
 if (!exports.SESSION_SECRET) {
     logger_1.default.error('No client secret. Set SESSION_SECRET environment variable.');
     process.exit(1);
 }
 if (!exports.MONGODB_URI) {
-    if (prod) {
-        logger_1.default.error('No mongo connection string. Set MONGODB_URI environment variable.');
-    }
-    else {
-        logger_1.default.error('No mongo connection string. Set MONGODB_URI_LOCAL environment variable.');
-    }
+    logger_1.default.error('No mongo connection string. Set MONGODB_URI environment variable.');
+    process.exit(1);
+}
+if (!exports.GOOGLE_OAUTH_ID) {
+    logger_1.default.error('No mongo connection string. Set MONGODB_URI_LOCAL environment variable.');
     process.exit(1);
 }
 //# sourceMappingURL=secrets.js.map

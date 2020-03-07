@@ -26,8 +26,8 @@ const secrets_1 = require("./util/secrets");
 const MINS_15 = 90000;
 const DAYS_5 = 1000 * 60 * 60 * 24 * 5;
 const PORT = 1980;
-const DEV_URL = 'http://localhost:8080';
-const PROD_URL = 'https://welcomeqr.codes';
+exports.DEV_URL = 'http://localhost:8080';
+exports.PROD_URL = 'https://welcomeqr.codes';
 const history = require('connect-history-api-fallback');
 const cors = require('cors');
 const MongoStore = connect_mongo_1.default(express_session_1.default);
@@ -66,7 +66,7 @@ if (process.env.NODE_ENV === 'production')
 app.use(passport_1.default.initialize());
 app.use(passport_1.default.session());
 app.use(cors({
-    origin: process.env.NODE_ENV !== 'production' ? DEV_URL : PROD_URL,
+    origin: process.env.NODE_ENV !== 'production' ? exports.DEV_URL : exports.PROD_URL,
     credentials: true
 }));
 app.use(lusca_1.default.xframe('SAMEORIGIN'));
@@ -78,12 +78,17 @@ app.use((req, res, next) => {
 /** ---------------------------------------  APP ROUTING  --------------------------------- */
 /** Auth */
 const user = __importStar(require("./controllers/user"));
-app.post('/session_challenge', user.sessionChallenge);
-app.post('/login', user.login);
-app.post('/logout', user.logout);
-app.post('/forgot', user.forgot);
-app.post('/reset/:token', user.reset);
-app.post('/signup', user.signup);
+app.post('/auth/session_challenge', user.sessionChallenge);
+app.post('/auth/login', user.login);
+app.post('/auth/logout', user.logout);
+app.post('/auth/forgot', user.forgot);
+app.post('/auth/reset/:token', user.reset);
+app.post('/auth/signup', user.signup);
+app.post('/auth/google', passport_1.default.authenticate('google', { scope: ['profile'] }));
+app.post('/auth/google/callback', passport_1.default.authenticate('google', { failureRedirect: '/?redirect=true' }), (req, res) => {
+    console.log(res);
+    res.redirect('/');
+});
 /** Editor */
 const editor = __importStar(require("./controllers/editor"));
 const passportConfig = __importStar(require("./config/passport"));
