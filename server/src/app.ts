@@ -81,8 +81,8 @@ app.post('/auth/logout', user.logout)
 app.post('/auth/forgot', user.forgot)
 app.post('/auth/reset/:token', user.reset)
 app.post('/auth/signup', user.signup)
-app.post('/auth/google', passport.authenticate('google', { scope: ['profile'] }))
-app.post('/auth/google/callback', passport.authenticate('google', { failureRedirect: '/?redirect=true' }), (req, res) => {
+app.get('/auth/google', passport.authenticate('google', { scope: ['profile'] }))
+app.get('/auth/google/callback', passport.authenticate('google', { failureRedirect: '/?redirect=true' }), (req, res) => {
     console.log(res)
     res.redirect('/')
 })
