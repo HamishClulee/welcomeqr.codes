@@ -11,7 +11,7 @@ export function ErrStr(error: AxiosError): string {
 
 export class QAuth {
 
-    private BASE_URL = process.env.NODE_ENV === 'development' ? 'http://localhost:1980/auth' : 'https://welcomeqr.codes/auth'
+    private BASE_URL = process.env.NODE_ENV === 'development' ? 'http://localhost:1980/qauth' : 'https://welcomeqr.codes/qauth'
     private AUTH_URL = process.env.NODE_ENV === 'development' ? 'http://localhost:8080/?redirect=true' : 'https://welcomeqr.codes/?redirect=true'
 
     ax: AxiosInstance;
