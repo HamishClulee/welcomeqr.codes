@@ -78,14 +78,14 @@ app.use((req, res, next) => {
 /** ---------------------------------------  APP ROUTING  --------------------------------- */
 /** Auth */
 const user = __importStar(require("./controllers/user"));
-app.post('/auth/session_challenge', user.sessionChallenge);
-app.post('/auth/login', user.login);
-app.post('/auth/logout', user.logout);
-app.post('/auth/forgot', user.forgot);
-app.post('/auth/reset/:token', user.reset);
-app.post('/auth/signup', user.signup);
-app.get('/auth/google', passport_1.default.authenticate('google', { scope: ['profile'] }));
-app.get('/auth/google/callback', passport_1.default.authenticate('google', { failureRedirect: '/?redirect=true' }), (req, res) => {
+app.post('/qauth/session_challenge', user.sessionChallenge);
+app.post('/qauth/login', user.login);
+app.post('/qauth/logout', user.logout);
+app.post('/qauth/forgot', user.forgot);
+app.post('/qauth/reset/:token', user.reset);
+app.post('/qauth/signup', user.signup);
+app.get('/qauth/google', passport_1.default.authenticate('google', { scope: ['profile'] }));
+app.get('/qauth/google/callback', passport_1.default.authenticate('google', { failureRedirect: '/?redirect=true' }), (req, res) => {
     console.log(res);
     res.redirect('/');
 });

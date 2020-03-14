@@ -140,7 +140,7 @@ exports.updateProfile = (req, res, next) => __awaiter(void 0, void 0, void 0, fu
                 }
                 return next(err);
             }
-            // req.flash('success', { msg: 'Profile information has been updated.' })
+            // req.flash('success', { msg: 'Profile information has been updated.' })auth
             res.redirect('/account');
         });
     });

@@ -135,7 +135,7 @@ export const updateProfile = async (req: Request, res: Response, next: NextFunct
                 }
                 return next(err)
             }
-            // req.flash('success', { msg: 'Profile information has been updated.' })
+            // req.flash('success', { msg: 'Profile information has been updated.' })auth
             res.redirect('/account')
         })
     })
