@@ -73,12 +73,12 @@ app.use((req, res, next) => {
 /** ---------------------------------------  APP ROUTING  --------------------------------- */
 /** Auth */
 import * as user from './controllers/user'
-app.post('/qauth/session_challenge', user.sessionChallenge)
-app.post('/qauth/login', user.login)
-app.post('/qauth/logout', user.logout)
-app.post('/qauth/forgot', user.forgot)
-app.post('/qauth/reset/:token', user.reset)
-app.post('/qauth/signup', user.signup)
+app.post('/session_challenge', user.sessionChallenge)
+app.post('/login', user.login)
+app.post('/logout', user.logout)
+app.post('/forgot', user.forgot)
+app.post('/reset/:token', user.reset)
+app.post('/signup', user.signup)
 // app.get('/google', passport.authenticate('google', { scope: ['profile'] }))
 // app.get('/google/callback', passport.authenticate('google', { failureRedirect: '/?redirect=true' }), (req, res) => {
 //     console.log(res)
