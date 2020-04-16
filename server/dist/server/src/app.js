@@ -40,8 +40,6 @@ mongoose_1.default.connect(mongoUrl, { useNewUrlParser: true, useCreateIndex: tr
 });
 /** ---------------------------------------  APP CONFIG  ---------------------------------------------- */
 app.set('port', PORT);
-app.set('views', path_1.default.join(__dirname, '../views'));
-app.set('view engine', 'pug');
 app.use(compression_1.default());
 app.use(body_parser_1.default.json());
 app.use(body_parser_1.default.urlencoded({ extended: true }));
@@ -84,8 +82,8 @@ app.post('/qauth/logout', user.logout);
 app.post('/qauth/forgot', user.forgot);
 app.post('/qauth/reset/:token', user.reset);
 app.post('/qauth/signup', user.signup);
-app.get('/qauth/google', passport_1.default.authenticate('google', { scope: ['profile'] }));
-app.get('/qauth/google/callback', passport_1.default.authenticate('google', { failureRedirect: '/?redirect=true' }), (req, res) => {
+app.get('/google', passport_1.default.authenticate('google', { scope: ['profile'] }));
+app.get('/google/callback', passport_1.default.authenticate('google', { failureRedirect: '/?redirect=true' }), (req, res) => {
     console.log(res);
     res.redirect('/');
 });

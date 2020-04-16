@@ -33,8 +33,6 @@ mongoose.connect(mongoUrl, { useNewUrlParser: true, useCreateIndex: true, useUni
 
 /** ---------------------------------------  APP CONFIG  ---------------------------------------------- */
 app.set('port', PORT)
-app.set('views', path.join(__dirname, '../views'))
-app.set('view engine', 'pug')
 app.use(compression())
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
@@ -81,8 +79,8 @@ app.post('/qauth/logout', user.logout)
 app.post('/qauth/forgot', user.forgot)
 app.post('/qauth/reset/:token', user.reset)
 app.post('/qauth/signup', user.signup)
-app.get('/qauth/google', passport.authenticate('google', { scope: ['profile'] }))
-app.get('/qauth/google/callback', passport.authenticate('google', { failureRedirect: '/?redirect=true' }), (req, res) => {
+app.get('/google', passport.authenticate('google', { scope: ['profile'] }))
+app.get('/google/callback', passport.authenticate('google', { failureRedirect: '/?redirect=true' }), (req, res) => {
     console.log(res)
     res.redirect('/')
 })
