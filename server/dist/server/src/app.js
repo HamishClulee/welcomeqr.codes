@@ -82,11 +82,11 @@ app.post('/qauth/logout', user.logout);
 app.post('/qauth/forgot', user.forgot);
 app.post('/qauth/reset/:token', user.reset);
 app.post('/qauth/signup', user.signup);
-app.get('/google', passport_1.default.authenticate('google', { scope: ['profile'] }));
-app.get('/google/callback', passport_1.default.authenticate('google', { failureRedirect: '/?redirect=true' }), (req, res) => {
-    console.log(res);
-    res.redirect('/');
-});
+// app.get('/google', passport.authenticate('google', { scope: ['profile'] }))
+// app.get('/google/callback', passport.authenticate('google', { failureRedirect: '/?redirect=true' }), (req, res) => {
+//     console.log(res)
+//     res.redirect('/')
+// })
 /** Editor */
 const editor = __importStar(require("./controllers/editor"));
 const passportConfig = __importStar(require("./config/passport"));

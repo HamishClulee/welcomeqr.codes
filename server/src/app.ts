@@ -79,11 +79,11 @@ app.post('/qauth/logout', user.logout)
 app.post('/qauth/forgot', user.forgot)
 app.post('/qauth/reset/:token', user.reset)
 app.post('/qauth/signup', user.signup)
-app.get('/google', passport.authenticate('google', { scope: ['profile'] }))
-app.get('/google/callback', passport.authenticate('google', { failureRedirect: '/?redirect=true' }), (req, res) => {
-    console.log(res)
-    res.redirect('/')
-})
+// app.get('/google', passport.authenticate('google', { scope: ['profile'] }))
+// app.get('/google/callback', passport.authenticate('google', { failureRedirect: '/?redirect=true' }), (req, res) => {
+//     console.log(res)
+//     res.redirect('/')
+// })
 
 /** Editor */
 import * as editor from './controllers/editor'
