@@ -9,30 +9,43 @@ import mongoose from 'mongoose'
 import passport from 'passport'
 import bluebird from 'bluebird'
 import multer from 'multer'
-import QLog from './logger'
+import winston from 'winston'
 import { MONGODB_URI, SESSION_SECRET } from './util/secrets'
 
-const MINS_15 = 90000
-const DAYS_5 = 1000 * 60 * 60 * 24 * 5
-const PORT = 1980
-export const DEV_URL = 'http://localhost:8080'
-export const PROD_URL = 'https://welcomeqr.codes'
 const history = require('connect-history-api-fallback')
 const cors = require('cors')
 const MongoStore = mongo(session)
 
+/** ---------------------------------------  LOGGING  ------------------------------------------------- */
+if (process.env.NODE_ENV === 'production') {
+    winston.createLogger({
+        level: 'info',
+        format: winston.format.json(),
+        defaultMeta: { service: 'user-service' },
+        transports: [
+          new winston.transports.File({ filename: './logs/error.log', level: 'error' }),
+          new winston.transports.File({ filename: './logs/combined.log' })
+        ]
+    })
+}
+
 /** ---------------------------------------  PASSPORT + MONGO CONFIG  --------------------------------- */
+import * as userController from './controllers/user'
+
 const app = express()
 const mongoUrl = MONGODB_URI
 mongoose.Promise = bluebird
 mongoose.connect(mongoUrl, { useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true } ).then(
-    () => { QLog.log(`[${new Date()}] Mongo is now connected!`) },
+    () => { /** ready to use. The `mongoose.connect()` promise resolves to undefined. */ },
 ).catch(err => {
     console.log('MongoDB connection error. Please make sure MongoDB is running. ' + err)
 })
 
 /** ---------------------------------------  APP CONFIG  ---------------------------------------------- */
-app.set('port', PORT)
+const MINS_15 = 90000
+app.set('port', 1980)
+app.set('views', path.join(__dirname, '../views'))
+app.set('view engine', 'pug')
 app.use(compression())
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
@@ -40,7 +53,7 @@ app.use(bodyParser.urlencoded({ extended: true }))
 app.use(session({
     cookie: {
         sameSite: true,
-        maxAge: DAYS_5,
+        maxAge: MINS_15,
         secure: false,
     },
     saveUninitialized: false,
@@ -49,7 +62,7 @@ app.use(session({
     store: new MongoStore({
         url: mongoUrl,
         autoReconnect: true,
-        ttl: DAYS_5,
+        ttl: MINS_15,
         autoRemove: 'native'
     })
 }))
@@ -60,47 +73,32 @@ app.use(passport.initialize())
 app.use(passport.session())
 
 app.use(cors({
-    origin: process.env.NODE_ENV !== 'production' ? DEV_URL : PROD_URL,
+    origin: process.env.NODE_ENV !== 'production' ? 'http://localhost:8080' : 'https://welcomeqr.codes',
     credentials: true
 }))
 app.use(lusca.xframe('SAMEORIGIN'))
 app.use(lusca.xssProtection(true))
-
 app.use((req, res, next) => {
     res.locals.user = req.user
     next()
 })
 
 /** ---------------------------------------  APP ROUTING  --------------------------------- */
-/** Auth */
-import * as user from './controllers/user'
-app.post('/session_challenge', user.sessionChallenge)
-app.post('/login', user.login)
-app.post('/logout', user.logout)
-app.post('/forgot', user.forgot)
-app.post('/reset/:token', user.reset)
-app.post('/signup', user.signup)
+app.post('/session_challenge', userController.sessionChallenge)
 
-app.get('/google', passport.authenticate('google', { scope: ['profile'] }))
-app.get('/google/callback', passport.authenticate('google', { failureRedirect: '/?redirect=true' }), (req, res) => {
-    res.redirect('/')
-})
+app.post('/login', userController.postLogin)
 
-app.post('/auth/google', passport.authenticate('google-id-token'), (req, res) => {
-    // do something with req.user
-    res.send(req.user ? 200 : 401)
-  }
-)
+app.post('/logout', userController.postLogout)
 
+app.post('/forgot', userController.postForgot)
 
-/** Editor */
-import * as editor from './controllers/editor'
-import * as passportConfig from './config/passport'
-app.post('/api/submitnew', passportConfig.isAuthenticated, editor.submitNew)
-app.post('/api/checksubdom', passportConfig.isAuthenticated, editor.checkSubdom)
-app.post('/api/submitsubdom', passportConfig.isAuthenticated, editor.submitSubdom)
-app.post('/api/gethtmlforuser', passportConfig.isAuthenticated, editor.getHTML)
-editor.precaching()
+app.post('/reset/:token', userController.postReset)
+
+app.post('/signup', userController.postSignup)
+
+// app.post('/account/profile', passportConfig.isAuthenticated, userController.postUpdateProfile)
+// app.post('/account/password', passportConfig.isAuthenticated, userController.postUpdatePassword)
+// app.post('/account/delete', passportConfig.isAuthenticated, userController.postDeleteAccount)
 
 /** ---------------------------------------  IMAGE STORAGE  --------------------------------- */
 const storage = multer.diskStorage({
@@ -120,6 +118,8 @@ app.post('/api/photo', (req: any, res: any): any => {
         res.end(JSON.stringify({ message: 'Upload success' }))
     })
 })
+
+app.post('/tester', userController.postSignup)
 
 /** -------------------------------  STATIC FILES AND SPA SERVER  --------------------------------- */
 const _static = express.static(path.join(__dirname, 'front-end'), { maxAge: 31557600000 })

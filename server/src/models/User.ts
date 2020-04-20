@@ -1,24 +1,10 @@
 import bcrypt from 'bcrypt-nodejs'
+import crypto from 'crypto'
 import mongoose from 'mongoose'
-import { EditorDocument } from './Editor'
-
-import { Document, Model, Schema } from 'mongoose';
-import { ObjectID } from 'bson';
-
-export interface AuthToken {
-    accessToken: string;
-    kind: string;
-}
-
-type findOrCreateFuntion = (id?: string | ObjectID | null) => void
-type comparePasswordFunction = (candidatePassword: string, cb: (err: any, isMatch: any) => {}) => void
 
 export type UserDocument = mongoose.Document & {
     email: string;
     password: string;
-    subdom: string | null;
-    editors: EditorDocument[],
-
     passwordResetToken: string;
     passwordResetExpires: Date;
 
@@ -34,15 +20,19 @@ export type UserDocument = mongoose.Document & {
     };
 
     comparePassword: comparePasswordFunction;
-    findOrCreate: findOrCreateFuntion;
+    gravatar: (size: number) => string;
 };
+
+type comparePasswordFunction = (candidatePassword: string, cb: (err: any, isMatch: any) => {}) => void;
+
+export interface AuthToken {
+    accessToken: string;
+    kind: string;
+}
 
 const userSchema = new mongoose.Schema({
     email: { type: String, unique: true },
     password: String,
-    subdom: { type: String || null, default: null },
-    editors: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Editor' }],
-
     passwordResetToken: String,
     passwordResetExpires: Date,
 
@@ -60,6 +50,9 @@ const userSchema = new mongoose.Schema({
     }
 }, { timestamps: true })
 
+/**
+ * Password hash middleware.
+ */
 userSchema.pre('save', function save(next) {
     const user = this as UserDocument
     if (!user.isModified('password')) { return next() }
@@ -78,11 +71,18 @@ const comparePassword: comparePasswordFunction = function (candidatePassword, cb
         cb(err, isMatch)
     })
 }
-const findOrCreate: findOrCreateFuntion = () => {
-
-}
 
 userSchema.methods.comparePassword = comparePassword
-userSchema.methods.findOrCreate = findOrCreate
+
+/**
+ * Helper method for getting user's gravatar.
+ */
+userSchema.methods.gravatar = function (size: number = 200) {
+    if (!this.email) {
+        return `https://gravatar.com/avatar/?s=${size}&d=retro`
+    }
+    const md5 = crypto.createHash('md5').update(this.email).digest('hex')
+    return `https://gravatar.com/avatar/${md5}?s=${size}&d=retro`
+}
 
 export const User = mongoose.model<UserDocument>('User', userSchema)

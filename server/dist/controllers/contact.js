@@ -21,6 +21,19 @@ const transporter = nodemailer_1.default.createTransport({
         pass: process.env.SENDGRID_PASSWORD
     }
 });
+/**
+ * GET /contact
+ * Contact form page.
+ */
+exports.getContact = (req, res) => {
+    res.render('contact', {
+        title: 'Contact'
+    });
+};
+/**
+ * POST /contact
+ * Send a contact form via Nodemailer.
+ */
 exports.postContact = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     yield express_validator_1.check('name', 'Name cannot be blank').not().isEmpty().run(req);
     yield express_validator_1.check('email', 'Email is not valid').isEmail().run(req);

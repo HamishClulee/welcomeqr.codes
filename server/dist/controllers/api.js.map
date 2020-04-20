@@ -1,0 +1,1 @@
+{"version":3,"file":"api.js","sourceRoot":"","sources":["../../src/controllers/api.ts"],"names":[],"mappings":"AAAA,YAAY,CAAA;;AAMZ;;;GAGG;AACU,QAAA,MAAM,GAAG,CAAC,GAAY,EAAE,GAAa,EAAE,EAAE;IAClD,GAAG,CAAC,MAAM,CAAC,WAAW,EAAE;QACpB,KAAK,EAAE,cAAc;KACxB,CAAC,CAAA;AACN,CAAC,CAAA"}
