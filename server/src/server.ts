@@ -1,5 +1,4 @@
 import app from './app'
-import QLog from './logger'
 
 console.log('build started')
 
@@ -11,7 +10,7 @@ const server = app.listen(app.get('port'), () => {
     )
     console.log('  Press CTRL-C to stop\n')
 
-    QLog.log(
+    console.log(
 `
 ============================================================================================\n
 [${new Date()}] Restarted on http://localhost:${app.get('port')}\n
