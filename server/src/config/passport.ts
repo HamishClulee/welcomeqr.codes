@@ -1,11 +1,25 @@
 import passport from 'passport'
 import passportLocal from 'passport-local'
 import _ from 'lodash'
-
+import GoogleTokenStrategy from 'passport-google-id-token'
 import { User, UserDocument } from '../models/User'
 import { Request, Response, NextFunction } from 'express'
-
 import { DEV_URL, PROD_URL } from '../app'
+import { GOOGLE_OAUTH_ID } from '../util/secrets'
+
+
+passport.use(new GoogleTokenStrategy({ clientID: GOOGLE_OAUTH_ID,},
+
+    (_parsedToken: any, googleId: any, done: (arg0: any, arg1: any) => any) => {
+
+        console.log(User)
+
+        // User.findOrCreate({ googleId: googleId }, function (err: any, user: any) {
+        //     return done(err, user);
+        // });
+
+    }
+));
 
 const LocalStrategy = passportLocal.Strategy
 
@@ -51,7 +65,7 @@ passport.use(new LocalStrategy({ usernameField: 'email' }, (email, password, don
  *       - Else create a new account.
  */
 
-var GoogleStrategy = require('passport-google-oauth20').Strategy;
+const GoogleStrategy = require('passport-google-oauth20').Strategy;
 
 passport.use(new GoogleStrategy({
     clientID: process.env.GOOGLE_OAUTH_ID,

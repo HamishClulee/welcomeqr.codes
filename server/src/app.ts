@@ -65,6 +65,7 @@ app.use(cors({
 }))
 app.use(lusca.xframe('SAMEORIGIN'))
 app.use(lusca.xssProtection(true))
+
 app.use((req, res, next) => {
     res.locals.user = req.user
     next()
@@ -79,11 +80,18 @@ app.post('/logout', user.logout)
 app.post('/forgot', user.forgot)
 app.post('/reset/:token', user.reset)
 app.post('/signup', user.signup)
-// app.get('/google', passport.authenticate('google', { scope: ['profile'] }))
-// app.get('/google/callback', passport.authenticate('google', { failureRedirect: '/?redirect=true' }), (req, res) => {
-//     console.log(res)
-//     res.redirect('/')
-// })
+
+app.get('/google', passport.authenticate('google', { scope: ['profile'] }))
+app.get('/google/callback', passport.authenticate('google', { failureRedirect: '/?redirect=true' }), (req, res) => {
+    res.redirect('/')
+})
+
+app.post('/auth/google', passport.authenticate('google-id-token'), (req, res) => {
+    // do something with req.user
+    res.send(req.user ? 200 : 401)
+  }
+)
+
 
 /** Editor */
 import * as editor from './controllers/editor'

@@ -1,22 +1,17 @@
 {
-    "name": "express-typescript-starter",
+    "name": "welcomeqr-server",
     "version": "0.1.0",
-    "description": "A starting point for Node.js express apps with TypeScript",
+    "description": "WelcomeQR codes sever",
     "repository": {
         "type": "git",
-        "url": "https://github.com/Microsoft/TypeScript-Node-Starter"
+        "url": "https://github.com/HamishClulee/welcomeqr.codes"
     },
-    "author": "Bowden Kelly",
+    "author": "Hamish Clulee",
     "license": "MIT",
     "scripts": {
-        "start": "nodemon",
-        "build": "yarn build-ts",
-        "serve": "node dist/server.js",
-        "watch-node": "nodemon dist/server.js",
-        "watch": "concurrently -k -p \"[{name}]\" -n \"Sass,TypeScript,Node\" -c \"yellow.bold,cyan.bold,green.bold\" \"npm run watch-ts\" \"npm run watch-node\"",
-        "build-ts": "tsc",
-        "watch-ts": "tsc -w",
-        "lint": "tsc --noEmit && eslint \"**/src/*.{js,ts}\" --quiet --fix"
+        "dev": "nodemon --watch 'src/**/*.ts' --exec 'ts-node --files' src/server.ts",
+        "build": "tsc",
+        "serve": "node dist/server.js"
     },
     "dependencies": {
         "@types/multer": "^1.4.0",
@@ -29,7 +24,6 @@
         "connect-mongo": "^3.0.0",
         "cors": "^2.8.5",
         "dotenv": "^8.2.0",
-        "errorhandler": "^1.5.1",
         "express": "^4.17.1",
         "express-flash": "0.0.2",
         "express-session": "^1.16.2",
@@ -39,10 +33,12 @@
         "lodash": "^4.17.15",
         "lusca": "^1.6.1",
         "mongoose": "^5.7.1",
+        "mongoose-findorcreate": "^3.0.0",
         "multer": "^1.4.2",
         "nodemailer": "^6.3.0",
         "passport": "^0.4.0",
         "passport-facebook": "^3.0.0",
+        "passport-google-id-token": "^0.4.7",
         "passport-google-oauth20": "^2.0.0",
         "passport-local": "^1.0.0",
         "pug": "^2.0.4",

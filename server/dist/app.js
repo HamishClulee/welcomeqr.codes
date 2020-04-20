@@ -26,8 +26,8 @@ const secrets_1 = require("./util/secrets");
 const MINS_15 = 90000;
 const DAYS_5 = 1000 * 60 * 60 * 24 * 5;
 const PORT = 1980;
-const DEV_URL = 'http://localhost:8080';
-const PROD_URL = 'https://welcomeqr.codes';
+exports.DEV_URL = 'http://localhost:8080';
+exports.PROD_URL = 'https://welcomeqr.codes';
 const history = require('connect-history-api-fallback');
 const cors = require('cors');
 const MongoStore = connect_mongo_1.default(express_session_1.default);
@@ -40,8 +40,6 @@ mongoose_1.default.connect(mongoUrl, { useNewUrlParser: true, useCreateIndex: tr
 });
 /** ---------------------------------------  APP CONFIG  ---------------------------------------------- */
 app.set('port', PORT);
-app.set('views', path_1.default.join(__dirname, '../views'));
-app.set('view engine', 'pug');
 app.use(compression_1.default());
 app.use(body_parser_1.default.json());
 app.use(body_parser_1.default.urlencoded({ extended: true }));
@@ -66,7 +64,7 @@ if (process.env.NODE_ENV === 'production')
 app.use(passport_1.default.initialize());
 app.use(passport_1.default.session());
 app.use(cors({
-    origin: process.env.NODE_ENV !== 'production' ? DEV_URL : PROD_URL,
+    origin: process.env.NODE_ENV !== 'production' ? exports.DEV_URL : exports.PROD_URL,
     credentials: true
 }));
 app.use(lusca_1.default.xframe('SAMEORIGIN'));
@@ -77,22 +75,29 @@ app.use((req, res, next) => {
 });
 /** ---------------------------------------  APP ROUTING  --------------------------------- */
 /** Auth */
-const userController = __importStar(require("./controllers/user"));
-app.post('/session_challenge', userController.sessionChallenge);
-app.post('/login', userController.postLogin);
-app.post('/logout', userController.postLogout);
-app.post('/forgot', userController.postForgot);
-app.post('/reset/:token', userController.postReset);
-app.post('/signup', userController.postSignup);
+const user = __importStar(require("./controllers/user"));
+app.post('/session_challenge', user.sessionChallenge);
+app.post('/login', user.login);
+app.post('/logout', user.logout);
+app.post('/forgot', user.forgot);
+app.post('/reset/:token', user.reset);
+app.post('/signup', user.signup);
+app.get('/google', passport_1.default.authenticate('google', { scope: ['profile'] }));
+app.get('/google/callback', passport_1.default.authenticate('google', { failureRedirect: '/?redirect=true' }), (req, res) => {
+    res.redirect('/');
+});
+app.post('/auth/google', passport_1.default.authenticate('google-id-token'), (req, res) => {
+    // do something with req.user
+    res.send(req.user ? 200 : 401);
+});
 /** Editor */
-const editorController = __importStar(require("./controllers/editor"));
+const editor = __importStar(require("./controllers/editor"));
 const passportConfig = __importStar(require("./config/passport"));
-app.post('/api/submitnew', passportConfig.isAuthenticated, editorController.postSubmitNew);
-app.post('/api/getallforuser', passportConfig.isAuthenticated, editorController.postGetAllEditorsForUser);
-app.post('/api/checksubdom', passportConfig.isAuthenticated, editorController.postCheckSubdom);
-app.post('/api/submitsubdom', passportConfig.isAuthenticated, editorController.postSubmitSubdom);
-app.post('/api/gethtmlforuser', passportConfig.isAuthenticated, editorController.postGetHTML);
-editorController.precaching();
+app.post('/api/submitnew', passportConfig.isAuthenticated, editor.submitNew);
+app.post('/api/checksubdom', passportConfig.isAuthenticated, editor.checkSubdom);
+app.post('/api/submitsubdom', passportConfig.isAuthenticated, editor.submitSubdom);
+app.post('/api/gethtmlforuser', passportConfig.isAuthenticated, editor.getHTML);
+editor.precaching();
 /** ---------------------------------------  IMAGE STORAGE  --------------------------------- */
 const storage = multer_1.default.diskStorage({
     destination: function (req, file, callback) {

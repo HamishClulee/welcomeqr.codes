@@ -82,7 +82,7 @@ export class QAuth {
     recover(email: string, token: string, password: string): AxiosPromise<QUser> {
         return this.ax.post('/recover', { email, token, password })
     }
-    google(): AxiosPromise<QUser> {
-        return this.ax.get('/google', {})
+    googleSignUp(token: string): AxiosPromise<QUser> {
+        return this.ax.post('/auth/google', {  })
     }
 }

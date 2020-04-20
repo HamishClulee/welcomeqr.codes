@@ -9,6 +9,7 @@ const userSchema = new mongoose_1.default.Schema({
     email: { type: String, unique: true },
     password: String,
     subdom: { type: String || null, default: null },
+    editors: [{ type: mongoose_1.default.Schema.Types.ObjectId, ref: 'Editor' }],
     passwordResetToken: String,
     passwordResetExpires: Date,
     facebook: String,
@@ -46,6 +47,9 @@ const comparePassword = function (candidatePassword, cb) {
         cb(err, isMatch);
     });
 };
+const findOrCreate = () => {
+};
 userSchema.methods.comparePassword = comparePassword;
+userSchema.methods.findOrCreate = findOrCreate;
 exports.User = mongoose_1.default.model('User', userSchema);
 //# sourceMappingURL=User.js.map

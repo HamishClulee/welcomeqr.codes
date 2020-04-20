@@ -1,7 +1,17 @@
 import bcrypt from 'bcrypt-nodejs'
-import crypto from 'crypto'
 import mongoose from 'mongoose'
-import { EditorDocument } from './Editor';
+import { EditorDocument } from './Editor'
+
+import { Document, Model, Schema } from 'mongoose';
+import { ObjectID } from 'bson';
+
+export interface AuthToken {
+    accessToken: string;
+    kind: string;
+}
+
+type findOrCreateFuntion = (id?: string | ObjectID | null) => void
+type comparePasswordFunction = (candidatePassword: string, cb: (err: any, isMatch: any) => {}) => void
 
 export type UserDocument = mongoose.Document & {
     email: string;
@@ -24,14 +34,8 @@ export type UserDocument = mongoose.Document & {
     };
 
     comparePassword: comparePasswordFunction;
+    findOrCreate: findOrCreateFuntion;
 };
-
-type comparePasswordFunction = (candidatePassword: string, cb: (err: any, isMatch: any) => {}) => void;
-
-export interface AuthToken {
-    accessToken: string;
-    kind: string;
-}
 
 const userSchema = new mongoose.Schema({
     email: { type: String, unique: true },
@@ -74,7 +78,11 @@ const comparePassword: comparePasswordFunction = function (candidatePassword, cb
         cb(err, isMatch)
     })
 }
+const findOrCreate: findOrCreateFuntion = () => {
+
+}
 
 userSchema.methods.comparePassword = comparePassword
+userSchema.methods.findOrCreate = findOrCreate
 
 export const User = mongoose.model<UserDocument>('User', userSchema)

@@ -36,7 +36,7 @@
         </qinput>
 
         <div class="button-container">
-            <div class="google-btn" style="width: 100%;">
+            <div class="google-btn" style="width: 100%;" @click="googleSignUp">
                 <div class="google-icon-wrapper">
                     <img class="google-icon-svg" src="/svg/google.svg"/>
                 </div>
@@ -132,6 +132,12 @@ export default {
             this.confirm = e
             if (this.password !== this.confirm) this.confirmerror = 'Passwords don\'t match'
             else this.confirmerror = ''
+        },
+        async googleSignUp() {
+            const authCode = await this.$gAuth.getAuthCode()
+            // console.log(authCode)
+            const response = await this.$qAuth.googleSignUp()
+            // post('http://your-backend-server-api-to-use-authcode', { code: authCode, redirect_uri: 'postmessage' })
         },
     },
     computed: {

@@ -19,91 +19,69 @@ const passport_1 = __importDefault(require("passport"));
 const User_1 = require("../models/User");
 const express_validator_1 = require("express-validator");
 require("../config/passport");
-const logger_1 = __importDefault(require("../logger"));
-/**
- * POST /session_challenge
- * Check if the user is authed
- */
-exports.sessionChallenge = (req, res) => {
-    // console.log('sess: \n => ', JSON.stringify(req.body.intercept, null, 2))
-    logger_1.default.log(`[${new Date()}] New session challenge from ${req.session ? JSON.stringify(req.session) : '=> no session exists!'}`);
-    if (!req.session.passport) {
-        logger_1.default.log(`[${new Date()}] Failed session challenge from ${req.hostname}`);
-        return res.status(401).send({
-            status: 401,
-            message: 'No user logged in.',
-            intercept: req.body.intercept,
-            user: { email: null, _id: null, authed: false, subdom: null },
-        });
+const qauth_1 = __importDefault(require("./qauth"));
+const errors_1 = require("./errors");
+exports.sessionChallenge = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const user = yield User_1.User.findOne({ _id: req.session.passport.user });
+        let { email, _id, subdom } = user;
+        return res.status(200).send({ user: qauth_1.default.approve({ email, id: _id, authed: true, subdom }) });
     }
-    else {
-        User_1.User.findOne({ _id: req.session.passport.user }, (err, user) => {
-            if (err) {
-                logger_1.default.log(`[${new Date()}] Mongo failed user look up with details ${JSON.stringify(req.session.passport.user)}`);
-                return res.status(401).send({
-                    status: 401,
-                    message: 'You are not authenticated.',
-                    intercept: req.body.intercept,
-                    user: { email: null, _id: null, authed: false, subdom: null },
-                });
-            }
-            if (user) {
-                logger_1.default.log(`[${new Date()}] New session challenge from ${user.email}`);
-                let { email, _id, subdom } = user;
-                return res.status(200).send({
-                    msg: 'you are a premium user',
-                    intercept: req.body.intercept,
-                    user: { email, id: _id, authed: true, subdom }
-                });
-            }
-            else {
-                logger_1.default.log(`[${new Date()}] New session challenge from non-existent user`);
-                return res.status(401).send({
-                    status: 401,
-                    message: 'You do not exist.',
-                    intercept: req.body.intercept,
-                    user: { email: null, _id: null, authed: false, subdom: null },
-                });
-            }
-        });
+    catch (e) {
+        errors_1.QAuthError('sessionChallenge', e, res, req.body.intercept);
     }
-};
-exports.postLogout = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    req.logout();
-    return res.status(200).send({ userContent: 'see you later, aligator', user: { email: null, _id: null, authed: false } });
 });
-exports.postLogin = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+exports.logout = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    req.logout();
+    return res.status(200).send({ userContent: 'see you later, aligator', user: qauth_1.default.deny() });
+});
+exports.login = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     yield express_validator_1.check('email', 'Email is not valid').isEmail().run(req);
-    yield express_validator_1.check('password', 'Password cannot be blank').isLength({ min: 1 }).run(req);
+    yield express_validator_1.check('password', 'Password must be at least 8 characters').isLength({ min: 8 }).run(req);
     yield express_validator_1.sanitize('email').normalizeEmail({ gmail_remove_dots: false }).run(req);
     const errors = express_validator_1.validationResult(req);
+    const status = req.body.intercept ? 403 : 200;
     if (!errors.isEmpty()) {
-        return res.status(400).send({ errors: errors.array(), userContent: 'signup deets bad', user: { email: null, _id: null, authed: false, subdom: null } });
+        return res.status(status).send({
+            errors: errors.array(),
+            userError: 'Something is wrong with those login details, try again.',
+            user: qauth_1.default.deny()
+        });
     }
     passport_1.default.authenticate('local', (err, user, info) => {
         if (err) {
             return next(err);
         }
         if (!user) {
-            return res.status(400).send({ userContent: 'no user exists', user: { email: null, _id: null, authed: false, subdom: null } });
+            return res.status(status).send({
+                userError: 'Email and password do not match.',
+                user: qauth_1.default.deny()
+            });
         }
         let { email, _id, subdom } = user;
         req.logIn(user, (err) => {
             if (err) {
                 return next(err);
             }
-            return res.status(200).send({ userContent: 'you sexy beast, welcome home', user: { email, id: _id, authed: true, subdom } });
+            return res.status(200).send({
+                user: qauth_1.default.approve({ email, id: _id, authed: true, subdom })
+            });
         });
     })(req, res, next);
 });
-exports.postSignup = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+exports.signup = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     yield express_validator_1.check('email', 'Email is not valid').isEmail().run(req);
-    yield express_validator_1.check('password', 'Password must be at least 4 characters long').isLength({ min: 4 }).run(req);
+    yield express_validator_1.check('password', 'Password must be at least 8 characters long').isLength({ min: 8 }).run(req);
     yield express_validator_1.check('confirm', 'Passwords do not match').equals(req.body.password).run(req);
     yield express_validator_1.sanitize('email').normalizeEmail({ gmail_remove_dots: false }).run(req);
     const errors = express_validator_1.validationResult(req);
+    const status = req.body.intercept ? 403 : 200;
     if (!errors.isEmpty()) {
-        return res.status(400).send({ errors: errors.array(), userContent: 'signup deets bad', user: { email: null, _id: null, authed: false, subdom: null } });
+        return res.status(403).send({
+            errors: errors.array(),
+            userError: 'Something is wrong with those login details, try again.',
+            user: qauth_1.default.deny()
+        });
     }
     const user = new User_1.User({
         email: req.body.email,
@@ -114,8 +92,10 @@ exports.postSignup = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
             return next(err);
         }
         if (existingUser) {
-            let { email, _id, subdom } = existingUser;
-            return res.status(200).send({ userContent: 'account already exists!', user: { email, id: _id, authed: true, subdom } });
+            return res.status(403).send({
+                user: qauth_1.default.deny(),
+                userError: 'That email already exists, did you forget your password?'
+            });
         }
         user.save((err) => {
             if (err) {
@@ -126,17 +106,14 @@ exports.postSignup = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
                 if (err) {
                     return next(err);
                 }
-                return res.status(200).send({ userContent: 'Hi dude man', user: { email, id: _id, authed: true, subdom } });
+                return res.status(200).send({
+                    user: qauth_1.default.approve({ email, id: _id, authed: true, subdom })
+                });
             });
         });
     });
 });
-exports.getAccount = (req, res) => {
-    res.render('account/profile', {
-        title: 'Account Management'
-    });
-};
-exports.postUpdateProfile = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+exports.updateProfile = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     yield express_validator_1.check('email', 'Please enter a valid email address.').isEmail().run(req);
     // eslint-disable-next-line @typescript-eslint/camelcase
     yield express_validator_1.sanitize('email').normalizeEmail({ gmail_remove_dots: false }).run(req);
@@ -163,12 +140,12 @@ exports.postUpdateProfile = (req, res, next) => __awaiter(void 0, void 0, void 0
                 }
                 return next(err);
             }
-            // req.flash('success', { msg: 'Profile information has been updated.' })
+            // req.flash('success', { msg: 'Profile information has been updated.' })auth
             res.redirect('/account');
         });
     });
 });
-exports.postUpdatePassword = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+exports.updatePassword = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     yield express_validator_1.check('password', 'Password must be at least 4 characters long').isLength({ min: 4 }).run(req);
     yield express_validator_1.check('confirmPassword', 'Passwords do not match').equals(req.body.password).run(req);
     const errors = express_validator_1.validationResult(req);
@@ -191,7 +168,7 @@ exports.postUpdatePassword = (req, res, next) => __awaiter(void 0, void 0, void 
         });
     });
 });
-exports.postDeleteAccount = (req, res, next) => {
+exports.deleteAccount = (req, res, next) => {
     const user = req.user;
     User_1.User.remove({ _id: user.id }, (err) => {
         if (err) {
@@ -202,7 +179,7 @@ exports.postDeleteAccount = (req, res, next) => {
         res.redirect('/');
     });
 };
-exports.getOauthUnlink = (req, res, next) => {
+exports.oAuthUnlink = (req, res, next) => {
     const provider = req.params.provider;
     const user = req.user;
     User_1.User.findById(user.id, (err, user) => {
@@ -220,7 +197,7 @@ exports.getOauthUnlink = (req, res, next) => {
         });
     });
 };
-exports.getReset = (req, res, next) => {
+exports._reset = (req, res, next) => {
     if (req.isAuthenticated()) {
         return res.redirect('/');
     }
@@ -240,7 +217,7 @@ exports.getReset = (req, res, next) => {
         });
     });
 };
-exports.postReset = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+exports.reset = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     yield express_validator_1.check('password', 'Password must be at least 4 characters long.').isLength({ min: 4 }).run(req);
     yield express_validator_1.check('confirm', 'Passwords must match.').equals(req.body.password).run(req);
     const errors = express_validator_1.validationResult(req);
@@ -300,7 +277,7 @@ exports.postReset = (req, res, next) => __awaiter(void 0, void 0, void 0, functi
         // res.redirect('/')
     });
 });
-exports.getForgot = (req, res) => {
+exports._forgot = (req, res) => {
     if (req.isAuthenticated()) {
         return res.redirect('/');
     }
@@ -308,7 +285,7 @@ exports.getForgot = (req, res) => {
         title: 'Forgot Password'
     });
 };
-exports.postForgot = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+exports.forgot = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     yield express_validator_1.check('email', 'Please enter a valid email address.').isEmail().run(req);
     // eslint-disable-next-line @typescript-eslint/camelcase
     yield express_validator_1.sanitize('email').normalizeEmail({ gmail_remove_dots: false }).run(req);

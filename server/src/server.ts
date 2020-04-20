@@ -1,8 +1,7 @@
-import errorHandler from 'errorhandler'
 import app from './app'
 import QLog from './logger'
 
-if (process.env.NODE_ENV !== 'production') app.use(errorHandler())
+console.log('build started')
 
 const server = app.listen(app.get('port'), () => {
     console.log(
@@ -19,5 +18,7 @@ const server = app.listen(app.get('port'), () => {
 ============================================================================================\n
 `)
 })
+
+console.log('build running')
 
 export default server
