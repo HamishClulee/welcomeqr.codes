@@ -1,4 +1,4 @@
 #!/usr/bin/env bash
-cd server
+cd server-V2
 kill -9 $(lsof -t -i:1980)
-yarn start --fix
+yarn dev

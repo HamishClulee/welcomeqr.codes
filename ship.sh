@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -eu
 echo "---------------------- Building Server. --------------------------------------"
-cd server
+cd server-V2
 yarn build
 echo "---------------------- Building front. --------------------------------------"
 cd ../front
@@ -9,8 +9,8 @@ yarn build --fix
 cd ..
 echo "---------------------- Copying static assets to /server/dist. ----------------"
 DATE=`date '+%Y-%m-%d %H:%M:%S'`
-rm -R $PWD/server/dist/front-end
-mkdir $PWD/server/dist/front-end
+rm -R $PWD/server-V2/dist/front-end
+mkdir $PWD/server-V2/dist/front-end
 cp -a $PWD/front/dist/. $PWD/server/dist/front-end
 echo "---------------------- Pushing to GIT. ----------------------------------------"
 git add .
