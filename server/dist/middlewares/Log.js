@@ -14,7 +14,6 @@ class Log {
         let _timeString = `${this.today.getHours()}:${this.today.getMinutes()}:${this.today.getSeconds()}`;
         this.baseDir = path.join(__dirname, '../../.logs/');
         this.fileName = `${_dateString}.log`;
-        console.log(this.fileName);
         this.linePrefix = `[${_dateString} ${_timeString}]`;
     }
     // Adds INFO prefix string to the log string

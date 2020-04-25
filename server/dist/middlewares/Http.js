@@ -5,7 +5,6 @@ const compress = require("compression");
 const connect = require("connect-mongo");
 const bodyParser = require("body-parser");
 const session = require("express-session");
-const path = require("path");
 const Log_1 = require("./Log");
 const Locals_1 = require("../providers/Locals");
 const Passport_1 = require("../providers/Passport");
@@ -44,10 +43,6 @@ class Http {
             origin: process.env.NODE_ENV !== 'production' ? 'http://localhost:8080' : 'https://welcomeqr.codes',
             credentials: true
         }));
-        if (process.env.NODE_ENV === 'production') {
-            const _static = _express.static(path.join(__dirname, 'front-end'), { maxAge: 31557600000 });
-            _express.use(_static);
-        }
         _express.use(compress());
         _express = Passport_1.default.mountPackage(_express);
         return _express;

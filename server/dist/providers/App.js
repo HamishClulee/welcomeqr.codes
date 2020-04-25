@@ -1,9 +1,4 @@
 "use strict";
-/**
- * Primary file for your Clustered API Server
- *
- * @author Faiz A. Farooqui <faiz@geekyants.com>
- */
 Object.defineProperty(exports, "__esModule", { value: true });
 const kue = require("kue");
 const path = require("path");

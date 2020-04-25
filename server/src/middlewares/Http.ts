@@ -54,11 +54,6 @@ class Http {
 			credentials: true
 		}))
 
-		if (process.env.NODE_ENV === 'production') {
-			const _static = _express.static(path.join(__dirname, 'front-end'), { maxAge: 31557600000 })
-			_express.use(_static)
-		}
-
 		_express.use(compress())
 
 		_express = Passport.mountPackage(_express)

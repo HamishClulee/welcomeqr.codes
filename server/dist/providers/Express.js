@@ -1,11 +1,8 @@
 "use strict";
-/**
- * Primary file for your Clustered API Server
- *
- * @author Faiz A. Farooqui <faiz@geekyants.com>
- */
 Object.defineProperty(exports, "__esModule", { value: true });
 const express = require("express");
+const path = require("path");
+const serveStatic = require("serve-static");
 const Locals_1 = require("./Locals");
 const Routes_1 = require("./Routes");
 const Kernel_1 = require("../middlewares/Kernel");
@@ -45,6 +42,9 @@ class Express {
         this.express.use(Handler_1.default.clientErrorHandler);
         this.express.use(Handler_1.default.errorHandler);
         this.express = Handler_1.default.notFoundHandler(this.express);
+        if (process.env.NODE_ENV === 'production') {
+            this.express.use(serveStatic(path.join(__dirname, 'front-end'), { maxAge: 31557600000 }));
+        }
         // Start the server on the specified port
         this.express.listen(port, (_error) => {
             if (_error) {

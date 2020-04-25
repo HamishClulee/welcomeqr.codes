@@ -1,9 +1,3 @@
-/**
- * Primary file for your Clustered API Server
- *
- * @author Faiz A. Farooqui <faiz@geekyants.com>
- */
-
 import * as kue from 'kue'
 import * as path from 'path'
 import * as dotenv from 'dotenv'

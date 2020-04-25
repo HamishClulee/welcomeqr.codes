@@ -1,11 +1,6 @@
-/**
- * Primary file for your Clustered API Server
- *
- * @author Faiz A. Farooqui <faiz@geekyants.com>
- */
-
 import * as express from 'express'
-
+import * as path from 'path'
+import * as serveStatic from 'serve-static'
 import Locals from './Locals'
 import Routes from './Routes'
 import Bootstrap from '../middlewares/Kernel'
@@ -58,6 +53,10 @@ class Express {
 		this.express.use(ExceptionHandler.clientErrorHandler)
 		this.express.use(ExceptionHandler.errorHandler)
 		this.express = ExceptionHandler.notFoundHandler(this.express)
+
+		if (process.env.NODE_ENV === 'production') {
+			this.express.use(serveStatic(path.join(__dirname, 'front-end'), { maxAge: 31557600000 }))
+		}
 
 		// Start the server on the specified port
 		this.express.listen(port, (_error: any) => {
