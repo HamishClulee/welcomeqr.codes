@@ -6,6 +6,8 @@ import Routes from './Routes'
 import Bootstrap from '../middlewares/Kernel'
 import ExceptionHandler from '../exception/Handler'
 
+const history = require('connect-history-api-fallback')
+
 class Express {
 	/**
 	 * Create the express object
@@ -54,9 +56,18 @@ class Express {
 		this.express.use(ExceptionHandler.errorHandler)
 		this.express = ExceptionHandler.notFoundHandler(this.express)
 
+		const _static = serveStatic(path.join(__dirname, 'front-end'), { maxAge: 31557600000 })
 		if (process.env.NODE_ENV === 'production') {
-			this.express.use(serveStatic(path.join(__dirname, 'front-end'), { maxAge: 31557600000 }))
+
+			this.express.use(_static)
 		}
+
+		this.express.use(history({
+			verbose: true,
+			disableDotRule: true
+		}))
+
+		this.express.get('*', _static)
 
 		// Start the server on the specified port
 		this.express.listen(port, (_error: any) => {
