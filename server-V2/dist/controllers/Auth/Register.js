@@ -1,17 +1,7 @@
 "use strict";
-/**
- * Handles your register route
- *
- * @author Faiz A. Farooqui <faiz@geekyants.com>
- */
 Object.defineProperty(exports, "__esModule", { value: true });
 const User_1 = require("../../models/User");
 class Register {
-    static show(req, res) {
-        return res.render('pages/signup', {
-            title: 'SignUp'
-        });
-    }
     static perform(req, res, next) {
         req.assert('email', 'E-mail cannot be blank').notEmpty();
         req.assert('email', 'E-mail is not valid').isEmail();
@@ -22,19 +12,17 @@ class Register {
         req.sanitize('email').normalizeEmail({ gmail_remove_dots: false });
         const errors = req.validationErrors();
         if (errors) {
-            req.flash('errors', errors);
             return res.redirect('/signup');
         }
-        const user = new User_1.default({
+        const user = new User_1.User({
             email: req.body.email,
             password: req.body.password
         });
-        User_1.default.findOne({ email: req.body.email }, (err, existingUser) => {
+        User_1.User.findOne({ email: req.body.email }, (err, existingUser) => {
             if (err) {
                 return next(err);
             }
             if (existingUser) {
-                req.flash('errors', { msg: 'Account with the e-mail address already exists.' });
                 return res.redirect('/signup');
             }
             user.save((err) => {
@@ -45,8 +33,6 @@ class Register {
                     if (err) {
                         return next(err);
                     }
-                    req.flash('success', { msg: 'You are successfully logged in now!' });
-                    res.redirect('/signup');
                 });
             });
         });

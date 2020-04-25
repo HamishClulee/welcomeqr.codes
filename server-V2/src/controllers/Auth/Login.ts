@@ -1,51 +1,55 @@
-/**
- * Handles your login routes
- *
- * @author Faiz A. Farooqui <faiz@geekyants.com>
- */
-
 import * as passport from 'passport'
+import { UserDocument } from '../../models/User'
+import { IRequest, IResponse, INext } from '../../interfaces/vendors'
+import { IVerifyOptions } from 'passport-local'
+const { assert, sanitize, validationResult } = require('express-validator')
 
-import {
-	IRequest, IResponse, INext
-} from '../../interfaces/vendors'
 import Log from '../../middlewares/Log'
 
 class Login {
-	public static show (req: IRequest, res: IResponse): any {
-		return res.render('pages/login', {
-			title: 'LogIn'
-		})
-	}
 
 	public static perform (req: IRequest, res: IResponse, next: INext): any {
-		req.assert('email', 'E-mail cannot be blank').notEmpty()
-		req.assert('email', 'E-mail is not valid').isEmail()
-		req.assert('password', 'Password cannot be blank').notEmpty()
-		req.assert('password', 'Password length must be atleast 8 characters').isLength({ min: 8 })
-		req.sanitize('email').normalizeEmail({ gmail_remove_dots: false })
 
-		const errors = req.validationErrors()
-		if (errors) {
-			return res.redirect('/login')
-		}
+		// assert('email', 'E-mail cannot be blank').notEmpty()
+		// assert('email', 'E-mail is not valid').isEmail()
+		// assert('password', 'Password cannot be blank').notEmpty()
+		// assert('password', 'Password length must be atleast 8 characters').isLength({ min: 8 })
+		// sanitize('email').normalizeEmail({ gmail_remove_dots: false })
 
-		Log.info('Here in the login controller #1!')
-		passport.authenticate('local', (err, user, info) => {
-			Log.info('Here in the login controller #2!')
+		// const errors = validationResult(req)
+
+		// if (!errors.isEmpty()) {
+		// 	Log.info('Bad login details', [Log.TAG_AUTH, Log.TAG_LOGIN])
+		// 	return res.status(400).send({
+		// 		errors: errors.array(),
+		// 		userContent: 'signup deets bad',
+		// 		user: { email: null, _id: null, authed: false }
+		// 	})
+		// }
+
+		passport.authenticate('local', (err: Error, user: UserDocument, info: IVerifyOptions) => {
 			if (err) {
+				Log.info('Passport login authenticate failure', [Log.TAG_AUTH, Log.TAG_LOGIN])
 				return next(err)
 			}
-
-			if (! user) {
-				return res.redirect('/login')
+			if (!user) {
+				Log.info('Invalid email entered', [Log.TAG_AUTH, Log.TAG_LOGIN])
+				return res.status(400).send({
+					userContent: 'no user exists',
+					user: { email: null, _id: null, authed: false }
+				})
 			}
-
+			let { email, _id } = user
 			req.logIn(user, (err) => {
 				if (err) {
+					Log.info('Login error - database', [Log.TAG_AUTH, Log.TAG_LOGIN])
 					return next(err)
 				}
-				res.redirect(req.session.returnTo || '/account')
+				Log.info('Login succes', [Log.TAG_AUTH, Log.TAG_LOGIN])
+				return res.status(200).send({
+					userContent: 'you sexy beast, welcome home',
+					user: { email, id: _id, authed: true }
+				})
 			})
 		})(req, res, next)
 	}

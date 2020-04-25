@@ -9,7 +9,9 @@ class Locals {
      */
     static config() {
         dotenv.config({ path: path.join(__dirname, '../../.env') });
-        const url = process.env.APP_URL || `http://localhost:${process.env.PORT}`;
+        const env = process.env.NODE_ENV;
+        const prodUrl = process.env.PROD_URL;
+        const devUrl = process.env.DEV_URL;
         const port = process.env.PORT || 1980;
         const appSecret = process.env.APP_SECRET || 'This is your responsibility!';
         const mongooseUrl = process.env.MONGOOSE_URL;
@@ -32,6 +34,7 @@ class Locals {
         const redisPrefix = process.env.REDIS_QUEUE_DB || 'q';
         const redisDB = process.env.REDIS_QUEUE_PREFIX || 3;
         return {
+            env,
             appSecret,
             apiPrefix,
             company,
@@ -50,7 +53,8 @@ class Locals {
             redisHttpPort,
             redisHttpHost,
             redisPrefix,
-            url,
+            prodUrl,
+            devUrl,
             queueMonitor,
             queueMonitorHttpPort
         };

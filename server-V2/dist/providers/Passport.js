@@ -13,7 +13,7 @@ class Passport {
             done(null, user.id);
         });
         passport.deserializeUser((id, done) => {
-            User_1.default.findById(id, (err, user) => {
+            User_1.User.findById(id, (err, user) => {
                 done(err, user);
             });
         });

@@ -1,42 +1,47 @@
 "use strict";
-/**
- * Handles your login routes
- *
- * @author Faiz A. Farooqui <faiz@geekyants.com>
- */
 Object.defineProperty(exports, "__esModule", { value: true });
 const passport = require("passport");
+const { assert, sanitize, validationResult } = require('express-validator');
 const Log_1 = require("../../middlewares/Log");
 class Login {
-    static show(req, res) {
-        return res.render('pages/login', {
-            title: 'LogIn'
-        });
-    }
     static perform(req, res, next) {
-        req.assert('email', 'E-mail cannot be blank').notEmpty();
-        req.assert('email', 'E-mail is not valid').isEmail();
-        req.assert('password', 'Password cannot be blank').notEmpty();
-        req.assert('password', 'Password length must be atleast 8 characters').isLength({ min: 8 });
-        req.sanitize('email').normalizeEmail({ gmail_remove_dots: false });
-        const errors = req.validationErrors();
-        if (errors) {
-            return res.redirect('/login');
-        }
-        Log_1.default.info('Here in the login controller #1!');
+        // assert('email', 'E-mail cannot be blank').notEmpty()
+        // assert('email', 'E-mail is not valid').isEmail()
+        // assert('password', 'Password cannot be blank').notEmpty()
+        // assert('password', 'Password length must be atleast 8 characters').isLength({ min: 8 })
+        // sanitize('email').normalizeEmail({ gmail_remove_dots: false })
+        // const errors = validationResult(req)
+        // if (!errors.isEmpty()) {
+        // 	Log.info('Bad login details', [Log.TAG_AUTH, Log.TAG_LOGIN])
+        // 	return res.status(400).send({
+        // 		errors: errors.array(),
+        // 		userContent: 'signup deets bad',
+        // 		user: { email: null, _id: null, authed: false }
+        // 	})
+        // }
         passport.authenticate('local', (err, user, info) => {
-            Log_1.default.info('Here in the login controller #2!');
             if (err) {
+                Log_1.default.info('Passport login authenticate failure', [Log_1.default.TAG_AUTH, Log_1.default.TAG_LOGIN]);
                 return next(err);
             }
             if (!user) {
-                return res.redirect('/login');
+                Log_1.default.info('Invalid email entered', [Log_1.default.TAG_AUTH, Log_1.default.TAG_LOGIN]);
+                return res.status(400).send({
+                    userContent: 'no user exists',
+                    user: { email: null, _id: null, authed: false }
+                });
             }
+            let { email, _id } = user;
             req.logIn(user, (err) => {
                 if (err) {
+                    Log_1.default.info('Login error - database', [Log_1.default.TAG_AUTH, Log_1.default.TAG_LOGIN]);
                     return next(err);
                 }
-                res.redirect(req.session.returnTo || '/account');
+                Log_1.default.info('Login succes', [Log_1.default.TAG_AUTH, Log_1.default.TAG_LOGIN]);
+                return res.status(200).send({
+                    userContent: 'you sexy beast, welcome home',
+                    user: { email, id: _id, authed: true }
+                });
             });
         })(req, res, next);
     }

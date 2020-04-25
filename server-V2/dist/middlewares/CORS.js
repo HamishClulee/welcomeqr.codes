@@ -2,15 +2,11 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const cors = require("cors");
 const Log_1 = require("./Log");
-const Locals_1 = require("../providers/Locals");
+// import Locals from '../providers/Locals'
 class CORS {
     mount(_express) {
         Log_1.default.info('Booting the \'CORS\' middleware...');
-        const options = {
-            origin: Locals_1.default.config().url,
-            optionsSuccessStatus: 200 // Some legacy browsers choke on 204
-        };
-        _express.use(cors(options));
+        _express.use(cors({ origin: 'http://localhost:8080', credentials: true }));
         return _express;
     }
 }

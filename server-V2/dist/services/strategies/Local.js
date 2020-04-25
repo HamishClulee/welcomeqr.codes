@@ -1,9 +1,4 @@
 "use strict";
-/**
- * Define passport's local strategy
- *
- * @author Faiz A. Farooqui <faiz@geekyants.com>
- */
 Object.defineProperty(exports, "__esModule", { value: true });
 const passport_local_1 = require("passport-local");
 const User_1 = require("../../models/User");
@@ -12,8 +7,7 @@ class Local {
     static init(_passport) {
         _passport.use(new passport_local_1.Strategy({ usernameField: 'email' }, (email, password, done) => {
             Log_1.default.info(`Email is ${email}`);
-            Log_1.default.info(`Password is ${password}`);
-            User_1.default.findOne({ email: email.toLowerCase() }, (err, user) => {
+            User_1.User.findOne({ email: email.toLowerCase() }, (err, user) => {
                 Log_1.default.info(`user is ${user.email}`);
                 Log_1.default.info(`error is ${err}`);
                 if (err) {

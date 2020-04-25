@@ -22,7 +22,7 @@ class CsrfToken {
 		_express.use((req, res, next) => {
 			const apiPrefix = Locals.config().apiPrefix
 
-			if (req.originalUrl.includes(`/${apiPrefix}/`)) {
+			if (req.originalUrl.includes(`/auth/`)) {
 				next()
 			} else {
 				lusca.csrf()(req, res, next)

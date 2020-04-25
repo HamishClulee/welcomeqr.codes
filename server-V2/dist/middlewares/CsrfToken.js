@@ -17,7 +17,7 @@ class CsrfToken {
         // does not contains the api substring
         _express.use((req, res, next) => {
             const apiPrefix = Locals_1.default.config().apiPrefix;
-            if (req.originalUrl.includes(`/${apiPrefix}/`)) {
+            if (req.originalUrl.includes(`/auth/`)) {
                 next();
             }
             else {

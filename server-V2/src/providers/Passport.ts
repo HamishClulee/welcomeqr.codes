@@ -1,10 +1,8 @@
 import { Application } from 'express'
 import * as passport from 'passport'
-
 import LocalStrategy from '../services/strategies/Local'
 import GoogleStrategy from '../services/strategies/Google'
-
-import User from '../models/User'
+import { User } from '../models/User'
 import Log from '../middlewares/Log'
 
 class Passport {

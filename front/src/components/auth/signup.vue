@@ -134,9 +134,9 @@ export default {
             else this.confirmerror = ''
         },
         async googleSignUp() {
-            const authCode = await this.$gAuth.getAuthCode()
-            // console.log(authCode)
-            const response = await this.$qAuth.googleSignUp()
+            // const authCode = await this.$gAuth.getAuthCode()
+            // // console.log(authCode)
+            // const response = await this.$qAuth.googleSignUp()
             // post('http://your-backend-server-api-to-use-authcode', { code: authCode, redirect_uri: 'postmessage' })
         },
     },

@@ -5,7 +5,7 @@ const compress = require("compression");
 const connect = require("connect-mongo");
 const bodyParser = require("body-parser");
 const session = require("express-session");
-const expressValidator = require("express-validator");
+const path = require("path");
 const Log_1 = require("./Log");
 const Locals_1 = require("../providers/Locals");
 const Passport_1 = require("../providers/Passport");
@@ -22,34 +22,33 @@ class Http {
             parameterLimit: Locals_1.default.config().maxParameterLimit,
             extended: false
         }));
-        // Disable the x-powered-by header in response
         _express.disable('x-powered-by');
-        // Enables the request payload validator
-        _express.use(expressValidator());
-        /**
-         * Enables the session store
-         *
-         * Note: You can also add redis-store
-         * into the options object.
-         */
         const options = {
-            resave: true,
-            saveUninitialized: true,
-            secret: Locals_1.default.config().appSecret,
             cookie: {
-                maxAge: 1209600000 // two weeks (in ms)
+                sameSite: true,
+                maxAge: 1000 * 60 * 60 * 24,
+                secure: false
             },
+            saveUninitialized: false,
+            resave: false,
+            secret: Locals_1.default.config().appSecret,
             store: new MongoStore({
                 url: process.env.MONGOOSE_URL,
-                autoReconnect: true
+                autoReconnect: true,
+                ttl: 1000 * 60 * 60 * 24,
+                autoRemove: 'native'
             })
         };
         _express.use(session(options));
-        // Enables the CORS
-        _express.use(cors());
-        // Enables the "gzip" / "deflate" compression for response
+        _express.use(cors({
+            origin: process.env.NODE_ENV !== 'production' ? 'http://localhost:8080' : 'https://welcomeqr.codes',
+            credentials: true
+        }));
+        if (process.env.NODE_ENV === 'production') {
+            const _static = _express.static(path.join(__dirname, 'front-end'), { maxAge: 31557600000 });
+            _express.use(_static);
+        }
         _express.use(compress());
-        // Loads the passport configuration
         _express = Passport_1.default.mountPackage(_express);
         return _express;
     }

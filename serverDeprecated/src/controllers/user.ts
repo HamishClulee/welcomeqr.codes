@@ -3,10 +3,10 @@ import crypto from 'crypto'
 import nodemailer from 'nodemailer'
 import passport from 'passport'
 import { User, UserDocument, AuthToken } from '../models/User'
-import { Request, Response, NextFunction } from 'express'
 import { IVerifyOptions } from 'passport-local'
 import { WriteError } from 'mongodb'
 import { check, sanitize, validationResult } from 'express-validator'
+import { Request, Response, NextFunction } from 'express'
 import '../config/passport'
 
 /**

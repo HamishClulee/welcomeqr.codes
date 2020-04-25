@@ -11,7 +11,7 @@ export function ErrStr(error: AxiosError): string {
 
 export class QAuth {
 
-    private BASE_URL = process.env.NODE_ENV === 'development' ? 'http://localhost:1980' : 'https://welcomeqr.codes'
+    private BASE_URL = process.env.NODE_ENV === 'development' ? 'http://localhost:1980/auth' : 'https://welcomeqr.codes/auth'
     private AUTH_URL = process.env.NODE_ENV === 'development' ? 'http://localhost:8080/?redirect=true' : 'https://welcomeqr.codes/?redirect=true'
 
     ax: AxiosInstance;
@@ -58,30 +58,39 @@ export class QAuth {
         // if intercept is set to false failed responses > 400 will not redirect the user to /auth
         return this.ax.post('/session_challenge', { intercept })
     }
+
     confirm(email: string, token: string): AxiosPromise<QUser> {
         return this.ax.post('/confirm', { email, token })
     }
+
     logout(): AxiosPromise<QUser> {
         return this.ax.post('/logout')
     }
+
     info(): AxiosPromise<QUser> {
         return this.ax.post('/info')
     }
+
     signup(email: string, password: string, confirm: string, intercept = false): AxiosPromise<QUser> {
         return this.ax.post('/signup', { email, password, confirm, intercept })
     }
+
     login(email: string, password: string, intercept = false): AxiosPromise<QUser> {
         return this.ax.post('/login', { email, password, intercept })
     }
+
     reconfirm(email: string): AxiosPromise<QUser> {
         return this.ax.post('/reconfirm', { email })
     }
+
     startrecovery(email: string): AxiosPromise<QUser> {
         return this.ax.post('/startrecovery', { email })
     }
+
     recover(email: string, token: string, password: string): AxiosPromise<QUser> {
         return this.ax.post('/recover', { email, token, password })
     }
+
     googleSignUp(token: string): AxiosPromise<QUser> {
         return this.ax.post('/auth/google', {  })
     }

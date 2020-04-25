@@ -5,6 +5,7 @@ import * as connect from 'connect-mongo'
 import * as bodyParser from 'body-parser'
 import * as session from 'express-session'
 import * as expressValidator from 'express-validator'
+import * as path from 'path'
 
 import Log from './Log'
 import Locals from '../providers/Locals'
@@ -27,40 +28,39 @@ class Http {
 			extended: false
 		}))
 
-		// Disable the x-powered-by header in response
 		_express.disable('x-powered-by')
 
-		// Enables the request payload validator
-		_express.use(expressValidator())
-
-		/**
-		 * Enables the session store
-		 *
-		 * Note: You can also add redis-store
-		 * into the options object.
-		 */
 		const options = {
-			resave: true,
-			saveUninitialized: true,
-			secret: Locals.config().appSecret,
 			cookie: {
-				maxAge: 1209600000 // two weeks (in ms)
+				sameSite: true,
+				maxAge: 1000 * 60 * 60 * 24, // One Day
+				secure: false
 			},
+			saveUninitialized: false,
+			resave: false,
+			secret: Locals.config().appSecret,
 			store: new MongoStore({
 				url: process.env.MONGOOSE_URL,
-				autoReconnect: true
+				autoReconnect: true,
+				ttl: 1000 * 60 * 60 * 24,
+				autoRemove: 'native'
 			})
 		}
 
 		_express.use(session(options))
 
-		// Enables the CORS
-		_express.use(cors())
+		_express.use(cors({
+			origin: process.env.NODE_ENV !== 'production' ? 'http://localhost:8080' : 'https://welcomeqr.codes',
+			credentials: true
+		}))
 
-		// Enables the "gzip" / "deflate" compression for response
+		if (process.env.NODE_ENV === 'production') {
+			const _static = _express.static(path.join(__dirname, 'front-end'), { maxAge: 31557600000 })
+			_express.use(_static)
+		}
+
 		_express.use(compress())
 
-		// Loads the passport configuration
 		_express = Passport.mountPackage(_express)
 
 		return _express

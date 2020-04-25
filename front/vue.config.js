@@ -14,7 +14,6 @@ const addStyleResource = (rule) => {
 
 module.exports = {
     chainWebpack: config => {
-
         const types = ['vue-modules', 'vue', 'normal-modules', 'normal']
         types.forEach(type => addStyleResource(config.module.rule('sass').oneOf(type)))
         config.resolve.alias.set('@I', path.resolve(__dirname, '../interfaces'))
@@ -23,5 +22,8 @@ module.exports = {
         webpackBundleAnalyzer: {
             openAnalyzer: false,
         },
+    },
+    devServer: {
+        disableHostCheck: true,
     },
 }

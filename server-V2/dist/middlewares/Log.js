@@ -4,23 +4,29 @@ const fs = require("fs");
 const path = require("path");
 class Log {
     constructor() {
+        // Auth tags
+        this.TAG_AUTH = 'AUTH';
+        this.TAG_SIGNUP = 'SIGNUP';
+        this.TAG_LOGIN = 'LOGIN';
+        this.TAG_FAILED_CHALLENGE = 'FAILED CHALLENGE';
         this.today = new Date();
         let _dateString = `${this.today.getFullYear()}-${(this.today.getMonth() + 1)}-${this.today.getDate()}`;
         let _timeString = `${this.today.getHours()}:${this.today.getMinutes()}:${this.today.getSeconds()}`;
         this.baseDir = path.join(__dirname, '../../.logs/');
         this.fileName = `${_dateString}.log`;
+        console.log(this.fileName);
         this.linePrefix = `[${_dateString} ${_timeString}]`;
     }
     // Adds INFO prefix string to the log string
-    info(_string) {
-        this.addLog('INFO', _string);
+    info(_string, tags = []) {
+        this.addLog('INFO', _string, tags);
     }
     // Adds WARN prefix string to the log string
-    warn(_string) {
-        this.addLog('WARN', _string);
+    warn(_string, tags = []) {
+        this.addLog('WARN', _string, tags);
     }
     // Adds ERROR prefix string to the log string
-    error(_string) {
+    error(_string, tags = []) {
         // Line break and show the first line
         console.log('\x1b[31m%s\x1b[0m', '[ERROR] :: ' + _string.split(/r?\n/)[0]);
         this.addLog('ERROR', _string);
@@ -33,13 +39,22 @@ class Log {
      * Creates the file if does not exist, and
      * append the log kind & string into the file.
      */
-    addLog(_kind, _string) {
+    addLog(_kind, _string, tags = []) {
         const _that = this;
         _kind = _kind.toUpperCase();
+        const addTags = () => {
+            let result = '';
+            if (tags) {
+                tags.forEach(tag => {
+                    result += `[${tag}] `;
+                });
+            }
+            return result;
+        };
         fs.open(`${_that.baseDir}${_that.fileName}`, 'a', (_err, _fileDescriptor) => {
             if (!_err && _fileDescriptor) {
                 // Append to file and close it
-                fs.appendFile(_fileDescriptor, `${_that.linePrefix} [${_kind}] ${_string}\n`, (_err) => {
+                fs.appendFile(_fileDescriptor, `${_that.linePrefix} [${_kind}] ${addTags()}${_string}\n`, (_err) => {
                     if (!_err) {
                         fs.close(_fileDescriptor, (_err) => {
                             if (!_err) {

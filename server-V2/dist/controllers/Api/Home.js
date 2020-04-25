@@ -1,9 +1,4 @@
 "use strict";
-/**
- * Define the API base url
- *
- * @author Faiz A. Farooqui <faiz@geekyants.com>
- */
 Object.defineProperty(exports, "__esModule", { value: true });
 const Locals_1 = require("../../providers/Locals");
 class Home {
