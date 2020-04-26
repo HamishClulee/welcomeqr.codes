@@ -2,13 +2,13 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const passport_google_oauth20_1 = require("passport-google-oauth20");
 const User_1 = require("../../models/User");
-const Locals_1 = require("../../providers/Locals");
+const Environment_1 = require("../../providers/Environment");
 class Google {
     static init(_passport) {
         _passport.use(new passport_google_oauth20_1.Strategy({
             clientID: process.env.GOOGLE_ID,
             clientSecret: process.env.GOOGLE_SECRET,
-            callbackURL: `${Locals_1.default.config().url}/auth/google/callback`,
+            callbackURL: `${Environment_1.default.config().url}/auth/google/callback`,
             passReqToCallback: true
         }, (req, accessToken, refreshToken, profile, done) => {
             if (req.user) {

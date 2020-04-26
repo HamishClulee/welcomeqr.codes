@@ -2,17 +2,14 @@ import { Application } from 'express'
 import * as expressStatusMonitor from 'express-status-monitor'
 
 import Log from './Log'
-import Locals from '../providers/Locals'
+import Environment from '../providers/Environment'
 
 class StatusMonitor {
 	public mount (_express: Application): Application {
 		Log.info('Booting the \'StatusMonitor\' middleware...')
 
-		const api: string = Locals.config().apiPrefix
-
-		// Define your status monitor config
 		const monitorOptions: object = {
-			title: Locals.config().name,
+			title: Environment.config().name,
 			path: '/status-monitor',
 			spans: [
 				{

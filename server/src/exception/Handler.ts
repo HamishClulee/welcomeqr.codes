@@ -1,18 +1,12 @@
-/**
- * Define the error & exception handlers
- *
- * @author Faiz A. Farooqui <faiz@geekyants.com>
- */
-
 import Log from '../middlewares/Log'
-import Locals from '../providers/Locals'
+import Environment from '../providers/Environment'
 
 class Handler {
 	/**
 	 * Handles all the not found routes
 	 */
 	public static notFoundHandler(_express): any {
-		const apiPrefix = Locals.config().apiPrefix
+		const apiPrefix = Environment.config().apiPrefix
 
 		_express.use('*', (req, res) => {
 			const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress
@@ -54,7 +48,7 @@ class Handler {
 		Log.error(err.stack)
 		res.status(500)
 
-		const apiPrefix = Locals.config().apiPrefix
+		const apiPrefix = Environment.config().apiPrefix
 		if (req.originalUrl.includes(`/${apiPrefix}/`)) {
 
 			if (err.name && err.name === 'UnauthorizedError') {

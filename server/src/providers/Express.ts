@@ -1,84 +1,169 @@
 import * as express from 'express'
 import * as path from 'path'
-import * as serveStatic from 'serve-static'
-import Locals from './Locals'
-import Routes from './Routes'
-import Bootstrap from '../middlewares/Kernel'
-import ExceptionHandler from '../exception/Handler'
+import * as compression from 'compression'
+import * as session from 'express-session'
+import * as bodyParser from 'body-parser'
+import * as history from 'connect-history-api-fallback'
+import * as cors from 'cors'
+import * as redis from 'redis'
+import * as lusca from 'lusca'
+import * as passport from 'passport'
+import * as multer from 'multer'
+import Environment from './Environment'
 
-const history = require('connect-history-api-fallback')
+const PORT = 1980
+const DEV_URL = 'http://localhost:8080'
+const PROD_URL = 'https://welcomeqr.codes'
+
+const RedisStore = require('connect-redis')(session)
+const redisClient = redis.createClient()
 
 class Express {
-	/**
-	 * Create the express object
-	 */
-	public express: express.Application
+	public app: express.Application
 
-	/**
-	 * Initializes the express server
-	 */
 	constructor () {
-
-		this.express = express()
-
-		this.mountDotEnv()
-		this.mountMiddlewares()
-		this.mountRoutes()
+		this.app = express()
 	}
 
-	private mountDotEnv (): void {
-		this.express = Locals.init(this.express)
-	}
-
-	/**
-	 * Mounts all the defined middlewares
-	 */
-	private mountMiddlewares (): void {
-		this.express = Bootstrap.init(this.express)
-	}
-
-	/**
-	 * Mounts all the defined routes
-	 */
-	private mountRoutes (): void {
-		this.express = Routes.mountAuth(this.express)
-	}
-
-	/**
-	 * Starts the express server
-	 */
 	public init (): any {
-		const port: number = Locals.config().port
+		// const port: number = Environment.config().port
 
-		// Registering Exception / Error Handlers
-		this.express.use(ExceptionHandler.logErrors)
-		this.express.use(ExceptionHandler.clientErrorHandler)
-		this.express.use(ExceptionHandler.errorHandler)
-		this.express = ExceptionHandler.notFoundHandler(this.express)
+		// this.express.use(bodyParser.json())
 
-		const _static = express.static(path.join(__dirname, '/front-end'), { maxAge: 31557600000 })
-		if (process.env.NODE_ENV === 'production') {
+		// this.express.use(bodyParser.urlencoded({
+		// 	limit: Locals.config().maxUploadLimit,
+		// 	parameterLimit: Locals.config().maxParameterLimit,
+		// 	extended: false
+		// }))
 
-			this.express.use(_static)
-		}
+		// this.express.disable('x-powered-by')
 
-		this.express.use(history({
+		// this.express.use(cors({
+		// 	origin: process.env.NODE_ENV !== 'production' ? 'http://localhost:8080' : 'https://welcomeqr.codes',
+		// 	credentials: true
+		// }))
+
+		// this.express.use(compress())
+
+		// const _static = express.static(path.join(__dirname, '../front-end'), { maxAge: 31557600000 })
+		// console.log('-->', path.join(__dirname, '../front-end'))
+		// if (process.env.NODE_ENV === 'production') {
+		// 	console.log('-->!!', path.join(__dirname, '../front-end'))
+		// 	this.express.use(_static)
+		// }
+
+		// this.express.use(history({
+		// 	verbose: true,
+		// 	disableDotRule: true
+		// }))
+
+		// this.express.get('/', _static)
+		// this.express.get('*', _static)
+
+		this.app.set('port', PORT)
+		this.app.use(compression())
+		this.app.use(bodyParser.json())
+		this.app.use(bodyParser.urlencoded({ extended: true }))
+
+		this.app.use(session({
+			cookie: {
+				sameSite: true,
+				maxAge: 1000 * 60 * 60 * 24, // One Day
+				secure: false
+			},
+			saveUninitialized: false,
+			resave: false,
+			secret: Environment.config().appSecret,
+			store: new RedisStore({ client: redisClient })
+		}))
+
+		if (process.env.NODE_ENV === 'production') { this.app.set('trust proxy', 1) }
+
+		this.app.use(passport.initialize())
+		this.app.use(passport.session())
+
+		this.app.use(cors({
+			origin: process.env.NODE_ENV !== 'production' ? DEV_URL : PROD_URL,
+			credentials: true
+		}))
+		this.app.use(lusca.xframe('SAMEORIGIN'))
+		this.app.use(lusca.xssProtection(true))
+
+		// this.app.use((req, res, next) => {
+		// 	res.locals.user = req.user
+		// 	next()
+		// })
+
+		/** ---------------------------------------  APP ROUTING  --------------------------------- */
+		/** Auth */
+		// import * as user from './controllers/user'
+		// this.app.post('/session_challenge', user.sessionChallenge)
+		// this.app.post('/login', user.login)
+		// this.app.post('/logout', user.logout)
+		// this.app.post('/forgot', user.forgot)
+		// this.app.post('/reset/:token', user.reset)
+		// this.app.post('/signup', user.signup)
+		// app.get('/google', passport.authenticate('google', { scope: ['profile'] }))
+		// app.get('/google/callback', passport.authenticate('google', { failureRedirect: '/?redirect=true' }), (req, res) => {
+		//     console.log(res)
+		//     res.redirect('/')
+		// })
+
+		/** Editor */
+		// import * as editor from './controllers/editor'
+		// import * as passportConfig from './config/passport'
+		// this.app.post('/api/submitnew', passportConfig.isAuthenticated, editor.submitNew)
+		// this.app.post('/api/checksubdom', passportConfig.isAuthenticated, editor.checkSubdom)
+		// this.app.post('/api/submitsubdom', passportConfig.isAuthenticated, editor.submitSubdom)
+		// this.app.post('/api/gethtmlforuser', passportConfig.isAuthenticated, editor.getHTML)
+		// editor.precaching()
+
+		/** ---------------------------------------  IMAGE STORAGE  --------------------------------- */
+		const storage = multer.diskStorage({
+			destination: function (req, file, callback) {
+				callback(null, './uploads')
+			},
+			filename: function (req, file, callback) {
+				callback(null, file.fieldname + '-' + Date.now())
+			}
+		})
+		const upload = multer({ storage : storage }).single('img')
+
+		this.app.post('/api/photo', (req: any, res: any): any => {
+			upload(req, res, (err) => {
+				if (err) {
+					return res.end('Error uploading file.')
+				}
+				res.end(JSON.stringify({ message: 'Upload success' }))
+			})
+		})
+
+		/** -------------------------------  STATIC FILES AND SPA SERVER  --------------------------------- */
+		// const _static = express.static(path.join(__dirname, 'front-end'), { maxAge: 31557600000 })
+		// if (process.env.NODE_ENV === 'production') {
+		// 	this.app.use(_static)
+		// }
+
+		this.app.use('/', express.static(path.join(__dirname, '../../dist/front-end')))
+
+		console.log('-->', path.join(__dirname, '../dist/front-end'))
+
+		this.app.use(history({
 			verbose: true,
 			disableDotRule: true
 		}))
 
-		this.express.get('*', _static)
+		this.app.get('*', express.static(path.join(__dirname, '../../dist/front-end')))
 
-		// Start the server on the specified port
-		this.express.listen(port, (_error: any) => {
+			// Start the server on the specified port
+		this.app.listen(PORT, (_error: any) => {
 			if (_error) {
 				return console.log('Error: ', _error)
 			}
 
-			return console.log('\x1b[33m%s\x1b[0m', `Server :: Running @ 'http://localhost:${port}'`)
+			return console.log('\x1b[33m%s\x1b[0m', `Server :: Running @ 'http://localhost:${PORT}'`)
 		})
 	}
 }
 
-/** Export the express module */
 export default new Express()

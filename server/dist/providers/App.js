@@ -5,32 +5,24 @@ const path = require("path");
 const dotenv = require("dotenv");
 const Express_1 = require("./Express");
 const Database_1 = require("./Database");
-const Locals_1 = require("./Locals");
+const Environment_1 = require("./Environment");
 const Log_1 = require("../middlewares/Log");
 class App {
-    // Loads your dotenv file
     loadConfiguration() {
         Log_1.default.info('Configuration :: Booting @ Master...');
         dotenv.config({ path: path.join(__dirname, '../../.env') });
     }
-    // Loads your Server
-    loadServer() {
-        Log_1.default.info('Server :: Booting @ Master...');
-        Express_1.default.init();
-    }
-    // Loads the Database Pool
     loadDatabase() {
         Log_1.default.info('Database :: Booting @ Master...');
         Database_1.Database.init();
     }
-    // Loads the Worker Cluster
-    loadWorker() {
-        Log_1.default.info('Worker :: Booting @ Master...');
+    loadServer() {
+        Log_1.default.info('Server :: Booting @ Master...');
+        Express_1.default.init();
     }
-    // Loads the Queue Monitor
     loadQueue() {
-        const isQueueMonitorEnabled = Locals_1.default.config().queueMonitor;
-        const queueMonitorPort = Locals_1.default.config().queueMonitorHttpPort;
+        const isQueueMonitorEnabled = Environment_1.default.config().queueMonitor;
+        const queueMonitorPort = Environment_1.default.config().queueMonitorHttpPort;
         if (isQueueMonitorEnabled) {
             kue.app.listen(queueMonitorPort);
             console.log('\x1b[33m%s\x1b[0m', `Queue Monitor :: Running @ 'http://localhost:${queueMonitorPort}'`);

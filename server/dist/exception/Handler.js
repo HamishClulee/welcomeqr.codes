@@ -1,18 +1,13 @@
 "use strict";
-/**
- * Define the error & exception handlers
- *
- * @author Faiz A. Farooqui <faiz@geekyants.com>
- */
 Object.defineProperty(exports, "__esModule", { value: true });
 const Log_1 = require("../middlewares/Log");
-const Locals_1 = require("../providers/Locals");
+const Environment_1 = require("../providers/Environment");
 class Handler {
     /**
      * Handles all the not found routes
      */
     static notFoundHandler(_express) {
-        const apiPrefix = Locals_1.default.config().apiPrefix;
+        const apiPrefix = Environment_1.default.config().apiPrefix;
         _express.use('*', (req, res) => {
             const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
             Log_1.default.error(`Path '${req.originalUrl}' not found [IP: '${ip}']!`);
@@ -49,7 +44,7 @@ class Handler {
     static errorHandler(err, req, res, next) {
         Log_1.default.error(err.stack);
         res.status(500);
-        const apiPrefix = Locals_1.default.config().apiPrefix;
+        const apiPrefix = Environment_1.default.config().apiPrefix;
         if (req.originalUrl.includes(`/${apiPrefix}/`)) {
             if (err.name && err.name === 'UnauthorizedError') {
                 const innerMessage = err.inner && err.inner.message ? err.inner.message : undefined;

@@ -26,15 +26,15 @@ if (cluster.isMaster) {
      */
     NativeEvent_1.default.cluster(cluster);
     /**
-     * Loads the Queue Monitor iff enabled
+     * Loads the Queue Monitor if enabled
      */
     App_1.default.loadQueue();
-    /**
-     * Run the Worker every minute
-     * Note: we normally start worker after
-     * the entire app is loaded
-     */
-    setTimeout(() => App_1.default.loadWorker(), 1000 * 60);
+    // /**
+    //  * Run the Worker every minute
+    //  * Note: we normally start worker after
+    //  * the entire app is loaded
+    //  */
+    // setTimeout(() => App.loadWorker(), 1000 * 60)
 }
 else {
     /**

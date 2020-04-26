@@ -1,21 +1,16 @@
 "use strict";
-/**
- * Sends your verify email
- *
- * @author Faiz A. Farooqui <faiz@geekyants.com>
- */
 Object.defineProperty(exports, "__esModule", { value: true });
 const kue = require("kue");
-const Locals_1 = require("./Locals");
+const Environment_1 = require("./Environment");
 const Log_1 = require("../middlewares/Log");
 class Queue {
     constructor() {
         this.jobs = kue.createQueue({
-            prefix: Locals_1.default.config().redisPrefix,
+            prefix: Environment_1.default.config().redisPrefix,
             redis: {
-                port: Locals_1.default.config().redisHttpPort,
-                host: Locals_1.default.config().redisHttpHost,
-                db: Locals_1.default.config().redisDB
+                port: Environment_1.default.config().redisHttpPort,
+                host: Environment_1.default.config().redisHttpHost,
+                db: Environment_1.default.config().redisDB
             }
         });
         this.jobs

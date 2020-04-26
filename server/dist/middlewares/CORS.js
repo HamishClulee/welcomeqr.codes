@@ -6,6 +6,7 @@ const Log_1 = require("./Log");
 class CORS {
     mount(_express) {
         Log_1.default.info('Booting the \'CORS\' middleware...');
+        console.log('fired cors');
         _express.use(cors({ origin: 'http://localhost:8080', credentials: true }));
         return _express;
     }

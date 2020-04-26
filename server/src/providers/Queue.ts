@@ -1,12 +1,6 @@
-/**
- * Sends your verify email
- *
- * @author Faiz A. Farooqui <faiz@geekyants.com>
- */
-
 import * as kue from 'kue'
 
-import Locals from './Locals'
+import Environment from './Environment'
 import Log from '../middlewares/Log'
 
 class Queue {
@@ -14,11 +8,11 @@ class Queue {
 
 	constructor() {
 		this.jobs = kue.createQueue({
-			prefix: Locals.config().redisPrefix,
+			prefix: Environment.config().redisPrefix,
 			redis: {
-				port: Locals.config().redisHttpPort,
-				host: Locals.config().redisHttpHost,
-				db:  Locals.config().redisDB
+				port: Environment.config().redisHttpPort,
+				host: Environment.config().redisHttpHost,
+				db:  Environment.config().redisDB
 			}
 		})
 

@@ -2,14 +2,12 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const expressStatusMonitor = require("express-status-monitor");
 const Log_1 = require("./Log");
-const Locals_1 = require("../providers/Locals");
+const Environment_1 = require("../providers/Environment");
 class StatusMonitor {
     mount(_express) {
         Log_1.default.info('Booting the \'StatusMonitor\' middleware...');
-        const api = Locals_1.default.config().apiPrefix;
-        // Define your status monitor config
         const monitorOptions = {
-            title: Locals_1.default.config().name,
+            title: Environment_1.default.config().name,
             path: '/status-monitor',
             spans: [
                 {

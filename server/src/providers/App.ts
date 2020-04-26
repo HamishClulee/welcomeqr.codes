@@ -5,12 +5,11 @@ import * as dotenv from 'dotenv'
 import Express from './Express'
 import { Database } from './Database'
 
-import Locals from './Locals'
+import Environment from './Environment'
 import Log from '../middlewares/Log'
 
 class App {
 
-	// Loads your dotenv file
 	public loadConfiguration (): void {
 
 		Log.info('Configuration :: Booting @ Master...')
@@ -18,15 +17,6 @@ class App {
 		dotenv.config({ path: path.join(__dirname, '../../.env') })
 	}
 
-	// Loads your Server
-	public loadServer (): void {
-
-		Log.info('Server :: Booting @ Master...')
-
-		Express.init()
-	}
-
-	// Loads the Database Pool
 	public loadDatabase (): void {
 
 		Log.info('Database :: Booting @ Master...')
@@ -34,16 +24,16 @@ class App {
 		Database.init()
 	}
 
-	// Loads the Worker Cluster
-	public loadWorker (): void {
+	public loadServer (): void {
 
-		Log.info('Worker :: Booting @ Master...')
+		Log.info('Server :: Booting @ Master...')
+
+		Express.init()
 	}
 
-	// Loads the Queue Monitor
 	public loadQueue (): void {
-		const isQueueMonitorEnabled: boolean = Locals.config().queueMonitor
-		const queueMonitorPort: number = Locals.config().queueMonitorHttpPort
+		const isQueueMonitorEnabled: boolean = Environment.config().queueMonitor
+		const queueMonitorPort: number = Environment.config().queueMonitorHttpPort
 
 		if (isQueueMonitorEnabled) {
 			kue.app.listen(queueMonitorPort)

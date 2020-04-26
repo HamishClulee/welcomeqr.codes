@@ -1,13 +1,13 @@
 import { Strategy } from 'passport-google-oauth20'
 import { User } from '../../models/User'
-import Locals from '../../providers/Locals'
+import Environment from '../../providers/Environment'
 
 class Google {
 	public static init (_passport: any): any {
 		_passport.use(new Strategy({
 			clientID: process.env.GOOGLE_ID,
 			clientSecret: process.env.GOOGLE_SECRET,
-			callbackURL: `${Locals.config().url}/auth/google/callback`,
+			callbackURL: `${Environment.config().url}/auth/google/callback`,
 			passReqToCallback: true
 		}, (req, accessToken, refreshToken, profile, done) => {
 			if (req.user) {
