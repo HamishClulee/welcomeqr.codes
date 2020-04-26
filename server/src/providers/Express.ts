@@ -56,7 +56,7 @@ class Express {
 		this.express.use(ExceptionHandler.errorHandler)
 		this.express = ExceptionHandler.notFoundHandler(this.express)
 
-		const _static = serveStatic(path.join(__dirname, 'front-end'), { maxAge: 31557600000 })
+		const _static = express.static(path.join(__dirname, '/front-end'), { maxAge: 31557600000 })
 		if (process.env.NODE_ENV === 'production') {
 
 			this.express.use(_static)
