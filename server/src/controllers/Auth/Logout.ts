@@ -1,4 +1,4 @@
-import { IRequest, IResponse } from '../../interfaces/vendors'
+import { IRequest, IResponse } from '../../interfaces'
 
 class Logout {
 	public static perform (req: IRequest, res: IResponse): any {

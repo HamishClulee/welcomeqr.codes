@@ -1,5 +1,5 @@
 import { User } from '../../models/User'
-import { IRequest, IResponse, INext } from '../../interfaces/vendors'
+import { IRequest, IResponse, INext } from '../../interfaces'
 
 class SessionChallenge {
 

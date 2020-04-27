@@ -9,11 +9,27 @@ import * as redis from 'redis'
 import * as lusca from 'lusca'
 import * as passport from 'passport'
 import * as multer from 'multer'
-import Environment from './Environment'
 
+import * as editor from '../controllers/Editor'
+import * as passportConfig from '../config/passport'
+
+/** Middlewares */
+import Environment from './Environment'
+import Log from '../middlewares/Log'
+import ExceptionHandler from '../exception/Handler'
+
+/** Routes - Auth */
+import SessionChallenge from '../controllers/Auth/SessionChallenge'
+import LogOut from '../controllers/Auth/Logout'
+import SignUp from '../controllers/Auth/SignUp'
+import LogIn from '../controllers/Auth/Login'
+
+/** Routes - Editor */
+
+/** App Constants */
 const PORT = 1980
-const DEV_URL = 'http://localhost:8080'
-const PROD_URL = 'https://welcomeqr.codes'
+const DEV_URL = Environment.config().devUrl
+const PROD_URL = Environment.config().prodUrl
 
 const RedisStore = require('connect-redis')(session)
 const redisClient = redis.createClient()
@@ -26,39 +42,11 @@ class Express {
 	}
 
 	public init (): any {
-		// const port: number = Environment.config().port
 
-		// this.express.use(bodyParser.json())
-
-		// this.express.use(bodyParser.urlencoded({
-		// 	limit: Locals.config().maxUploadLimit,
-		// 	parameterLimit: Locals.config().maxParameterLimit,
-		// 	extended: false
-		// }))
-
-		// this.express.disable('x-powered-by')
-
-		// this.express.use(cors({
-		// 	origin: process.env.NODE_ENV !== 'production' ? 'http://localhost:8080' : 'https://welcomeqr.codes',
-		// 	credentials: true
-		// }))
-
-		// this.express.use(compress())
-
-		// const _static = express.static(path.join(__dirname, '../front-end'), { maxAge: 31557600000 })
-		// console.log('-->', path.join(__dirname, '../front-end'))
-		// if (process.env.NODE_ENV === 'production') {
-		// 	console.log('-->!!', path.join(__dirname, '../front-end'))
-		// 	this.express.use(_static)
-		// }
-
-		// this.express.use(history({
-		// 	verbose: true,
-		// 	disableDotRule: true
-		// }))
-
-		// this.express.get('/', _static)
-		// this.express.get('*', _static)
+		// this.app.use(ExceptionHandler.logErrors)
+		// this.app.use(ExceptionHandler.clientErrorHandler)
+		// this.app.use(ExceptionHandler.errorHandler)
+		// this.app = ExceptionHandler.notFoundHandler(this.app)
 
 		this.app.set('port', PORT)
 		this.app.use(compression())
@@ -89,34 +77,25 @@ class Express {
 		this.app.use(lusca.xframe('SAMEORIGIN'))
 		this.app.use(lusca.xssProtection(true))
 
-		// this.app.use((req, res, next) => {
-		// 	res.locals.user = req.user
-		// 	next()
-		// })
+		this.app.use((req, res, next) => {
+			res.locals.user = req.session.user
+			next()
+		})
 
 		/** ---------------------------------------  APP ROUTING  --------------------------------- */
+
 		/** Auth */
-		// import * as user from './controllers/user'
-		// this.app.post('/session_challenge', user.sessionChallenge)
-		// this.app.post('/login', user.login)
-		// this.app.post('/logout', user.logout)
-		// this.app.post('/forgot', user.forgot)
-		// this.app.post('/reset/:token', user.reset)
-		// this.app.post('/signup', user.signup)
-		// app.get('/google', passport.authenticate('google', { scope: ['profile'] }))
-		// app.get('/google/callback', passport.authenticate('google', { failureRedirect: '/?redirect=true' }), (req, res) => {
-		//     console.log(res)
-		//     res.redirect('/')
-		// })
+		this.app.post('/auth/session_challenge', SessionChallenge.perform)
+		this.app.post('/auth/login', LogIn.perform)
+		this.app.post('/auth/logout', LogOut.perform)
+		this.app.post('/auth/signup', SignUp.perform)
 
 		/** Editor */
-		// import * as editor from './controllers/editor'
-		// import * as passportConfig from './config/passport'
-		// this.app.post('/api/submitnew', passportConfig.isAuthenticated, editor.submitNew)
-		// this.app.post('/api/checksubdom', passportConfig.isAuthenticated, editor.checkSubdom)
-		// this.app.post('/api/submitsubdom', passportConfig.isAuthenticated, editor.submitSubdom)
-		// this.app.post('/api/gethtmlforuser', passportConfig.isAuthenticated, editor.getHTML)
-		// editor.precaching()
+		this.app.post('/api/submitnew', passportConfig.isAuthenticated, editor.submitNew)
+		this.app.post('/api/checksubdom', passportConfig.isAuthenticated, editor.checkSubdom)
+		this.app.post('/api/submitsubdom', passportConfig.isAuthenticated, editor.submitSubdom)
+		this.app.post('/api/gethtmlforuser', passportConfig.isAuthenticated, editor.getHTML)
+		editor.precaching()
 
 		/** ---------------------------------------  IMAGE STORAGE  --------------------------------- */
 		const storage = multer.diskStorage({
@@ -139,14 +118,7 @@ class Express {
 		})
 
 		/** -------------------------------  STATIC FILES AND SPA SERVER  --------------------------------- */
-		// const _static = express.static(path.join(__dirname, 'front-end'), { maxAge: 31557600000 })
-		// if (process.env.NODE_ENV === 'production') {
-		// 	this.app.use(_static)
-		// }
-
 		this.app.use('/', express.static(path.join(__dirname, '../../dist/front-end')))
-
-		console.log('-->', path.join(__dirname, '../dist/front-end'))
 
 		this.app.use(history({
 			verbose: true,
@@ -155,13 +127,16 @@ class Express {
 
 		this.app.get('*', express.static(path.join(__dirname, '../../dist/front-end')))
 
-			// Start the server on the specified port
 		this.app.listen(PORT, (_error: any) => {
 			if (_error) {
 				return console.log('Error: ', _error)
 			}
 
-			return console.log('\x1b[33m%s\x1b[0m', `Server :: Running @ 'http://localhost:${PORT}'`)
+			Log.info(
+				`Server :: Running @ ${process.env.NODE_ENV === 'production' ? PROD_URL : DEV_URL} :: in ${process.env.NODE_ENV} mode`
+			, [Log.TAG_RESTARTED])
+
+			return console.log('\x1b[33m%s\x1b[0m', `Server :: Running @ 'http://localhost:${PORT}' :: in ${process.env.NODE_ENV} mode`)
 		})
 	}
 }

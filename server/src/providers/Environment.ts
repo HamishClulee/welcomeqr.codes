@@ -12,6 +12,9 @@ class Environment {
 		const appSecret = process.env.APP_SECRET || 'This is your responsibility!'
 		const mongooseUrl = process.env.MONGOOSE_URL
 
+		const googleClientId = process.env.GOOGLE_ID
+		const googleSecret = process.env.GOOGLE_SECRET
+
 		const name = process.env.APP_NAME || 'Welcome QR Codes'
 		const keywords = process.env.APP_KEYWORDS || 'somethings'
 		const year = (new Date()).getFullYear()
@@ -30,6 +33,8 @@ class Environment {
 		const redisDB = process.env.REDIS_QUEUE_PREFIX || 3
 
 		return {
+			googleClientId,
+			googleSecret,
 			env,
 			appSecret,
 			company,

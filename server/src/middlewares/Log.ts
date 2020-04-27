@@ -7,7 +7,9 @@ class Log {
 	public TAG_AUTH = 'AUTH'
 	public TAG_SIGNUP = 'SIGNUP'
 	public TAG_LOGIN = 'LOGIN'
-	public TAG_FAILED_CHALLENGE = 'FAILED CHALLENGE'
+	public TAG_FAILED_CHALLENGE = 'FAILED_CHALLENGE'
+	public TAG_RESTARTED = 'RESTARTED'
+	public TAG_API_ERROR = 'API_ERROR'
 
 	public baseDir: string
 	public fileName: string

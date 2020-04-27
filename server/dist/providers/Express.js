@@ -11,10 +11,21 @@ const redis = require("redis");
 const lusca = require("lusca");
 const passport = require("passport");
 const multer = require("multer");
+const editor = require("../controllers/Editor");
+const passportConfig = require("../config/passport");
+/** Middlewares */
 const Environment_1 = require("./Environment");
+const Log_1 = require("../middlewares/Log");
+/** Routes - Auth */
+const SessionChallenge_1 = require("../controllers/Auth/SessionChallenge");
+const Logout_1 = require("../controllers/Auth/Logout");
+const SignUp_1 = require("../controllers/Auth/SignUp");
+const Login_1 = require("../controllers/Auth/Login");
+/** Routes - Editor */
+/** App Constants */
 const PORT = 1980;
-const DEV_URL = 'http://localhost:8080';
-const PROD_URL = 'https://welcomeqr.codes';
+const DEV_URL = Environment_1.default.config().devUrl;
+const PROD_URL = Environment_1.default.config().prodUrl;
 const RedisStore = require('connect-redis')(session);
 const redisClient = redis.createClient();
 class Express {
@@ -22,31 +33,10 @@ class Express {
         this.app = express();
     }
     init() {
-        // const port: number = Environment.config().port
-        // this.express.use(bodyParser.json())
-        // this.express.use(bodyParser.urlencoded({
-        // 	limit: Locals.config().maxUploadLimit,
-        // 	parameterLimit: Locals.config().maxParameterLimit,
-        // 	extended: false
-        // }))
-        // this.express.disable('x-powered-by')
-        // this.express.use(cors({
-        // 	origin: process.env.NODE_ENV !== 'production' ? 'http://localhost:8080' : 'https://welcomeqr.codes',
-        // 	credentials: true
-        // }))
-        // this.express.use(compress())
-        // const _static = express.static(path.join(__dirname, '../front-end'), { maxAge: 31557600000 })
-        // console.log('-->', path.join(__dirname, '../front-end'))
-        // if (process.env.NODE_ENV === 'production') {
-        // 	console.log('-->!!', path.join(__dirname, '../front-end'))
-        // 	this.express.use(_static)
-        // }
-        // this.express.use(history({
-        // 	verbose: true,
-        // 	disableDotRule: true
-        // }))
-        // this.express.get('/', _static)
-        // this.express.get('*', _static)
+        // this.app.use(ExceptionHandler.logErrors)
+        // this.app.use(ExceptionHandler.clientErrorHandler)
+        // this.app.use(ExceptionHandler.errorHandler)
+        // this.app = ExceptionHandler.notFoundHandler(this.app)
         this.app.set('port', PORT);
         this.app.use(compression());
         this.app.use(bodyParser.json());
@@ -73,32 +63,22 @@ class Express {
         }));
         this.app.use(lusca.xframe('SAMEORIGIN'));
         this.app.use(lusca.xssProtection(true));
-        // this.app.use((req, res, next) => {
-        // 	res.locals.user = req.user
-        // 	next()
-        // })
+        this.app.use((req, res, next) => {
+            res.locals.user = req.session.user;
+            next();
+        });
         /** ---------------------------------------  APP ROUTING  --------------------------------- */
         /** Auth */
-        // import * as user from './controllers/user'
-        // this.app.post('/session_challenge', user.sessionChallenge)
-        // this.app.post('/login', user.login)
-        // this.app.post('/logout', user.logout)
-        // this.app.post('/forgot', user.forgot)
-        // this.app.post('/reset/:token', user.reset)
-        // this.app.post('/signup', user.signup)
-        // app.get('/google', passport.authenticate('google', { scope: ['profile'] }))
-        // app.get('/google/callback', passport.authenticate('google', { failureRedirect: '/?redirect=true' }), (req, res) => {
-        //     console.log(res)
-        //     res.redirect('/')
-        // })
+        this.app.post('/auth/session_challenge', SessionChallenge_1.default.perform);
+        this.app.post('/auth/login', Login_1.default.perform);
+        this.app.post('/auth/logout', Logout_1.default.perform);
+        this.app.post('/auth/signup', SignUp_1.default.perform);
         /** Editor */
-        // import * as editor from './controllers/editor'
-        // import * as passportConfig from './config/passport'
-        // this.app.post('/api/submitnew', passportConfig.isAuthenticated, editor.submitNew)
-        // this.app.post('/api/checksubdom', passportConfig.isAuthenticated, editor.checkSubdom)
-        // this.app.post('/api/submitsubdom', passportConfig.isAuthenticated, editor.submitSubdom)
-        // this.app.post('/api/gethtmlforuser', passportConfig.isAuthenticated, editor.getHTML)
-        // editor.precaching()
+        this.app.post('/api/submitnew', passportConfig.isAuthenticated, editor.submitNew);
+        this.app.post('/api/checksubdom', passportConfig.isAuthenticated, editor.checkSubdom);
+        this.app.post('/api/submitsubdom', passportConfig.isAuthenticated, editor.submitSubdom);
+        this.app.post('/api/gethtmlforuser', passportConfig.isAuthenticated, editor.getHTML);
+        editor.precaching();
         /** ---------------------------------------  IMAGE STORAGE  --------------------------------- */
         const storage = multer.diskStorage({
             destination: function (req, file, callback) {
@@ -118,23 +98,18 @@ class Express {
             });
         });
         /** -------------------------------  STATIC FILES AND SPA SERVER  --------------------------------- */
-        // const _static = express.static(path.join(__dirname, 'front-end'), { maxAge: 31557600000 })
-        // if (process.env.NODE_ENV === 'production') {
-        // 	this.app.use(_static)
-        // }
         this.app.use('/', express.static(path.join(__dirname, '../../dist/front-end')));
-        console.log('-->', path.join(__dirname, '../dist/front-end'));
         this.app.use(history({
             verbose: true,
             disableDotRule: true
         }));
         this.app.get('*', express.static(path.join(__dirname, '../../dist/front-end')));
-        // Start the server on the specified port
         this.app.listen(PORT, (_error) => {
             if (_error) {
                 return console.log('Error: ', _error);
             }
-            return console.log('\x1b[33m%s\x1b[0m', `Server :: Running @ 'http://localhost:${PORT}'`);
+            Log_1.default.info(`Server :: Running @ ${process.env.NODE_ENV === 'production' ? PROD_URL : DEV_URL} :: in ${process.env.NODE_ENV} mode`, [Log_1.default.TAG_RESTARTED]);
+            return console.log('\x1b[33m%s\x1b[0m', `Server :: Running @ 'http://localhost:${PORT}' :: in ${process.env.NODE_ENV} mode`);
         });
     }
 }

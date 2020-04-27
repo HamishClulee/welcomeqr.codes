@@ -8,7 +8,9 @@ class Log {
         this.TAG_AUTH = 'AUTH';
         this.TAG_SIGNUP = 'SIGNUP';
         this.TAG_LOGIN = 'LOGIN';
-        this.TAG_FAILED_CHALLENGE = 'FAILED CHALLENGE';
+        this.TAG_FAILED_CHALLENGE = 'FAILED_CHALLENGE';
+        this.TAG_RESTARTED = 'RESTARTED';
+        this.TAG_API_ERROR = 'API_ERROR';
         this.today = new Date();
         let _dateString = `${this.today.getFullYear()}-${(this.today.getMonth() + 1)}-${this.today.getDate()}`;
         let _timeString = `${this.today.getHours()}:${this.today.getMinutes()}:${this.today.getSeconds()}`;

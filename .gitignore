@@ -19,3 +19,4 @@ report.html
 *.ntvs*
 *.njsproj
 *.sln
+*.buffer

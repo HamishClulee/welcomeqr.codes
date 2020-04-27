@@ -1,6 +1,6 @@
 import * as bcrypt from 'bcrypt-nodejs'
-import * as crypto from 'crypto'
 import * as mongoose from 'mongoose'
+import { EditorDocument } from './Editor'
 
 export type UserDocument = mongoose.Document & {
 
@@ -8,6 +8,9 @@ export type UserDocument = mongoose.Document & {
 	password: string;
 	passwordResetToken: string;
 	passwordResetExpires: Date;
+
+	subdom: string | null;
+	editors: EditorDocument[],
 
 	google: String,
 	tokens: AuthToken[];

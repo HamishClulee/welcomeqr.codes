@@ -1,6 +1,6 @@
 import * as passport from 'passport'
 import { User, UserDocument } from '../../models/User'
-import { IRequest, IResponse, INext } from '../../interfaces/vendors'
+import { IRequest, IResponse, INext } from '../../interfaces'
 import Log from '../../middlewares/Log'
 const { assert, sanitize, validationResult } = require('express-validator')
 

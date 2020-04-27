@@ -1,6 +1,6 @@
 import * as passport from 'passport'
 import { UserDocument } from '../../models/User'
-import { IRequest, IResponse, INext } from '../../interfaces/vendors'
+import { IRequest, IResponse, INext } from '../../interfaces'
 import { IVerifyOptions } from 'passport-local'
 const { assert, sanitize, validationResult } = require('express-validator')
 
