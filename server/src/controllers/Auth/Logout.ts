@@ -1,10 +1,19 @@
 import { IRequest, IResponse } from '../../interfaces'
+import QAuth from '../QAuth'
 
-class Logout {
+class LogOut {
+
 	public static perform (req: IRequest, res: IResponse): any {
+
 		req.logout()
-		return res.status(200).send({ userContent: 'see you later, aligator', user: { email: null, _id: null, authed: false } })
+
+		return res.status(200).send({
+
+			userContent: 'see you later, aligator',
+			user: QAuth.deny()
+
+		})
 	}
 }
 
-export default Logout
+export default LogOut

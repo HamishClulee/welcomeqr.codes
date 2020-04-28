@@ -1,5 +1,6 @@
 import { User } from '../../models/User'
 import { IRequest, IResponse, INext } from '../../interfaces'
+import QAuth from '../QAuth'
 
 class SessionChallenge {
 
@@ -10,7 +11,7 @@ class SessionChallenge {
 			return res.status(401).send({
 				status: 401,
 				message: 'No user logged in.',
-				user: { email: null, _id: null, authed: false }
+				user: QAuth.deny()
 			})
 
 		} else {
@@ -18,27 +19,33 @@ class SessionChallenge {
 			User.findOne({ _id: req.session.passport.user }, (err, user) => {
 
 				if (err) {
+
 					return res.status(401).send({
-						status: 401,
+
 						message: 'You are not authenticated.',
-						user: { email: null, _id: null, authed: false }
+						user: QAuth.deny()
+
 					})
 				}
 
 				if (user) {
 
-					let { email, _id } = user
+					let { email, _id, subdom } = user
+
 					return res.status(200).send({
+
 						msg: 'you are a premium user',
-						user: { email, id: _id, authed: true }
+						user: QAuth.approve({ email, id: _id, authed: true, subdom })
+
 					})
 
 				} else {
 
 					return res.status(401).send({
-						status: 401,
+
 						message: 'You do not exist.',
-						user: { email: null, _id: null, authed: false }
+						user: QAuth.deny()
+
 					})
 
 				}

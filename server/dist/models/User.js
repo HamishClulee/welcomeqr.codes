@@ -7,12 +7,11 @@ const userSchema = new mongoose.Schema({
     password: String,
     passwordResetToken: String,
     passwordResetExpires: Date,
+    subdom: { type: String || null, default: null },
+    editors: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Editor' }],
     google: String,
     tokens: Array
 }, { timestamps: true });
-/**
- * Password hash middleware.
- */
 userSchema.pre('save', function save(next) {
     const user = this;
     if (!user.isModified('password')) {

@@ -18,7 +18,7 @@ class Log {
 	public today: Date = new Date()
 
 	constructor() {
-		let _dateString = `${this.today.getFullYear()}-${(this.today.getMonth() + 1)}-${this.today.getDate()}`
+		let _dateString = `${this.today.getFullYear()}-${('0' + (this.today.getMonth() + 1)).slice(-2)}-${('0' + this.today.getDate()).slice(-2)}`
 		let _timeString = `${this.today.getHours()}:${this.today.getMinutes()}:${this.today.getSeconds()}`
 		this.baseDir = path.join(__dirname, '../../.logs/')
 		this.fileName = `${_dateString}.log`
