@@ -1,26 +1,35 @@
 <template>
     <nav class="create-topbar-container">
-        <div class="navbar-left">
+        <div class="top-bar-left">
             <div class="logo-con" @click="routehome">
                 <img src="/svg/smallogo.svg" />
             </div>
         </div>
-        <h6 class="h6">https://{{ getuser.subdom }}.welcomeqr.codes</h6>
-        <div class="spacer"></div>
 
-        <div class="top-bar-left">
-            <router-link class="button options" :to="{ name: 'manage'}">
-                OPTIONS
+        <div class="top-bar-middle"><h6 class="h6">https://{{ getuser.subdom }}.welcomeqr.codes</h6></div>
+
+        <div class="top-bar-right">
+
+            <router-link tag="div" :to="{ name: 'manage'}" class="top-bar-item-container">
+                <div class="icon-container options"></div>
+                <div class="tiny-text">OPTIONS</div>
             </router-link>
-            <button class="button save" @click="$emit('save')">
-                SAVE
-            </button>
-            <button class="button preview" @click="$emit('preview')">
-                PREVIEW
-            </button>
-            <button class="button publish">
-                PUBLISH
-            </button>
+
+            <div :to="{ name: 'manage'}" class="top-bar-item-container" @click="$emit('save')">
+                <div class="icon-container save"></div>
+                <div class="tiny-text">SAVE</div>
+            </div>
+
+            <div class="top-bar-item-container" @click="$emit('preview')">
+                <div class="icon-container preview"></div>
+                <div class="tiny-text">PREVIEW</div>
+            </div>
+
+            <div class="top-bar-item-container" @click="$emit('publish')">
+                <div class="icon-container publish"></div>
+                <div class="tiny-text">PUBLISH</div>
+            </div>
+
         </div>
 
     </nav>
@@ -51,9 +60,9 @@ export default {
     margin-left: 20px
     font-size: 1em
     margin-bottom: 5px
-.spacer
-    width: 20%
-.top-bar-left
+.top-bar-middle
+    width: 100%
+.top-bar-right
     display: flex
     flex-direction: row
     align-items: center
@@ -70,7 +79,7 @@ export default {
     position: fixed
     width: 100%
     box-shadow: 0 1px 2px rgba(0,0,0,0.24)
-.navbar-left
+.top-bar-left
     display: flex
     flex-direction: row
     background-color: transparent
@@ -89,4 +98,31 @@ export default {
         width: 120px
         @media (min-width: 0px) and (max-width: 520px)
             height: 30px
+.top-bar-item-container
+    height: 50px
+    width: 70px
+    display: flex
+    align-items: center
+    justify-content: center
+    flex-direction: column
+    cursor: pointer
+    &:hover
+        opacity: 0.8
+.icon-container
+    height: 25px
+    width: 25px
+.tiny-text
+    font-size: 0.7em
+.publish
+    background: center / contain no-repeat url("/svg/cloud-up.svg")
+    background-size: unset
+.save
+    background: center / contain no-repeat url("/svg/file-check.svg")
+    background-size: unset
+.preview
+    background: center / contain no-repeat url("/svg/eye.svg")
+    background-size: unset
+.options
+    background: center / contain no-repeat url("/svg/settings.svg")
+    background-size: unset
 </style>

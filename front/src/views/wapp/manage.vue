@@ -11,7 +11,7 @@
             <qinput
                 v-if="!getuser.subdom"
                 :fullwidth="false"
-                setwidth="450px"
+                setwidth="350px"
                 inptype="text"
                 placey="Your unique sub domain..."
                 errortxt=""

@@ -1,3 +1,4 @@
+// https://github.com/dariusk/corpora
 export const adverbs = [
 	'abnormally',
 	'absentmindedly',

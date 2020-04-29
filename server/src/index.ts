@@ -35,13 +35,6 @@ if (cluster.isMaster) {
 	 */
 	App.loadQueue()
 
-	// /**
-	//  * Run the Worker every minute
-	//  * Note: we normally start worker after
-	//  * the entire app is loaded
-	//  */
-	// setTimeout(() => App.loadWorker(), 1000 * 60)
-
 } else {
 
 	/**

@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+// https://github.com/dariusk/corpora
 exports.adverbs = [
     'abnormally',
     'absentmindedly',

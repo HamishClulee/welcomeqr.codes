@@ -1,3 +1,4 @@
+// https://github.com/dariusk/corpora
 export const nouns = [
 	'armour',
 	'barrymore',
