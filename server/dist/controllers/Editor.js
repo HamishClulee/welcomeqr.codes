@@ -13,6 +13,9 @@ const Editor_1 = require("../models/Editor");
 const Subdom_1 = require("../models/Subdom");
 const User_1 = require("../models/User");
 const ApiError_1 = require("./ApiError");
+const adjective = require("../resources/words/adjectives");
+const noun = require("../resources/words/nouns");
+const adverb = require("../resources/words/adverbs");
 const QAuth_1 = require("./QAuth");
 const SUBDOMS_ID = '5e52678609948c1e0ec9994f';
 let SUBDOMS = [];
@@ -65,7 +68,16 @@ exports.getHTML = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         ApiError_1.QApiError('getHTML', e, res);
     }
 });
-exports.precaching = () => {
+exports._precaching = () => {
     return Subdom_1.Subdom.findById(SUBDOMS_ID).exec().then(res => SUBDOMS = res.subdoms);
+};
+exports.generateRandomSubDom = (req, res) => {
+    try {
+        const rando = () => { return `${adverb.adverbs[Math.floor(Math.random() * Math.floor(adverb.length - 1))]}-${adjective.adjectives[Math.floor(Math.random() * Math.floor(adjective.length - 1))]}-${noun.nouns[Math.floor(Math.random() * Math.floor(noun.length - 1))]}`; };
+        return res.status(200).send({ userContent: 'Here is your subdom, dude.', subdom: rando() });
+    }
+    catch (e) {
+        ApiError_1.QApiError('generateRandomSubdom', e, res);
+    }
 };
 //# sourceMappingURL=Editor.js.map

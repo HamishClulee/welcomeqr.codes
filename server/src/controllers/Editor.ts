@@ -5,6 +5,10 @@ import { Subdom } from '../models/Subdom'
 import { User } from '../models/User'
 import { QApiError } from './ApiError'
 
+import * as adjective from '../resources/words/adjectives'
+import * as noun from '../resources/words/nouns'
+import * as adverb from '../resources/words/adverbs'
+
 import QAuth from './QAuth'
 
 const SUBDOMS_ID = '5e52678609948c1e0ec9994f'
@@ -77,6 +81,18 @@ export const getHTML = async (req: IRequest, res: IResponse) => {
 	}
 }
 
-export const precaching = () => {
+export const _precaching = () => {
 	return Subdom.findById(SUBDOMS_ID).exec().then(res => SUBDOMS = res.subdoms)
+}
+
+export const generateRandomSubDom = (req: IRequest, res: IResponse) => {
+	try {
+
+		const rando = () => { return `${adverb.adverbs[Math.floor(Math.random() * Math.floor(adverb.length - 1))]}-${adjective.adjectives[Math.floor(Math.random() * Math.floor(adjective.length - 1))]}-${noun.nouns[Math.floor(Math.random() * Math.floor(noun.length - 1))]}`}
+
+		return res.status(200).send({ userContent: 'Here is your subdom, dude.', subdom: rando() })
+
+	} catch (e) {
+		QApiError('generateRandomSubdom', e, res)
+	}
 }

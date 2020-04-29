@@ -78,7 +78,8 @@ class Express {
         this.app.post('/api/checksubdom', passportConfig.isAuthenticated, editor.checkSubdom);
         this.app.post('/api/submitsubdom', passportConfig.isAuthenticated, editor.submitSubdom);
         this.app.post('/api/gethtmlforuser', passportConfig.isAuthenticated, editor.getHTML);
-        editor.precaching();
+        this.app.post('/api/generatesubdom', passportConfig.isAuthenticated, editor.generateRandomSubDom);
+        editor._precaching();
         /** ---------------------------------------  IMAGE STORAGE  --------------------------------- */
         const storage = multer.diskStorage({
             destination: function (req, file, callback) {

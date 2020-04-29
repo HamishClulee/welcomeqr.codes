@@ -11,12 +11,13 @@
             <qinput
                 v-if="!getuser.subdom"
                 :fullwidth="false"
-                setwidth="250px"
+                setwidth="450px"
                 inptype="text"
                 placey="Your unique sub domain..."
                 errortxt=""
                 eventname="subdominput"
                 @subdominput="checksubdom"
+                ref="subdom"
                 :isrequired="true"
                 :hasautocomplete="false"> 
             </qinput>
@@ -25,15 +26,19 @@
             <span class="icon bigx" v-else></span>
             <loadinginline class="icon" v-if="checking"></loadinginline>
         </div>
-        <button class="button-small subsubmit" @click="submitsubdom">I'm Happy With My Sub Domain!</button>
+        <div class="subdom-button-container">
+            <button class="button-small subsubmit" @click="submitsubdom">I'm Happy With My Sub Domain!</button>
+            <button class="button-small subsubmit" @click="getrandomsubdom">Generate Random Sub Domain!</button>
+        </div>
+        
     </template>
+
     <template v-else>
         <h4 class="h4">Your subdomain is</h4>
         <h5 class="h5">https://{{ getuser.subdom }}.welcomeqr.codes</h5>
         <h6 class="h6">Any websites you publish will be hosted at that address</h6>
         <router-link class="button" tag="button" :to="{ path: '/app/create'}">Start editing</router-link>
-    </template>
-    
+    </template>    
 
     <!-- USER HAS A SUBDOM -->
     <div v-for="(ed, ind) in editors" :key="ind">
@@ -78,9 +83,14 @@ export default {
         })
     },
     methods: {
+        getrandomsubdom() {
+            this.$QEdit.generateRandomSubDom().then(res => {
+                this.$refs['subdom'].$data.val = res.data.subdom
+            })
+        },
         checksubdom(e) {
             this.checking = true
-            this.subdom = e
+            if (e) this.subdom = e
             this.$QEdit.checksubdom(this.subdom).then(res =>{
                 this.checking = false
                 this.subdomok = res.data.okay
@@ -102,6 +112,11 @@ export default {
 </script>
 
 <style lang="sass" scoped>
+.subdom-button-container
+    display: flex
+    flex-direction: row
+    align-items: center
+    justify-content: center
 .h6
     margin-bottom: 25px
 .subsubmit

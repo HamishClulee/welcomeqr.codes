@@ -56,4 +56,8 @@ export class QEdit {
     getHTML(): AxiosPromise<APIResponse> {
         return this.ax.post('/gethtmlforuser')
     }
+
+    generateRandomSubDom(): AxiosPromise<APIResponse> {
+        return this.ax.post('/generatesubdom')
+    }
 }
