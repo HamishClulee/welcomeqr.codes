@@ -11,22 +11,22 @@
         <div class="top-bar-right">
 
             <router-link tag="div" :to="{ name: 'manage'}" class="top-bar-item-container">
-                <div class="icon-container options"></div>
+                <qicon icon="cog" color="secondary" size="small"></qicon>
                 <div class="tiny-text">OPTIONS</div>
             </router-link>
 
             <div :to="{ name: 'manage'}" class="top-bar-item-container" @click="$emit('save')">
-                <div class="icon-container save"></div>
+                <qicon icon="file-tick" color="secondary" size="small"></qicon>
                 <div class="tiny-text">SAVE</div>
             </div>
 
             <div class="top-bar-item-container" @click="$emit('preview')">
-                <div class="icon-container preview"></div>
+                <qicon icon="eye" color="secondary" size="small"></qicon>
                 <div class="tiny-text">PREVIEW</div>
             </div>
 
             <div class="top-bar-item-container" @click="$emit('publish')">
-                <div class="icon-container publish"></div>
+                <qicon icon="cloud-up" color="secondary" size="small"></qicon>
                 <div class="tiny-text">PUBLISH</div>
             </div>
 
@@ -36,9 +36,13 @@
 </template>
 
 <script>
+import qicon from '../icon/qicon'
 import { mapGetters } from 'vuex'
 export default {
     name: 'createtopbar',
+    components: {
+        qicon,
+    },
     methods: {
         routehome () {
             this.$router.push({ name: 'home'})
@@ -99,7 +103,6 @@ export default {
         @media (min-width: 0px) and (max-width: 520px)
             height: 30px
 .top-bar-item-container
-    height: 50px
     width: 70px
     display: flex
     align-items: center
@@ -108,21 +111,18 @@ export default {
     cursor: pointer
     &:hover
         opacity: 0.8
-.icon-container
-    height: 25px
-    width: 25px
 .tiny-text
     font-size: 0.7em
-.publish
-    background: center / contain no-repeat url("/svg/cloud-up.svg")
-    background-size: unset
-.save
-    background: center / contain no-repeat url("/svg/file-check.svg")
-    background-size: unset
-.preview
-    background: center / contain no-repeat url("/svg/eye.svg")
-    background-size: unset
-.options
-    background: center / contain no-repeat url("/svg/settings.svg")
-    background-size: unset
+// .publish
+//     background: center / contain no-repeat url("/svg/cloud-up.svg")
+//     background-size: unset
+// .save
+//     background: center / contain no-repeat url("/svg/file-check.svg")
+//     background-size: unset
+// .preview
+//     background: center / contain no-repeat url("/svg/eye.svg")
+//     background-size: unset
+// .options
+//     background: center / contain no-repeat url("/svg/settings.svg")
+//     background-size: unset
 </style>

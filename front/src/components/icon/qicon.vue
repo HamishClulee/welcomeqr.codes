@@ -1,13 +1,17 @@
 <template>
     <svg xmlns="http://www.w3.org/2000/svg" :width="getSize" :height="getSize" viewBox="0 0 24 24" :fill="vars[color]">
-        <cloudup v-if="icon === 'cloudup'"></cloudup>
+        <cloudup v-if="icon === 'cloud-up'"></cloudup>
         <eye v-if="icon === 'eye'"></eye>
+        <filetick v-if="icon === 'file-tick'"></filetick>
+        <cog v-if="icon === 'cog'"></cog>
     </svg>
 </template>
 
 <script>
 import cloudup from './paths/cloudup'
 import eye from './paths/eye'
+import cog from './paths/cog'
+import filetick from './paths/filetick'
 import variables from '../../style/index.sass'
 import { manifest } from './manifest.js'
 
@@ -21,7 +25,7 @@ const _sizemap = {
 export default {
     name: 'qicon',
     components: {
-        cloudup, eye,
+        cloudup, eye, filetick, cog,
     },
     props: {
         color: {

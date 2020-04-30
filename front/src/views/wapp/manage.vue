@@ -29,8 +29,8 @@
             <loadinginline class="icon" v-if="checking"></loadinginline>
         </div>
         <div class="subdom-button-container">
-            <button class="button-small subsubmit" @click="submitsubdom">I'm Happy With My Sub Domain!</button>
-            <button class="button-small subsubmit" @click="getrandomsubdom">Generate Random Sub Domain!</button>
+            <button class="button-small subsubmit first" @click="submitsubdom">I'm Happy With My Sub Domain!</button>
+            <button class="button-small subsubmit second" @click="getrandomsubdom">Generate Random Sub Domain!</button>
         </div>
         
     </template>
@@ -42,7 +42,7 @@
         <router-link class="button" tag="button" :to="{ path: '/app/create'}">Start editing</router-link>
     </template>    
 
-    <!-- USER HAS A SUBDOM -->
+    <!-- USER HAS A SUBDOM - TODO:: implement multiple editors, blocked by:: user roles, JWT, OAuth -->
     <div v-for="(ed, ind) in editors" :key="ind">
         <router-link :to="{ path: '/app/create'}">
             {{ ed._id }}
@@ -123,6 +123,10 @@ export default {
     flex-direction: row
     align-items: center
     justify-content: center
+    .first
+        margin-left: 2.5px
+    .second
+        margin-right: 2.5px
 .h6
     margin-bottom: 25px
 .subsubmit

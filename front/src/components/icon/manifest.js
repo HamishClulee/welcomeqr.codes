@@ -1,3 +1,3 @@
 export const manifest = [
-    'cloudup', 'eye',
+    'cloud-up', 'eye', 'file-tick', 'cog',
 ]
