@@ -9,6 +9,11 @@ export function ErrStr(error: AxiosError): string {
     return 'Something went wrong - please try again.'
 }
 
+interface GoogleDetails {
+    code: String,
+    redirect_uri: String,
+}
+
 export class QAuth {
 
     private BASE_URL = process.env.NODE_ENV === 'development' ? 'http://localhost:1980/auth' : 'https://welcomeqr.codes/auth'
@@ -91,7 +96,7 @@ export class QAuth {
         return this.ax.post('/recover', { email, token, password })
     }
 
-    googleSignUp(token: string): AxiosPromise<QUser> {
-        return this.ax.post('/auth/google', {  })
+    googleSignUp(deets: GoogleDetails): AxiosPromise<QUser> {
+        return this.ax.post('/google', deets)
     }
 }

@@ -134,10 +134,10 @@ export default {
             else this.confirmerror = ''
         },
         async googleSignUp() {
-            // const authCode = await this.$gAuth.getAuthCode()
-            // // console.log(authCode)
-            // const response = await this.$qAuth.googleSignUp()
-            // post('http://your-backend-server-api-to-use-authcode', { code: authCode, redirect_uri: 'postmessage' })
+            const authCode = await this.$gAuth.getAuthCode()
+            const response = await this.$QAuth.googleSignUp({ code: authCode, redirect_uri: 'postmessage' }).then(res => {
+                console.log(res)
+            })
         },
     },
     computed: {

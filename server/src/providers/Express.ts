@@ -84,13 +84,22 @@ class Express {
 
 		/** ---------------------------------------  APP ROUTING  --------------------------------- */
 
-		/** Auth */
+		/** -------------- Auth -------------- */
+
+		// Local
 		this.app.post('/auth/session_challenge', SessionChallenge.perform)
 		this.app.post('/auth/login', LogIn.perform)
 		this.app.post('/auth/logout', LogOut.perform)
 		this.app.post('/auth/signup', SignUp.perform)
 
-		/** Editor */
+		// Google
+		this.app.post('/auth/google', passport.authenticate('google', { scope: ['profile email'] }))
+		this.app.get('/auth/google/callback', passport.authenticate('google', { failureRedirect: '/?redirect=true' }), (req, res) => {
+			console.log('I THINK THE SHIT JUST WORKED NIKKA', res)
+			// res.redirect('/')
+		})
+
+		/** -------------- Editor -------------- */
 		this.app.post('/api/submitnew', passportConfig.isAuthenticated, editor.submitNew)
 		this.app.post('/api/checksubdom', passportConfig.isAuthenticated, editor.checkSubdom)
 		this.app.post('/api/submitsubdom', passportConfig.isAuthenticated, editor.submitSubdom)

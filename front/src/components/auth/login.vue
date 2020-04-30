@@ -27,7 +27,7 @@
 
         <div class="button-container">
 
-            <div class="google-btn" style="width: 100%;" @click="google">
+            <div class="google-btn" style="width: 100%;" @click="googleSignUp">
                 <div class="google-icon-wrapper">
                     <img class="google-icon-svg" src="/svg/google.svg"/>
                 </div>
@@ -105,11 +105,14 @@ export default {
             else if (this.password === '') this.passerror = ''
             else this.passerror = ''
         },
-        google() {
-            this.$QAuth.google().then(res => { this.success(res) })
+        async googleSignUp() {
+            const authCode = await this.$gAuth.getAuthCode()
+            const response = await this.$QAuth.googleSignUp({ code: authCode, redirect_uri: 'postmessage' }).then(res => {
+                this.$store.commit('IS_AUTHED', res.data.user)
+            })
         },
         success(res) {
-            if (res.data.userError) {
+            if (res.data.userError) {googleSignUp
                 this.servermsg = res.data.userError
             } else {
                 this.$store.commit('IS_AUTHED', res.data.user)
