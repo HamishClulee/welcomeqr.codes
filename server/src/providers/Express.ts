@@ -71,11 +71,11 @@ class Express {
 		this.app.use(passport.session())
 
 		this.app.use(cors({
-			origin: process.env.NODE_ENV !== 'production' ? DEV_URL : PROD_URL,
+			origin: process.env.NODE_ENV !== 'production' ? DEV_URL : [PROD_URL, 'https://acounts.google.com'],
 			credentials: true
 		}))
-		this.app.use(lusca.xframe('SAMEORIGIN'))
-		this.app.use(lusca.xssProtection(true))
+		// this.app.use(lusca.xframe('SAMEORIGIN'))
+		// this.app.use(lusca.xssProtection(true))
 
 		this.app.use((req, res, next) => {
 			res.locals.user = req.session.user

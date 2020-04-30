@@ -8,7 +8,6 @@ const bodyParser = require("body-parser");
 const history = require("connect-history-api-fallback");
 const cors = require("cors");
 const redis = require("redis");
-const lusca = require("lusca");
 const passport = require("passport");
 const multer = require("multer");
 const editor = require("../controllers/Editor");
@@ -58,11 +57,11 @@ class Express {
         this.app.use(passport.initialize());
         this.app.use(passport.session());
         this.app.use(cors({
-            origin: process.env.NODE_ENV !== 'production' ? DEV_URL : PROD_URL,
+            origin: process.env.NODE_ENV !== 'production' ? DEV_URL : [PROD_URL, 'https://acounts.google.com'],
             credentials: true
         }));
-        this.app.use(lusca.xframe('SAMEORIGIN'));
-        this.app.use(lusca.xssProtection(true));
+        // this.app.use(lusca.xframe('SAMEORIGIN'))
+        // this.app.use(lusca.xssProtection(true))
         this.app.use((req, res, next) => {
             res.locals.user = req.session.user;
             next();
