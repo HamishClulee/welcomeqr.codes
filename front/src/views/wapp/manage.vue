@@ -5,6 +5,8 @@
 
     <!-- USER HASNT ENTERED A SUBDOM YET -->
 
+    <qicon color="link" icon="eye" size="xlarge"></qicon>
+
     <template v-if="!getuser.subdom">
         <div class="subdom-input-container" >
             <span class="pre">https://</span>
@@ -53,13 +55,17 @@
 <script>
 import { EventBus, LOADING } from '../../EventBus'
 import { mapGetters } from 'vuex'
+
 import qinput from '../../components/forms/qinput'
 import loadinginline from '../../components/loadinginline'
+import qicon from '../../components/icon/qicon'
+
 export default {
     name: 'manage',
     components: {
         qinput,
         loadinginline,
+        qicon,
     },
     data() {
         return {
