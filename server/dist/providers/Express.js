@@ -57,8 +57,9 @@ class Express {
         this.app.use(passport.initialize());
         this.app.use(passport.session());
         this.app.use(cors({
-            origin: process.env.NODE_ENV !== 'production' ? DEV_URL : [PROD_URL, 'https://acounts.google.com'],
-            credentials: true
+            origin: process.env.NODE_ENV !== 'production' ? [DEV_URL, '/\.google.com\.com$/'] : [PROD_URL, '/\.google.com\.com$/'],
+            credentials: true,
+            methods: ['GET', 'POST']
         }));
         // this.app.use(lusca.xframe('SAMEORIGIN'))
         // this.app.use(lusca.xssProtection(true))
