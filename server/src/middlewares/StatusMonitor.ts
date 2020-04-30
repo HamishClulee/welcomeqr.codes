@@ -5,7 +5,9 @@ import Log from './Log'
 import Environment from '../providers/Environment'
 
 class StatusMonitor {
+
 	public mount (_express: Application): Application {
+
 		Log.info('Booting the \'StatusMonitor\' middleware...')
 
 		const monitorOptions: object = {
