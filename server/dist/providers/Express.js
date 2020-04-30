@@ -42,9 +42,9 @@ class Express {
         this.app.use(bodyParser.urlencoded({ extended: true }));
         this.app.use(session({
             cookie: {
-                sameSite: true,
-                maxAge: 1000 * 60 * 60 * 24,
-                secure: false
+                // sameSite: true,
+                maxAge: 1000 * 60 * 60 * 24 // One Day
+                // secure: false
             },
             saveUninitialized: false,
             resave: false,
@@ -58,8 +58,7 @@ class Express {
         this.app.use(passport.session());
         this.app.use(cors({
             origin: process.env.NODE_ENV !== 'production' ? [DEV_URL, '/\.google.com\.com$/'] : [PROD_URL, '/\.google.com\.com$/'],
-            credentials: true,
-            methods: ['GET', 'POST']
+            credentials: true
         }));
         // this.app.use(lusca.xframe('SAMEORIGIN'))
         // this.app.use(lusca.xssProtection(true))
