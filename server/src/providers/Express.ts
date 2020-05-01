@@ -75,6 +75,10 @@ class Express {
 			credentials: true
 		}))
 
+		this.app.options('*', cors(
+			{ preflightContinue: true }
+		)) // include before other routes
+
 		// this.app.use(lusca.xframe('SAMEORIGIN'))
 		// this.app.use(lusca.xssProtection(true))
 

@@ -60,6 +60,7 @@ class Express {
             origin: process.env.NODE_ENV !== 'production' ? [DEV_URL, '/\.google.com\.com$/'] : [PROD_URL, '/\.google.com\.com$/'],
             credentials: true
         }));
+        this.app.options('*', cors({ preflightContinue: true })); // include before other routes
         // this.app.use(lusca.xframe('SAMEORIGIN'))
         // this.app.use(lusca.xssProtection(true))
         this.app.use((req, res, next) => {
