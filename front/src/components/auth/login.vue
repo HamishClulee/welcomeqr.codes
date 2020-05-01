@@ -34,7 +34,7 @@
                 <p class="btn-text"><b>Continue with Google</b></p>
             </div>
 
-            <a href="http://localhost:1980/auth/google">GOOGS</a>
+            <a href="https://welcomeqr.codes/auth/google">GOOGS</a>
 
             <g-signin-button
                 class="google-btn" style="width: 100%;"
