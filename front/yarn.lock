@@ -8635,6 +8635,11 @@ vue-google-oauth2@^1.5.3:
   resolved "https://registry.yarnpkg.com/vue-google-oauth2/-/vue-google-oauth2-1.5.3.tgz#cefe8d043c5334a98a85c8479954b8647ec2ee86"
   integrity sha512-g5BE/YifxfUjuBXgAaverWi1ZGk/a967ZOLacPrgPtDZIYOvT1bOtpWEDolx2RJIxbixPabQsDKTWL7bQm1WBA==
 
+vue-google-signin-button@^1.0.4:
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/vue-google-signin-button/-/vue-google-signin-button-1.0.4.tgz#733e9fea786ff730278c8eef8be9f594adc8d7b8"
+  integrity sha512-spmf+qPQQ1zAEndDxybYsf22U47eYPuvU9cb1N9YETmPQ4+UBG9ALLxgID1mHkusvBVclRyxmvJc3zc7hD56wg==
+
 vue-hot-reload-api@^2.3.0:
   version "2.3.4"
   resolved "https://registry.yarnpkg.com/vue-hot-reload-api/-/vue-hot-reload-api-2.3.4.tgz#532955cc1eb208a3d990b3a9f9a70574657e08f2"

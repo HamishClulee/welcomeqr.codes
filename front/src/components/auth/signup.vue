@@ -136,7 +136,7 @@ export default {
         async googleSignUp() {
             const authCode = await this.$gAuth.getAuthCode()
             const response = await this.$QAuth.googleSignUp({ code: authCode, redirect_uri: 'postmessage' }).then(res => {
-                console.log(res)
+                // console.log(res)
             })
         },
     },

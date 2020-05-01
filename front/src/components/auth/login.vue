@@ -34,6 +34,16 @@
                 <p class="btn-text"><b>Continue with Google</b></p>
             </div>
 
+            <a href="http://localhost:1980/auth/google">GOOGS</a>
+
+            <g-signin-button
+                class="google-btn" style="width: 100%;"
+                :params="googleSignInParams"
+                @success="onSignInSuccess"
+                @error="onSignInError">
+                Sign in with Google
+            </g-signin-button>
+
             <button
                 :disabled="!validated"
                 type="submit"
@@ -53,10 +63,12 @@
 <script>
 import qinput from '../forms/qinput'
 import { EventBus, MESSAGES, LOADING, SERVER_AUTH_ERROR_MESSAGE } from '../../EventBus'
+
 export default {
     name: 'login',
     components: {
         qinput,
+
     },
     data() {
         return {
@@ -65,6 +77,9 @@ export default {
             emailerror: '',
             passerror: '',
             servermsg: '',
+            googleSignInParams: {
+                client_id: `${process.env.VUE_APP_GOOGLE_CLIENT_ID}.apps.googleusercontent.com`,
+            },
         }
     },
     created () {
@@ -85,6 +100,19 @@ export default {
         })
     },
     methods: {
+        async onSignInSuccess (googleUser) {
+
+            // `googleUser` is the GoogleUser object that represents the just-signed-in user.
+            // See https://developers.google.com/identity/sign-in/web/reference#users
+
+            const profile = await googleUser.getBasicProfile() // etc etc
+            // console.log('YoYoGabba: ', profile, googleUser)
+        },
+        onSignInError (error) {
+
+            // console.log('OH NOES', error)
+
+        },
         submit(e) {
             e.preventDefault()
             if (this.validated) {
@@ -107,9 +135,9 @@ export default {
         },
         async googleSignUp() {
             const authCode = await this.$gAuth.getAuthCode()
-            const response = await this.$QAuth.googleSignUp({ code: authCode, redirect_uri: 'postmessage' }).then(res => {
-                this.$store.commit('IS_AUTHED', res.data.user)
-            })
+            // const response = await this.$QAuth.googleSignUp({ code: authCode, redirect_uri: 'postmessage' }).then(res => {
+            //     this.$store.commit('IS_AUTHED', res.data.user)
+            // })
         },
         success(res) {
             if (res.data.userError) {googleSignUp

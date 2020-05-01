@@ -6,6 +6,9 @@ import store from './store'
 import { QAuth } from './api/auth'
 import { QEdit } from './api/editor'
 
+import GSignInButton from 'vue-google-signin-button'
+Vue.use(GSignInButton)
+
 import GoogleAuth from 'vue-google-oauth2'
 Vue.use(GoogleAuth, {
     clientId: `${process.env.VUE_APP_GOOGLE_CLIENT_ID}.apps.googleusercontent.com`,

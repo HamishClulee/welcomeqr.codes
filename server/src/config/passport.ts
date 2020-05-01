@@ -47,7 +47,7 @@ passport.use(new GoogleStrategy({
 		process.env.NODE_ENV === 'production'
 			? Environment.config().prodUrl
 			: Environment.config().devUrl }/auth/google/callback`
-	}, async (access: any, refresh: any, profile: any, done: any) => {
+	}, (access: any, refresh: any, profile: any, done: any) => {
 		console.log(access, refresh, profile, done)
 	}
 ))
