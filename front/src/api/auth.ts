@@ -97,6 +97,6 @@ export class QAuth {
     }
 
     googleSignUp(deets: GoogleDetails): AxiosPromise<QUser> {
-        return this.ax.post('/google', deets)
+        return this.ax.get('/google', { headers: { Authorization: `Bearer ${deets.code}`}})
     }
 }

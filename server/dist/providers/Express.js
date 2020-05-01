@@ -74,7 +74,7 @@ class Express {
         this.app.post('/auth/logout', Logout_1.default.perform);
         this.app.post('/auth/signup', SignUp_1.default.perform);
         // Google
-        this.app.post('/auth/google', passport.authenticate('google', { scope: ['profile email'] }));
+        this.app.get('/auth/google', passport.authenticate('google', { scope: ['profile email'] }));
         this.app.get('/auth/google/callback', passport.authenticate('google', { failureRedirect: '/?redirect=true' }), (req, res) => {
             console.log('I THINK THE SHIT JUST WORKED NIKKA', res);
             // res.redirect('/')
