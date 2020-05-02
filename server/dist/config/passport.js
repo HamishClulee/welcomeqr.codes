@@ -35,7 +35,7 @@ passport.use(new LocalStrategy({ usernameField: 'email' }, (email, password, don
     });
 }));
 const GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
-const url = process.env.NODE_ENV === 'production' ? 'https://welcomeqr,codes' : 'http://localhost:1980';
+const url = process.env.NODE_ENV === 'production' ? 'https://welcomeqr.codes' : 'http://localhost:1980';
 passport.use(new GoogleStrategy({
     clientID: Environment_1.default.config().googleClientId,
     clientSecret: Environment_1.default.config().googleSecret,
