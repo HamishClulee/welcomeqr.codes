@@ -43,6 +43,7 @@ passport.use(new GoogleStrategy({
 }, function (accessToken, refreshToken, profile, done) {
     console.log('-------------------->>>>>>>>>>>>>>>>>>>>>>.. ehhhhhheeeeeeeeeee');
     Log_1.default.error('-------------------->>>>>>>>>>>>>>>>>>>>>>.. ehhhhhheeeeeeeeeee');
+    done(accessToken, refreshToken, profile);
 }));
 exports.isAuthenticated = (req, res, next) => {
     if (req.isAuthenticated()) {
