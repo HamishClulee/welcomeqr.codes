@@ -40,7 +40,7 @@ passport.use(new GoogleStrategy({
     clientID: Environment_1.default.config().googleClientId,
     clientSecret: Environment_1.default.config().googleSecret,
     callbackURL: `${url}/auth/google/callback`
-}, function (accessToken, refreshToken, profile, done) {
+}, (accessToken, refreshToken, profile, done) => {
     console.log('Inside passport strat handler function');
     Log_1.default.error('Inside passport strat handler function');
     return done(null, profile);

@@ -27,20 +27,14 @@
 
         <div class="button-container">
 
-            <div class="google-btn" style="width: 100%;">
-                <div class="google-icon-wrapper">
-                    <img class="google-icon-svg" src="/svg/google.svg"/>
+            <a :href="buildLink">
+                <div class="google-btn" style="width: 100%;">
+                    <div class="google-icon-wrapper">
+                        <img class="google-icon-svg" src="/svg/google.svg"/>
+                    </div>
+                    <p class="btn-text"><b>Continue with Google</b></p>
                 </div>
-                <a :href="buildLink"><p class="btn-text"><b>Continue with Google</b></p></a>
-            </div>
-
-            <!-- <g-signin-button
-                class="google-btn" style="width: 100%;"
-                :params="googleSignInParams"
-                @success="onSignInSuccess"
-                @error="onSignInError">
-                Sign in with Google
-            </g-signin-button> -->
+            </a>
 
             <button
                 :disabled="!validated"
@@ -98,19 +92,6 @@ export default {
         })
     },
     methods: {
-        async onSignInSuccess (googleUser) {
-
-            // `googleUser` is the GoogleUser object that represents the just-signed-in user.
-            // See https://developers.google.com/identity/sign-in/web/reference#users
-
-            const profile = await googleUser.getBasicProfile() // etc etc
-            // console.log('YoYoGabba: ', profile, googleUser)
-        },
-        onSignInError (error) {
-
-            // console.log('OH NOES', error)
-
-        },
         submit(e) {
             e.preventDefault()
             if (this.validated) {
@@ -131,12 +112,6 @@ export default {
             else if (this.password === '') this.passerror = ''
             else this.passerror = ''
         },
-        async googleSignUp() {
-            const authCode = await this.$gAuth.getAuthCode()
-            // const response = await this.$QAuth.googleSignUp({ code: authCode, redirect_uri: 'postmessage' }).then(res => {
-            //     this.$store.commit('IS_AUTHED', res.data.user)
-            // })
-        },
         success(res) {
             if (res.data.userError) {googleSignUp
                 this.servermsg = res.data.userError
@@ -156,7 +131,7 @@ export default {
         buildLink() {
             return process.env.NODE_ENV === 'development' ?
                 'http://localhost:1980/auth/google' :
-                '/auth/google/callback'
+                '/auth/google'
         },
         validated() {
             return this.emailerror === '' 

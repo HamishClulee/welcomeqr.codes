@@ -45,7 +45,7 @@ passport.use(new GoogleStrategy({
 	clientSecret: Environment.config().googleSecret,
 	callbackURL: `${url}/auth/google/callback`
 	},
-	function (accessToken: any, refreshToken: any, profile: any, done: any) {
+	(accessToken: any, refreshToken: any, profile: any, done: any) => {
 
 		console.log('Inside passport strat handler function')
 		Log.error('Inside passport strat handler function')

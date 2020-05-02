@@ -36,12 +36,15 @@
         </qinput>
 
         <div class="button-container">
-            <div class="google-btn" style="width: 100%;" @click="googleSignUp">
-                <div class="google-icon-wrapper">
-                    <img class="google-icon-svg" src="/svg/google.svg"/>
+
+            <a :href="buildLink">
+                <div class="google-btn" style="width: 100%;">
+                    <div class="google-icon-wrapper">
+                        <img class="google-icon-svg" src="/svg/google.svg"/>
+                    </div>
+                    <p class="btn-text"><b>Continue with Google</b></p>
                 </div>
-                <p class="btn-text"><b>Continue with Google</b></p>
-            </div>
+            </a>
 
             <button
                 :disabled="!validated"
@@ -133,14 +136,13 @@ export default {
             if (this.password !== this.confirm) this.confirmerror = 'Passwords don\'t match'
             else this.confirmerror = ''
         },
-        async googleSignUp() {
-            const authCode = await this.$gAuth.getAuthCode()
-            const response = await this.$QAuth.googleSignUp({ code: authCode, redirect_uri: 'postmessage' }).then(res => {
-                // console.log(res)
-            })
-        },
     },
     computed: {
+        buildLink() {
+            return process.env.NODE_ENV === 'development' ?
+                'http://localhost:1980/auth/google' :
+                '/auth/google'
+        },
         validated() {
             return this.emailerror === '' 
                 && this.passerror === '' 

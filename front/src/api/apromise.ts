@@ -1,5 +1,5 @@
 import axios, { AxiosPromise } from 'axios'
-import { plainToClass } from 'class-transformer'
+// import { plainToClass } from 'class-transformer'
 
 // A helper that converts an Axios promise to a typed Typescript promise. The
 // specified type must be a class.
@@ -8,7 +8,7 @@ export default <T>(c: any, axiosPromise: AxiosPromise): Promise<T> => {
     return new Promise<T>((resolve, reject) => {
         axiosPromise
             .then(response => {
-                resolve(plainToClass(c, response.data as T))
+                // resolve(plainToClass(c, response.data as T))
             })
             .catch(error => {
                 if (error.response) {

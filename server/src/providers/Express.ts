@@ -109,16 +109,11 @@ class Express {
 
 		this.app.get('/auth/google/callback',
 			passport.authenticate('google', { failureRedirect: '/?redirect=true' }),
-			function(req, res) {
-				console.log('I THINK THE SHIT JUST WORKED NIKKA')
-				Log.info('I THINK THE SHIT JUST WORKED NIKKA')
-				res.redirect('/?fuckyeahboi=yeeeeahhhhhbbboooiiiii')
+			(req, res) => {
+				console.log('IT WORKED')
+				Log.info('IT WORKED')
+				res.redirect('/')
 		})
-
-		// this.app.get('/auth/google', passport.authenticate('google', { scope: ['profile email'] }))
-		// this.app.get('/auth/google/callback', passport.authenticate('google', { failureRedirect: '/?redirect=true' }), (req, res) => {
-
-		// })
 
 		/** -------------- Editor -------------- */
 		this.app.post('/api/submitnew', passportConfig.isAuthenticated, editor.submitNew)

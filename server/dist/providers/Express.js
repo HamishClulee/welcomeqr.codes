@@ -82,14 +82,11 @@ class Express {
         //   request.  If authentication fails, the user will be redirected back to the
         //   login page.  Otherwise, the primary route function function will be called,
         //   which, in this example, will redirect the user to the home page.
-        this.app.get('/auth/google/callback', passport.authenticate('google', { failureRedirect: '/?redirect=true' }), function (req, res) {
-            console.log('I THINK THE SHIT JUST WORKED NIKKA');
-            Log_1.default.info('I THINK THE SHIT JUST WORKED NIKKA');
-            res.redirect('/?fuckyeahboi=yeeeeahhhhhbbboooiiiii');
+        this.app.get('/auth/google/callback', passport.authenticate('google', { failureRedirect: '/?redirect=true' }), (req, res) => {
+            console.log('IT WORKED');
+            Log_1.default.info('IT WORKED');
+            res.redirect('/');
         });
-        // this.app.get('/auth/google', passport.authenticate('google', { scope: ['profile email'] }))
-        // this.app.get('/auth/google/callback', passport.authenticate('google', { failureRedirect: '/?redirect=true' }), (req, res) => {
-        // })
         /** -------------- Editor -------------- */
         this.app.post('/api/submitnew', passportConfig.isAuthenticated, editor.submitNew);
         this.app.post('/api/checksubdom', passportConfig.isAuthenticated, editor.checkSubdom);
