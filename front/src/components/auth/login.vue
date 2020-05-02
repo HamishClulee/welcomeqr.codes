@@ -34,7 +34,7 @@
                 <p class="btn-text"><b>Continue with Google</b></p>
             </div>
 
-            <a href="https://welcomeqr.codes/auth/google">GOOGS</a>
+            <a :href="buildLink">GOOGS</a>
 
             <g-signin-button
                 class="google-btn" style="width: 100%;"
@@ -100,6 +100,11 @@ export default {
         })
     },
     methods: {
+        buildLink() {
+            return process.env.NODE_ENV === 'development' ?
+                'http://localhost:1980/auth/google' :
+                'https://welcomeqr.codes/auth/google/callback'
+        },
         async onSignInSuccess (googleUser) {
 
             // `googleUser` is the GoogleUser object that represents the just-signed-in user.

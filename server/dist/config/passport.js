@@ -4,6 +4,7 @@ const passport = require("passport");
 const passportLocal = require("passport-local");
 const lodash_1 = require("lodash");
 const Environment_1 = require("../providers/Environment");
+const Log_1 = require("../middlewares/Log");
 const User_1 = require("../models/User");
 const LocalStrategy = passportLocal.Strategy;
 passport.serializeUser((user, done) => {
@@ -33,15 +34,15 @@ passport.use(new LocalStrategy({ usernameField: 'email' }, (email, password, don
         });
     });
 }));
-let GoogleStrategy = require('passport-google-oauth20').Strategy;
+const GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
+const url = process.env.NODE_ENV === 'production' ? 'https://welcomeqr,codes' : 'http://localhost:1980';
 passport.use(new GoogleStrategy({
     clientID: Environment_1.default.config().googleClientId,
     clientSecret: Environment_1.default.config().googleSecret,
-    callbackURL: `${process.env.NODE_ENV === 'production'
-        ? Environment_1.default.config().prodUrl
-        : Environment_1.default.config().devUrl}/auth/google/callback`
-}, (access, refresh, profile, done) => {
-    console.log(access, refresh, profile, done);
+    callbackURL: `${url}/auth/google/callback`
+}, function (accessToken, refreshToken, profile, done) {
+    console.log('-------------------->>>>>>>>>>>>>>>>>>>>>>.. ehhhhhheeeeeeeeeee');
+    Log_1.default.error('-------------------->>>>>>>>>>>>>>>>>>>>>>.. ehhhhhheeeeeeeeeee');
 }));
 exports.isAuthenticated = (req, res, next) => {
     if (req.isAuthenticated()) {

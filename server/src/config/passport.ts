@@ -3,6 +3,7 @@ import * as passportLocal from 'passport-local'
 import _ from 'lodash'
 
 import Environment from '../providers/Environment'
+import Log from '../middlewares/Log'
 
 import { User, UserDocument } from '../models/User'
 import { IRequest, IResponse, INext } from '../interfaces'
@@ -35,20 +36,20 @@ passport.use(new LocalStrategy({ usernameField: 'email' }, (email, password, don
 	})
 }))
 
-let GoogleStrategy = require('passport-google-oauth20').Strategy
+const GoogleStrategy = require('passport-google-oauth').OAuth2Strategy
+
+const url = process.env.NODE_ENV === 'production' ? 'https://welcomeqr,codes' : 'http://localhost:1980'
 
 passport.use(new GoogleStrategy({
-
 	clientID: Environment.config().googleClientId,
-
 	clientSecret: Environment.config().googleSecret,
+	callbackURL: `${url}/auth/google/callback`
+	},
+	function (accessToken: any, refreshToken: any, profile: any, done: any) {
 
-	callbackURL: `${
-		process.env.NODE_ENV === 'production'
-			? Environment.config().prodUrl
-			: Environment.config().devUrl }/auth/google/callback`
-	}, (access: any, refresh: any, profile: any, done: any) => {
-		console.log(access, refresh, profile, done)
+		console.log('-------------------->>>>>>>>>>>>>>>>>>>>>>.. ehhhhhheeeeeeeeeee')
+		Log.error('-------------------->>>>>>>>>>>>>>>>>>>>>>.. ehhhhhheeeeeeeeeee')
+
 	}
 ))
 
