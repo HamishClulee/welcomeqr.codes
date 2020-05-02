@@ -15,6 +15,7 @@ const passportConfig = require("../config/passport");
 /** Middlewares */
 const Environment_1 = require("./Environment");
 const Log_1 = require("../middlewares/Log");
+const Handler_1 = require("../exception/Handler");
 /** Routes - Auth */
 const SessionChallenge_1 = require("../controllers/Auth/SessionChallenge");
 const Logout_1 = require("../controllers/Auth/Logout");
@@ -34,7 +35,7 @@ class Express {
     init() {
         // this.app.use(ExceptionHandler.logErrors)
         // this.app.use(ExceptionHandler.clientErrorHandler)
-        // this.app.use(ExceptionHandler.errorHandler)
+        this.app.use(Handler_1.default.errorHandler);
         // this.app = ExceptionHandler.notFoundHandler(this.app)
         this.app.set('port', PORT);
         this.app.use(compression());

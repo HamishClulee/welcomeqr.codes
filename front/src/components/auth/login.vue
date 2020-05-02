@@ -27,22 +27,20 @@
 
         <div class="button-container">
 
-            <div class="google-btn" style="width: 100%;" @click="googleSignUp">
+            <div class="google-btn" style="width: 100%;">
                 <div class="google-icon-wrapper">
                     <img class="google-icon-svg" src="/svg/google.svg"/>
                 </div>
-                <p class="btn-text"><b>Continue with Google</b></p>
+                <a :href="buildLink"><p class="btn-text"><b>Continue with Google</b></p></a>
             </div>
 
-            <a :href="buildLink">GOOGS</a>
-
-            <g-signin-button
+            <!-- <g-signin-button
                 class="google-btn" style="width: 100%;"
                 :params="googleSignInParams"
                 @success="onSignInSuccess"
                 @error="onSignInError">
                 Sign in with Google
-            </g-signin-button>
+            </g-signin-button> -->
 
             <button
                 :disabled="!validated"
@@ -100,11 +98,6 @@ export default {
         })
     },
     methods: {
-        buildLink() {
-            return process.env.NODE_ENV === 'development' ?
-                'http://localhost:1980/auth/google' :
-                'https://welcomeqr.codes/auth/google/callback'
-        },
         async onSignInSuccess (googleUser) {
 
             // `googleUser` is the GoogleUser object that represents the just-signed-in user.
@@ -160,6 +153,11 @@ export default {
         },
     },
     computed: {
+        buildLink() {
+            return process.env.NODE_ENV === 'development' ?
+                'http://localhost:1980/auth/google' :
+                '/auth/google/callback'
+        },
         validated() {
             return this.emailerror === '' 
                 && this.passerror === '' 

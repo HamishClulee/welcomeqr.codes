@@ -47,9 +47,10 @@ passport.use(new GoogleStrategy({
 	},
 	function (accessToken: any, refreshToken: any, profile: any, done: any) {
 
-		console.log('-------------------->>>>>>>>>>>>>>>>>>>>>>.. ehhhhhheeeeeeeeeee')
-		Log.error('-------------------->>>>>>>>>>>>>>>>>>>>>>.. ehhhhhheeeeeeeeeee')
-		done(accessToken, refreshToken, profile)
+		console.log('Inside passport strat handler function')
+		Log.error('Inside passport strat handler function')
+
+		return done(null, profile)
 	}
 ))
 

@@ -41,9 +41,9 @@ passport.use(new GoogleStrategy({
     clientSecret: Environment_1.default.config().googleSecret,
     callbackURL: `${url}/auth/google/callback`
 }, function (accessToken, refreshToken, profile, done) {
-    console.log('-------------------->>>>>>>>>>>>>>>>>>>>>>.. ehhhhhheeeeeeeeeee');
-    Log_1.default.error('-------------------->>>>>>>>>>>>>>>>>>>>>>.. ehhhhhheeeeeeeeeee');
-    done(accessToken, refreshToken, profile);
+    console.log('Inside passport strat handler function');
+    Log_1.default.error('Inside passport strat handler function');
+    return done(null, profile);
 }));
 exports.isAuthenticated = (req, res, next) => {
     if (req.isAuthenticated()) {

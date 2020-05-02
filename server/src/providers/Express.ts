@@ -45,7 +45,7 @@ class Express {
 
 		// this.app.use(ExceptionHandler.logErrors)
 		// this.app.use(ExceptionHandler.clientErrorHandler)
-		// this.app.use(ExceptionHandler.errorHandler)
+		this.app.use(ExceptionHandler.errorHandler)
 		// this.app = ExceptionHandler.notFoundHandler(this.app)
 
 		this.app.set('port', PORT)
