@@ -50,7 +50,7 @@
                     <div
                         class="canvas-item"
                         @click="togglecanvas">
-                            <router-link :to="{ path: '/auth'}">Login / SignUp</router-link>
+                            <router-link :to="{ path: '/auth/login'}">Login / SignUp</router-link>
                     </div>
                     <div class="account-settings" v-if="isauthed">
                         <div

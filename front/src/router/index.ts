@@ -7,6 +7,11 @@ const pricing = () => import('../views/pricing.vue')
 
 /** Auth routes */
 const auth = () => import('../views/auth.vue')
+const login = () => import('../views/auth/login.vue')
+const signup = () => import('../views/auth/signup.vue')
+const reset = () => import('../views/auth/reset.vue')
+const forgot = () => import('../views/auth/forgot.vue')
+
 const account = () => import('../views/account.vue')
 
 /** Create App routes */
@@ -50,6 +55,28 @@ const routes = [
                 noindex: true,
             }, next)
         },
+        children: [
+            {
+                path: '/auth/login',
+                name: 'login',
+                component: login,
+            },
+            {
+                path: '/auth/signup',
+                name: 'signup',
+                component: signup,
+            },
+            {
+                path: '/auth/reset',
+                name: 'reset',
+                component: reset,
+            },
+            {
+                path: '/auth/forgot',
+                name: 'forgot',
+                component: forgot,
+            },
+        ],
     },
     {
         path: '/pricing',

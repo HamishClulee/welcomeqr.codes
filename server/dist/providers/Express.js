@@ -20,6 +20,8 @@ const SessionChallenge_1 = require("../controllers/Auth/SessionChallenge");
 const Logout_1 = require("../controllers/Auth/Logout");
 const SignUp_1 = require("../controllers/Auth/SignUp");
 const Login_1 = require("../controllers/Auth/Login");
+const Forgot_1 = require("../controllers/Auth/Forgot");
+const Reset_1 = require("../controllers/Auth/Reset");
 /** Routes - Editor */
 /** App Constants */
 const PORT = 1980;
@@ -73,6 +75,8 @@ class Express {
         this.app.post('/auth/login', Login_1.default.perform);
         this.app.post('/auth/logout', Logout_1.default.perform);
         this.app.post('/auth/signup', SignUp_1.default.perform);
+        this.app.post('/auth/forgot', Forgot_1.default.perform);
+        this.app.post('/auth/reset/:token', Reset_1.default.perform);
         // Google
         this.app.get('/auth/google', passport.authenticate('google', { scope: ['email'] }));
         this.app.get('/auth/google/callback', passport.authenticate('google', { failureRedirect: '/?redirect=true' }), (req, res) => {

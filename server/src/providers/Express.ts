@@ -16,13 +16,14 @@ import * as passportConfig from '../config/passport'
 /** Middlewares */
 import Environment from './Environment'
 import Log from '../middlewares/Log'
-import ExceptionHandler from '../exception/Handler'
 
 /** Routes - Auth */
 import SessionChallenge from '../controllers/Auth/SessionChallenge'
 import LogOut from '../controllers/Auth/Logout'
 import SignUp from '../controllers/Auth/SignUp'
 import LogIn from '../controllers/Auth/Login'
+import Forgot from '../controllers/Auth/Forgot'
+import Reset from '../controllers/Auth/Reset'
 
 /** Routes - Editor */
 
@@ -92,6 +93,9 @@ class Express {
 		this.app.post('/auth/login', LogIn.perform)
 		this.app.post('/auth/logout', LogOut.perform)
 		this.app.post('/auth/signup', SignUp.perform)
+
+		this.app.post('/auth/forgot', Forgot.perform)
+		this.app.post('/auth/reset/:token', Reset.perform)
 
 		// Google
 		this.app.get('/auth/google',

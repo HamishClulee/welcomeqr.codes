@@ -55,7 +55,8 @@
                     SUBMIT
             </button>
 
-            <p @click="$emit('wantslogin')">Already have an account? <a>Login here.</a></p>
+            <p>Don't have an account? <router-link :to="{ path: '/auth/signup' }">Sign Up here.</router-link></p>
+            <p><router-link :to="{ path: '/auth/forgot' }">Trouble logging in?</router-link></p>
 
         </div>
 
@@ -64,7 +65,7 @@
 
 <script>
 import SERVER from '../../api'
-import qinput from '../forms/qinput'
+import qinput from '../../components/forms/qinput'
 import { EventBus, MESSAGES, LOADING, SERVER_AUTH_ERROR_MESSAGE } from '../../EventBus'
 export default {
     name: 'signup',
@@ -123,7 +124,7 @@ export default {
         validateemail(e) {
             const reg = /^\S+@\S+$/
             this.email = e
-            if (!reg.test(this.email)) this.emailerror = 'That email address looks funny, did you type if correctly?'
+            if (!reg.test(this.email)) this.emailerror = 'That email address looks funny, did you type it correctly?'
             else this.emailerror = ''
         },
         validatepassword(e) {

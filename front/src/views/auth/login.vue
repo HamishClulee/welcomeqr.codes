@@ -45,7 +45,8 @@
                     SUBMIT
             </button>
 
-            <p @click="$emit('wantssignup')">Don't have an account? <a>Sign Up here.</a></p>
+            <p>Don't have an account? <router-link :to="{ path: '/auth/signup' }">Sign Up here.</router-link></p>
+            <p><router-link :to="{ path: '/auth/forgot' }">Trouble logging in?</router-link></p>
 
         </div>
 
@@ -53,7 +54,7 @@
 </template>
 
 <script>
-import qinput from '../forms/qinput'
+import qinput from '../../components/forms/qinput'
 import { EventBus, MESSAGES, LOADING, SERVER_AUTH_ERROR_MESSAGE } from '../../EventBus'
 
 export default {
@@ -102,7 +103,7 @@ export default {
         validateemail(e) {
             const reg = /^\S+@\S+$/
             this.email = e
-            if (!reg.test(this.email)) this.emailerror = 'That email address looks funny, did you type if correctly?'
+            if (!reg.test(this.email)) this.emailerror = 'That email address looks funny, did you type it correctly?'
             else if (this.email === '') this.emailerror = ''
             else this.emailerror = ''
         },

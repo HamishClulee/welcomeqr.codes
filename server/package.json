@@ -6,6 +6,8 @@
   "dependencies": {
     "@types/bluebird": "^3.5.24",
     "@types/node": "^13.13.0",
+    "@types/nodemailer": "^6.4.0",
+    "async": "^3.1.0",
     "bcrypt-nodejs": "0.0.3",
     "bluebird": "^3.5.2",
     "body-parser": "^1.18.3",
@@ -29,6 +31,8 @@
     "memory-cache": "^0.2.0",
     "mongoose": "^5.2.9",
     "multer": "^1.4.2",
+    "nodemailer": "^6.4.6",
+    "nodemailer-sparkpost-transport": "^2.2.0",
     "nodemon": "^2.0.3",
     "passport": "^0.4.0",
     "passport-google-oauth": "^2.0.0",
@@ -38,6 +42,7 @@
     "tslint": "^5.11.0"
   },
   "devDependencies": {
+    "@types/async": "^3.0.2",
     "@types/bcrypt-nodejs": "0.0.30",
     "@types/compression": "0.0.36",
     "@types/cors": "^2.8.4",

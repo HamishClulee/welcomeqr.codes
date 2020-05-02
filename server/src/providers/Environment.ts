@@ -15,6 +15,8 @@ class Environment {
 		const googleClientId = process.env.GOOGLE_ID
 		const googleSecret = process.env.GOOGLE_SECRET
 
+		const sparkSecret = process.env.SPARK_SECRET
+
 		const name = process.env.APP_NAME || 'Welcome QR Codes'
 		const keywords = process.env.APP_KEYWORDS || 'somethings'
 		const year = (new Date()).getFullYear()
@@ -35,6 +37,7 @@ class Environment {
 		return {
 			googleClientId,
 			googleSecret,
+			sparkSecret,
 			env,
 			appSecret,
 			company,

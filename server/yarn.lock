@@ -35,6 +35,11 @@
   dependencies:
     defer-to-connect "^1.0.1"
 
+"@types/async@^3.0.2":
+  version "3.2.1"
+  resolved "https://registry.yarnpkg.com/@types/async/-/async-3.2.1.tgz#14dd3f50b1e664ee834a5efdd3c9895f56c1649b"
+  integrity sha512-r/lKpgD0b4dz/relMdFUhhSSgP4UmbrEEsxxFMSZkIbbDF2Tehs6xUHlFHGVVFQDfhCoBUqX94vjCNIqbcU21A==
+
 "@types/babel-types@*", "@types/babel-types@^7.0.0":
   version "7.0.7"
   resolved "https://registry.yarnpkg.com/@types/babel-types/-/babel-types-7.0.7.tgz#667eb1640e8039436028055737d2b9986ee336e3"
@@ -156,6 +161,13 @@
   version "13.13.0"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-13.13.0.tgz#30d2d09f623fe32cde9cb582c7a6eda2788ce4a8"
   integrity sha512-WE4IOAC6r/yBZss1oQGM5zs2D7RuKR6Q+w+X2SouPofnWn+LbCqClRyhO3ZE7Ix8nmFgo/oVuuE01cJT2XB13A==
+
+"@types/nodemailer@^6.4.0":
+  version "6.4.0"
+  resolved "https://registry.yarnpkg.com/@types/nodemailer/-/nodemailer-6.4.0.tgz#d8c039be3ed685c4719a026455555be82c124b74"
+  integrity sha512-KY7bFWB0MahRZvVW4CuW83qcCDny59pJJ0MQ5ifvfcjNwPlIT0vW4uARO4u1gtkYnWdhSvURegecY/tzcukJcA==
+  dependencies:
+    "@types/node" "*"
 
 "@types/qs@*":
   version "6.9.1"
@@ -359,6 +371,11 @@ async@^1.5.0:
   version "1.5.2"
   resolved "https://registry.yarnpkg.com/async/-/async-1.5.2.tgz#ec6a61ae56480c0c3cb241c95618e20892f9672a"
   integrity sha1-7GphrlZIDAw8skHJVhjiCJL5Zyo=
+
+async@^3.1.0:
+  version "3.2.0"
+  resolved "https://registry.yarnpkg.com/async/-/async-3.2.0.tgz#b3a2685c5ebb641d3de02d161002c60fc9f85720"
+  integrity sha512-TR2mEZFVOj2pLStYxLht7TyfuRzaydfpxr3k9RpHIzMgw7A64dzsdqCxH1WJyQdoe8T10nDXd9wnEigmiuHIZw==
 
 asynckit@^0.4.0:
   version "0.4.0"
@@ -2362,7 +2379,7 @@ lodash.unescape@4.0.1:
   resolved "https://registry.yarnpkg.com/lodash.unescape/-/lodash.unescape-4.0.1.tgz#bf2249886ce514cda112fae9218cdc065211fc9c"
   integrity sha1-vyJJiGzlFM2hEvrpIYzcBlIR/Jw=
 
-lodash@^4.0.0, lodash@^4.17.11, lodash@^4.17.15, lodash@^4.17.4, lodash@^4.17.5:
+lodash@^4.0.0, lodash@^4.17.11, lodash@^4.17.15, lodash@^4.17.2, lodash@^4.17.4, lodash@^4.17.5:
   version "4.17.15"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.15.tgz#b447f6670a0455bbfeedd11392eff330ea097548"
   integrity sha512-8xOcRHvCjnocdS5cpwXQXVzmmh5e5+saE2QGoeQmbKmRS6J3VQppPOIt0MnmE+4xlZoumy0GPG0D0MVIQbNA1A==
@@ -2689,6 +2706,18 @@ node-redis-warlock@~0.2.0:
   dependencies:
     node-redis-scripty "0.0.5"
     uuid "^2.0.1"
+
+nodemailer-sparkpost-transport@^2.2.0:
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/nodemailer-sparkpost-transport/-/nodemailer-sparkpost-transport-2.2.0.tgz#77199e5bebe861d58f934b991016ff79f5c1a11a"
+  integrity sha512-7o73oWUbF/dXcwD8XuQTfQnMY7LfBSfvF0y9v7I4nfMjhXBf70/AISnDaszmdROdm8dJOyKrVpL9T/KRkdfdFQ==
+  dependencies:
+    sparkpost "^2.1.0"
+
+nodemailer@^6.4.6:
+  version "6.4.6"
+  resolved "https://registry.yarnpkg.com/nodemailer/-/nodemailer-6.4.6.tgz#d37f504f6560b36616f646a606894fe18819107f"
+  integrity sha512-/kJ+FYVEm2HuUlw87hjSqTss+GU35D4giOpdSfGp7DO+5h6RlJj7R94YaYHOkoxu1CSaM0d3WRBtCzwXrY6MKA==
 
 nodemon@^2.0.3:
   version "2.0.3"
@@ -3371,7 +3400,7 @@ repeat-string@^1.5.2, repeat-string@^1.6.1:
   resolved "https://registry.yarnpkg.com/repeat-string/-/repeat-string-1.6.1.tgz#8dcae470e1c88abc2d600fff4a776286da75e637"
   integrity sha1-jcrkcOHIirwtYA//Sndihtp15jc=
 
-request@^2.88.0:
+request@^2.79.0, request@^2.88.0:
   version "2.88.2"
   resolved "https://registry.yarnpkg.com/request/-/request-2.88.2.tgz#d73c918731cb5a87da047e207234146f664d12b3"
   integrity sha512-MsvtOrfG9ZcrOwAW+Qi+F6HbD0CWXEh9ou77uOb7FM2WPhwT7smM833PzanhJLsgXjN89Ir6V2PczXNnMpwKhw==
@@ -3706,6 +3735,14 @@ source-map@^0.7.3:
   version "0.7.3"
   resolved "https://registry.yarnpkg.com/source-map/-/source-map-0.7.3.tgz#5302f8169031735226544092e64981f751750383"
   integrity sha512-CkCj6giN3S+n9qrYiBTX5gystlENnRW5jZeNLHpe6aue+SrHcG5VYwujhW9s4dY31mEGsxBDrHR6oI69fTXsaQ==
+
+sparkpost@^2.1.0:
+  version "2.1.4"
+  resolved "https://registry.yarnpkg.com/sparkpost/-/sparkpost-2.1.4.tgz#f099526b7800deff672b7a7ce60ef2b5266c3251"
+  integrity sha512-7yvpfLVCnCVaE1yexemHNDX2bLkG3Lel14aCwj1ZCAX8Aa4OjYCP7uWPOkSwwXLYfQZRUgdwxgzXwaIDiYVx7A==
+  dependencies:
+    lodash "^4.17.2"
+    request "^2.79.0"
 
 sparse-bitfield@^3.0.3:
   version "3.0.3"

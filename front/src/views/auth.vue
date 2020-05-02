@@ -1,49 +1,14 @@
 <template>
-
     <main class="auth-container">
-
         <section class="active-component-container">
-
-            <login @wantssignup="active = 'signup'" v-show="active === 'login'"></login>
-
-            <signup @wantslogin="active = 'login'" v-show="active === 'signup'"></signup>
-
-            <forgot v-show="active === 'forgot'"></forgot>
-
+            <router-view></router-view>
         </section>
-
     </main>
-
 </template>
 
 <script>
-import signup from '../components/auth/signup'
-import login from '../components/auth/login'
-import forgot from '../components/auth/forgot'
-import { EventBus, MESSAGES } from '../EventBus'
 export default {
     name: 'auth',
-    components: {
-        signup,
-        login,
-        forgot,
-    },
-    data () {
-        return {
-            active: 'login',
-        }
-    },
-    created() {
-        const para = new URLSearchParams(window.location.search)
-        if (para.get('redirect') === 'true') {
-            EventBus.$emit(MESSAGES, {
-                is: true,
-                msg: 'You need to be logged in to view that page!',
-                color: 'tertiary',
-                black: false,
-            })
-        }
-    },
 }
 </script>
 
