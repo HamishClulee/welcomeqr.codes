@@ -45,7 +45,7 @@ class Express {
 
 		// this.app.use(ExceptionHandler.logErrors)
 		// this.app.use(ExceptionHandler.clientErrorHandler)
-		this.app.use(ExceptionHandler.errorHandler)
+		// this.app.use(ExceptionHandler.errorHandler)
 		// this.app = ExceptionHandler.notFoundHandler(this.app)
 
 		this.app.set('port', PORT)
@@ -75,10 +75,6 @@ class Express {
 			credentials: true
 		}))
 
-		this.app.options('*', cors(
-			{ preflightContinue: true }
-		)) // include before other routes
-
 		// this.app.use(lusca.xframe('SAMEORIGIN'))
 		// this.app.use(lusca.xssProtection(true))
 
@@ -101,18 +97,10 @@ class Express {
 		this.app.get('/auth/google',
 			passport.authenticate('google', { scope: ['email'] }))
 
-		// GET /auth/google/callback
-		//   Use passport.authenticate() as route middleware to authenticate the
-		//   request.  If authentication fails, the user will be redirected back to the
-		//   login page.  Otherwise, the primary route function function will be called,
-		//   which, in this example, will redirect the user to the home page.
-
 		this.app.get('/auth/google/callback',
 			passport.authenticate('google', { failureRedirect: '/?redirect=true' }),
 			(req, res) => {
-				console.log('IT WORKED')
-				Log.info('IT WORKED')
-				res.redirect('/')
+				res.redirect('/?googleauth=true')
 		})
 
 		/** -------------- Editor -------------- */

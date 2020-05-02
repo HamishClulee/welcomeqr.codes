@@ -2,8 +2,9 @@ import * as passport from 'passport'
 import * as passportLocal from 'passport-local'
 import _ from 'lodash'
 
+import * as mongoose from 'mongoose'
+
 import Environment from '../providers/Environment'
-import Log from '../middlewares/Log'
 
 import { User, UserDocument } from '../models/User'
 import { IRequest, IResponse, INext } from '../interfaces'
@@ -11,13 +12,19 @@ import { IRequest, IResponse, INext } from '../interfaces'
 const LocalStrategy = passportLocal.Strategy
 
 passport.serializeUser<any, any>((user, done) => {
-	done(undefined, user.id)
+	done(null, user.id)
 })
 
-passport.deserializeUser((id, done) => {
-	User.findById(id, (err, user) => {
-		done(err, user)
-	})
+passport.deserializeUser<any, any>((id, done) => {
+	if (mongoose.Types.ObjectId.isValid(id)) {
+		User.findById(id, (err, user) => {
+			done(err, user)
+		})
+	} else {
+		console.log('saved new user !')
+		const _user = new User()
+		_user.save()
+	}
 })
 
 passport.use(new LocalStrategy({ usernameField: 'email' }, (email, password, done) => {
@@ -45,14 +52,66 @@ passport.use(new GoogleStrategy({
 	clientSecret: Environment.config().googleSecret,
 	callbackURL: `${url}/auth/google/callback`
 	},
-	(accessToken: any, refreshToken: any, profile: any, done: any) => {
+	async (req: any, accessToken: any, refreshToken: any, profile: any, done: any) => {
 
-		console.log('Inside passport strat handler function')
-		Log.error('Inside passport strat handler function')
+		if (req.user) {
+			User.findOne({ google: profile.id }, (err, existingUser) => {
+				if (err) {
+					return done(err)
+				}
 
-		return done(null, profile)
-	}
-))
+				if (existingUser) {
+					// req.flash('errors', { msg: 'There is already a Google account that belongs to you. Sign in with that account or delete it, then link it with your current account.' })
+					return done(err)
+				} else {
+					User.findById(req.user.id, (err, user) => {
+						if (err) {
+							return done(err)
+						}
+
+						user.google = profile.id
+						user.tokens.push({ kind: 'google', accessToken })
+						user.save((err) => {
+							// req.flash('info', { msg: 'Google account has been linked.' })
+							return done(err, user)
+						})
+					})
+				}
+			})
+		} else {
+			User.findOne({ google: profile.id }, (err, existingUser) => {
+				if (err) {
+					return done(err)
+				}
+
+				if (existingUser) {
+					return done(null, existingUser)
+				}
+
+				User.findOne({ email: profile.emails[0].value }, (err, existingEmailUser) => {
+					if (err) {
+						return done(err)
+					}
+
+					if (existingEmailUser) {
+						// req.flash('errors', { msg: 'There is already an account using this email address. Sing in to that accoount and link it with Google manually from Account Settings.' })
+						return done(err)
+					} else {
+						const user = new User()
+
+						user.email = profile.emails[0].value
+						user.google = profile.id
+						user.tokens.push({ kind: 'google', accessToken })
+
+						user.save((err) => {
+							return done(err, user)
+						})
+					}
+				})
+			})
+		}
+	})
+)
 
 export const isAuthenticated = (req: IRequest, res: IResponse, next: INext) => {
 	if (req.isAuthenticated()) { return next() } else { res.redirect('/?authRedirect=true') }

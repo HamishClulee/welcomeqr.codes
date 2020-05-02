@@ -115,6 +115,16 @@ export default {
             this.$router.push({ path: '/auth' })
         }
 
+        if (para.get('googleauth') === 'true') {
+            EventBus.$emit(MESSAGES, {
+                is: true,
+                msg: 'Logged in with Google!',
+                color: 'secondary',
+                black: false,
+            })
+            this.$router.push({ path: '/app/manage' })
+        }
+
         // useful cludge
         __proxy = this
         window.addEventListener('resize', debounce(this.sizeChange, 500))

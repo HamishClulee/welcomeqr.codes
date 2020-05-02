@@ -15,7 +15,6 @@ const passportConfig = require("../config/passport");
 /** Middlewares */
 const Environment_1 = require("./Environment");
 const Log_1 = require("../middlewares/Log");
-const Handler_1 = require("../exception/Handler");
 /** Routes - Auth */
 const SessionChallenge_1 = require("../controllers/Auth/SessionChallenge");
 const Logout_1 = require("../controllers/Auth/Logout");
@@ -35,7 +34,7 @@ class Express {
     init() {
         // this.app.use(ExceptionHandler.logErrors)
         // this.app.use(ExceptionHandler.clientErrorHandler)
-        this.app.use(Handler_1.default.errorHandler);
+        // this.app.use(ExceptionHandler.errorHandler)
         // this.app = ExceptionHandler.notFoundHandler(this.app)
         this.app.set('port', PORT);
         this.app.use(compression());
@@ -61,7 +60,6 @@ class Express {
             origin: process.env.NODE_ENV !== 'production' ? [DEV_URL, '/\.google.com\.com$/'] : [PROD_URL, '/\.google.com\.com$/'],
             credentials: true
         }));
-        this.app.options('*', cors({ preflightContinue: true })); // include before other routes
         // this.app.use(lusca.xframe('SAMEORIGIN'))
         // this.app.use(lusca.xssProtection(true))
         this.app.use((req, res, next) => {
@@ -77,15 +75,8 @@ class Express {
         this.app.post('/auth/signup', SignUp_1.default.perform);
         // Google
         this.app.get('/auth/google', passport.authenticate('google', { scope: ['email'] }));
-        // GET /auth/google/callback
-        //   Use passport.authenticate() as route middleware to authenticate the
-        //   request.  If authentication fails, the user will be redirected back to the
-        //   login page.  Otherwise, the primary route function function will be called,
-        //   which, in this example, will redirect the user to the home page.
         this.app.get('/auth/google/callback', passport.authenticate('google', { failureRedirect: '/?redirect=true' }), (req, res) => {
-            console.log('IT WORKED');
-            Log_1.default.info('IT WORKED');
-            res.redirect('/');
+            res.redirect('/?googleauth=true');
         });
         /** -------------- Editor -------------- */
         this.app.post('/api/submitnew', passportConfig.isAuthenticated, editor.submitNew);
