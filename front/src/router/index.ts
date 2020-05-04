@@ -48,33 +48,55 @@ const routes = [
         path: '/auth',
         name: 'auth',
         component: auth,
-        beforeEnter: (to: any, from: any, next: any) => {
-            overwritemetas({
-                title: 'Login ~ Signup',
-                description: `Login and Signup here!`,
-                noindex: true,
-            }, next)
-        },
+        redirect: { name: 'login' },
         children: [
             {
                 path: '/auth/login',
                 name: 'login',
                 component: login,
+                beforeEnter: (to: any, from: any, next: any) => {
+                    overwritemetas({
+                        title: 'Login ~ Signup',
+                        description: `Login and Signup here!`,
+                        noindex: true,
+                    }, next)
+                },
             },
             {
                 path: '/auth/signup',
                 name: 'signup',
                 component: signup,
+                beforeEnter: (to: any, from: any, next: any) => {
+                    overwritemetas({
+                        title: 'Login ~ Signup',
+                        description: `Login and Signup here!`,
+                        noindex: true,
+                    }, next)
+                },
             },
             {
                 path: '/auth/reset',
                 name: 'reset',
                 component: reset,
+                beforeEnter: (to: any, from: any, next: any) => {
+                    overwritemetas({
+                        title: 'Login ~ Signup',
+                        description: `Login and Signup here!`,
+                        noindex: true,
+                    }, next)
+                },
             },
             {
                 path: '/auth/forgot',
                 name: 'forgot',
                 component: forgot,
+                beforeEnter: (to: any, from: any, next: any) => {
+                    overwritemetas({
+                        title: 'Login ~ Signup',
+                        description: `Login and Signup here!`,
+                        noindex: true,
+                    }, next)
+                },
             },
         ],
     },

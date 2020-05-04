@@ -64,16 +64,8 @@ export class QAuth {
         return this.ax.post('/session_challenge', { intercept })
     }
 
-    confirm(email: string, token: string): AxiosPromise<QUser> {
-        return this.ax.post('/confirm', { email, token })
-    }
-
     logout(): AxiosPromise<QUser> {
         return this.ax.post('/logout')
-    }
-
-    info(): AxiosPromise<QUser> {
-        return this.ax.post('/info')
     }
 
     signup(email: string, password: string, confirm: string, intercept = false): AxiosPromise<QUser> {
@@ -84,19 +76,11 @@ export class QAuth {
         return this.ax.post('/login', { email, password, intercept })
     }
 
-    reconfirm(email: string): AxiosPromise<QUser> {
-        return this.ax.post('/reconfirm', { email })
+    forgot(email: string): AxiosPromise<QUser> {
+        return this.ax.post('/forgot', { email, intercept: false })
     }
 
-    startrecovery(email: string): AxiosPromise<QUser> {
-        return this.ax.post('/startrecovery', { email })
-    }
-
-    recover(email: string, token: string, password: string): AxiosPromise<QUser> {
-        return this.ax.post('/recover', { email, token, password })
-    }
-
-    googleSignUp(deets: GoogleDetails): AxiosPromise<QUser> {
-        return this.ax.get('/google', { headers: { Authorization: `Bearer ${deets.code}`}})
+    reset(token: string, password: string, confirm: string): AxiosPromise<QUser> {
+        return this.ax.post('/reset', { token, password, confirm })
     }
 }

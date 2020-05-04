@@ -4,6 +4,7 @@
   "description": "A Web & API server built using TypeScript",
   "main": "dist",
   "dependencies": {
+    "@sendgrid/mail": "^7.1.0",
     "@types/bluebird": "^3.5.24",
     "@types/node": "^13.13.0",
     "@types/nodemailer": "^6.4.0",

@@ -10,7 +10,7 @@ class LogIn {
         validate.check('email', 'E-mail is not valid').isEmail();
         validate.check('password', 'Password cannot be blank').notEmpty();
         validate.check('password', 'Password length must be atleast 8 characters').isLength({ min: 8 });
-        validate.sanitize('email').normalizeEmail({ gmail_remove_dots: false });
+        // validate.sanitize('email').normalizeEmail({ gmail_remove_dots: false })
         const errors = validate.validationResult(req);
         if (!errors.isEmpty()) {
             Log_1.default.info('Bad login details', [Log_1.default.TAG_AUTH, Log_1.default.TAG_LOGIN]);

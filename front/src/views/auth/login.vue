@@ -114,7 +114,7 @@ export default {
             else this.passerror = ''
         },
         success(res) {
-            if (res.data.userError) {googleSignUp
+            if (res.data.userError) {
                 this.servermsg = res.data.userError
             } else {
                 this.$store.commit('IS_AUTHED', res.data.user)

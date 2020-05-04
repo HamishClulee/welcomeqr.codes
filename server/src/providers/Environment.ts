@@ -8,6 +8,7 @@ class Environment {
 		const env = process.env.NODE_ENV
 		const prodUrl = process.env.PROD_URL
 		const devUrl = process.env.DEV_URL
+		const baseUrl = process.env.NODE_ENV === 'production' ? prodUrl : devUrl
 		const port = process.env.PORT || 1980
 		const appSecret = process.env.APP_SECRET || 'This is your responsibility!'
 		const mongooseUrl = process.env.MONGOOSE_URL
@@ -15,7 +16,7 @@ class Environment {
 		const googleClientId = process.env.GOOGLE_ID
 		const googleSecret = process.env.GOOGLE_SECRET
 
-		const sparkSecret = process.env.SPARK_SECRET
+		const sendGridSecret = process.env.SENDGRID_API_KEY
 
 		const name = process.env.APP_NAME || 'Welcome QR Codes'
 		const keywords = process.env.APP_KEYWORDS || 'somethings'
@@ -35,9 +36,10 @@ class Environment {
 		const redisDB = process.env.REDIS_QUEUE_PREFIX || 3
 
 		return {
+			baseUrl,
+			sendGridSecret,
 			googleClientId,
 			googleSecret,
-			sparkSecret,
 			env,
 			appSecret,
 			company,

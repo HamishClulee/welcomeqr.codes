@@ -95,7 +95,7 @@ class Express {
 		this.app.post('/auth/signup', SignUp.perform)
 
 		this.app.post('/auth/forgot', Forgot.perform)
-		this.app.post('/auth/reset/:token', Reset.perform)
+		this.app.post('/auth/reset', Reset.perform)
 
 		// Google
 		this.app.get('/auth/google',

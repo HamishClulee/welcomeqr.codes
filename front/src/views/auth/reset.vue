@@ -87,6 +87,8 @@ export default {
             if (this.validated) {
                 this.servermsg = ''
             }
+            const params = new URLSearchParams(window.location.search)
+            this.$QAuth.reset(params.get('token'), this.password, this.confirm).then(res => { this.success(res) })
         },
         validatepassword(e) {
             this.password = e
@@ -97,6 +99,19 @@ export default {
             this.confirm = e
             if (this.password !== this.confirm) this.confirmerror = 'Passwords don\'t match'
             else this.confirmerror = ''
+        },
+        success(res) {
+            if (res.data.userError) {
+                this.servermsg = res.data.userError
+            } else {
+                EventBus.$emit(MESSAGES, {
+                    is: true,
+                    msg: `Password reset, you are now logged in!`,
+                    color: 'secondary',
+                    black: false,
+                })
+                this.servermsg = 'Password reset successfully! You are now logged in!'
+            }
         },
     },
     computed: {

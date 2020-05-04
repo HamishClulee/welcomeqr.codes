@@ -1,13 +1,12 @@
-
 import * as validate from 'express-validator'
 import * as async from 'async'
-import * as nodemailer from 'nodemailer'
-
-import sparkPostTransport from 'nodemailer-sparkpost-transport'
-import Environment from '../../providers/Environment'
 
 import { User, UserDocument } from '../../models/User'
 import { IRequest, IResponse, INext } from '../../interfaces'
+
+import QAuth from '../QAuth'
+
+const sgMail = require('@sendgrid/mail')
 
 class Reset {
 
@@ -18,50 +17,77 @@ class Reset {
 		const errors = validate.validationResult(req)
 
 		if (!errors.isEmpty()) {
-			return res.redirect('back')
+
+			return res.status(401).send({
+
+				errors: errors.array(),
+				userContent: 'Error validating those details...',
+				user: QAuth.deny()
+
+			})
 		}
 
-		async.waterfall([
-			function resetPassword(done: Function) {
-				User
-					.findOne({ passwordResetToken: req.params.token })
-					.where('passwordResetExpires').gt(Date.now())
-					.exec((err, user: any) => {
-						if (err) { return next(err) }
-						if (!user) {
-							// --> 'Password reset token is invalid or has expired.'
-							return res.redirect('back')
-						}
-						user.password = req.body.password
-						user.passwordResetToken = undefined
-						user.passwordResetExpires = undefined
-						user.save((err: any) => {
-							if (err) { return next(err) }
-							req.logIn(user, (err) => {
-								done(err, user)
-							})
+		let _user
+
+		function resetPassword() {
+
+			User.findOne({ passwordResetToken: req.body.token })
+
+				.exec((err, user: any) => {
+
+					if (err) { return next(err) }
+
+					if (!user) {
+
+						return res.status(401).send({
+
+							errors: errors.array(),
+							userContent: 'Password reset token is invalid or has expired.',
+							user: QAuth.deny()
+
 						})
+					}
+
+					user.password = req.body.password
+					user.passwordResetToken = undefined
+
+					_user = user
+
+					user.save((err: any) => {
+
+						if (err) { return next(err) }
+
+						req.logIn(user, null)
+
+						sendResetPasswordEmail()
+
 					})
-			},
-			function sendResetPasswordEmail(user: UserDocument, done: Function) {
-				const transporter = nodemailer.createTransport(sparkPostTransport({
-					sparkPostApiKey: Environment.config().sparkSecret
-				}))
-				const mailOptions = {
-					to: user.email,
-					from: 'WelcomeQR Codes',
-					subject: 'Your Password Reset Link',
-					text: `Hello,\n\nThis is a confirmation that the password for your account ${user.email} has just been changed.\n`
-				}
-				transporter.sendMail(mailOptions, (err) => {
-					// --> 'Success! Your password has been changed.'
-					done(err)
+
 				})
+		}
+		function sendResetPasswordEmail() {
+
+			sgMail.setApiKey(process.env.SENDGRID_API_KEY)
+
+			const msg = {
+				to: _user.email,
+				from: 'info@welcomeqr.codes',
+				subject: 'Your Password Reset Link',
+				text: `Hello,\n\nThis is a confirmation that the password for your account ${_user.email} has just been changed.\n`,
+				html: '<strong>and easy to do anywhere, even with Node.js</strong>'
 			}
-		], (err) => {
-		if (err) { return next(err) }
-		res.redirect('/mailerror=true')
-		})
+
+			sgMail.send(msg)
+
+			return res.status(200).send({
+
+				errors: errors.array(),
+				userContent: 'Password has been reset!',
+				user: QAuth.deny()
+
+			})
+
+		}
 	}
 }
 

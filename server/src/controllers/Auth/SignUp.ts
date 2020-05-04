@@ -1,4 +1,3 @@
-import * as passport from 'passport'
 import * as validate from 'express-validator'
 
 import { User, UserDocument } from '../../models/User'

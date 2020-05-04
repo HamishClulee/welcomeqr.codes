@@ -12,6 +12,7 @@ class Database {
         mongoose.set('useCreateIndex', true);
         mongoose.connect(dsn, options, (error) => {
             if (error) {
+                console.log('WHAT THE FUCK **************************************************8');
                 Log_1.default.info('Failed to connect to the Mongo server!!');
                 console.log(error);
                 throw error;

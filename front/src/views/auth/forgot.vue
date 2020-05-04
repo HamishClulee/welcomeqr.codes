@@ -67,6 +67,7 @@ export default {
                 color: 'secondary',
                 black: false,
             })
+            this.$router.push({ path: '/app/manage' })
         })
     },
     methods: {
@@ -75,12 +76,28 @@ export default {
             if (this.validated) {
                 this.servermsg = ''
             }
+            this.$QAuth.forgot(this.email).then(res => {
+                this.success(res)
+            })
         },
         validateemail(e) {
             const reg = /^\S+@\S+$/
             this.email = e
             if (!reg.test(this.email)) this.emailerror = 'That email address looks funny, did you type it correctly?'
             else this.emailerror = ''
+        },
+        success(res) {
+            if (res.data.userError) {
+                this.servermsg = res.data.userError
+            } else {
+                EventBus.$emit(MESSAGES, {
+                    is: true,
+                    msg: `We have sent you an email at ${this.email}!`,
+                    color: 'secondary',
+                    black: false,
+                })
+                this.servermsg = 'Check your email for details on how to reset your password.'
+            }
         },
     },
     computed: {

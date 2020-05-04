@@ -76,7 +76,7 @@ class Express {
         this.app.post('/auth/logout', Logout_1.default.perform);
         this.app.post('/auth/signup', SignUp_1.default.perform);
         this.app.post('/auth/forgot', Forgot_1.default.perform);
-        this.app.post('/auth/reset/:token', Reset_1.default.perform);
+        this.app.post('/auth/reset', Reset_1.default.perform);
         // Google
         this.app.get('/auth/google', passport.authenticate('google', { scope: ['email'] }));
         this.app.get('/auth/google/callback', passport.authenticate('google', { failureRedirect: '/?redirect=true' }), (req, res) => {
