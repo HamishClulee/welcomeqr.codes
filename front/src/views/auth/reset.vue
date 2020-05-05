@@ -111,6 +111,8 @@ export default {
                     black: false,
                 })
                 this.servermsg = 'Password reset successfully! You are now logged in!'
+                this.$store.commit('IS_AUTHED', res.data.user)
+                this.$router.push({ path: '/app/manage' })
             }
         },
     },

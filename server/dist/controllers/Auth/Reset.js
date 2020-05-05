@@ -9,15 +9,9 @@ class Reset {
         validate.check('password', 'Password must be at least 8 characters long.').isLength({ min: 8 }).run(req);
         validate.check('confirm', 'Passwords must match.').equals(req.body.password).run(req);
         const errors = validate.validationResult(req);
-        if (!errors.isEmpty()) {
-            return res.status(401).send({
-                errors: errors.array(),
-                userContent: 'Error validating those details...',
-                user: QAuth_1.default.deny()
-            });
-        }
         let _user;
-        function resetPassword() {
+        // Initiated at EOF
+        const resetPassword = () => {
             User_1.User.findOne({ passwordResetToken: req.body.token })
                 .exec((err, user) => {
                 if (err) {
@@ -37,12 +31,14 @@ class Reset {
                     if (err) {
                         return next(err);
                     }
-                    req.logIn(user, null);
-                    sendResetPasswordEmail();
+                    req.logIn(user, () => {
+                        sendResetPasswordEmail();
+                    });
                 });
             });
-        }
-        function sendResetPasswordEmail() {
+        };
+        // Initiated at EOF
+        const sendResetPasswordEmail = () => {
             sgMail.setApiKey(process.env.SENDGRID_API_KEY);
             const msg = {
                 to: _user.email,
@@ -55,8 +51,19 @@ class Reset {
             return res.status(200).send({
                 errors: errors.array(),
                 userContent: 'Password has been reset!',
+                user: QAuth_1.default.approve(_user)
+            });
+        };
+        // Gogo berries! this is the init.
+        if (!errors.isEmpty()) {
+            return res.status(403).send({
+                errors: errors.array(),
+                userContent: 'Something went wrong, try again later!',
                 user: QAuth_1.default.deny()
             });
+        }
+        else {
+            resetPassword();
         }
     }
 }

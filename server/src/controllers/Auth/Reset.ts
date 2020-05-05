@@ -11,25 +11,16 @@ const sgMail = require('@sendgrid/mail')
 class Reset {
 
 	public static perform (req: IRequest, res: IResponse, next: INext): any {
+
 		validate.check('password', 'Password must be at least 8 characters long.').isLength({ min: 8 }).run(req)
 		validate.check('confirm', 'Passwords must match.').equals(req.body.password).run(req)
 
 		const errors = validate.validationResult(req)
 
-		if (!errors.isEmpty()) {
-
-			return res.status(401).send({
-
-				errors: errors.array(),
-				userContent: 'Error validating those details...',
-				user: QAuth.deny()
-
-			})
-		}
-
 		let _user
 
-		function resetPassword() {
+		// Initiated at EOF
+		const resetPassword = () => {
 
 			User.findOne({ passwordResetToken: req.body.token })
 
@@ -57,15 +48,17 @@ class Reset {
 
 						if (err) { return next(err) }
 
-						req.logIn(user, null)
-
-						sendResetPasswordEmail()
+						req.logIn(user, () => {
+							sendResetPasswordEmail()
+						})
 
 					})
 
 				})
 		}
-		function sendResetPasswordEmail() {
+
+		// Initiated at EOF
+		const sendResetPasswordEmail = () => {
 
 			sgMail.setApiKey(process.env.SENDGRID_API_KEY)
 
@@ -83,9 +76,27 @@ class Reset {
 
 				errors: errors.array(),
 				userContent: 'Password has been reset!',
+				user: QAuth.approve(_user)
+
+			})
+
+		}
+
+		// Gogo berries! this is the init.
+
+		if (!errors.isEmpty()) {
+
+			return res.status(403).send({
+
+				errors: errors.array(),
+				userContent: 'Something went wrong, try again later!',
 				user: QAuth.deny()
 
 			})
+
+		} else {
+
+			resetPassword()
 
 		}
 	}
