@@ -42,14 +42,12 @@ class Reset {
 					user.password = req.body.password
 					user.passwordResetToken = undefined
 
-					_user = user
-
 					user.save((err: any) => {
 
 						if (err) { return next(err) }
 
 						req.logIn(user, () => {
-							sendResetPasswordEmail()
+							sendResetPasswordEmail(user)
 						})
 
 					})
@@ -58,25 +56,33 @@ class Reset {
 		}
 
 		// Initiated at EOF
-		const sendResetPasswordEmail = () => {
+		const sendResetPasswordEmail = (user: UserDocument) => {
 
 			sgMail.setApiKey(process.env.SENDGRID_API_KEY)
 
 			const msg = {
-				to: _user.email,
+				to: user.email,
 				from: 'info@welcomeqr.codes',
 				subject: 'Your Password Reset Link',
-				text: `Hello,\n\nThis is a confirmation that the password for your account ${_user.email} has just been changed.\n`,
+				text: `Hello,\n\n
+						This is a confirmation that the password for your account ${user.email} has just been changed.\n`,
 				html: '<strong>and easy to do anywhere, even with Node.js</strong>'
 			}
 
 			sgMail.send(msg)
 
+			let { email, _id, subdom } = user
+
 			return res.status(200).send({
 
 				errors: errors.array(),
 				userContent: 'Password has been reset!',
-				user: QAuth.approve(_user)
+				user: QAuth.approve({
+					email,
+					id: _id,
+					authed: true,
+					subdom
+				})
 
 			})
 

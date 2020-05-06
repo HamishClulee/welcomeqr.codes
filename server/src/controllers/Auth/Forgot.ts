@@ -1,6 +1,5 @@
-import * as async from 'async'
 import * as validate from 'express-validator'
-
+import * as html from '../../resources/emails/forgot'
 import QAuth from '../QAuth'
 import Environment from '../../providers/Environment'
 
@@ -88,16 +87,13 @@ class Forgot {
 
 			sgMail.setApiKey(process.env.SENDGRID_API_KEY)
 
+			// console.log(html.build(`${Environment.config().baseUrl}/auth/reset?token=${token}`))
+
 			const msg = {
 				to: user.email,
 				from: 'info@welcomeqr.codes',
 				subject: 'Reset your password on WelcomeQR Codes',
-				html: `<p>
-						You are receiving this email because you have requested the reset of the password for your account.\n\n
-						Please click on the following link, or paste this into your browser to complete the process:\n\n\n
-						<a href="${Environment.config().baseUrl}/auth/reset?token=${token}">Click here.</a>\n\n\n
-						If you did not request this, please ignore this email and your password will remain unchanged.\n
-					</p>`
+				html: html.build(`${Environment.config().baseUrl}/auth/reset?token=${token}`)
 			}
 
 			sgMail.send(msg)

@@ -23,7 +23,12 @@ class SessionChallenge {
                     let { email, _id, subdom } = user;
                     return res.status(200).send({
                         msg: 'you are a premium user',
-                        user: QAuth_1.default.approve({ email, id: _id, authed: true, subdom })
+                        user: QAuth_1.default.approve({
+                            email,
+                            id: _id,
+                            authed: true,
+                            subdom
+                        })
                     });
                 }
                 else {

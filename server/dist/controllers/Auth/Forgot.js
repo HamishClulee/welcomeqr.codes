@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const validate = require("express-validator");
+const html = require("../../resources/emails/forgot");
 const QAuth_1 = require("../QAuth");
 const Environment_1 = require("../../providers/Environment");
 const User_1 = require("../../models/User");
@@ -52,16 +53,12 @@ class Forgot {
         // Initiated at EOF
         function sendResetEmail(user) {
             sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+            // console.log(html.build(`${Environment.config().baseUrl}/auth/reset?token=${token}`))
             const msg = {
                 to: user.email,
                 from: 'info@welcomeqr.codes',
                 subject: 'Reset your password on WelcomeQR Codes',
-                html: `<p>
-						You are receiving this email because you have requested the reset of the password for your account.\n\n
-						Please click on the following link, or paste this into your browser to complete the process:\n\n\n
-						<a href="${Environment_1.default.config().baseUrl}/auth/reset?token=${token}">Click here.</a>\n\n\n
-						If you did not request this, please ignore this email and your password will remain unchanged.\n
-					</p>`
+                html: html.build(`${Environment_1.default.config().baseUrl}/auth/reset?token=${token}`)
             };
             sgMail.send(msg);
             return res.status(200).send({
