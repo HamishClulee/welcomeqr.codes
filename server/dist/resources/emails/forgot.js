@@ -108,7 +108,7 @@ const html = `<!DOCTYPE html>
 
   <!-- start preheader -->
   <div class="preheader" style="display: none; max-width: 0; max-height: 0; overflow: hidden; font-size: 1px; line-height: 1px; color: #fff; opacity: 0;">
-    A preheader is the short summary text that follows the subject line when an email is viewed in the inbox.
+    Password reset instructions for for WelcomeQR Codes...
   </div>
   <!-- end preheader -->
 
@@ -126,8 +126,8 @@ const html = `<!DOCTYPE html>
         <table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px;">
           <tr>
             <td align="center" valign="top" style="padding: 36px 24px;">
-              <a href="https://welcomeqr.codes" target="_blank" style="display: inline-block;">
-                <img src="IDlogoimageID" alt="Logo" border="0" width="100%" style="display: block; width: 100%; max-width: 600px; min-width: 48px;">
+              <a href='https://welcomeqr.codes' target='_blank'>
+                <img src='https://feampete.sirv.com/Images/logo.png' width="62.9%" border='0' alt='logo'/>
               </a>
             </td>
           </tr>
@@ -151,7 +151,7 @@ const html = `<!DOCTYPE html>
         <![endif]-->
         <table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px;">
           <tr>
-            <td align="left" bgcolor="#ffffff" style="padding: 36px 24px 0; font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; border-top: 3px solid #d4dadf;">
+            <td align="left" bgcolor="#ffffff" style="padding: 36px 24px 0; font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; border-top: 3px solid #009688;">
               <h1 style="margin: 0; font-size: 32px; font-weight: 700; letter-spacing: -1px; line-height: 48px;">Reset Your Password</h1>
             </td>
           </tr>
@@ -178,7 +178,7 @@ const html = `<!DOCTYPE html>
           <!-- start copy -->
           <tr>
             <td align="left" bgcolor="#ffffff" style="padding: 24px; font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 16px; line-height: 24px;">
-              <p style="margin: 0;">Tap the button below to reset your customer account password. If you didn't request a new password, you can safely delete this email.</p>
+              <p style="margin: 0;">Tap the button below to reset your account password. If you didn't request a new password, or if you have remembered your previous password, you can safely delete this email.</p>
             </td>
           </tr>
           <!-- end copy -->
@@ -191,7 +191,7 @@ const html = `<!DOCTYPE html>
                   <td align="center" bgcolor="#ffffff" style="padding: 12px;">
                     <table border="0" cellpadding="0" cellspacing="0">
                       <tr>
-                        <td align="center" bgcolor="#1a82e2" style="border-radius: 6px;">
+                        <td align="center" bgcolor="#1976D2" style="border-radius: 6px;">
                           <a href="<% url %>" target="_blank" style="display: inline-block; padding: 16px 36px; font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 16px; color: #ffffff; text-decoration: none; border-radius: 6px;">Reset Password</a>
                         </td>
                       </tr>
@@ -214,8 +214,8 @@ const html = `<!DOCTYPE html>
 
           <!-- start copy -->
           <tr>
-            <td align="left" bgcolor="#ffffff" style="padding: 24px; font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 16px; line-height: 24px; border-bottom: 3px solid #d4dadf">
-              <p style="margin: 0;">Cheers,<br> Paste</p>
+            <td align="left" bgcolor="#ffffff" style="padding: 24px; font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 16px; line-height: 24px; border-bottom: 3px solid #009688;">
+              <p style="margin: 0;">Cheers,<br> Hamish from Welcome QR Codes.</p>
             </td>
           </tr>
           <!-- end copy -->
@@ -243,7 +243,7 @@ const html = `<!DOCTYPE html>
           <!-- start permission -->
           <tr>
             <td align="center" bgcolor="#e9ecef" style="padding: 12px 24px; font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 20px; color: #666;">
-              <p style="margin: 0;">You received this email because we received a request for [type_of_action] for your account. If you didn't request [type_of_action] you can safely delete this email.</p>
+              <p style="margin: 0;">You received this email because we received a request for a password reset for your account. If you didn't request password reset you can safely delete this email.</p>
             </td>
           </tr>
           <!-- end permission -->
@@ -251,8 +251,7 @@ const html = `<!DOCTYPE html>
           <!-- start unsubscribe -->
           <tr>
             <td align="center" bgcolor="#e9ecef" style="padding: 12px 24px; font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 20px; color: #666;">
-              <p style="margin: 0;">To stop receiving these emails, you can <a href="https://sendgrid.com" target="_blank">unsubscribe</a> at any time.</p>
-              <p style="margin: 0;">Paste 1234 S. Broadway St. City, State 12345</p>
+              <p style="margin: 0;">To stop receiving these emails, you can <a href="https://welcomeqr.codes/account?unsub=true" target="_blank">unsubscribe</a> at any time.</p>
             </td>
           </tr>
           <!-- end unsubscribe -->
@@ -273,6 +272,6 @@ const html = `<!DOCTYPE html>
 </body>
 </html>`;
 exports.build = (url) => {
-    return html.split('<% url %>').join(url);
+    return html.split('{{ url }}').join(url);
 };
 //# sourceMappingURL=forgot.js.map

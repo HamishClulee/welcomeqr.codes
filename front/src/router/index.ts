@@ -11,8 +11,10 @@ const login = () => import('../views/auth/login.vue')
 const signup = () => import('../views/auth/signup.vue')
 const reset = () => import('../views/auth/reset.vue')
 const forgot = () => import('../views/auth/forgot.vue')
-
 const account = () => import('../views/account.vue')
+
+/** Tester routes */
+const testhtml = () => import('../views/testhtml.vue')
 
 /** Create App routes */
 const wapp = () => import('../views/wapp.vue')
@@ -198,6 +200,11 @@ const routes = [
                 noindex: true,
             }, next)
         },
+    },
+    {
+        path: '/testhtml',
+        name: 'testhtml',
+        component: testhtml,
     },
     {
         path: '*',
