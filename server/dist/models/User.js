@@ -2,11 +2,46 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const bcrypt = require("bcrypt-nodejs");
 const mongoose = require("mongoose");
+// ----------------------------------------------------------------------------
+// TypeScript Defs ------------------------------------------------------------
+// ----------------------------------------------------------------------------
+var Role;
+(function (Role) {
+    Role["Admin"] = "ADMIN";
+    Role["User"] = "USER";
+})(Role || (Role = {}));
+var AccountTier;
+(function (AccountTier) {
+    AccountTier["Free"] = "FREE";
+    AccountTier["Paid"] = "PAID";
+    AccountTier["Premium"] = "PREMIUM";
+})(AccountTier || (AccountTier = {}));
+// ----------------------------------------------------------------------------
+// Mongoose Defs --------------------------------------------------------------
+// ----------------------------------------------------------------------------
 const userSchema = new mongoose.Schema({
     email: { type: String, unique: true },
     password: String,
+    accountTier: {
+        type: String,
+        enum: [AccountTier.Free, AccountTier.Paid, AccountTier.Premium],
+        default: AccountTier.Free
+    },
     passwordResetToken: String,
-    passwordResetExpires: Date,
+    emailVerifyToken: String,
+    allowEmails: {
+        type: Boolean,
+        default: true
+    },
+    emailVerified: {
+        type: Boolean,
+        default: true
+    },
+    role: {
+        type: String,
+        enum: [Role.God, Role.Admin],
+        default: Role.User
+    },
     subdom: { type: String || null, default: null },
     editors: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Editor' }],
     google: String,
@@ -32,7 +67,7 @@ userSchema.pre('save', function save(next) {
 });
 userSchema.statics.findOrCreate = function findOrCreate(profile, cb) {
     let userObj = new this();
-    this.findOne({ _id: profile.id }, function (err, result) {
+    this.findOne({ _id: profile.id }, (err, result) => {
         if (!result) {
             userObj.username = profile.displayName;
             userObj.save(cb);

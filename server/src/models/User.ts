@@ -2,12 +2,33 @@ import * as bcrypt from 'bcrypt-nodejs'
 import * as mongoose from 'mongoose'
 import { EditorDocument } from './Editor'
 
+// ----------------------------------------------------------------------------
+// TypeScript Defs ------------------------------------------------------------
+// ----------------------------------------------------------------------------
+enum Role {
+	Admin = 'ADMIN',
+	User = 'USER'
+}
+
+enum AccountTier {
+	Free = 'FREE',
+	Paid = 'PAID',
+	Premium = 'PREMIUM'
+}
+
 export type UserDocument = mongoose.Document & {
 
 	email: string;
 	password: string;
+
+	accountTier: AccountTier;
+
+	role: Role;
+	allowEmails: boolean;
+	emailVerified: boolean;
+	
+	emailVerifyToken: string;
 	passwordResetToken: string;
-	passwordResetExpires: Date;
 
 	subdom: string | null;
 	editors: EditorDocument[];
@@ -25,12 +46,35 @@ export interface AuthToken {
 	kind: string
 }
 
+// ----------------------------------------------------------------------------
+// Mongoose Defs --------------------------------------------------------------
+// ----------------------------------------------------------------------------
 const userSchema = new mongoose.Schema({
 
 	email: { type: String, unique: true },
 	password: String,
+
+	accountTier: {
+		type: String,
+		enum: [ AccountTier.Free, AccountTier.Paid, AccountTier.Premium ],
+		default: AccountTier.Free
+	},
+
 	passwordResetToken: String,
-	passwordResetExpires: Date,
+	emailVerifyToken: String,
+	allowEmails: {
+		type: Boolean,
+		default: true
+	},
+	emailVerified: {
+		type: Boolean,
+		default: true
+	},
+	role: {
+		type: String,
+		enum: [ Role.God, Role.Admin ],
+		default: Role.User
+	}
 
 	subdom: { type: String || null, default: null },
 	editors: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Editor' }],
@@ -39,6 +83,8 @@ const userSchema = new mongoose.Schema({
 	tokens: Array
 
 }, { timestamps: true })
+
+
 
 userSchema.pre('save', function save(next) {
 
@@ -66,7 +112,8 @@ userSchema.statics.findOrCreate = function findOrCreate(profile, cb) {
 
 	let userObj = new this()
 
-	this.findOne({_id : profile.id}, function(err, result) {
+	this.findOne({_id : profile.id}, (err, result) => {
+
 		if (!result) {
 
 			userObj.username = profile.displayName
