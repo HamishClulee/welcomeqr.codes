@@ -11,7 +11,10 @@ const login = () => import('../views/auth/login.vue')
 const signup = () => import('../views/auth/signup.vue')
 const reset = () => import('../views/auth/reset.vue')
 const forgot = () => import('../views/auth/forgot.vue')
-const account = () => import('../views/account.vue')
+
+/** Account routes */
+const account = () => import('../views/account/account.vue')
+const verify = () => import('../views/account/verify.vue')
 
 /** Tester routes */
 const testhtml = () => import('../views/testhtml.vue')
@@ -26,7 +29,7 @@ const preview = () => import('../views/wapp/preview.vue')
 const terms = () => import('../views/terms.vue')
 const privacy = () => import('../views/privacy.vue')
 
-/** Notfound and plumbing routes */
+/** Misc plumbing routes */
 const notfound = () => import('../views/notfound.vue')
 
 import overwritemetas from '../utils/seo'
@@ -34,6 +37,9 @@ import overwritemetas from '../utils/seo'
 Vue.use(VueRouter)
 
 const routes = [
+    // -------------------------------------------------------------------
+    // --------------------------- SITE
+    // -------------------------------------------------------------------
     {
         path: '/',
         name: 'home',
@@ -46,6 +52,50 @@ const routes = [
             }, next)
         },
     },
+    {
+        path: '/pricing',
+        name: 'pricing',
+        component: pricing,
+        beforeEnter: (to: any, from: any, next: any) => {
+            overwritemetas({
+                title: 'Welcome QR | Pricing',
+                description: `Brief description of how Welcome QR Codes prices it's products. Gives details of different plans and tiers offered and the services included in each tier.`,
+                noindex: true,
+            }, next)
+        },
+    },
+    // -------------------------------------------------------------------
+    // --------------------------- ACCOUNT
+    // -------------------------------------------------------------------
+    {
+        path: '/account',
+        name: 'account',
+        component: account,
+        beforeEnter: (to: any, from: any, next: any) => {
+            overwritemetas({
+                title: 'Welcome QR | Account',
+                description: `Manage all the information we need to keep your account working as intended`,
+                noindex: true,
+            }, next)
+        },
+        children: [
+            {
+                path: '/account/verify',
+                name: 'verify',
+                component: verify,
+                beforeEnter: (to: any, from: any, next: any) => {
+                    overwritemetas({
+                        title: 'Welcome QR | Verify',
+                        description: `Verify your email address`,
+                        noindex: true,
+                    }, next)
+                },
+            },
+        ],
+    },
+    // -------------------------------------------------------------------
+    // --------------------------- AUTH
+    // -------------------------------------------------------------------
     {
         path: '/auth',
         name: 'auth',
@@ -102,18 +152,9 @@ const routes = [
             },
         ],
     },
-    {
-        path: '/pricing',
-        name: 'pricing',
-        component: pricing,
-        beforeEnter: (to: any, from: any, next: any) => {
-            overwritemetas({
-                title: 'Welcome QR | Pricing',
-                description: `Brief description of how Welcome QR Codes prices it's products. Gives details of different plans and tiers offered and the services included in each tier.`,
-                noindex: true,
-            }, next)
-        },
-    },
+    // -------------------------------------------------------------------
+    // --------------------------- APP
+    // -------------------------------------------------------------------
     {
         path: '/app',
         name: 'wapp',
@@ -163,20 +204,11 @@ const routes = [
                     }, next)
                 },
             },
-            {
-                path: '/account',
-                name: 'account',
-                component: account,
-                beforeEnter: (to: any, from: any, next: any) => {
-                    overwritemetas({
-                        title: 'Welcome QR | Account',
-                        description: `Manage all the information we need to keep your account working as intened`,
-                        noindex: true,
-                    }, next)
-                },
-            },
         ],
     },
+    // -------------------------------------------------------------------
+    // --------------------------- REGULATORY
+    // -------------------------------------------------------------------
     {
         path: '/privacy',
         name: 'privacy',
@@ -206,6 +238,9 @@ const routes = [
         name: 'testhtml',
         component: testhtml,
     },
+    // -------------------------------------------------------------------
+    // --------------------------- PLUMBING
+    // -------------------------------------------------------------------
     {
         path: '*',
         name: 'notfound',
@@ -228,9 +263,5 @@ const router = new VueRouter({
         return savedPosition ? savedPosition : { x: 0, y: 0 }
     },
 })
-
-// router.beforeEach((to, from, next) => {
-//     debugger
-// })
 
 export default router

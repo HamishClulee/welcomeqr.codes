@@ -2,12 +2,19 @@
   <main class="account-container">
     <h3 class="h3">Account view place holder</h3>
     <button class="button" @click="logout">LOGOUT</button>
+    <ul>
+        <li>TODO ---- </li>
+        <li>Subsubscribe</li>
+        <li>Unlink Google Account</li>
+        <li>Change Password</li>
+    </ul>
+    <router-view></router-view>
   </main>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
-import { EventBus, MESSAGES, LOADING } from '../EventBus'
+import { EventBus, MESSAGES, LOADING } from '../../EventBus'
 export default {
     name: 'account',
     created() {
