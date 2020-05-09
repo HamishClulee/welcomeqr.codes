@@ -44,17 +44,10 @@ export const submitSubdom = async (req: IRequest, res: IResponse) => {
 
 			const user = await User.findOne({ '_id': req.session.passport.user })
 
-			let { email, _id } = user
-
 			return res.status(200).send({
 				userContent: 'Everything sorted',
 				intercept: false,
-				user: QAuth.approve({
-					id: _id,
-					email,
-					subdom: req.body.subdom,
-					authed: true
-				})
+				user: QAuth.approve(user)
 			})
 		}
 	} catch (e) {

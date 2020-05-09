@@ -24,6 +24,7 @@ import SignUp from '../controllers/Auth/SignUp'
 import LogIn from '../controllers/Auth/Login'
 import Forgot from '../controllers/Auth/Forgot'
 import Reset from '../controllers/Auth/Reset'
+import VerifyEmail from '../controllers/Auth/VerifyEmail'
 
 /** Routes - Editor */
 
@@ -93,7 +94,7 @@ class Express {
 		this.app.post('/auth/login', LogIn.perform)
 		this.app.post('/auth/logout', LogOut.perform)
 		this.app.post('/auth/signup', SignUp.perform)
-
+		this.app.post('/auth/verify_email', VerifyEmail.perform)
 		this.app.post('/auth/forgot', Forgot.perform)
 		this.app.post('/auth/reset', Reset.perform)
 

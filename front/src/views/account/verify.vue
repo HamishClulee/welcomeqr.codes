@@ -1,7 +1,12 @@
 <template>
   <main class="account-container">
     <h3 class="h3">Verify your email address</h3>
-    <button class="button" @click="verify">verify</button>
+    <button class="button" v-if="servermsg === ''" @click="verify">verify</button>
+    <template v-else>
+        <h4 class="h4">{{ servermsg }}</h4>
+        <router-link :to="{ name: 'account' }">Account page</router-link>
+    </template>
+
   </main>
 </template>
 
@@ -9,6 +14,11 @@
 import { EventBus, MESSAGES, LOADING } from '../../EventBus'
 export default {
     name: 'account',
+    data() {
+        return {
+            servermsg: '',
+        }
+    },
     created() {
         EventBus.$emit(LOADING, true)
         this.$QAuth.authenticate().then(res => {
@@ -18,7 +28,11 @@ export default {
     },
     methods: {
         verify() {
-
+            const params = new URLSearchParams(window.location.search)
+            this.$QAuth.verifyemail(params.get('token')).then(res => {
+                this.servermsg = 'Email verified.'
+                this.$store.commit('IS_AUTHED', res.data.user)
+            })
         },
     },
 }

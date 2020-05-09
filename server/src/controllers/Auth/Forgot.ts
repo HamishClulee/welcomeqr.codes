@@ -1,5 +1,5 @@
 import * as validate from 'express-validator'
-import * as html from '../../resources/emails/forgot'
+import * as ForgotPassword from '../../resources/emails/forgot'
 import QAuth from '../QAuth'
 import Environment from '../../providers/Environment'
 
@@ -87,13 +87,11 @@ class Forgot {
 
 			sgMail.setApiKey(process.env.SENDGRID_API_KEY)
 
-			// console.log(html.build(`${Environment.config().baseUrl}/auth/reset?token=${token}`))
-
 			const msg = {
 				to: user.email,
-				from: 'info@welcomeqr.codes',
+				from: 'Welcome QR',
 				subject: 'Reset your password on WelcomeQR Codes',
-				html: html.build(`${Environment.config().baseUrl}/auth/reset?token=${token}`)
+				html: ForgotPassword.build(`${Environment.config().baseUrl}/auth/reset?token=${token}`)
 			}
 
 			sgMail.send(msg)
@@ -109,7 +107,6 @@ class Forgot {
 		}
 
 		// Gogo berries! this is the init.
-
 		if (!errors.isEmpty()) {
 
 			return res.status(403).send({

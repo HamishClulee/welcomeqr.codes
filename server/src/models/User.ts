@@ -17,25 +17,18 @@ enum AccountTier {
 }
 
 export type UserDocument = mongoose.Document & {
-
 	email: string;
 	password: string;
-
 	accountTier: AccountTier;
-
 	role: Role;
 	allowEmails: boolean;
 	emailVerified: boolean;
-	
 	emailVerifyToken: string;
 	passwordResetToken: string;
-
 	subdom: string | null;
 	editors: EditorDocument[];
-
 	google: String;
 	tokens: AuthToken[];
-
 	comparePassword: comparePasswordFunction;
 }
 
@@ -50,16 +43,13 @@ export interface AuthToken {
 // Mongoose Defs --------------------------------------------------------------
 // ----------------------------------------------------------------------------
 const userSchema = new mongoose.Schema({
-
 	email: { type: String, unique: true },
 	password: String,
-
 	accountTier: {
 		type: String,
 		enum: [ AccountTier.Free, AccountTier.Paid, AccountTier.Premium ],
 		default: AccountTier.Free
 	},
-
 	passwordResetToken: String,
 	emailVerifyToken: String,
 	allowEmails: {
@@ -72,16 +62,13 @@ const userSchema = new mongoose.Schema({
 	},
 	role: {
 		type: String,
-		enum: [ Role.God, Role.Admin ],
+		enum: [ Role.Admin, Role.User ],
 		default: Role.User
-	}
-
+	},
 	subdom: { type: String || null, default: null },
 	editors: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Editor' }],
-
 	google: String,
 	tokens: Array
-
 }, { timestamps: true })
 
 

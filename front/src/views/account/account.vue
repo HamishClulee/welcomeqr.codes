@@ -1,13 +1,19 @@
 <template>
   <main class="account-container">
-    <h3 class="h3">Account view place holder</h3>
-    <button class="button" @click="logout">LOGOUT</button>
-    <ul>
-        <li>TODO ---- </li>
-        <li>Subsubscribe</li>
-        <li>Unlink Google Account</li>
-        <li>Change Password</li>
-    </ul>
+
+    <template v-if="$route.name !== 'verify'">
+
+        {{ $route.name !== 'verify' }}
+        <h3 class="h3">Account view place holder</h3>
+        <button class="button" @click="logout">LOGOUT</button>
+        <ul>
+            <li>TODO ---- </li>
+            <li>Subsubscribe</li>
+            <li>Unlink Google Account</li>
+            <li>Change Password</li>
+        </ul>
+    </template>
+
     <router-view></router-view>
   </main>
 </template>

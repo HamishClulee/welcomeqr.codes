@@ -30,17 +30,10 @@ class SessionChallenge {
 
 				if (user) {
 
-					let { email, _id, subdom } = user
-
 					return res.status(200).send({
 
 						msg: 'you are a premium user',
-						user: QAuth.approve({
-							email,
-							id: _id,
-							authed: true,
-							subdom
-						})
+						user: QAuth.approve(user)
 
 					})
 

@@ -38,16 +38,10 @@ exports.submitSubdom = (req, res) => __awaiter(void 0, void 0, void 0, function*
             yield Subdom_1.Subdom.updateOne({ '_id': SUBDOMS_ID }, { subdoms: SUBDOMS }, { upsert: true });
             yield User_1.User.updateOne({ '_id': req.session.passport.user }, { subdom: req.body.subdom });
             const user = yield User_1.User.findOne({ '_id': req.session.passport.user });
-            let { email, _id } = user;
             return res.status(200).send({
                 userContent: 'Everything sorted',
                 intercept: false,
-                user: QAuth_1.default.approve({
-                    id: _id,
-                    email,
-                    subdom: req.body.subdom,
-                    authed: true
-                })
+                user: QAuth_1.default.approve(user)
             });
         }
     }

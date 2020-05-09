@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const validate = require("express-validator");
-const html = require("../../resources/emails/forgot");
+const ForgotPassword = require("../../resources/emails/forgot");
 const QAuth_1 = require("../QAuth");
 const Environment_1 = require("../../providers/Environment");
 const User_1 = require("../../models/User");
@@ -53,12 +53,11 @@ class Forgot {
         // Initiated at EOF
         function sendResetEmail(user) {
             sgMail.setApiKey(process.env.SENDGRID_API_KEY);
-            // console.log(html.build(`${Environment.config().baseUrl}/auth/reset?token=${token}`))
             const msg = {
                 to: user.email,
-                from: 'info@welcomeqr.codes',
+                from: 'Welcome QR',
                 subject: 'Reset your password on WelcomeQR Codes',
-                html: html.build(`${Environment_1.default.config().baseUrl}/auth/reset?token=${token}`)
+                html: ForgotPassword.build(`${Environment_1.default.config().baseUrl}/auth/reset?token=${token}`)
             };
             sgMail.send(msg);
             return res.status(200).send({

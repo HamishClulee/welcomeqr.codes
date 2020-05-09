@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const validate = require("express-validator");
 const User_1 = require("../../models/User");
+const ResetEmail = require("../../resources/emails/resetconfirm");
 const QAuth_1 = require("../QAuth");
 const sgMail = require('@sendgrid/mail');
 class Reset {
@@ -41,23 +42,15 @@ class Reset {
             sgMail.setApiKey(process.env.SENDGRID_API_KEY);
             const msg = {
                 to: user.email,
-                from: 'info@welcomeqr.codes',
-                subject: 'Your Password Reset Link',
-                text: `Hello,\n\n
-						This is a confirmation that the password for your account ${user.email} has just been changed.\n`,
-                html: '<strong>and easy to do anywhere, even with Node.js</strong>'
+                from: 'Welcome QR',
+                subject: 'Password Changed Successfully',
+                html: ResetEmail.build()
             };
             sgMail.send(msg);
-            let { email, _id, subdom } = user;
             return res.status(200).send({
                 errors: errors.array(),
                 userContent: 'Password has been reset!',
-                user: QAuth_1.default.approve({
-                    email,
-                    id: _id,
-                    authed: true,
-                    subdom
-                })
+                user: QAuth_1.default.approve(user)
             });
         };
         // Gogo berries! this is the init.

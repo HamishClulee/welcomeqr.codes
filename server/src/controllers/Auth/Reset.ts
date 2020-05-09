@@ -1,8 +1,9 @@
 import * as validate from 'express-validator'
-import * as async from 'async'
 
 import { User, UserDocument } from '../../models/User'
 import { IRequest, IResponse, INext } from '../../interfaces'
+
+import * as ResetEmail from '../../resources/emails/resetconfirm'
 
 import QAuth from '../QAuth'
 
@@ -62,27 +63,18 @@ class Reset {
 
 			const msg = {
 				to: user.email,
-				from: 'info@welcomeqr.codes',
-				subject: 'Your Password Reset Link',
-				text: `Hello,\n\n
-						This is a confirmation that the password for your account ${user.email} has just been changed.\n`,
-				html: '<strong>and easy to do anywhere, even with Node.js</strong>'
+				from: 'Welcome QR',
+				subject: 'Password Changed Successfully',
+				html: ResetEmail.build()
 			}
 
 			sgMail.send(msg)
-
-			let { email, _id, subdom } = user
 
 			return res.status(200).send({
 
 				errors: errors.array(),
 				userContent: 'Password has been reset!',
-				user: QAuth.approve({
-					email,
-					id: _id,
-					authed: true,
-					subdom
-				})
+				user: QAuth.approve(user)
 
 			})
 
