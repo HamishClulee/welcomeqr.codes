@@ -108,7 +108,7 @@ const html = `<!DOCTYPE html>
 
   <!-- start preheader -->
   <div class="preheader" style="display: none; max-width: 0; max-height: 0; overflow: hidden; font-size: 1px; line-height: 1px; color: #fff; opacity: 0;">
-    Password reset instructions for for WelcomeQR Codes...
+    Password reset confirmation from WelcomeQR Codes...
   </div>
   <!-- end preheader -->
 
@@ -152,7 +152,7 @@ const html = `<!DOCTYPE html>
         <table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px;">
           <tr>
             <td align="left" bgcolor="#ffffff" style="padding: 36px 24px 0; font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; border-top: 3px solid #009688;">
-              <h1 style="margin: 0; font-size: 32px; font-weight: 700; letter-spacing: -1px; line-height: 48px;">Reset Your Password</h1>
+              <h1 style="margin: 0; font-size: 32px; font-weight: 700; letter-spacing: -1px; line-height: 48px;">Password Changed Successfully</h1>
             </td>
           </tr>
         </table>
@@ -178,7 +178,7 @@ const html = `<!DOCTYPE html>
           <!-- start copy -->
           <tr>
             <td align="left" bgcolor="#ffffff" style="padding: 24px; font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 16px; line-height: 24px;">
-              <p style="margin: 0;">You have successfully reset your password at Welcome QR Codes. If you did not request a password please <a href="https://welcomeqr.codes/contact" target="_blank">contact us immediately.</p>
+              <p style="margin: 0;">You have successfully reset your password at Welcome QR Codes. If you did not request a password please <a href="https://welcomeqr.codes/contact" target="_blank">contact us immediately.</a></p>
             </td>
           </tr>
           <!-- end copy -->
@@ -192,7 +192,7 @@ const html = `<!DOCTYPE html>
                     <table border="0" cellpadding="0" cellspacing="0">
                       <tr>
                         <td align="center" bgcolor="#1976D2" style="border-radius: 6px;">
-                          <a href="https://welcomeqr.codes/app/manage" target="_blank" style="display: inline-block; padding: 16px 36px; font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 16px; color: #ffffff; text-decoration: none; border-radius: 6px;">Start Editing!</a>
+                          <a href="https://welcomeqr.codes/app/manage" target="_blank" style="display: inline-block; padding: 16px 36px; font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 16px; color: #ffffff; text-decoration: none; border-radius: 6px;">Start Editing</a>
                         </td>
                       </tr>
                     </table>
@@ -234,7 +234,7 @@ const html = `<!DOCTYPE html>
           <!-- start permission -->
           <tr>
             <td align="center" bgcolor="#e9ecef" style="padding: 12px 24px; font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 20px; color: #666;">
-              <p style="margin: 0;">You received this email because you just reset your password. If you didn't reset your password you can safely delete this email.</p>
+              <p style="margin: 0;">You received this email because you just reset your password. If you didn't request a password reset please <a href="https://welcomeqr.codes/contact" target="_blank">contact us immediately.</a></p>
             </td>
           </tr>
           <!-- end permission -->

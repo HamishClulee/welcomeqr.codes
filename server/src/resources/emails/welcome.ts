@@ -4,7 +4,7 @@ const html = `<!DOCTYPE html>
 
   <meta charset="utf-8">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
-  <title>Welcome Email</title>
+  <title>Password Reset</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <style type="text/css">
   /**
@@ -89,7 +89,7 @@ const html = `<!DOCTYPE html>
   }
 
   a {
-    color: black;
+    color: #1a82e2;
   }
 
   img {
@@ -106,7 +106,7 @@ const html = `<!DOCTYPE html>
 
   <!-- start preheader -->
   <div class="preheader" style="display: none; max-width: 0; max-height: 0; overflow: hidden; font-size: 1px; line-height: 1px; color: #fff; opacity: 0;">
-    A preheader is the short summary text that follows the subject line when an email is viewed in the inbox.
+    Welcome to Welcome QR Codes :)
   </div>
   <!-- end preheader -->
 
@@ -124,8 +124,8 @@ const html = `<!DOCTYPE html>
         <table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px;">
           <tr>
             <td align="center" valign="top" style="padding: 36px 24px;">
-              <a href="https://sendgrid.com" target="_blank" rel="noopener noreferrer" style="display: inline-block;">
-                <img src="./img/paste-logo-light@2x.png" alt="Logo" border="0" width="48" style="display: block; width: 48px; max-width: 48px; min-width: 48px;">
+              <a href='https://welcomeqr.codes' target='_blank'>
+                <img src='https://feampete.sirv.com/Images/logo.png' width="62.9%" border='0' alt='logo'/>
               </a>
             </td>
           </tr>
@@ -149,8 +149,8 @@ const html = `<!DOCTYPE html>
         <![endif]-->
         <table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px;">
           <tr>
-            <td bgcolor="#ffffff" align="left">
-              <img src="./img/welcome-hero.jpg" alt="Welcome" width="600" style="display: block; width: 100%; max-width: 100%;">
+            <td align="left" bgcolor="#ffffff" style="padding: 36px 24px 0; font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; border-top: 3px solid #009688;">
+              <h1 style="margin: 0; font-size: 32px; font-weight: 700; letter-spacing: -1px; line-height: 48px;">Welcome to Welcome QR Codes!</h1>
             </td>
           </tr>
         </table>
@@ -175,9 +175,8 @@ const html = `<!DOCTYPE html>
 
           <!-- start copy -->
           <tr>
-            <td bgcolor="#ffffff" align="left" style="padding: 24px; font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 16px; line-height: 24px;">
-              <h1 style="margin: 0 0 12px; font-size: 32px; font-weight: 400; line-height: 48px;">Welcome, Jason!</h1>
-              <p style="margin: 0;">Thank you for signing up with Paste. We strive to produce high quality email templates that you can use for your transactional or marketing needs.</p>
+            <td align="left" bgcolor="#ffffff" style="padding: 24px; font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 16px; line-height: 24px;">
+              <p style="margin: 0;">Thanks for signing up at Welcome QR Codes. If you have any questions or feedback about the product please feel free to <a href="https://welcomeqr.codes/contact" target="_blank">contact us</a>, we would love to hear from you!</p>
             </td>
           </tr>
           <!-- end copy -->
@@ -190,8 +189,8 @@ const html = `<!DOCTYPE html>
                   <td align="center" bgcolor="#ffffff" style="padding: 12px;">
                     <table border="0" cellpadding="0" cellspacing="0">
                       <tr>
-                        <td align="center" bgcolor="#1a82e2" style="border-radius: 6px;">
-                          <a href="https://sendgrid.com" target="_blank" rel="noopener noreferrer" style="display: inline-block; padding: 16px 36px; font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 16px; color: #ffffff; text-decoration: none; border-radius: 6px;">Do Something Sweet</a>
+                        <td align="center" bgcolor="#1976D2" style="border-radius: 6px;">
+                          <a href="<% url %>" target="_blank" style="display: inline-block; padding: 16px 36px; font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 16px; color: #ffffff; text-decoration: none; border-radius: 6px;">Verify Your Email</a>
                         </td>
                       </tr>
                     </table>
@@ -204,8 +203,8 @@ const html = `<!DOCTYPE html>
 
           <!-- start copy -->
           <tr>
-            <td align="left" bgcolor="#ffffff" style="padding: 24px; font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 16px; line-height: 24px; border-bottom: 3px solid #d4dadf">
-              <p style="margin: 0;">Cheers,<br> Paste</p>
+            <td align="left" bgcolor="#ffffff" style="padding: 24px; font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 16px; line-height: 24px; border-bottom: 3px solid #009688;">
+              <p style="margin: 0;">Cheers,<br> Hamish from Welcome QR Codes.</p>
             </td>
           </tr>
           <!-- end copy -->
@@ -233,7 +232,7 @@ const html = `<!DOCTYPE html>
           <!-- start permission -->
           <tr>
             <td align="center" bgcolor="#e9ecef" style="padding: 12px 24px; font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 20px; color: #666;">
-              <p style="margin: 0;">You received this email because we received a request for [type_of_action] for your account. If you didn't request [type_of_action] you can safely delete this email.</p>
+              <p style="margin: 0;">You received this email because you just created an account at Welcome QR Codes. If you didn't just create an account, you can safely delete this email.</a></p>
             </td>
           </tr>
           <!-- end permission -->
@@ -241,8 +240,7 @@ const html = `<!DOCTYPE html>
           <!-- start unsubscribe -->
           <tr>
             <td align="center" bgcolor="#e9ecef" style="padding: 12px 24px; font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 20px; color: #666;">
-              <p style="margin: 0;">To stop receiving these emails, you can <a href="https://sendgrid.com" target="_blank" rel="noopener noreferrer">unsubscribe</a> at any time.</p>
-              <p style="margin: 0;">Paste 1234 S. Broadway St. City, State 12345</p>
+              <p style="margin: 0;">To stop receiving these emails, you can <a href="https://welcomeqr.codes/account?unsub=true" target="_blank">unsubscribe</a> at any time.</p>
             </td>
           </tr>
           <!-- end unsubscribe -->
