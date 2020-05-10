@@ -62,7 +62,7 @@ class SignUp {
 					})
 
 				}
-				
+
 				user.emailVerifyToken = token
 
 				user.save((err) => {
@@ -84,8 +84,6 @@ class SignUp {
 							return next(err)
 
 						}
-
-						
 
 						Log.info('Signup success', [Log.TAG_AUTH, Log.TAG_SIGNUP])
 

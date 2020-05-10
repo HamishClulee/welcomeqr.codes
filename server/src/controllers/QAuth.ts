@@ -1,4 +1,5 @@
 import { UserDocument } from '../models/User'
+import { userInfo } from 'os'
 
 interface AuthResponse {
 	email: string | null,
@@ -9,15 +10,40 @@ interface AuthResponse {
 	tier: string | null
 }
 
+interface SettingsResponse extends AuthResponse {
+	allowsemails: boolean,
+	isemailverified: boolean,
+}
+
 const QAuth = {
-	
+
+	settings: (user: UserDocument): SettingsResponse => {
+		return {
+			email: user.email,
+			id: user._id,
+			authed: true,
+			subdom: user.subdom,
+			role: user.role,
+			tier: user.accountTier,
+			allowsemails: user.allowEmails,
+			isemailverified: user.emailVerified
+		}
+	},
+
 	deny: (): AuthResponse => {
-		return { email: null, id: null, authed: false, subdom: null, role: null, tier: null }
+		return {
+			email: null,
+			id: null,
+			authed: false,
+			subdom: null,
+			role: null,
+			tier: null
+		}
 	},
 
 	approve: (user: UserDocument): AuthResponse => {
 
-		let result: AuthResponse = {
+		return {
 			email: user.email,
 			id: user._id,
 			authed: true,
@@ -25,8 +51,6 @@ const QAuth = {
 			role: user.role,
 			tier: user.accountTier
 		}
-
-		return result
 	}
 }
 

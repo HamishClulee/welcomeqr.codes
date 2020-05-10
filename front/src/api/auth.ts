@@ -64,6 +64,10 @@ export class QAuth {
         return this.ax.post('/session_challenge', { intercept })
     }
 
+    usersettings(intercept = true): AxiosPromise<QUser> {
+        return this.ax.post('/user_settings', { intercept })
+    }
+
     logout(): AxiosPromise<QUser> {
         return this.ax.post('/logout')
     }

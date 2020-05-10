@@ -1,32 +1,60 @@
 <template>
   <main class="account-container">
 
-    <template v-if="$route.name !== 'verify'">
+        <h3 class="h3">Account Settings</h3>
 
-        {{ $route.name !== 'verify' }}
-        <h3 class="h3">Account view place holder</h3>
-        <button class="button" @click="logout">LOGOUT</button>
-        <ul>
-            <li>TODO ---- </li>
-            <li>Subsubscribe</li>
-            <li>Unlink Google Account</li>
-            <li>Change Password</li>
-        </ul>
-    </template>
+        <pagesection qtitle="Controls">
+            <div class="controls-container">
+                <button class="button" @click="logout">LOGOUT</button>
+                <button class="button">Delete Your Account</button>
+            </div>
+        </pagesection>
 
-    <router-view></router-view>
+        <pagesection id="verify" qtitle="Verify Email">
+            <verify :user="user"></verify>
+        </pagesection>
+    
+        <pagesection id="unsub" qtitle="Unsubscribe from Emails">
+          <unsub :user="user"></unsub>
+        </pagesection>
+
+        <pagesection qtitle="Change Password">
+            <changepass></changepass>
+        </pagesection>
+
+        <pagesection qtitle="Unlink Google account">
+            <unlinkgoogle></unlinkgoogle>
+        </pagesection>
   </main>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
 import { EventBus, MESSAGES, LOADING } from '../../EventBus'
+import pagesection from '../../components/pagesection'
+import verify from './verify'
+import unsub from './unsub'
+import changepass from './changepass'
+import unlinkgoogle from './unlinkgoogle'
 export default {
     name: 'account',
+    components: {
+        pagesection,
+        unsub,
+        verify,
+        changepass,
+        unlinkgoogle,
+    },
+    data() {
+        return {
+            user: {},
+        }
+    },
     created() {
         EventBus.$emit(LOADING, true)
-        this.$QAuth.authenticate().then(res => {
+        this.$QAuth.usersettings().then(res => {
             this.$store.commit('IS_AUTHED', res.data.user)
+            this.user = res.data.user
             EventBus.$emit(LOADING, false)
         })
     },
@@ -57,12 +85,9 @@ export default {
 <style lang="sass" scoped>
 .account-container
     width: 90%
-    margin: 0 auto
+    margin: 100px auto
     min-width: 400px
-    height: 100vh
-    min-height: 800px
+    min-height: 90vh
     display: flex
     flex-direction: column
-    align-items: center
-    justify-content: center
 </style>

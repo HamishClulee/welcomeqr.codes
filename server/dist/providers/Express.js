@@ -23,6 +23,7 @@ const Login_1 = require("../controllers/Auth/Login");
 const Forgot_1 = require("../controllers/Auth/Forgot");
 const Reset_1 = require("../controllers/Auth/Reset");
 const VerifyEmail_1 = require("../controllers/Auth/VerifyEmail");
+const Settings_1 = require("../controllers/Auth/Settings");
 /** Routes - Editor */
 /** App Constants */
 const PORT = 1980;
@@ -77,6 +78,7 @@ class Express {
         this.app.post('/auth/logout', Logout_1.default.perform);
         this.app.post('/auth/signup', SignUp_1.default.perform);
         this.app.post('/auth/verify_email', VerifyEmail_1.default.perform);
+        this.app.post('/auth/user_settings', Settings_1.default.perform);
         this.app.post('/auth/forgot', Forgot_1.default.perform);
         this.app.post('/auth/reset', Reset_1.default.perform);
         // Google

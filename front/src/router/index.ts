@@ -14,7 +14,6 @@ const forgot = () => import('../views/auth/forgot.vue')
 
 /** Account routes */
 const account = () => import('../views/account/account.vue')
-const verify = () => import('../views/account/verify.vue')
 
 /** Tester routes */
 const testhtml = () => import('../views/testhtml.vue')
@@ -78,20 +77,6 @@ const routes = [
                 noindex: true,
             }, next)
         },
-        children: [
-            {
-                path: '/account/verify',
-                name: 'verify',
-                component: verify,
-                beforeEnter: (to: any, from: any, next: any) => {
-                    overwritemetas({
-                        title: 'Welcome QR | Verify',
-                        description: `Verify your email address`,
-                        noindex: true,
-                    }, next)
-                },
-            },
-        ],
     },
     // -------------------------------------------------------------------
     // --------------------------- AUTH

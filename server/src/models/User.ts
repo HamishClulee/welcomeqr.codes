@@ -71,8 +71,6 @@ const userSchema = new mongoose.Schema({
 	tokens: Array
 }, { timestamps: true })
 
-
-
 userSchema.pre('save', function save(next) {
 
 	const user = this as UserDocument

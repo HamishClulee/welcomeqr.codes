@@ -1,22 +1,29 @@
 <template>
-  <main class="account-container">
-    <h3 class="h3">Verify your email address</h3>
-    <button class="button" v-if="servermsg === ''" @click="verify">verify</button>
-    <template v-else>
-        <h4 class="h4">{{ servermsg }}</h4>
-        <router-link :to="{ name: 'account' }">Account page</router-link>
-    </template>
+    <section class="verify-container">
 
-  </main>
+        <p>Your email address is {{ verifystatus }}</p>
+
+        <button class="button" v-if="!isverifed" @click="verify">verify</button>
+
+        <h6 v-else class="h4">{{ servermsg }}</h6>
+
+    </section>
 </template>
 
 <script>
 import { EventBus, MESSAGES, LOADING } from '../../EventBus'
 export default {
     name: 'account',
+    props: {
+        user: {
+            type: Object,
+            required: true,
+        },
+    },
     data() {
         return {
             servermsg: '',
+            isverifed: false,
         }
     },
     created() {
@@ -25,6 +32,9 @@ export default {
             this.$store.commit('IS_AUTHED', res.data.user)
             EventBus.$emit(LOADING, false)
         })
+    },
+    mounted() {
+        this.isverifed = this.user.isemailverified
     },
     methods: {
         verify() {
@@ -35,18 +45,14 @@ export default {
             })
         },
     },
+    computed: {
+        verifystatus() {
+            return this.isverifed ? 'verified, thank you!' : 'unverified, please click the button below to verify!'
+        },
+    },
 }
 </script>
 
 <style lang="sass" scoped>
-.account-container
-    width: 90%
-    margin: 0 auto
-    min-width: 400px
-    height: 100vh
-    min-height: 800px
-    display: flex
-    flex-direction: column
-    align-items: center
-    justify-content: center
+.verify-container
 </style>
