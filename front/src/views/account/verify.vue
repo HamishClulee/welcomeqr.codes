@@ -3,7 +3,7 @@
 
         <p>Your email address is {{ verifystatus }}</p>
 
-        <button class="button" v-if="!isverifed" @click="verify">verify</button>
+        <button class="button" v-if="!user.isemailverified" @click="verify">verify</button>
 
         <h6 v-else class="h4">{{ servermsg }}</h6>
 
@@ -13,7 +13,7 @@
 <script>
 import { EventBus, MESSAGES, LOADING } from '../../EventBus'
 export default {
-    name: 'account',
+    name: 'verify',
     props: {
         user: {
             type: Object,
@@ -23,18 +23,7 @@ export default {
     data() {
         return {
             servermsg: '',
-            isverifed: false,
         }
-    },
-    created() {
-        EventBus.$emit(LOADING, true)
-        this.$QAuth.authenticate().then(res => {
-            this.$store.commit('IS_AUTHED', res.data.user)
-            EventBus.$emit(LOADING, false)
-        })
-    },
-    mounted() {
-        this.isverifed = this.user.isemailverified
     },
     methods: {
         verify() {
@@ -47,12 +36,10 @@ export default {
     },
     computed: {
         verifystatus() {
-            return this.isverifed ? 'verified, thank you!' : 'unverified, please click the button below to verify!'
+            return this.user.isemailverified ? 'verified, thank you!' : 'unverified, please click the button below to verify!'
         },
     },
 }
 </script>
 
-<style lang="sass" scoped>
-.verify-container
-</style>
+<style lang="sass" scoped></style>

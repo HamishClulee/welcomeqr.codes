@@ -42,7 +42,7 @@ class Reset {
             sgMail.setApiKey(process.env.SENDGRID_API_KEY);
             const msg = {
                 to: user.email,
-                from: 'Welcome QR',
+                from: 'noreply@welcomeqr.codes',
                 subject: 'Password Changed Successfully',
                 html: ResetEmail.build()
             };

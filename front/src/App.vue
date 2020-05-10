@@ -13,6 +13,7 @@
 
 		<!-- APP ACTUAL -->
         <transition-group name="fade" mode="out-in">
+
             <template v-show="!showGlobalSpinner">
 
                 <sitemodal :key="1" v-if="showsitemodal" v-bind="{ contains }"></sitemodal>
@@ -24,6 +25,7 @@
                 <qrfooter :key="4" v-if="loadPushed && showfooter"></qrfooter>
 
             </template>
+            
         </transition-group>
 
 

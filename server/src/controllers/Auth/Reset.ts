@@ -63,7 +63,7 @@ class Reset {
 
 			const msg = {
 				to: user.email,
-				from: 'Welcome QR',
+				from: 'noreply@welcomeqr.codes',
 				subject: 'Password Changed Successfully',
 				html: ResetEmail.build()
 			}

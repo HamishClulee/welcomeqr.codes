@@ -52,7 +52,6 @@ class LogIn {
 
 				})
 			}
-			let { email, _id, subdom } = user
 
 			req.logIn(user, (err) => {
 

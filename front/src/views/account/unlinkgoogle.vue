@@ -1,6 +1,6 @@
 <template>
     <section class="unsub-container">
-        <h6 class="h6">Click here to unlink your goolge account.</h6>
+        <h6 class="h6">To Do.</h6>
     </section>
 </template>
 

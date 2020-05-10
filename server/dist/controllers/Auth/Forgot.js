@@ -55,7 +55,7 @@ class Forgot {
             sgMail.setApiKey(process.env.SENDGRID_API_KEY);
             const msg = {
                 to: user.email,
-                from: 'Welcome QR',
+                from: 'noreply@welcomeqr.codes',
                 subject: 'Reset your password on WelcomeQR Codes',
                 html: ForgotPassword.build(`${Environment_1.default.config().baseUrl}/auth/reset?token=${token}`)
             };

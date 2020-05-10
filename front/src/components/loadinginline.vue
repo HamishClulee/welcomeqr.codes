@@ -1,5 +1,5 @@
 <template>
-    <div id="square5">
+    <div :id="large ? 'square6' : 'square5'">
         <span></span>
         <span></span>
         <span></span>
@@ -10,12 +10,31 @@
 <script>
 export default {
     name: 'loadinginline',
+    props: {
+        large: {
+            type: Boolean,
+            default: false,
+        },
+    },
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 #square5 {
   display: flex;
+}
+
+#square6 span {
+  color: white;
+  padding: 1px;
+  margin: 1px;
+  width: 25px;
+  height: 25px;
+  background-color: #f4a236;
+  border-radius: 50%;
+  display: inline-block;
+  -webkit-animation: square5 1.4s infinite ease-in-out both;
+          animation: square5 1.4s infinite ease-in-out both;
 }
 
 #square5 span {

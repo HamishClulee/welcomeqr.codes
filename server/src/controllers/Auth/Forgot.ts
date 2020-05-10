@@ -89,7 +89,7 @@ class Forgot {
 
 			const msg = {
 				to: user.email,
-				from: 'Welcome QR',
+				from: 'noreply@welcomeqr.codes',
 				subject: 'Reset your password on WelcomeQR Codes',
 				html: ForgotPassword.build(`${Environment.config().baseUrl}/auth/reset?token=${token}`)
 			}

@@ -1,6 +1,6 @@
 <template>
     <section class="unsub-container">
-        <h6 class="h6">Click here to change your password.</h6>
+        <h6 class="h6">To do.</h6>
     </section>
 </template>
 

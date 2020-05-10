@@ -26,6 +26,7 @@ import Forgot from '../controllers/Auth/Forgot'
 import Reset from '../controllers/Auth/Reset'
 import VerifyEmail from '../controllers/Auth/VerifyEmail'
 import Settings from '../controllers/Auth/Settings'
+import ToggleSubscribe from '../controllers/Auth/ToggleSubscribe'
 
 /** Routes - Editor */
 
@@ -97,6 +98,7 @@ class Express {
 		this.app.post('/auth/signup', SignUp.perform)
 		this.app.post('/auth/verify_email', VerifyEmail.perform)
 		this.app.post('/auth/user_settings', Settings.perform)
+		this.app.post('/auth/toggle_subscribe', ToggleSubscribe.perform)
 		this.app.post('/auth/forgot', Forgot.perform)
 		this.app.post('/auth/reset', Reset.perform)
 

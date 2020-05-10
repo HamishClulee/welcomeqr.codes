@@ -6,7 +6,7 @@
         <pagesection qtitle="Controls">
             <div class="controls-container">
                 <button class="button" @click="logout">LOGOUT</button>
-                <button class="button">Delete Your Account</button>
+                <!-- <button class="button">Delete Your Account</button> -->
             </div>
         </pagesection>
 
@@ -18,13 +18,13 @@
           <unsub :user="user"></unsub>
         </pagesection>
 
-        <pagesection qtitle="Change Password">
+        <!-- <pagesection qtitle="Change Password">
             <changepass></changepass>
         </pagesection>
 
         <pagesection qtitle="Unlink Google account">
             <unlinkgoogle></unlinkgoogle>
-        </pagesection>
+        </pagesection> -->
   </main>
 </template>
 
@@ -34,16 +34,14 @@ import { EventBus, MESSAGES, LOADING } from '../../EventBus'
 import pagesection from '../../components/pagesection'
 import verify from './verify'
 import unsub from './unsub'
-import changepass from './changepass'
-import unlinkgoogle from './unlinkgoogle'
+// import changepass from './changepass'
+// import unlinkgoogle from './unlinkgoogle'
 export default {
     name: 'account',
     components: {
         pagesection,
         unsub,
         verify,
-        changepass,
-        unlinkgoogle,
     },
     data() {
         return {
@@ -52,6 +50,7 @@ export default {
     },
     created() {
         EventBus.$emit(LOADING, true)
+
         this.$QAuth.usersettings().then(res => {
             this.$store.commit('IS_AUTHED', res.data.user)
             this.user = res.data.user
@@ -90,4 +89,7 @@ export default {
     min-height: 90vh
     display: flex
     flex-direction: column
+.controls-container
+    .button
+        margin: 5px
 </style>

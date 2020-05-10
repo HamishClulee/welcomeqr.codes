@@ -1,12 +1,16 @@
 <template>
     <div class="toggle-container-outer" @click="toggle" :class="nolabels ? 'center-toggle' : 'display-default'">
+
         <div class="toggle-label left" v-if="labelLeft !== ''">
             {{ labelLeft }}
         </div>
+
         <div class="toggle-container-inner">
             <div class="toggle-background" :class="[toggleLeft ? 'be-colored-on' : 'be-colored-off', hasgray ? 'hasgray' : 'nogray']"></div>
         </div>
+
         <div class="toggle-actual" :class="toggleLeft ? 'be-left' : 'be-right'"></div>
+
         <div class="toggle-label right" v-if="labelRight !== ''">
             {{ labelRight }}
         </div>
@@ -27,7 +31,7 @@ export default {
             required: false,
             default: '',
         },
-        startAs: Boolean,
+        toggleLeft: Boolean,
         name: String,
         emitparent: {
             type: Boolean,
@@ -44,17 +48,8 @@ export default {
             type: Boolean,
         },
     },
-    data() {
-        return {
-            toggleLeft: true,
-        }
-    },
-    mounted() {
-        this.toggleLeft = this.startAs
-    },
     methods: {
         toggle() {
-            this.toggleLeft = !this.toggleLeft
             if (this.emitparent) {
                 this.$parent.$emit('toggle-changed', this.name)
             }

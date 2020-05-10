@@ -68,6 +68,10 @@ export class QAuth {
         return this.ax.post('/user_settings', { intercept })
     }
 
+    togglesubscribe(subscribe: boolean): AxiosPromise<QUser> {
+        return this.ax.post('/toggle_subscribe', { subscribe })
+    }
+
     logout(): AxiosPromise<QUser> {
         return this.ax.post('/logout')
     }

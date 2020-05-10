@@ -25,7 +25,7 @@ export default {
     text-align: left
     margin-bottom: 60px
 .slot-wrapper
-
+    padding: 0 10px 
 .h4
     border-bottom: 1px solid $light-gray
     padding-bottom: 10px

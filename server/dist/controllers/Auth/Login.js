@@ -31,7 +31,6 @@ class LogIn {
                     user: QAuth_1.default.deny()
                 });
             }
-            let { email, _id, subdom } = user;
             req.logIn(user, (err) => {
                 if (err) {
                     Log_1.default.info('Login error - database', [Log_1.default.TAG_AUTH, Log_1.default.TAG_LOGIN]);
