@@ -56,7 +56,7 @@ class SignUp {
                             to: user.email,
                             from: 'noreply@welcomeqr.codes',
                             subject: 'A warm welcome from Welcome QR Codes',
-                            html: WelcomeEmail.build(`${Environment_1.default.config().baseUrl}/account/verify?token=${token}`)
+                            html: WelcomeEmail.build(`${Environment_1.default.config().baseUrl}/account?token=${token}`)
                         };
                         sgMail.send(msg);
                         return res.status(200).send({
