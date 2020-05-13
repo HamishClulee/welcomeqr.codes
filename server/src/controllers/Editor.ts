@@ -3,13 +3,11 @@ import { IResponse, IRequest } from '../interfaces'
 import { Editor } from '../models/Editor'
 import { Subdom } from '../models/Subdom'
 import { User } from '../models/User'
-import { QApiError } from './ApiError'
+import Mister from './Mister'
 
 import * as adjective from '../resources/words/adjectives'
 import * as noun from '../resources/words/nouns'
 import * as adverb from '../resources/words/adverbs'
-
-import QAuth from './QAuth'
 
 const SUBDOMS_ID = '5e52678609948c1e0ec9994f'
 let SUBDOMS: string[] = []
@@ -25,10 +23,10 @@ export const submitNew = async (req: IRequest, res: IResponse) => {
 
 		await Editor.findOneAndUpdate(query, update, options)
 
-		return res.status(200).send({ userContent: 'El poho loco! You just submitted your html!' })
+		Mister.success(res, 200)
 
 	} catch (e) {
-		QApiError('submitNew', e, res)
+		Mister.apiError('submitNew', e, res)
 	}
 }
 
@@ -44,14 +42,10 @@ export const submitSubdom = async (req: IRequest, res: IResponse) => {
 
 			const user = await User.findOne({ '_id': req.session.passport.user })
 
-			return res.status(200).send({
-				userContent: 'Everything sorted',
-				intercept: false,
-				user: QAuth.approve(user)
-			})
+			Mister.success(res, 200)
 		}
 	} catch (e) {
-		QApiError('submitSubdom', e, res)
+		Mister.apiError('submitSubdom', e, res)
 	}
 }
 
@@ -67,10 +61,10 @@ export const getHTML = async (req: IRequest, res: IResponse) => {
 
 		const editor = await Editor.findOne({ 'userid': req.session.passport.user })
 
-		return res.status(200).send({ userContent: 'Here is your HTML', editor })
+		Mister.success(res, 200, editor)
 
 	} catch (e) {
-		QApiError('getHTML', e, res)
+		Mister.apiError('getHTML', e, res)
 	}
 }
 
@@ -83,9 +77,9 @@ export const generateRandomSubDom = (req: IRequest, res: IResponse) => {
 
 		const rando = () => { return `${adverb.adverbs[Math.floor(Math.random() * Math.floor(adverb.length - 1))]}-${adjective.adjectives[Math.floor(Math.random() * Math.floor(adjective.length - 1))]}-${noun.nouns[Math.floor(Math.random() * Math.floor(noun.length - 1))]}`}
 
-		return res.status(200).send({ userContent: 'Here is your subdom, dude.', subdom: rando() })
+		Mister.success(res, 200, rando())
 
 	} catch (e) {
-		QApiError('generateRandomSubdom', e, res)
+		Mister.apiError('generateRandomSubdom', e, res)
 	}
 }

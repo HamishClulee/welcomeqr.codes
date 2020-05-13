@@ -69,7 +69,7 @@
       true,
       "ignore-for-loop"
     ],
-    "curly": true,
+    "curly": [true, "error", "multi"],
     "no-empty": true,
     "no-unused-expression": true,
     "eofline": true,

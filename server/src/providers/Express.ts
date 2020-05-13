@@ -13,22 +13,12 @@ import * as multer from 'multer'
 import * as editor from '../controllers/Editor'
 import * as passportConfig from '../config/passport'
 
+/** All Auth Routes */
+import * as QAuth from '../controllers/QAuth'
+
 /** Middlewares */
 import Environment from './Environment'
 import Log from '../middlewares/Log'
-
-/** Routes - Auth */
-import SessionChallenge from '../controllers/Auth/SessionChallenge'
-import LogOut from '../controllers/Auth/Logout'
-import SignUp from '../controllers/Auth/SignUp'
-import LogIn from '../controllers/Auth/Login'
-import Forgot from '../controllers/Auth/Forgot'
-import Reset from '../controllers/Auth/Reset'
-import VerifyEmail from '../controllers/Auth/VerifyEmail'
-import Settings from '../controllers/Auth/Settings'
-import ToggleSubscribe from '../controllers/Auth/ToggleSubscribe'
-
-/** Routes - Editor */
 
 /** App Constants */
 const PORT = 1980
@@ -92,15 +82,15 @@ class Express {
 		/** -------------- Auth -------------- */
 
 		// Local
-		this.app.post('/auth/session_challenge', SessionChallenge.perform)
-		this.app.post('/auth/login', LogIn.perform)
-		this.app.post('/auth/logout', LogOut.perform)
-		this.app.post('/auth/signup', SignUp.perform)
-		this.app.post('/auth/verify_email', VerifyEmail.perform)
-		this.app.post('/auth/user_settings', Settings.perform)
-		this.app.post('/auth/toggle_subscribe', ToggleSubscribe.perform)
-		this.app.post('/auth/forgot', Forgot.perform)
-		this.app.post('/auth/reset', Reset.perform)
+		this.app.post('/auth/login', QAuth.login)
+		this.app.post('/auth/signup', QAuth.signup)
+		this.app.post('/auth/logout', QAuth.logout)
+		this.app.post('/auth/session_challenge', QAuth.sessionchallenge)
+		this.app.post('/auth/verify_email', QAuth.verifyemail)
+		this.app.post('/auth/forgot', QAuth.forgotpassword)
+		this.app.post('/auth/reset', QAuth.resetpassword)
+		this.app.post('/auth/toggle_subscribe', passportConfig.isAuthenticated, QAuth.togglesubscribe)
+		this.app.post('/auth/user_settings', passportConfig.isAuthenticated, QAuth.usersettings)
 
 		// Google
 		this.app.get('/auth/google',

@@ -12,20 +12,11 @@ const passport = require("passport");
 const multer = require("multer");
 const editor = require("../controllers/Editor");
 const passportConfig = require("../config/passport");
+/** All Auth Routes */
+const QAuth = require("../controllers/QAuth");
 /** Middlewares */
 const Environment_1 = require("./Environment");
 const Log_1 = require("../middlewares/Log");
-/** Routes - Auth */
-const SessionChallenge_1 = require("../controllers/Auth/SessionChallenge");
-const Logout_1 = require("../controllers/Auth/Logout");
-const SignUp_1 = require("../controllers/Auth/SignUp");
-const Login_1 = require("../controllers/Auth/Login");
-const Forgot_1 = require("../controllers/Auth/Forgot");
-const Reset_1 = require("../controllers/Auth/Reset");
-const VerifyEmail_1 = require("../controllers/Auth/VerifyEmail");
-const Settings_1 = require("../controllers/Auth/Settings");
-const ToggleSubscribe_1 = require("../controllers/Auth/ToggleSubscribe");
-/** Routes - Editor */
 /** App Constants */
 const PORT = 1980;
 const DEV_URL = Environment_1.default.config().devUrl;
@@ -74,15 +65,15 @@ class Express {
         /** ---------------------------------------  APP ROUTING  --------------------------------- */
         /** -------------- Auth -------------- */
         // Local
-        this.app.post('/auth/session_challenge', SessionChallenge_1.default.perform);
-        this.app.post('/auth/login', Login_1.default.perform);
-        this.app.post('/auth/logout', Logout_1.default.perform);
-        this.app.post('/auth/signup', SignUp_1.default.perform);
-        this.app.post('/auth/verify_email', VerifyEmail_1.default.perform);
-        this.app.post('/auth/user_settings', Settings_1.default.perform);
-        this.app.post('/auth/toggle_subscribe', ToggleSubscribe_1.default.perform);
-        this.app.post('/auth/forgot', Forgot_1.default.perform);
-        this.app.post('/auth/reset', Reset_1.default.perform);
+        this.app.post('/auth/login', QAuth.login);
+        this.app.post('/auth/signup', QAuth.signup);
+        this.app.post('/auth/logout', QAuth.logout);
+        this.app.post('/auth/session_challenge', QAuth.sessionchallenge);
+        this.app.post('/auth/verify_email', QAuth.verifyemail);
+        this.app.post('/auth/forgot', QAuth.forgotpassword);
+        this.app.post('/auth/reset', QAuth.resetpassword);
+        this.app.post('/auth/toggle_subscribe', passportConfig.isAuthenticated, QAuth.togglesubscribe);
+        this.app.post('/auth/user_settings', passportConfig.isAuthenticated, QAuth.usersettings);
         // Google
         this.app.get('/auth/google', passport.authenticate('google', { scope: ['email'] }));
         this.app.get('/auth/google/callback', passport.authenticate('google', { failureRedirect: '/?redirect=true' }), (req, res) => {
