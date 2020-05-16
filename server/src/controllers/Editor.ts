@@ -3,7 +3,7 @@ import { IResponse, IRequest } from '../interfaces'
 import { Editor } from '../models/Editor'
 import { Subdom } from '../models/Subdom'
 import { User } from '../models/User'
-import Mister from './Mister'
+import Turtle from './Turtle'
 
 import * as adjective from '../resources/words/adjectives'
 import * as noun from '../resources/words/nouns'
@@ -23,10 +23,10 @@ export const submitNew = async (req: IRequest, res: IResponse) => {
 
 		await Editor.findOneAndUpdate(query, update, options)
 
-		Mister.success(res, 200)
+		Turtle.success(res, 200)
 
 	} catch (e) {
-		Mister.apiError('submitNew', e, res)
+		Turtle.apiError('submitNew', e, res)
 	}
 }
 
@@ -42,10 +42,10 @@ export const submitSubdom = async (req: IRequest, res: IResponse) => {
 
 			const user = await User.findOne({ '_id': req.session.passport.user })
 
-			Mister.success(res, 200)
+			Turtle.success(res, 200)
 		}
 	} catch (e) {
-		Mister.apiError('submitSubdom', e, res)
+		Turtle.apiError('submitSubdom', e, res)
 	}
 }
 
@@ -61,10 +61,10 @@ export const getHTML = async (req: IRequest, res: IResponse) => {
 
 		const editor = await Editor.findOne({ 'userid': req.session.passport.user })
 
-		Mister.success(res, 200, editor)
+		Turtle.success(res, 200, editor)
 
 	} catch (e) {
-		Mister.apiError('getHTML', e, res)
+		Turtle.apiError('getHTML', e, res)
 	}
 }
 
@@ -77,9 +77,9 @@ export const generateRandomSubDom = (req: IRequest, res: IResponse) => {
 
 		const rando = () => { return `${adverb.adverbs[Math.floor(Math.random() * Math.floor(adverb.length - 1))]}-${adjective.adjectives[Math.floor(Math.random() * Math.floor(adjective.length - 1))]}-${noun.nouns[Math.floor(Math.random() * Math.floor(noun.length - 1))]}`}
 
-		Mister.success(res, 200, rando())
+		Turtle.success(res, 200, rando())
 
 	} catch (e) {
-		Mister.apiError('generateRandomSubdom', e, res)
+		Turtle.apiError('generateRandomSubdom', e, res)
 	}
 }

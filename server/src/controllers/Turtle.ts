@@ -17,7 +17,7 @@ interface SettingsResponse extends AuthResponse {
 	isemailverified: boolean,
 }
 
-const Mister = {
+const Turtle = {
 
 	settings: (res, user: UserDocument): SettingsResponse => {
 		return res.status(200).send({ user: this.buildSettings(user) })
@@ -93,4 +93,4 @@ const Mister = {
 
 }
 
-export default Mister
+export default Turtle
