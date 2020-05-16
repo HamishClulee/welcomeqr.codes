@@ -14,12 +14,12 @@ class NativeEvent {
 
 		// Catch cluster disconnect event...
 		_cluster.on('disconnect', (worker) =>
-			Log.info(`Server :: Cluster with ProcessID '${worker.process.pid}' Disconnected!`)
+			Log.warn(`Server :: Cluster with ProcessID '${worker.process.pid}' Disconnected!`)
 		)
 
 		// Catch cluster exit event...
 		_cluster.on('exit', (worker, code, signal) => {
-			Log.info(`Server :: Cluster with ProcessID '${worker.process.pid}' is Dead with Code '${code}, and signal: '${signal}'`)
+			Log.warn(`Server :: Cluster with ProcessID '${worker.process.pid}' is Dead with Code '${code}, and signal: '${signal}'`)
 			// Ensuring a new cluster will start if an old one dies
 			_cluster.fork()
 		})

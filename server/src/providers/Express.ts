@@ -37,11 +37,6 @@ class Express {
 
 	public init (): any {
 
-		// this.app.use(ExceptionHandler.logErrors)
-		// this.app.use(ExceptionHandler.clientErrorHandler)
-		// this.app.use(ExceptionHandler.errorHandler)
-		// this.app = ExceptionHandler.notFoundHandler(this.app)
-
 		this.app.set('port', PORT)
 		this.app.use(compression())
 		this.app.use(bodyParser.json())

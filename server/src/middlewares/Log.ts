@@ -53,6 +53,9 @@ class Log {
 	 * append the log kind & string into the file.
 	 */
 	private addLog (_kind: string, _string: string, tags: string[] = []): void {
+
+		if (process.env.NODE_ENV === 'development') { console.log(_string) }
+
 		const _that = this
 		_kind = _kind.toUpperCase()
 
