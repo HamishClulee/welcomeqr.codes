@@ -19,34 +19,42 @@ interface SettingsResponse extends AuthResponse {
 
 const Turtle = {
 
-	settings: (res, user: UserDocument): SettingsResponse => {
+	settings: function(res, user: UserDocument): SettingsResponse {
+
 		return res.status(200).send({ user: this.buildSettings(user) })
-	},
-
-	deny: (res: IResponse, status: number = 403, msg: string = ''): IResponse => {
-
-		return res.status(status).send({ msg, user: this.killUser() })
-	},
-
-	approve: (res: IResponse, status: number, user: UserDocument, msg: string = ''): IResponse => {
-
-		return res.status(status).send({ msg, user: this.buildUser(user) })
 
 	},
 
-	success: (res: IResponse, status: number, content: any = {}, msg: string = ''): IResponse => {
+	deny: function(res: IResponse, status: number = 403, msg: string = ''): IResponse {
+
+		let _user = this.killUser()
+
+		return res.status(status).send({ msg, user: _user })
+
+	},
+
+	approve: function(res: IResponse, status: number, user: UserDocument, msg: string = ''): IResponse {
+
+		let _user = this.buildUser(user)
+
+		return res.status(status).send({ msg, user: _user })
+
+	},
+
+	success: function(res: IResponse, status: number, content: any = {}, msg: string = ''): IResponse {
 
 		return res.status(status).send({ msg, content })
 
 	},
 
-	failure: (res: IResponse, status: number, content: any = {}, msg: string = ''): IResponse => {
+	failure: function(res: IResponse, status: number, content: any = {}, msg: string = ''): IResponse {
 
 		return res.status(status).send({ msg, content })
 
 	},
 
-	killUser: (): AuthResponse => {
+	killUser: function(): AuthResponse {
+
 		return {
 			email: null,
 			id: null,
@@ -55,9 +63,11 @@ const Turtle = {
 			role: null,
 			tier: null
 		}
+
 	},
 
-	buildUser: (user: UserDocument): AuthResponse => {
+	buildUser: function(user: UserDocument): AuthResponse {
+
 		return {
 			email: user.email,
 			id: user._id,
@@ -66,9 +76,11 @@ const Turtle = {
 			role: user.role,
 			tier: user.accountTier
 		}
+
 	},
 
-	buildSettings: (user: UserDocument): SettingsResponse => {
+	buildSettings: function(user: UserDocument): SettingsResponse {
+
 		return {
 			email: user.email,
 			id: user._id,
@@ -79,16 +91,23 @@ const Turtle = {
 			allowsemails: user.allowEmails,
 			isemailverified: user.emailVerified
 		}
+
 	},
 
-	apiError: (funcname: string, e: Error, res: IResponse): IResponse => {
+	apiError: function(funcname: string, e: Error, res: IResponse): IResponse {
+
 		Log.error(`Function Name: ${ funcname } :: ${String(e)}`, [Log.TAG_API_ERROR])
+
 		return res.status(501).send({ userContent: 'Ice cream machine broke, ok, have a nice day', e })
+
 	},
 
-	authError: (funcname: string, e: any, res: IResponse, intercept: boolean): IResponse => {
+	authError: function(funcname: string, e: any, res: IResponse, intercept: boolean): IResponse {
+
 		Log.error(`Function Name: ${ funcname } :: ${String(e)} :: User Auth Failure`, [Log.TAG_AUTH])
+
 		return res.status(403).send({ userContent: 'Ice cream machine broke, ok, have a nice day', e, user: this.killUser(), intercept })
+
 	}
 
 }

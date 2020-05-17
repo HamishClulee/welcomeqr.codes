@@ -3,7 +3,7 @@ import { IResponse, IRequest } from '../interfaces'
 import { Editor } from '../models/Editor'
 import { Subdom } from '../models/Subdom'
 import { User } from '../models/User'
-import Turtle from './Turtle'
+import Clean from './Clean'
 
 import * as adjective from '../resources/words/adjectives'
 import * as noun from '../resources/words/nouns'
@@ -13,6 +13,7 @@ const SUBDOMS_ID = '5e52678609948c1e0ec9994f'
 let SUBDOMS: string[] = []
 
 export const submitNew = async (req: IRequest, res: IResponse) => {
+
 	try {
 
 		let query = { 'userid': req.session.passport.user }
@@ -23,15 +24,19 @@ export const submitNew = async (req: IRequest, res: IResponse) => {
 
 		await Editor.findOneAndUpdate(query, update, options)
 
-		Turtle.success(res, 200)
+		return Clean.success(res, 200)
 
 	} catch (e) {
-		Turtle.apiError('submitNew', e, res)
+
+		return Clean.apiError('submitNew', e, res)
+
 	}
 }
 
 export const submitSubdom = async (req: IRequest, res: IResponse) => {
+
 	try {
+
 		if (SUBDOMS.indexOf(req.body.subdom) === -1) {
 
 			SUBDOMS.push(req.body.subdom)
@@ -42,10 +47,13 @@ export const submitSubdom = async (req: IRequest, res: IResponse) => {
 
 			const user = await User.findOne({ '_id': req.session.passport.user })
 
-			Turtle.success(res, 200)
+			return Clean.approve(res, 200, user)
 		}
+
 	} catch (e) {
-		Turtle.apiError('submitSubdom', e, res)
+
+		return Clean.apiError('submitSubdom', e, res)
+
 	}
 }
 
@@ -57,29 +65,38 @@ export const checkSubdom = (req: IRequest, res: IResponse) => {
 }
 
 export const getHTML = async (req: IRequest, res: IResponse) => {
+
 	try {
 
 		const editor = await Editor.findOne({ 'userid': req.session.passport.user })
 
-		Turtle.success(res, 200, editor)
+		return Clean.success(res, 200, editor)
 
 	} catch (e) {
-		Turtle.apiError('getHTML', e, res)
+
+		Clean.apiError('getHTML', e, res)
+
 	}
+
 }
 
 export const _precaching = () => {
+
 	return Subdom.findById(SUBDOMS_ID).exec().then(res => SUBDOMS = res.subdoms)
+
 }
 
 export const generateRandomSubDom = (req: IRequest, res: IResponse) => {
+
 	try {
 
 		const rando = () => { return `${adverb.adverbs[Math.floor(Math.random() * Math.floor(adverb.length - 1))]}-${adjective.adjectives[Math.floor(Math.random() * Math.floor(adjective.length - 1))]}-${noun.nouns[Math.floor(Math.random() * Math.floor(noun.length - 1))]}`}
 
-		Turtle.success(res, 200, rando())
+		return Clean.success(res, 200, rando())
 
 	} catch (e) {
-		Turtle.apiError('generateRandomSubdom', e, res)
+
+		return Clean.apiError('generateRandomSubdom', e, res)
+
 	}
 }

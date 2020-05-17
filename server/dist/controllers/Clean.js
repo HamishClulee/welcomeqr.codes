@@ -61,4 +61,4 @@ const Turtle = {
     }
 };
 exports.default = Turtle;
-//# sourceMappingURL=Turtle.js.map
+//# sourceMappingURL=Clean.js.map

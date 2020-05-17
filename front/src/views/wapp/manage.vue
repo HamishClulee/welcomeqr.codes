@@ -91,7 +91,7 @@ export default {
     methods: {
         getrandomsubdom() {
             this.$QEdit.generateRandomSubDom().then(res => {
-                this.$refs['subdom'].$data.val = res.data.subdom
+                this.$refs['subdom'].$data.val = res.data.content
             })
         },
         checksubdom(e) {

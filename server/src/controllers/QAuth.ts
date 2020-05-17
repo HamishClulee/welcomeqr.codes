@@ -10,7 +10,7 @@ import { IRequest, IResponse, INext } from '../interfaces'
 import { IVerifyOptions } from 'passport-local'
 
 import Environment from '../providers/Environment'
-import Turtle from './Turtle'
+import Clean from './Clean'
 
 import Log from '../middlewares/Log'
 
@@ -25,27 +25,29 @@ export const login = (req: IRequest, res: IResponse, next: INext): any => {
 
 	const errors = validate.validationResult(req)
 
-	if (!errors.isEmpty()) { Turtle.authError('login', `Validation error: ${String(errors)}`, res, req.body.intercept) }
+	if (!errors.isEmpty()) { return Clean.authError('login', `Validation error: ${String(errors)}`, res, req.body.intercept) }
 
 	try {
 
 		passport.authenticate('local', (err: Error, user: UserDocument, info: IVerifyOptions) => {
 
-			if (err) { Turtle.authError('login::passport::err', err, res, req.body.intercept) }
+			if (err) { return Clean.authError('login::passport::err', err, res, req.body.intercept) }
 
-			if (!user) { Turtle.authError('login::passport::no-user', err, res, req.body.intercept) }
+			if (!user) { return Clean.authError('login::passport::no-user', err, res, req.body.intercept) }
 
 			req.logIn(user, (err) => {
 
-				if (err) { Turtle.authError('login::passport::login-err', err, res, req.body.intercept) }
+				if (err) { return Clean.authError('login::passport::login-err', err, res, req.body.intercept) }
 
-				Turtle.approve(res, 200, user)
+				return Clean.approve(res, 200, user)
 
 			})
 		})(req, res)
 
 	} catch (e) {
-		Turtle.authError('login', `caught error: ${e}`, res, req.body.intercept)
+
+		return Clean.authError('login', `caught error: ${e}`, res, req.body.intercept)
+
 	}
 
 }
@@ -59,7 +61,7 @@ export const signup = async (req: IRequest, res: IResponse) => {
 
 	const errors = validate.validationResult(req)
 
-	if (!errors.isEmpty()) { Turtle.authError('login', `Validation error: ${errors.array()}`, res, req.body.intercept) }
+	if (!errors.isEmpty()) { return Clean.authError('login', `Validation error: ${errors.array()}`, res, req.body.intercept) }
 
 	try {
 
@@ -69,7 +71,7 @@ export const signup = async (req: IRequest, res: IResponse) => {
 
 		let existinguser = await User.findOne({ email: req.body.email })
 
-		if (existinguser) { Turtle.approve(res, 200, existinguser) }
+		if (existinguser) { return Clean.approve(res, 200, existinguser) }
 
 		const user: UserDocument = new User({
 			email: req.body.email,
@@ -90,14 +92,15 @@ export const signup = async (req: IRequest, res: IResponse) => {
 				html: WelcomeEmail.build(`${Environment.config().baseUrl}/account?token=${token}`)
 			})
 
-			Turtle.approve(res, 200, user)
+			return Clean.approve(res, 200, user)
 
 		})
 
 	} catch (e) {
-		Turtle.authError('signup', `caught error: ${e}`, res, req.body.intercept)
-	}
 
+		return Clean.authError('signup', `caught error: ${e}`, res, req.body.intercept)
+
+	}
 }
 
 export const logout = async (req: IRequest, res: IResponse) => {
@@ -106,46 +109,50 @@ export const logout = async (req: IRequest, res: IResponse) => {
 
 		await req.logout()
 
-		Turtle.deny(res, 401)
+		return Clean.deny(res, 401)
 
 	} catch (e) {
-		Turtle.authError('logout', `caught error: ${e}`, res, req.body.intercept)
-	}
 
+		return Clean.authError('logout', `caught error: ${e}`, res, req.body.intercept)
+
+	}
 }
 
 export const sessionchallenge = async (req: IRequest, res: IResponse) => {
 
 	try {
 
-		if (!req.session.passport) { Turtle.deny(res, 403) }
+		if (!req.session.passport) { Clean.deny(res, 403) }
 
 		const user = await User.findOne({ _id: req.session.passport.user })
 
-		if (user) { Turtle.approve(res, 200, user) }
+		if (user) { return Clean.approve(res, 200, user) }
 
-		Turtle.deny(res, 401, 'You do not exist.')
+		return Clean.deny(res, 401, 'You do not exist.')
 
 	} catch (e) {
-		Turtle.authError('session challenge', `caught error: ${e}`, res, req.body.intercept)
-	}
 
+		return Clean.authError('session challenge', `caught error: ${e}`, res, req.body.intercept)
+
+	}
 }
 
 export const togglesubscribe = async (req: IRequest, res: IResponse) => {
 
 	try {
 
-		if (!req.session.passport) { Turtle.deny(res, 401, 'No user logged in') }
+		if (!req.session.passport) { return Clean.deny(res, 401, 'No user logged in') }
 
 		const user = await User.findOneAndUpdate({ _id: req.session.passport.user }, { allowEmails: req.body.subscribe }, { new: true })
 
-		if (!user) { Turtle.deny(res, 403, 'Account with that email address does not exist.') }
+		if (!user) { return Clean.deny(res, 403, 'Account with that email address does not exist.') }
 
-		Turtle.approve(res, 200, user)
+		return Clean.approve(res, 200, user)
 
 	} catch (e) {
-		Turtle.authError('toggle subscribe', `caught error: ${e}`, res, req.body.intercept)
+
+		return Clean.authError('toggle subscribe', `caught error: ${e}`, res, req.body.intercept)
+
 	}
 }
 
@@ -155,17 +162,19 @@ export const verifyemail = async (req: IRequest, res, IResponse) => {
 
 		const user = await User.findOne({ emailVerifyToken: req.body.token })
 
-		if (!user) { Turtle.deny(res, 401, 'Verify token is invalid or has expired.') }
+		if (!user) { return Clean.deny(res, 401, 'Verify token is invalid or has expired.') }
 
 		user.emailVerified = true
 		user.emailVerifyToken = undefined
 
 		await user.save()
 
-		Turtle.approve(res, 200, user)
+		return Clean.approve(res, 200, user)
 
 	} catch (e) {
-		Turtle.authError('verify email', `caught error: ${e}`, res, req.body.intercept)
+
+		return Clean.authError('verify email', `caught error: ${e}`, res, req.body.intercept)
+
 	}
 }
 
@@ -176,13 +185,13 @@ export const resetpassword = async (req: IRequest, res, IResponse) => {
 
 	const errors = validate.validationResult(req)
 
-	if (!errors.isEmpty()) { Turtle.deny(res, 403, 'Validation error') }
+	if (!errors.isEmpty()) { return Clean.deny(res, 403, 'Validation error') }
 
 	try {
 
 		const user = await User.findOne({ passwordResetToken: req.body.token })
 
-		if (!user) { Turtle.deny(res, 401, 'No user.') }
+		if (!user) { return Clean.deny(res, 401, 'No user.') }
 
 		user.password = req.body.password
 		user.passwordResetToken = undefined
@@ -202,9 +211,10 @@ export const resetpassword = async (req: IRequest, res, IResponse) => {
 		})
 
 	} catch (e) {
-		Turtle.authError('reset password', `caught error: ${e}`, res, req.body.intercept)
-	}
 
+		return Clean.authError('reset password', `caught error: ${e}`, res, req.body.intercept)
+
+	}
 }
 
 export const forgotpassword = async (req: IRequest, res: IResponse) => {
@@ -219,7 +229,7 @@ export const forgotpassword = async (req: IRequest, res: IResponse) => {
 
 		const user = await User.findOne({ email: req.body.email })
 
-		if (!user) { Turtle.deny(res, 403, 'No user.') }
+		if (!user) { return Clean.deny(res, 403, 'No user.') }
 
 		user.passwordResetToken = token
 
@@ -234,29 +244,53 @@ export const forgotpassword = async (req: IRequest, res: IResponse) => {
 			html: ForgotPassword.build(`${Environment.config().baseUrl}/auth/reset?token=${token}`)
 		})
 
-		Turtle.approve(res, 200, user)
+		return Clean.approve(res, 200, user)
 
 	} catch (e) {
-		Turtle.authError('forgot password', `caught error: ${e}`, res, req.body.intercept)
+
+		return Clean.authError('forgot password', `caught error: ${e}`, res, req.body.intercept)
+
 	}
 }
 
 export const usersettings = async (req: IRequest, res: IResponse) => {
+
 	try {
-		if (!req.session.passport) { Turtle.deny(res, 403, 'No user logged in.') }
+
+		if (!req.session.passport) { return Clean.deny(res, 403, 'No user logged in.') }
 
 		const user = await User.findOne({ _id: req.session.passport.user })
 
-		if (!user) { Turtle.deny(res, 403, 'No user exists.') }
+		if (!user) { return Clean.deny(res, 403, 'No user exists.') }
 
-		Turtle.settings(res, user)
+		return Clean.settings(res, user)
 
 	} catch (e) {
-		Turtle.authError('user settings', `caught error: ${e}`, res, req.body.intercept)
+
+		return Clean.authError('user settings', `caught error: ${e}`, res, req.body.intercept)
+
 	}
 }
 
 export const contact = (req: IRequest, res: IResponse) => {
-	Log.info(req.body)
-	return res.status(200).send({ _: ':)' })
+
+	SendGrid.setApiKey(process.env.SENDGRID_API_KEY)
+
+	SendGrid.send({
+
+		to: Environment.config().internalEmail,
+		from: 'contact@welcomeqr.codes',
+		subject: 'New contact from Welcome QR',
+
+		html: `
+			<p><b>From:</b> ${req.body.name}</p>
+			<p><b>Email:</b> ${req.body.email}</p>
+			<p><b>Selected:</b> ${req.body.selectVal}</p>
+			<p><b>Message:</b> ${req.body.message}</p>
+		`
+
+	})
+
+	return Clean.success(res, 200)
+
 }

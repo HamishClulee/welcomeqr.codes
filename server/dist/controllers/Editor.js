@@ -12,7 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const Editor_1 = require("../models/Editor");
 const Subdom_1 = require("../models/Subdom");
 const User_1 = require("../models/User");
-const Turtle_1 = require("./Turtle");
+const Clean_1 = require("./Clean");
 const adjective = require("../resources/words/adjectives");
 const noun = require("../resources/words/nouns");
 const adverb = require("../resources/words/adverbs");
@@ -24,10 +24,10 @@ exports.submitNew = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
         let update = { html: req.body.html };
         let options = { upsert: true, new: true, setDefaultsOnInsert: true };
         yield Editor_1.Editor.findOneAndUpdate(query, update, options);
-        Turtle_1.default.success(res, 200);
+        return Clean_1.default.success(res, 200);
     }
     catch (e) {
-        Turtle_1.default.apiError('submitNew', e, res);
+        return Clean_1.default.apiError('submitNew', e, res);
     }
 });
 exports.submitSubdom = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -37,11 +37,11 @@ exports.submitSubdom = (req, res) => __awaiter(void 0, void 0, void 0, function*
             yield Subdom_1.Subdom.updateOne({ '_id': SUBDOMS_ID }, { subdoms: SUBDOMS }, { upsert: true });
             yield User_1.User.updateOne({ '_id': req.session.passport.user }, { subdom: req.body.subdom });
             const user = yield User_1.User.findOne({ '_id': req.session.passport.user });
-            Turtle_1.default.success(res, 200);
+            return Clean_1.default.approve(res, 200, user);
         }
     }
     catch (e) {
-        Turtle_1.default.apiError('submitSubdom', e, res);
+        return Clean_1.default.apiError('submitSubdom', e, res);
     }
 });
 exports.checkSubdom = (req, res) => {
@@ -51,10 +51,10 @@ exports.checkSubdom = (req, res) => {
 exports.getHTML = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const editor = yield Editor_1.Editor.findOne({ 'userid': req.session.passport.user });
-        Turtle_1.default.success(res, 200, editor);
+        return Clean_1.default.success(res, 200, editor);
     }
     catch (e) {
-        Turtle_1.default.apiError('getHTML', e, res);
+        Clean_1.default.apiError('getHTML', e, res);
     }
 });
 exports._precaching = () => {
@@ -63,10 +63,10 @@ exports._precaching = () => {
 exports.generateRandomSubDom = (req, res) => {
     try {
         const rando = () => { return `${adverb.adverbs[Math.floor(Math.random() * Math.floor(adverb.length - 1))]}-${adjective.adjectives[Math.floor(Math.random() * Math.floor(adjective.length - 1))]}-${noun.nouns[Math.floor(Math.random() * Math.floor(noun.length - 1))]}`; };
-        Turtle_1.default.success(res, 200, rando());
+        return Clean_1.default.success(res, 200, rando());
     }
     catch (e) {
-        Turtle_1.default.apiError('generateRandomSubdom', e, res);
+        return Clean_1.default.apiError('generateRandomSubdom', e, res);
     }
 };
 //# sourceMappingURL=Editor.js.map

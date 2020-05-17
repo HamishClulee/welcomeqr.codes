@@ -13,6 +13,8 @@ class Environment {
 		const appSecret = process.env.APP_SECRET || 'This is your responsibility!'
 		const mongooseUrl = process.env.MONGOOSE_URL
 
+		const internalEmail = process.env.INTERNAL_EMAIL
+
 		const googleClientId = process.env.GOOGLE_ID
 		const googleSecret = process.env.GOOGLE_SECRET
 
@@ -36,6 +38,7 @@ class Environment {
 		const redisDB = process.env.REDIS_QUEUE_PREFIX || 3
 
 		return {
+			internalEmail,
 			baseUrl,
 			sendGridSecret,
 			googleClientId,

@@ -12,6 +12,7 @@ class Environment {
         const port = process.env.PORT || 1980;
         const appSecret = process.env.APP_SECRET || 'This is your responsibility!';
         const mongooseUrl = process.env.MONGOOSE_URL;
+        const internalEmail = process.env.INTERNAL_EMAIL;
         const googleClientId = process.env.GOOGLE_ID;
         const googleSecret = process.env.GOOGLE_SECRET;
         const sendGridSecret = process.env.SENDGRID_API_KEY;
@@ -29,6 +30,7 @@ class Environment {
         const redisPrefix = process.env.REDIS_QUEUE_DB || 'q';
         const redisDB = process.env.REDIS_QUEUE_PREFIX || 3;
         return {
+            internalEmail,
             baseUrl,
             sendGridSecret,
             googleClientId,

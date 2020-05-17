@@ -16,8 +16,7 @@ const ResetEmail = require("../resources/emails/resetconfirm");
 const ForgotPassword = require("../resources/emails/forgot");
 const User_1 = require("../models/User");
 const Environment_1 = require("../providers/Environment");
-const Turtle_1 = require("./Turtle");
-const Log_1 = require("../middlewares/Log");
+const Clean_1 = require("./Clean");
 const SendGrid = require('@sendgrid/mail');
 exports.login = (req, res, next) => {
     validate.check('email', 'E-mail cannot be blank').notEmpty();
@@ -26,26 +25,26 @@ exports.login = (req, res, next) => {
     validate.check('password', 'Password length must be atleast 8 characters').isLength({ min: 8 });
     const errors = validate.validationResult(req);
     if (!errors.isEmpty()) {
-        Turtle_1.default.authError('login', `Validation error: ${String(errors)}`, res, req.body.intercept);
+        return Clean_1.default.authError('login', `Validation error: ${String(errors)}`, res, req.body.intercept);
     }
     try {
         passport.authenticate('local', (err, user, info) => {
             if (err) {
-                Turtle_1.default.authError('login::passport::err', err, res, req.body.intercept);
+                return Clean_1.default.authError('login::passport::err', err, res, req.body.intercept);
             }
             if (!user) {
-                Turtle_1.default.authError('login::passport::no-user', err, res, req.body.intercept);
+                return Clean_1.default.authError('login::passport::no-user', err, res, req.body.intercept);
             }
             req.logIn(user, (err) => {
                 if (err) {
-                    Turtle_1.default.authError('login::passport::login-err', err, res, req.body.intercept);
+                    return Clean_1.default.authError('login::passport::login-err', err, res, req.body.intercept);
                 }
-                Turtle_1.default.approve(res, 200, user);
+                return Clean_1.default.approve(res, 200, user);
             });
         })(req, res);
     }
     catch (e) {
-        Turtle_1.default.authError('login', `caught error: ${e}`, res, req.body.intercept);
+        return Clean_1.default.authError('login', `caught error: ${e}`, res, req.body.intercept);
     }
 };
 exports.signup = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -55,7 +54,7 @@ exports.signup = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     validate.check('password', 'Password length must be atleast 8 characters').isLength({ min: 8 });
     const errors = validate.validationResult(req);
     if (!errors.isEmpty()) {
-        Turtle_1.default.authError('login', `Validation error: ${errors.array()}`, res, req.body.intercept);
+        return Clean_1.default.authError('login', `Validation error: ${errors.array()}`, res, req.body.intercept);
     }
     try {
         const token = yield require('crypto').randomBytes(48, (err, buffer) => {
@@ -63,7 +62,7 @@ exports.signup = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         });
         let existinguser = yield User_1.User.findOne({ email: req.body.email });
         if (existinguser) {
-            Turtle_1.default.approve(res, 200, existinguser);
+            return Clean_1.default.approve(res, 200, existinguser);
         }
         const user = new User_1.User({
             email: req.body.email,
@@ -79,65 +78,65 @@ exports.signup = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
                 subject: 'A warm welcome from Welcome QR Codes',
                 html: WelcomeEmail.build(`${Environment_1.default.config().baseUrl}/account?token=${token}`)
             });
-            Turtle_1.default.approve(res, 200, user);
+            return Clean_1.default.approve(res, 200, user);
         });
     }
     catch (e) {
-        Turtle_1.default.authError('signup', `caught error: ${e}`, res, req.body.intercept);
+        return Clean_1.default.authError('signup', `caught error: ${e}`, res, req.body.intercept);
     }
 });
 exports.logout = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         yield req.logout();
-        Turtle_1.default.deny(res, 401);
+        return Clean_1.default.deny(res, 401);
     }
     catch (e) {
-        Turtle_1.default.authError('logout', `caught error: ${e}`, res, req.body.intercept);
+        return Clean_1.default.authError('logout', `caught error: ${e}`, res, req.body.intercept);
     }
 });
 exports.sessionchallenge = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         if (!req.session.passport) {
-            Turtle_1.default.deny(res, 403);
+            Clean_1.default.deny(res, 403);
         }
         const user = yield User_1.User.findOne({ _id: req.session.passport.user });
         if (user) {
-            Turtle_1.default.approve(res, 200, user);
+            return Clean_1.default.approve(res, 200, user);
         }
-        Turtle_1.default.deny(res, 401, 'You do not exist.');
+        return Clean_1.default.deny(res, 401, 'You do not exist.');
     }
     catch (e) {
-        Turtle_1.default.authError('session challenge', `caught error: ${e}`, res, req.body.intercept);
+        return Clean_1.default.authError('session challenge', `caught error: ${e}`, res, req.body.intercept);
     }
 });
 exports.togglesubscribe = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         if (!req.session.passport) {
-            Turtle_1.default.deny(res, 401, 'No user logged in');
+            return Clean_1.default.deny(res, 401, 'No user logged in');
         }
         const user = yield User_1.User.findOneAndUpdate({ _id: req.session.passport.user }, { allowEmails: req.body.subscribe }, { new: true });
         if (!user) {
-            Turtle_1.default.deny(res, 403, 'Account with that email address does not exist.');
+            return Clean_1.default.deny(res, 403, 'Account with that email address does not exist.');
         }
-        Turtle_1.default.approve(res, 200, user);
+        return Clean_1.default.approve(res, 200, user);
     }
     catch (e) {
-        Turtle_1.default.authError('toggle subscribe', `caught error: ${e}`, res, req.body.intercept);
+        return Clean_1.default.authError('toggle subscribe', `caught error: ${e}`, res, req.body.intercept);
     }
 });
 exports.verifyemail = (req, res, IResponse) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const user = yield User_1.User.findOne({ emailVerifyToken: req.body.token });
         if (!user) {
-            Turtle_1.default.deny(res, 401, 'Verify token is invalid or has expired.');
+            return Clean_1.default.deny(res, 401, 'Verify token is invalid or has expired.');
         }
         user.emailVerified = true;
         user.emailVerifyToken = undefined;
         yield user.save();
-        Turtle_1.default.approve(res, 200, user);
+        return Clean_1.default.approve(res, 200, user);
     }
     catch (e) {
-        Turtle_1.default.authError('verify email', `caught error: ${e}`, res, req.body.intercept);
+        return Clean_1.default.authError('verify email', `caught error: ${e}`, res, req.body.intercept);
     }
 });
 exports.resetpassword = (req, res, IResponse) => __awaiter(void 0, void 0, void 0, function* () {
@@ -145,12 +144,12 @@ exports.resetpassword = (req, res, IResponse) => __awaiter(void 0, void 0, void 
     validate.check('confirm', 'Passwords must match.').equals(req.body.password).run(req);
     const errors = validate.validationResult(req);
     if (!errors.isEmpty()) {
-        Turtle_1.default.deny(res, 403, 'Validation error');
+        return Clean_1.default.deny(res, 403, 'Validation error');
     }
     try {
         const user = yield User_1.User.findOne({ passwordResetToken: req.body.token });
         if (!user) {
-            Turtle_1.default.deny(res, 401, 'No user.');
+            return Clean_1.default.deny(res, 401, 'No user.');
         }
         user.password = req.body.password;
         user.passwordResetToken = undefined;
@@ -166,7 +165,7 @@ exports.resetpassword = (req, res, IResponse) => __awaiter(void 0, void 0, void 
         });
     }
     catch (e) {
-        Turtle_1.default.authError('reset password', `caught error: ${e}`, res, req.body.intercept);
+        return Clean_1.default.authError('reset password', `caught error: ${e}`, res, req.body.intercept);
     }
 });
 exports.forgotpassword = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -176,7 +175,7 @@ exports.forgotpassword = (req, res) => __awaiter(void 0, void 0, void 0, functio
         });
         const user = yield User_1.User.findOne({ email: req.body.email });
         if (!user) {
-            Turtle_1.default.deny(res, 403, 'No user.');
+            return Clean_1.default.deny(res, 403, 'No user.');
         }
         user.passwordResetToken = token;
         yield user.save();
@@ -187,29 +186,40 @@ exports.forgotpassword = (req, res) => __awaiter(void 0, void 0, void 0, functio
             subject: 'Reset your password on WelcomeQR Codes',
             html: ForgotPassword.build(`${Environment_1.default.config().baseUrl}/auth/reset?token=${token}`)
         });
-        Turtle_1.default.approve(res, 200, user);
+        return Clean_1.default.approve(res, 200, user);
     }
     catch (e) {
-        Turtle_1.default.authError('forgot password', `caught error: ${e}`, res, req.body.intercept);
+        return Clean_1.default.authError('forgot password', `caught error: ${e}`, res, req.body.intercept);
     }
 });
 exports.usersettings = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         if (!req.session.passport) {
-            Turtle_1.default.deny(res, 403, 'No user logged in.');
+            return Clean_1.default.deny(res, 403, 'No user logged in.');
         }
         const user = yield User_1.User.findOne({ _id: req.session.passport.user });
         if (!user) {
-            Turtle_1.default.deny(res, 403, 'No user exists.');
+            return Clean_1.default.deny(res, 403, 'No user exists.');
         }
-        Turtle_1.default.settings(res, user);
+        return Clean_1.default.settings(res, user);
     }
     catch (e) {
-        Turtle_1.default.authError('user settings', `caught error: ${e}`, res, req.body.intercept);
+        return Clean_1.default.authError('user settings', `caught error: ${e}`, res, req.body.intercept);
     }
 });
 exports.contact = (req, res) => {
-    Log_1.default.info(req.body);
-    return res.status(200).send({ _: ':)' });
+    SendGrid.setApiKey(process.env.SENDGRID_API_KEY);
+    SendGrid.send({
+        to: Environment_1.default.config().internalEmail,
+        from: 'contact@welcomeqr.codes',
+        subject: 'New contact from Welcome QR',
+        html: `
+			<p><b>From:</b> ${req.body.name}</p>
+			<p><b>Email:</b> ${req.body.email}</p>
+			<p><b>Selected:</b> ${req.body.selectVal}</p>
+			<p><b>Message:</b> ${req.body.message}</p>
+		`
+    });
+    return Clean_1.default.success(res, 200);
 };
 //# sourceMappingURL=QAuth.js.map
