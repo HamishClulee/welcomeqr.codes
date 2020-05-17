@@ -2,8 +2,9 @@
     <div class="field-container" :style="{ 'width': fullwidth ? '100%' : 'auto'}">
 
         <span class="input-row">
-            <input
-                :style="{ 'width': setwidth }"
+            <textarea
+                :rows="rows"
+                :style="{ 'width': setwidth}"
                 @focus="touched = true"
                 @blur="onBlur"
                 @input="touched = true"
@@ -13,7 +14,7 @@
                 :type="localtype"
                 :autocomplete="hasautocomplete"
                 :required="isrequired"
-            >
+            />
             <img @click="toggletype" v-if="inptype === 'password'" :src="localtype === 'password' ? '/svg/eye.svg' : '/svg/eye-slash.svg'"/>
         </span>
 
@@ -26,7 +27,6 @@
         <div class="error-text-con">
             <div v-if="errortxt !== ''" class="error-icon"></div>
             <p class="error-text">{{ errortxt }}</p>
-
         </div>
 
     </div>
@@ -36,6 +36,11 @@
 export default {
     name: 'qinput',
     props: {
+        rows: {
+            type: Number,
+            default: 10,
+            required: false,
+        },
         fullwidth: {
             default: true,
             type: Boolean,

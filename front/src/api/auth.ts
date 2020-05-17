@@ -51,7 +51,7 @@ export class QAuth {
         localStorage.setItem('QToken', token)
     }
 
-    removetoken():void {
+    removetoken(): void {
         localStorage.removeItem('QToken')
     }
 
@@ -94,5 +94,9 @@ export class QAuth {
 
     verifyemail(token: string): AxiosPromise<QUser> {
         return this.ax.post('/verify_email', { token })
+    }
+
+    contact(email: string, name: string, message: string, selectval: string): AxiosPromise<QUser> {
+        return this.ax.post('/contact', { email, name, message, selectval })
     }
 }

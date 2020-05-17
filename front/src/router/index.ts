@@ -16,7 +16,7 @@ const forgot = () => import('../views/auth/forgot.vue')
 const account = () => import('../views/account/account.vue')
 
 /** Tester routes */
-const testhtml = () => import('../views/testhtml.vue')
+
 
 /** Create App routes */
 const wapp = () => import('../views/wapp.vue')
@@ -27,9 +27,11 @@ const preview = () => import('../views/wapp/preview.vue')
 /** Site routes */
 const terms = () => import('../views/terms.vue')
 const privacy = () => import('../views/privacy.vue')
+const contact = () => import('../views/contact.vue')
 
 /** Misc plumbing routes */
 const notfound = () => import('../views/notfound.vue')
+const testhtml = () => import('../views/testhtml.vue')
 
 import overwritemetas from '../utils/seo'
 
@@ -47,7 +49,7 @@ const routes = [
             overwritemetas({
                 title: 'Welcome QR | Description',
                 description: `Brief description of how Welcome QR functions and the benefits it can provide to customers.`,
-                noindex: true,
+                index: true,
             }, next)
         },
     },
@@ -59,7 +61,19 @@ const routes = [
             overwritemetas({
                 title: 'Welcome QR | Pricing',
                 description: `Brief description of how Welcome QR Codes prices it's products. Gives details of different plans and tiers offered and the services included in each tier.`,
-                noindex: true,
+                index: true,
+            }, next)
+        },
+    },
+    {
+        path: '/contact',
+        name: 'contact',
+        component: contact,
+        beforeEnter: (to: any, from: any, next: any) => {
+            overwritemetas({
+                title: 'Welcome QR | Contact Us',
+                description: `Get in touch with us about; bug reports, feature requests, account queries or kind words of encoragement. We would love to hear from you!`,
+                index: true,
             }, next)
         },
     },
@@ -74,7 +88,7 @@ const routes = [
             overwritemetas({
                 title: 'Welcome QR | Account',
                 description: `Manage all the information we need to keep your account working as intended`,
-                noindex: true,
+                index: true,
             }, next)
         },
     },
@@ -95,7 +109,7 @@ const routes = [
                     overwritemetas({
                         title: 'Login ~ Signup',
                         description: `Login and Signup here!`,
-                        noindex: true,
+                        index: true,
                     }, next)
                 },
             },
@@ -107,7 +121,7 @@ const routes = [
                     overwritemetas({
                         title: 'Login ~ Signup',
                         description: `Login and Signup here!`,
-                        noindex: true,
+                        index: true,
                     }, next)
                 },
             },
@@ -119,7 +133,7 @@ const routes = [
                     overwritemetas({
                         title: 'Login ~ Signup',
                         description: `Login and Signup here!`,
-                        noindex: true,
+                        index: true,
                     }, next)
                 },
             },
@@ -131,7 +145,7 @@ const routes = [
                     overwritemetas({
                         title: 'Login ~ Signup',
                         description: `Login and Signup here!`,
-                        noindex: true,
+                        index: true,
                     }, next)
                 },
             },
@@ -147,9 +161,9 @@ const routes = [
         redirect: '/app/manage',
         beforeEnter: (to: any, from: any, next: any) => {
             overwritemetas({
-                title: 'Welcome QR | Create New QR',
-                description: `Where the magic happens, create a new dowmloadable QR code and associate website and content`,
-                noindex: true,
+                title: '',
+                description: ``,
+                index: false,
             }, next)
         },
         children: [
@@ -161,7 +175,7 @@ const routes = [
                     overwritemetas({
                         title: 'Welcome QR | Manage',
                         description: `Where the magic happens, create a new downloadable QR code and associate website and content.`,
-                        noindex: true,
+                        index: true,
                     }, next)
                 },
             },
@@ -173,7 +187,7 @@ const routes = [
                     overwritemetas({
                         title: 'Welcome QR | Create Your Site',
                         description: `Where the magic happens, create a new downloadable QR code and associate website and content.`,
-                        noindex: true,
+                        index: true,
                     }, next)
                 },
             },
@@ -185,7 +199,7 @@ const routes = [
                     overwritemetas({
                         title: 'Welcome QR | Preview',
                         description: `Where the magic happens, create a new downloadable QR code and associate website and content.`,
-                        noindex: true,
+                        index: true,
                     }, next)
                 },
             },
@@ -200,9 +214,9 @@ const routes = [
         component: privacy,
         beforeEnter: (to: any, from: any, next: any) => {
             overwritemetas({
-                title: 'Welcome QR |Privacy Policy',
+                title: 'Welcome QR | Privacy Policy',
                 description: `Brief description of how Welcome QR Codesmanages and takes care of your data and your datas security.`,
-                noindex: true,
+                index: true,
             }, next)
         },
     },
@@ -214,7 +228,7 @@ const routes = [
             overwritemetas({
                 title: 'Welcome QR | Terms and Conditions',
                 description: `Brief description of how Welcome QR Codes does business in a legal sense, information on your rights and our methods of operation`,
-                noindex: true,
+                index: true,
             }, next)
         },
     },
@@ -222,6 +236,13 @@ const routes = [
         path: '/testhtml',
         name: 'testhtml',
         component: testhtml,
+        beforeEnter: (to: any, from: any, next: any) => {
+            overwritemetas({
+                title: '',
+                description: '',
+                index: false,
+            }, next)
+        },
     },
     // -------------------------------------------------------------------
     // --------------------------- PLUMBING
@@ -234,7 +255,7 @@ const routes = [
             overwritemetas({
                 title: '',
                 description: '',
-                noindex: true,
+                index: false,
             }, next)
         },
     },

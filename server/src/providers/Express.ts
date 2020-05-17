@@ -86,6 +86,7 @@ class Express {
 		this.app.post('/auth/reset', QAuth.resetpassword)
 		this.app.post('/auth/toggle_subscribe', passportConfig.isAuthenticated, QAuth.togglesubscribe)
 		this.app.post('/auth/user_settings', passportConfig.isAuthenticated, QAuth.usersettings)
+		this.app.post('/auth/contact', QAuth.contact)
 
 		// Google
 		this.app.get('/auth/google',

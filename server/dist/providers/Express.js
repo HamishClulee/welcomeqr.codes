@@ -28,10 +28,6 @@ class Express {
         this.app = express();
     }
     init() {
-        // this.app.use(ExceptionHandler.logErrors)
-        // this.app.use(ExceptionHandler.clientErrorHandler)
-        // this.app.use(ExceptionHandler.errorHandler)
-        // this.app = ExceptionHandler.notFoundHandler(this.app)
         this.app.set('port', PORT);
         this.app.use(compression());
         this.app.use(bodyParser.json());
@@ -74,6 +70,7 @@ class Express {
         this.app.post('/auth/reset', QAuth.resetpassword);
         this.app.post('/auth/toggle_subscribe', passportConfig.isAuthenticated, QAuth.togglesubscribe);
         this.app.post('/auth/user_settings', passportConfig.isAuthenticated, QAuth.usersettings);
+        this.app.post('/auth/contact', QAuth.contact);
         // Google
         this.app.get('/auth/google', passport.authenticate('google', { scope: ['email'] }));
         this.app.get('/auth/google/callback', passport.authenticate('google', { failureRedirect: '/?redirect=true' }), (req, res) => {

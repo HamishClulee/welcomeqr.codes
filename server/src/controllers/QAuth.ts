@@ -12,6 +12,8 @@ import { IVerifyOptions } from 'passport-local'
 import Environment from '../providers/Environment'
 import Turtle from './Turtle'
 
+import Log from '../middlewares/Log'
+
 const SendGrid = require('@sendgrid/mail')
 
 export const login = (req: IRequest, res: IResponse, next: INext): any => {
@@ -252,4 +254,9 @@ export const usersettings = async (req: IRequest, res: IResponse) => {
 	} catch (e) {
 		Turtle.authError('user settings', `caught error: ${e}`, res, req.body.intercept)
 	}
+}
+
+export const contact = (req: IRequest, res: IResponse) => {
+	Log.info(req.body)
+	return res.status(200).send({ _: ':)' })
 }

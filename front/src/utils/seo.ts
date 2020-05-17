@@ -1,7 +1,7 @@
 interface Meta {
   title: string,
   description: string,
-  noindex: boolean,
+  index: boolean,
 }
 
 const overwritemetas = (meta: Meta | null = null, next: any): void => {
@@ -14,7 +14,7 @@ const overwritemetas = (meta: Meta | null = null, next: any): void => {
         title.text = meta.title
         des.content = meta.description
 
-        if (meta.noindex) {
+        if (meta.index === false) {
 
             const robots: HTMLMetaElement = document.createElement('meta') as HTMLMetaElement
             robots.name = 'robots'
@@ -28,11 +28,7 @@ const overwritemetas = (meta: Meta | null = null, next: any): void => {
                 const metas: HTMLCollectionOf<HTMLMetaElement> = document.getElementsByTagName('meta') as HTMLCollectionOf<HTMLMetaElement>
                 for (let i = 0; i < metas.length; i += 1) {
 
-                    if (metas[i] && metas[i].parentNode && metas[i].name === 'robots') {
-
-              metas[i].parentNode!.removeChild(metas[i])
-
-                    }
+                    if (metas[i] && metas[i].parentNode && metas[i].name === 'robots') metas[i].parentNode!.removeChild(metas[i])
 
                 }
 
