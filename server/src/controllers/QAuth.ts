@@ -10,8 +10,7 @@ import { IRequest, IResponse, INext } from '../interfaces'
 import { IVerifyOptions } from 'passport-local'
 
 import Environment from '../providers/Environment'
-import Clean from './Clean'
-
+import Clean from '../middlewares/Clean'
 import Log from '../middlewares/Log'
 
 const SendGrid = require('@sendgrid/mail')
@@ -122,7 +121,7 @@ export const sessionchallenge = async (req: IRequest, res: IResponse) => {
 
 	try {
 
-		if (!req.session.passport) { Clean.deny(res, 403) }
+		if (!req.session.passport) { return Clean.deny(res, 403) }
 
 		const user = await User.findOne({ _id: req.session.passport.user })
 

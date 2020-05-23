@@ -1,7 +1,7 @@
 import { UserDocument } from '../models/User'
 import { IResponse } from '../interfaces'
 
-import Log from '../middlewares/Log'
+import Log from './Log'
 
 interface AuthResponse {
 	email: string | null,
@@ -17,7 +17,7 @@ interface SettingsResponse extends AuthResponse {
 	isemailverified: boolean,
 }
 
-const Turtle = {
+const Clean = {
 
 	settings: function(res, user: UserDocument): SettingsResponse {
 
@@ -112,4 +112,4 @@ const Turtle = {
 
 }
 
-export default Turtle
+export default Clean

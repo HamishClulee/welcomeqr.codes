@@ -12,7 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const Editor_1 = require("../models/Editor");
 const Subdom_1 = require("../models/Subdom");
 const User_1 = require("../models/User");
-const Clean_1 = require("./Clean");
+const Clean_1 = require("../middlewares/Clean");
 const adjective = require("../resources/words/adjectives");
 const noun = require("../resources/words/nouns");
 const adverb = require("../resources/words/adverbs");
@@ -62,8 +62,16 @@ exports._precaching = () => {
 };
 exports.generateRandomSubDom = (req, res) => {
     try {
-        const rando = () => { return `${adverb.adverbs[Math.floor(Math.random() * Math.floor(adverb.length - 1))]}-${adjective.adjectives[Math.floor(Math.random() * Math.floor(adjective.length - 1))]}-${noun.nouns[Math.floor(Math.random() * Math.floor(noun.length - 1))]}`; };
-        return Clean_1.default.success(res, 200, rando());
+        const randInd = (len) => {
+            return Math.floor(Math.random() * Math.floor(len - 1));
+        };
+        const ad = adverb.adverbs;
+        const nouns = noun.nouns;
+        const adj = adjective.adjectives;
+        const randSubDom = () => {
+            return `${ad[randInd(ad.length)]}-${adj[randInd(adj.length)]}-${nouns[randInd(nouns.length)]}`;
+        };
+        return Clean_1.default.success(res, 200, randSubDom());
     }
     catch (e) {
         return Clean_1.default.apiError('generateRandomSubdom', e, res);

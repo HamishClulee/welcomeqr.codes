@@ -77,7 +77,7 @@ export default {
     },
     beforeCreate() {
         // if token exists, maybe user already has a session, pass false so auth failure doesnt redirect user to /auth
-        if(this.$QAuth.checktoken()) this.$QAuth.authenticate(false).then(res => {
+        if(this.$QAuth.checktoken()) this.$QAuth.authenticate(true).then(res => {
             this.$store.commit('IS_AUTHED', res.data.user)
         })
     },

@@ -3,7 +3,7 @@ import { IResponse, IRequest } from '../interfaces'
 import { Editor } from '../models/Editor'
 import { Subdom } from '../models/Subdom'
 import { User } from '../models/User'
-import Clean from './Clean'
+import Clean from '../middlewares/Clean'
 
 import * as adjective from '../resources/words/adjectives'
 import * as noun from '../resources/words/nouns'
@@ -90,9 +90,19 @@ export const generateRandomSubDom = (req: IRequest, res: IResponse) => {
 
 	try {
 
-		const rando = () => { return `${adverb.adverbs[Math.floor(Math.random() * Math.floor(adverb.length - 1))]}-${adjective.adjectives[Math.floor(Math.random() * Math.floor(adjective.length - 1))]}-${noun.nouns[Math.floor(Math.random() * Math.floor(noun.length - 1))]}`}
+		const randInd = (len: number): number => {
+			return Math.floor(Math.random() * Math.floor(len - 1))
+		}
 
-		return Clean.success(res, 200, rando())
+		const ad = adverb.adverbs
+		const nouns = noun.nouns
+		const adj = adjective.adjectives
+
+		const randSubDom = () => {
+			return `${ad[randInd(ad.length)]}-${adj[randInd(adj.length)]}-${nouns[randInd(nouns.length)]}`
+		}
+
+		return Clean.success(res, 200, randSubDom())
 
 	} catch (e) {
 

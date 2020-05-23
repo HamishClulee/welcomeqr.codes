@@ -16,7 +16,7 @@ const ResetEmail = require("../resources/emails/resetconfirm");
 const ForgotPassword = require("../resources/emails/forgot");
 const User_1 = require("../models/User");
 const Environment_1 = require("../providers/Environment");
-const Clean_1 = require("./Clean");
+const Clean_1 = require("../middlewares/Clean");
 const SendGrid = require('@sendgrid/mail');
 exports.login = (req, res, next) => {
     validate.check('email', 'E-mail cannot be blank').notEmpty();
@@ -97,7 +97,7 @@ exports.logout = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
 exports.sessionchallenge = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         if (!req.session.passport) {
-            Clean_1.default.deny(res, 403);
+            return Clean_1.default.deny(res, 403);
         }
         const user = yield User_1.User.findOne({ _id: req.session.passport.user });
         if (user) {
