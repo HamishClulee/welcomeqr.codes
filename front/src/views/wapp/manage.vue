@@ -79,11 +79,16 @@ export default {
     },
     created() {
         EventBus.$emit(LOADING, true)
-        this.$QAuth.authenticate().then(res => {
+        this.$QAuth.authenticate(true).then(res => {
             this.$store.commit('IS_AUTHED', res.data.user)
             if (res.data.user.subdom) {
                 this.subdom = res.data.user.subdom
             }
+            EventBus.$emit(LOADING, false)
+            this.authinprog = false
+        }).catch(err => {
+            this.$router.push({ name: 'login', query: { 'redirect': true } })
+            this.$store.commit('IS_AUTHED', err.response.data.user)
             EventBus.$emit(LOADING, false)
             this.authinprog = false
         })

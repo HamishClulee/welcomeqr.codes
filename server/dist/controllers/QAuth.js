@@ -97,13 +97,13 @@ exports.logout = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
 exports.sessionchallenge = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         if (!req.session.passport) {
-            return Clean_1.default.deny(res, 403);
+            return Clean_1.default.deny(res, 403, 'No session', req.body.intercept);
         }
         const user = yield User_1.User.findOne({ _id: req.session.passport.user });
         if (user) {
-            return Clean_1.default.approve(res, 200, user);
+            return Clean_1.default.approve(res, 200, user, 'Auth success', req.body.intercept);
         }
-        return Clean_1.default.deny(res, 401, 'You do not exist.');
+        return Clean_1.default.deny(res, 401, 'You do not exist', req.body.intercept);
     }
     catch (e) {
         return Clean_1.default.authError('session challenge', `caught error: ${e}`, res, req.body.intercept);

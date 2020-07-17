@@ -25,19 +25,19 @@ const Clean = {
 
 	},
 
-	deny: function(res: IResponse, status: number = 403, msg: string = ''): IResponse {
+	deny: function(res: IResponse, status: number = 403, msg: string = '', intercept: boolean = false): IResponse {
 
 		let _user = this.killUser()
 
-		return res.status(status).send({ msg, user: _user })
+		return res.status(status).send({ msg, user: _user, intercept })
 
 	},
 
-	approve: function(res: IResponse, status: number, user: UserDocument, msg: string = ''): IResponse {
+	approve: function(res: IResponse, status: number, user: UserDocument, msg: string = '', intercept: boolean = false): IResponse {
 
 		let _user = this.buildUser(user)
 
-		return res.status(status).send({ msg, user: _user })
+		return res.status(status).send({ msg, user: _user, intercept })
 
 	},
 

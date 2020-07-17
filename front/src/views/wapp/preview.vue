@@ -1,7 +1,7 @@
 <template>
     <main class="preview-container" v-show="!authinprog">
         <section class="preview-html-container" v-html="html">
-
+            <!-- Server side HTML will display here -->
         </section>
         <button class="floating-fixed" @click="backtoedit"></button>
     </main>
@@ -28,7 +28,11 @@ export default {
                     this.html = htmlRes.data.editor.html
                 }
             } )
-
+        }).catch(err => {
+            this.$router.push({ name: 'login', query: { 'redirect': true } })
+            this.$store.commit('IS_AUTHED', err.response.data.user)
+            EventBus.$emit(LOADING, false)
+            this.authinprog = false
         })
     },
     methods: {

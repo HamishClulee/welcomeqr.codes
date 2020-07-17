@@ -5,13 +5,13 @@ const Clean = {
     settings: function (res, user) {
         return res.status(200).send({ user: this.buildSettings(user) });
     },
-    deny: function (res, status = 403, msg = '') {
+    deny: function (res, status = 403, msg = '', intercept = false) {
         let _user = this.killUser();
-        return res.status(status).send({ msg, user: _user });
+        return res.status(status).send({ msg, user: _user, intercept });
     },
-    approve: function (res, status, user, msg = '') {
+    approve: function (res, status, user, msg = '', intercept = false) {
         let _user = this.buildUser(user);
-        return res.status(status).send({ msg, user: _user });
+        return res.status(status).send({ msg, user: _user, intercept });
     },
     success: function (res, status, content = {}, msg = '') {
         return res.status(status).send({ msg, content });

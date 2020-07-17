@@ -125,6 +125,11 @@ export default {
                 }
                 
             })
+        }).catch(err => {
+            this.$router.push({ name: 'login', query: { 'redirect': true } })
+            this.$store.commit('IS_AUTHED', err.response.data.user)
+            EventBus.$emit(LOADING, false)
+            this.authinprog = false
         })
     },
     mounted () {

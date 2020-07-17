@@ -10,7 +10,6 @@ const cors = require("cors");
 const redis = require("redis");
 const passport = require("passport");
 const multer = require("multer");
-// import DBDump from '../resources/dump10000users'
 const editor = require("../controllers/Editor");
 const passportConfig = require("../config/passport");
 /** All Auth Routes */
@@ -84,7 +83,6 @@ class Express {
         this.app.post('/api/gethtmlforuser', passportConfig.isAuthenticated, editor.getHTML);
         this.app.post('/api/generatesubdom', passportConfig.isAuthenticated, editor.generateRandomSubDom);
         editor._precaching();
-        // DBDump.addXUsersToDb(10000)
         /** ---------------------------------------  IMAGE STORAGE  --------------------------------- */
         const storage = multer.diskStorage({
             destination: function (req, file, callback) {

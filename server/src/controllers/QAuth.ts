@@ -11,7 +11,6 @@ import { IVerifyOptions } from 'passport-local'
 
 import Environment from '../providers/Environment'
 import Clean from '../middlewares/Clean'
-import Log from '../middlewares/Log'
 
 const SendGrid = require('@sendgrid/mail')
 
@@ -121,13 +120,13 @@ export const sessionchallenge = async (req: IRequest, res: IResponse) => {
 
 	try {
 
-		if (!req.session.passport) { return Clean.deny(res, 403) }
+		if (!req.session.passport) { return Clean.deny(res, 403, 'No session', req.body.intercept) }
 
 		const user = await User.findOne({ _id: req.session.passport.user })
 
-		if (user) { return Clean.approve(res, 200, user) }
+		if (user) { return Clean.approve(res, 200, user, 'Auth success', req.body.intercept) }
 
-		return Clean.deny(res, 401, 'You do not exist.')
+		return Clean.deny(res, 401, 'You do not exist', req.body.intercept)
 
 	} catch (e) {
 

@@ -114,7 +114,7 @@ export default {
                 color: 'tertiary',
                 black: false,
             })
-            this.$router.push({ path: '/auth' })
+            this.$router.push({ path: '/auth/login?redirect=true' })
         }
 
         if (para.get('googleauth') === 'true') {

@@ -10,8 +10,6 @@ import * as lusca from 'lusca'
 import * as passport from 'passport'
 import * as multer from 'multer'
 
-// import DBDump from '../resources/dump10000users'
-
 import * as editor from '../controllers/Editor'
 import * as passportConfig from '../config/passport'
 
@@ -107,8 +105,6 @@ class Express {
 		this.app.post('/api/gethtmlforuser', passportConfig.isAuthenticated, editor.getHTML)
 		this.app.post('/api/generatesubdom', passportConfig.isAuthenticated, editor.generateRandomSubDom)
 		editor._precaching()
-
-		// DBDump.addXUsersToDb(10000)
 
 		/** ---------------------------------------  IMAGE STORAGE  --------------------------------- */
 		const storage = multer.diskStorage({

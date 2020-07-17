@@ -1,23 +1,22 @@
-import axios, { AxiosError, AxiosResponse, AxiosInstance, AxiosPromise } from 'axios'
-import { SignUpPayload, LoginPayload, QUser } from '@I/IUser'
+import axios, { AxiosError, AxiosInstance, AxiosPromise } from 'axios'
+import { QUser } from '@I/IUser'
 import { EventBus, LOADING, SERVER_AUTH_ERROR_MESSAGE } from '../EventBus'
 
-export function ErrStr(error: AxiosError): string {
+export const ErrStr = (error: AxiosError): string => {
     if (error.response && error.response.data.status) {
         return error.response.data.status
     }
     return 'Something went wrong - please try again.'
 }
 
-interface GoogleDetails {
-    code: String,
-    redirect_uri: String,
-}
-
 export class QAuth {
 
-    private BASE_URL = process.env.NODE_ENV === 'development' ? 'http://localhost:1980/auth' : 'https://welcomeqr.codes/auth'
-    private AUTH_URL = process.env.NODE_ENV === 'development' ? 'http://localhost:8080/?redirect=true' : 'https://welcomeqr.codes/?redirect=true'
+    private DEV_SERV = 'http://localhost:1980'
+    private DEV_CLIENT = 'http://localhost:8080'
+    private PROD_BASE = 'https://welcomeqr.codes'
+
+    private BASE_URL = process.env.NODE_ENV === 'development' ? `${this.DEV_SERV}/auth` : `${this.PROD_BASE}/auth`
+    // private AUTH_URL = process.env.NODE_ENV === 'development' ? `${this.DEV_CLIENT}/?redirect=true` : `${this.PROD_BASE}/?redirect=true`
 
     ax: AxiosInstance;
 
@@ -28,23 +27,23 @@ export class QAuth {
             withCredentials: true,
         })
 
-        this.ax.interceptors.response.use(res => res, (error: AxiosError ) => {
-            if (error.response && error.response.data.userError) {
-                EventBus.$emit(SERVER_AUTH_ERROR_MESSAGE, error.response.data.userError)
-            }
-            if (
-                error.response
-                && error.response.status > 400
-                && error.response.data.intercept
-            ) 
-            {
-                window.location.href = this.AUTH_URL
-                EventBus.$emit(LOADING, false)
-            }
+        // this.ax.interceptors.response.use(res => res, (error: AxiosError ) => {
+        //     if (error.response && error.response.data.userError) {
+        //         EventBus.$emit(SERVER_AUTH_ERROR_MESSAGE, error.response.data.userError)
+        //     }
+        //     if (
+        //         error.response
+        //         && error.response.status > 400
+        //         && error.response.data.intercept
+        //     ) 
+        //     {
+        //         window.location.href = this.AUTH_URL
+        //         EventBus.$emit(LOADING, false)
+        //     }
 
-            this.removetoken()
-            return Promise.reject(error)
-        })
+        //     this.removetoken()
+        //     return Promise.reject(error)
+        // })
     }
 
     settoken(token: string): void {
@@ -60,7 +59,6 @@ export class QAuth {
     }
 
     authenticate(intercept = true): AxiosPromise<QUser> {
-        // if intercept is set to false failed responses > 400 will not redirect the user to /auth
         return this.ax.post('/session_challenge', { intercept })
     }
 
