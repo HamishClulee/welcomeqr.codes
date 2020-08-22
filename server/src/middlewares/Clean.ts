@@ -1,6 +1,9 @@
 import { UserDocument } from '../models/User'
 import { IResponse } from '../interfaces'
 
+import Env from '../providers/Environment'
+import jwt from 'jsonwebtoken'
+
 import Log from './Log'
 
 interface AuthResponse {
@@ -9,12 +12,19 @@ interface AuthResponse {
 	authed: boolean,
 	subdom: string | null,
 	role: string | null,
-	tier: string | null
+	tier: string | null,
+	token: string | null,
 }
 
 interface SettingsResponse extends AuthResponse {
 	allowsemails: boolean,
 	isemailverified: boolean,
+}
+
+const generateAccessToken = (userid: string) => {
+
+	return jwt.sign(userid, Env.get().tokenSecret, { expiresIn: `${1000 * 60 * 60 * 24}s` })
+
 }
 
 const Clean = {
@@ -61,7 +71,8 @@ const Clean = {
 			authed: false,
 			subdom: null,
 			role: null,
-			tier: null
+			tier: null,
+			token: null
 		}
 
 	},
@@ -74,7 +85,8 @@ const Clean = {
 			authed: true,
 			subdom: user.subdom,
 			role: user.role,
-			tier: user.accountTier
+			tier: user.accountTier,
+			token: generateAccessToken(user._id)
 		}
 
 	},
@@ -88,6 +100,7 @@ const Clean = {
 			subdom: user.subdom,
 			role: user.role,
 			tier: user.accountTier,
+			token: generateAccessToken(user._id),
 			allowsemails: user.allowEmails,
 			isemailverified: user.emailVerified
 		}

@@ -11,7 +11,7 @@ const redis = require("redis");
 const passport = require("passport");
 const multer = require("multer");
 const editor = require("../controllers/Editor");
-const passportConfig = require("../config/passport");
+const auth = require("../config/passport");
 /** All Auth Routes */
 const QAuth = require("../controllers/QAuth");
 /** Middlewares */
@@ -68,8 +68,8 @@ class Express {
         this.app.post('/auth/verify_email', QAuth.verifyemail);
         this.app.post('/auth/forgot', QAuth.forgotpassword);
         this.app.post('/auth/reset', QAuth.resetpassword);
-        this.app.post('/auth/toggle_subscribe', passportConfig.isAuthenticated, QAuth.togglesubscribe);
-        this.app.post('/auth/user_settings', passportConfig.isAuthenticated, QAuth.usersettings);
+        this.app.post('/auth/toggle_subscribe', auth.isReqAllowed, QAuth.togglesubscribe);
+        this.app.post('/auth/user_settings', auth.isReqAllowed, QAuth.usersettings);
         this.app.post('/auth/contact', QAuth.contact);
         // Google
         this.app.get('/auth/google', passport.authenticate('google', { scope: ['email'] }));
@@ -77,11 +77,11 @@ class Express {
             res.redirect('/?googleauth=true');
         });
         /** -------------- Editor -------------- */
-        this.app.post('/api/submitnew', passportConfig.isAuthenticated, editor.submitNew);
-        this.app.post('/api/checksubdom', passportConfig.isAuthenticated, editor.checkSubdom);
-        this.app.post('/api/submitsubdom', passportConfig.isAuthenticated, editor.submitSubdom);
-        this.app.post('/api/gethtmlforuser', passportConfig.isAuthenticated, editor.getHTML);
-        this.app.post('/api/generatesubdom', passportConfig.isAuthenticated, editor.generateRandomSubDom);
+        this.app.post('/api/submitnew', auth.isReqAllowed, editor.submitNew);
+        this.app.post('/api/checksubdom', auth.isReqAllowed, editor.checkSubdom);
+        this.app.post('/api/submitsubdom', auth.isReqAllowed, editor.submitSubdom);
+        this.app.post('/api/gethtmlforuser', auth.isReqAllowed, editor.getHTML);
+        this.app.post('/api/generatesubdom', auth.isReqAllowed, editor.generateRandomSubDom);
         editor._precaching();
         /** ---------------------------------------  IMAGE STORAGE  --------------------------------- */
         const storage = multer.diskStorage({

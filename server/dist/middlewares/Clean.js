@@ -1,6 +1,11 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+const Environment_1 = require("../providers/Environment");
+const jsonwebtoken_1 = require("jsonwebtoken");
 const Log_1 = require("./Log");
+const generateAccessToken = (userid) => {
+    return jsonwebtoken_1.default.sign(userid, Environment_1.default.get().tokenSecret, { expiresIn: `${1000 * 60 * 60 * 24}s` });
+};
 const Clean = {
     settings: function (res, user) {
         return res.status(200).send({ user: this.buildSettings(user) });
@@ -26,7 +31,8 @@ const Clean = {
             authed: false,
             subdom: null,
             role: null,
-            tier: null
+            tier: null,
+            token: null
         };
     },
     buildUser: function (user) {
@@ -36,7 +42,8 @@ const Clean = {
             authed: true,
             subdom: user.subdom,
             role: user.role,
-            tier: user.accountTier
+            tier: user.accountTier,
+            token: generateAccessToken(user._id)
         };
     },
     buildSettings: function (user) {
@@ -47,6 +54,7 @@ const Clean = {
             subdom: user.subdom,
             role: user.role,
             tier: user.accountTier,
+            token: generateAccessToken(user._id),
             allowsemails: user.allowEmails,
             isemailverified: user.emailVerified
         };

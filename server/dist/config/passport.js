@@ -14,8 +14,8 @@ const passportLocal = require("passport-local");
 const lodash_1 = require("lodash");
 const mongoose = require("mongoose");
 const Environment_1 = require("../providers/Environment");
-const User_1 = require("../models/User");
 const jsonwebtoken_1 = require("jsonwebtoken");
+const User_1 = require("../models/User");
 const LocalStrategy = passportLocal.Strategy;
 passport.serializeUser((user, done) => {
     done(null, user.id);
@@ -111,26 +111,7 @@ passport.use(new GoogleStrategy({
         });
     }
 })));
-exports.isAuthenticated = (req, res, next) => {
-    if (req.isAuthenticated()) {
-        return next();
-    }
-    else {
-        res.redirect('/?authRedirect=true');
-    }
-};
-exports.isAuthorized = (req, res, next) => {
-    const provider = req.path.split('/').slice(-1)[0];
-    const user = req.session.user;
-    if (lodash_1.default.find(user.tokens, { kind: provider })) {
-        next();
-    }
-    else {
-        res.redirect(`/auth/${provider}`);
-    }
-};
-exports.authenticateToken = (req, res, next) => {
-    // Gather the jwt access token from the request header
+exports.isReqAllowed = (req, res, next) => {
     const authHeader = req.headers['authorization'];
     const token = authHeader && authHeader.split(' ')[1];
     if (token == null) {
@@ -141,10 +122,22 @@ exports.authenticateToken = (req, res, next) => {
             return res.sendStatus(403);
         }
         req.user = user;
-        next(); // pass the execution off to whatever request the client intended
+        if (req.isAuthenticated()) {
+            next();
+        }
+        else {
+            res.redirect('/?authRedirect=true');
+        }
     });
 };
-exports.generateAccessToken = (userid) => {
-    return jsonwebtoken_1.default.sign(userid, Environment_1.default.get().tokenSecret, { expiresIn: `${1000 * 60 * 60 * 24}s` });
+exports.isAuthorized = (req, res, next) => {
+    const provider = req.path.split('/').slice(-1)[0];
+    const user = req.session.user;
+    if (lodash_1.default.find(user.tokens, { kind: provider })) {
+        next();
+    }
+    else {
+        res.redirect(`/auth/${provider}`);
+    }
 };
 //# sourceMappingURL=passport.js.map

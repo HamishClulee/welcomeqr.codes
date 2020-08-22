@@ -5,11 +5,10 @@ import _ from 'lodash'
 import * as mongoose from 'mongoose'
 
 import Env from '../providers/Environment'
+import jwt from 'jsonwebtoken'
 
 import { User, UserDocument } from '../models/User'
 import { IRequest, IResponse, INext } from '../interfaces'
-
-import jwt from 'jsonwebtoken'
 
 const LocalStrategy = passportLocal.Strategy
 
@@ -30,18 +29,28 @@ passport.deserializeUser<any, any>((id, done) => {
 })
 
 passport.use(new LocalStrategy({ usernameField: 'email' }, (email, password, done) => {
+
 	User.findOne({ email: email.toLowerCase() }, (err, user: any) => {
+
 		if (err) { return done(err) }
+
 		if (!user) {
+
 			return done(undefined, false, { message: `Email ${email} not found.` })
 		}
+
 		user.comparePassword(password, (err: Error, isMatch: boolean) => {
+
 			if (err) { return done(err) }
+
 			if (isMatch) {
+
 				return done(undefined, user)
 			}
+
 			return done(undefined, false, { message: 'Invalid email or password.' })
 		})
+
 	})
 }))
 
@@ -119,23 +128,8 @@ passport.use(new GoogleStrategy(
 	})
 )
 
-export const isAuthenticated = (req: IRequest, res: IResponse, next: INext) => {
-	if (req.isAuthenticated()) { return next() } else { res.redirect('/?authRedirect=true') }
-}
+export const isReqAllowed = (req: IRequest, res: IResponse, next: INext) => {
 
-export const isAuthorized = (req: IRequest, res: IResponse, next: INext) => {
-
-	const provider = req.path.split('/').slice(-1)[0]
-
-	const user = req.session.user as UserDocument
-
-	if (_.find(user.tokens, { kind: provider })) { next() } else { res.redirect(`/auth/${provider}`) }
-
-}
-
-export const authenticateToken = (req, res, next) => {
-
-	// Gather the jwt access token from the request header
 	const authHeader = req.headers['authorization']
 
 	const token = authHeader && authHeader.split(' ')[1]
@@ -148,12 +142,17 @@ export const authenticateToken = (req, res, next) => {
 
 		req.user = user
 
-		next() // pass the execution off to whatever request the client intended
+		if (req.isAuthenticated()) { next() } else { res.redirect('/?authRedirect=true') }
+
 	})
 }
 
-export const generateAccessToken = (userid: string) => {
+export const isAuthorized = (req: IRequest, res: IResponse, next: INext) => {
 
-	return jwt.sign(userid, Env.get().tokenSecret, { expiresIn: `${1000 * 60 * 60 * 24}s` })
+	const provider = req.path.split('/').slice(-1)[0]
+
+	const user = req.session.user as UserDocument
+
+	if (_.find(user.tokens, { kind: provider })) { next() } else { res.redirect(`/auth/${provider}`) }
 
 }

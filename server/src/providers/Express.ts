@@ -11,7 +11,7 @@ import * as passport from 'passport'
 import * as multer from 'multer'
 
 import * as editor from '../controllers/Editor'
-import * as passportConfig from '../config/passport'
+import * as auth from '../config/passport'
 
 /** All Auth Routes */
 import * as QAuth from '../controllers/QAuth'
@@ -85,8 +85,8 @@ class Express {
 		this.app.post('/auth/forgot', QAuth.forgotpassword)
 		this.app.post('/auth/reset', QAuth.resetpassword)
 
-		this.app.post('/auth/toggle_subscribe', passportConfig.isAuthenticated, QAuth.togglesubscribe)
-		this.app.post('/auth/user_settings', passportConfig.isAuthenticated, QAuth.usersettings)
+		this.app.post('/auth/toggle_subscribe', auth.isReqAllowed, QAuth.togglesubscribe)
+		this.app.post('/auth/user_settings', auth.isReqAllowed, QAuth.usersettings)
 
 		this.app.post('/auth/contact', QAuth.contact)
 
@@ -101,11 +101,12 @@ class Express {
 		})
 
 		/** -------------- Editor -------------- */
-		this.app.post('/api/submitnew', passportConfig.isAuthenticated, editor.submitNew)
-		this.app.post('/api/checksubdom', passportConfig.isAuthenticated, editor.checkSubdom)
-		this.app.post('/api/submitsubdom', passportConfig.isAuthenticated, editor.submitSubdom)
-		this.app.post('/api/gethtmlforuser', passportConfig.isAuthenticated, editor.getHTML)
-		this.app.post('/api/generatesubdom', passportConfig.isAuthenticated, editor.generateRandomSubDom)
+		this.app.post('/api/submitnew', auth.isReqAllowed, editor.submitNew)
+		this.app.post('/api/checksubdom', auth.isReqAllowed, editor.checkSubdom)
+		this.app.post('/api/submitsubdom', auth.isReqAllowed, editor.submitSubdom)
+		this.app.post('/api/gethtmlforuser', auth.isReqAllowed, editor.getHTML)
+		this.app.post('/api/generatesubdom', auth.isReqAllowed, editor.generateRandomSubDom)
+
 		editor._precaching()
 
 		/** ---------------------------------------  IMAGE STORAGE  --------------------------------- */
