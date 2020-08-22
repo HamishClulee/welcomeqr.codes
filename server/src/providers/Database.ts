@@ -2,12 +2,12 @@ import * as mongoose from 'mongoose'
 import * as bluebird from 'bluebird'
 import { MongoError } from 'mongodb'
 
-import Environment from './Environment'
+import Env from './Environment'
 import Log from '../middlewares/Log'
 
 export class Database {
 	public static init (): any {
-		const dsn = Environment.config().mongooseUrl
+		const dsn = Env.get().mongooseUrl
 		const options = { useNewUrlParser: true, useUnifiedTopology: true };
 
 		(<any>mongoose).Promise = bluebird

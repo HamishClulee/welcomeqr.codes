@@ -2,8 +2,8 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const path = require("path");
 const dotenv = require("dotenv");
-class Environment {
-    static config() {
+class Env {
+    static get() {
         dotenv.config({ path: path.join(__dirname, '../../.env') });
         const env = process.env.NODE_ENV;
         const prodUrl = process.env.PROD_URL;
@@ -15,6 +15,7 @@ class Environment {
         const internalEmail = process.env.INTERNAL_EMAIL;
         const googleClientId = process.env.GOOGLE_ID;
         const googleSecret = process.env.GOOGLE_SECRET;
+        const tokenSecret = process.env.TOKEN_SECRET;
         const sendGridSecret = process.env.SENDGRID_API_KEY;
         const name = process.env.APP_NAME || 'Welcome QR Codes';
         const keywords = process.env.APP_KEYWORDS || 'somethings';
@@ -37,6 +38,7 @@ class Environment {
             googleSecret,
             env,
             appSecret,
+            tokenSecret,
             company,
             copyright,
             description,
@@ -56,5 +58,5 @@ class Environment {
         };
     }
 }
-exports.default = Environment;
+exports.default = Env;
 //# sourceMappingURL=Environment.js.map

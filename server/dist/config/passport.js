@@ -15,6 +15,7 @@ const lodash_1 = require("lodash");
 const mongoose = require("mongoose");
 const Environment_1 = require("../providers/Environment");
 const User_1 = require("../models/User");
+const jsonwebtoken_1 = require("jsonwebtoken");
 const LocalStrategy = passportLocal.Strategy;
 passport.serializeUser((user, done) => {
     done(null, user.id);
@@ -53,8 +54,8 @@ passport.use(new LocalStrategy({ usernameField: 'email' }, (email, password, don
 const GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 const url = process.env.NODE_ENV === 'production' ? 'https://welcomeqr.codes' : 'http://localhost:1980';
 passport.use(new GoogleStrategy({
-    clientID: Environment_1.default.config().googleClientId,
-    clientSecret: Environment_1.default.config().googleSecret,
+    clientID: Environment_1.default.get().googleClientId,
+    clientSecret: Environment_1.default.get().googleSecret,
     callbackURL: `${url}/auth/google/callback`
 }, (req, accessToken, refreshToken, profile, done) => __awaiter(void 0, void 0, void 0, function* () {
     if (req.user) {
@@ -127,5 +128,23 @@ exports.isAuthorized = (req, res, next) => {
     else {
         res.redirect(`/auth/${provider}`);
     }
+};
+exports.authenticateToken = (req, res, next) => {
+    // Gather the jwt access token from the request header
+    const authHeader = req.headers['authorization'];
+    const token = authHeader && authHeader.split(' ')[1];
+    if (token == null) {
+        return res.sendStatus(401);
+    } // if there isn't any token
+    jsonwebtoken_1.default.verify(token, Environment_1.default.get().tokenSecret, (err, user) => {
+        if (err) {
+            return res.sendStatus(403);
+        }
+        req.user = user;
+        next(); // pass the execution off to whatever request the client intended
+    });
+};
+exports.generateAccessToken = (userid) => {
+    return jsonwebtoken_1.default.sign(userid, Environment_1.default.get().tokenSecret, { expiresIn: `${1000 * 60 * 60 * 24}s` });
 };
 //# sourceMappingURL=passport.js.map

@@ -6,11 +6,11 @@ const Log_1 = require("../middlewares/Log");
 class Queue {
     constructor() {
         this.jobs = kue.createQueue({
-            prefix: Environment_1.default.config().redisPrefix,
+            prefix: Environment_1.default.get().redisPrefix,
             redis: {
-                port: Environment_1.default.config().redisHttpPort,
-                host: Environment_1.default.config().redisHttpHost,
-                db: Environment_1.default.config().redisDB
+                port: Environment_1.default.get().redisHttpPort,
+                host: Environment_1.default.get().redisHttpHost,
+                db: Environment_1.default.get().redisDB
             }
         });
         this.jobs

@@ -7,7 +7,7 @@ class StatusMonitor {
     mount(_express) {
         Log_1.default.info('Booting the \'StatusMonitor\' middleware...');
         const monitorOptions = {
-            title: Environment_1.default.config().name,
+            title: Environment_1.default.get().name,
             path: '/status-monitor',
             spans: [
                 {

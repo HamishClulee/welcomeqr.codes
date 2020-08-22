@@ -1,8 +1,9 @@
 import * as path from 'path'
 import * as dotenv from 'dotenv'
 
-class Environment {
-	public static config(): any {
+class Env {
+
+	public static get(): any {
 		dotenv.config({ path: path.join(__dirname, '../../.env') })
 
 		const env = process.env.NODE_ENV
@@ -17,7 +18,7 @@ class Environment {
 
 		const googleClientId = process.env.GOOGLE_ID
 		const googleSecret = process.env.GOOGLE_SECRET
-
+		const tokenSecret = process.env.TOKEN_SECRET
 		const sendGridSecret = process.env.SENDGRID_API_KEY
 
 		const name = process.env.APP_NAME || 'Welcome QR Codes'
@@ -45,6 +46,7 @@ class Environment {
 			googleSecret,
 			env,
 			appSecret,
+			tokenSecret,
 			company,
 			copyright,
 			description,
@@ -65,4 +67,4 @@ class Environment {
 	}
 }
 
-export default Environment
+export default Env

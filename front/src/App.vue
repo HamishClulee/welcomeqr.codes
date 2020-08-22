@@ -65,7 +65,7 @@ export default {
 
         return {
             showsitemodal: false,
-            showGlobalSpinner: false,
+            showGlobalSpinner: true,
             contains: null,
             loadPushed: false,
             showUserMessage: false,

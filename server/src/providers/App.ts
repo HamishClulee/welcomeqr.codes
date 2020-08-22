@@ -5,7 +5,7 @@ import * as dotenv from 'dotenv'
 import Express from './Express'
 import { Database } from './Database'
 
-import Environment from './Environment'
+import Env from './Environment'
 import Log from '../middlewares/Log'
 
 class App {
@@ -32,8 +32,8 @@ class App {
 	}
 
 	public loadQueue (): void {
-		const isQueueMonitorEnabled: boolean = Environment.config().queueMonitor
-		const queueMonitorPort: number = Environment.config().queueMonitorHttpPort
+		const isQueueMonitorEnabled: boolean = Env.get().queueMonitor
+		const queueMonitorPort: number = Env.get().queueMonitorHttpPort
 
 		if (isQueueMonitorEnabled) {
 			kue.app.listen(queueMonitorPort)

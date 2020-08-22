@@ -19,8 +19,8 @@ const Environment_1 = require("./Environment");
 const Log_1 = require("../middlewares/Log");
 /** App Constants */
 const PORT = 1980;
-const DEV_URL = Environment_1.default.config().devUrl;
-const PROD_URL = Environment_1.default.config().prodUrl;
+const DEV_URL = Environment_1.default.get().devUrl;
+const PROD_URL = Environment_1.default.get().prodUrl;
 const RedisStore = require('connect-redis')(session);
 const redisClient = redis.createClient();
 class Express {
@@ -40,7 +40,7 @@ class Express {
             },
             saveUninitialized: false,
             resave: false,
-            secret: Environment_1.default.config().appSecret,
+            secret: Environment_1.default.get().appSecret,
             store: new RedisStore({ client: redisClient })
         }));
         if (process.env.NODE_ENV === 'production') {
@@ -108,6 +108,7 @@ class Express {
             disableDotRule: true
         }));
         this.app.get('*', express.static(path.join(__dirname, '../../dist/front-end')));
+        console.log('>>> Test new env setup: --> ', Environment_1.default.get().sendGridSecret);
         this.app.listen(PORT, (_error) => {
             if (_error) {
                 return console.log('Error: ', _error);

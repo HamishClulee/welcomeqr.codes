@@ -21,8 +21,8 @@ class App {
         Express_1.default.init();
     }
     loadQueue() {
-        const isQueueMonitorEnabled = Environment_1.default.config().queueMonitor;
-        const queueMonitorPort = Environment_1.default.config().queueMonitorHttpPort;
+        const isQueueMonitorEnabled = Environment_1.default.get().queueMonitor;
+        const queueMonitorPort = Environment_1.default.get().queueMonitorHttpPort;
         if (isQueueMonitorEnabled) {
             kue.app.listen(queueMonitorPort);
             console.log('\x1b[33m%s\x1b[0m', `Queue Monitor :: Running @ 'http://localhost:${queueMonitorPort}'`);

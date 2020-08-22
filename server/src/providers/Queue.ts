@@ -1,6 +1,6 @@
 import * as kue from 'kue'
 
-import Environment from './Environment'
+import Env from './Environment'
 import Log from '../middlewares/Log'
 
 class Queue {
@@ -8,11 +8,11 @@ class Queue {
 
 	constructor() {
 		this.jobs = kue.createQueue({
-			prefix: Environment.config().redisPrefix,
+			prefix: Env.get().redisPrefix,
 			redis: {
-				port: Environment.config().redisHttpPort,
-				host: Environment.config().redisHttpHost,
-				db:  Environment.config().redisDB
+				port: Env.get().redisHttpPort,
+				host: Env.get().redisHttpHost,
+				db:  Env.get().redisDB
 			}
 		})
 

@@ -65,18 +65,6 @@ userSchema.pre('save', function save(next) {
         });
     });
 });
-userSchema.statics.findOrCreate = function findOrCreate(profile, cb) {
-    let userObj = new this();
-    this.findOne({ _id: profile.id }, (err, result) => {
-        if (!result) {
-            userObj.username = profile.displayName;
-            userObj.save(cb);
-        }
-        else {
-            cb(err, result);
-        }
-    });
-};
 const comparePassword = function (candidatePassword, cb) {
     bcrypt.compare(candidatePassword, this.password, (err, isMatch) => {
         cb(err, isMatch);

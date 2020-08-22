@@ -17,13 +17,13 @@ import * as passportConfig from '../config/passport'
 import * as QAuth from '../controllers/QAuth'
 
 /** Middlewares */
-import Environment from './Environment'
+import Env from './Environment'
 import Log from '../middlewares/Log'
 
 /** App Constants */
 const PORT = 1980
-const DEV_URL = Environment.config().devUrl
-const PROD_URL = Environment.config().prodUrl
+const DEV_URL = Env.get().devUrl
+const PROD_URL = Env.get().prodUrl
 
 const RedisStore = require('connect-redis')(session)
 const redisClient = redis.createClient()
@@ -50,7 +50,7 @@ class Express {
 			},
 			saveUninitialized: false,
 			resave: false,
-			secret: Environment.config().appSecret,
+			secret: Env.get().appSecret,
 			store: new RedisStore({ client: redisClient })
 		}))
 
@@ -84,8 +84,10 @@ class Express {
 		this.app.post('/auth/verify_email', QAuth.verifyemail)
 		this.app.post('/auth/forgot', QAuth.forgotpassword)
 		this.app.post('/auth/reset', QAuth.resetpassword)
+
 		this.app.post('/auth/toggle_subscribe', passportConfig.isAuthenticated, QAuth.togglesubscribe)
 		this.app.post('/auth/user_settings', passportConfig.isAuthenticated, QAuth.usersettings)
+
 		this.app.post('/auth/contact', QAuth.contact)
 
 		// Google
@@ -135,6 +137,8 @@ class Express {
 		}))
 
 		this.app.get('*', express.static(path.join(__dirname, '../../dist/front-end')))
+
+		console.log('>>> Test new env setup: --> ', Env.get().sendGridSecret)
 
 		this.app.listen(PORT, (_error: any) => {
 			if (_error) {

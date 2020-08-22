@@ -6,7 +6,7 @@ const Environment_1 = require("./Environment");
 const Log_1 = require("../middlewares/Log");
 class Database {
     static init() {
-        const dsn = Environment_1.default.config().mongooseUrl;
+        const dsn = Environment_1.default.get().mongooseUrl;
         const options = { useNewUrlParser: true, useUnifiedTopology: true };
         mongoose.Promise = bluebird;
         mongoose.set('useCreateIndex', true);

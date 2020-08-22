@@ -2,7 +2,7 @@ import { Application } from 'express'
 import * as expressStatusMonitor from 'express-status-monitor'
 
 import Log from './Log'
-import Environment from '../providers/Environment'
+import Env from '../providers/Environment'
 
 class StatusMonitor {
 
@@ -11,7 +11,7 @@ class StatusMonitor {
 		Log.info('Booting the \'StatusMonitor\' middleware...')
 
 		const monitorOptions: object = {
-			title: Environment.config().name,
+			title: Env.get().name,
 			path: '/status-monitor',
 			spans: [
 				{

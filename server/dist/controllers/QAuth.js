@@ -76,7 +76,7 @@ exports.signup = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
                 to: user.email,
                 from: 'noreply@welcomeqr.codes',
                 subject: 'A warm welcome from Welcome QR Codes',
-                html: WelcomeEmail.build(`${Environment_1.default.config().baseUrl}/account?token=${token}`)
+                html: WelcomeEmail.build(`${Environment_1.default.get().baseUrl}/account?token=${token}`)
             });
             return Clean_1.default.approve(res, 200, user);
         });
@@ -184,7 +184,7 @@ exports.forgotpassword = (req, res) => __awaiter(void 0, void 0, void 0, functio
             to: user.email,
             from: 'noreply@welcomeqr.codes',
             subject: 'Reset your password on WelcomeQR Codes',
-            html: ForgotPassword.build(`${Environment_1.default.config().baseUrl}/auth/reset?token=${token}`)
+            html: ForgotPassword.build(`${Environment_1.default.get().baseUrl}/auth/reset?token=${token}`)
         });
         return Clean_1.default.approve(res, 200, user);
     }
@@ -210,7 +210,7 @@ exports.usersettings = (req, res) => __awaiter(void 0, void 0, void 0, function*
 exports.contact = (req, res) => {
     SendGrid.setApiKey(process.env.SENDGRID_API_KEY);
     SendGrid.send({
-        to: Environment_1.default.config().internalEmail,
+        to: Environment_1.default.get().internalEmail,
         from: 'contact@welcomeqr.codes',
         subject: 'New contact from Welcome QR',
         html: `

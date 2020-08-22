@@ -9,7 +9,7 @@ import { UserDocument, User } from '../models/User'
 import { IRequest, IResponse, INext } from '../interfaces'
 import { IVerifyOptions } from 'passport-local'
 
-import Environment from '../providers/Environment'
+import Env from '../providers/Environment'
 import Clean from '../middlewares/Clean'
 
 const SendGrid = require('@sendgrid/mail')
@@ -87,7 +87,7 @@ export const signup = async (req: IRequest, res: IResponse) => {
 				to: user.email,
 				from: 'noreply@welcomeqr.codes',
 				subject: 'A warm welcome from Welcome QR Codes',
-				html: WelcomeEmail.build(`${Environment.config().baseUrl}/account?token=${token}`)
+				html: WelcomeEmail.build(`${Env.get().baseUrl}/account?token=${token}`)
 			})
 
 			return Clean.approve(res, 200, user)
@@ -239,7 +239,7 @@ export const forgotpassword = async (req: IRequest, res: IResponse) => {
 			to: user.email,
 			from: 'noreply@welcomeqr.codes',
 			subject: 'Reset your password on WelcomeQR Codes',
-			html: ForgotPassword.build(`${Environment.config().baseUrl}/auth/reset?token=${token}`)
+			html: ForgotPassword.build(`${Env.get().baseUrl}/auth/reset?token=${token}`)
 		})
 
 		return Clean.approve(res, 200, user)
@@ -276,7 +276,7 @@ export const contact = (req: IRequest, res: IResponse) => {
 
 	SendGrid.send({
 
-		to: Environment.config().internalEmail,
+		to: Env.get().internalEmail,
 		from: 'contact@welcomeqr.codes',
 		subject: 'New contact from Welcome QR',
 

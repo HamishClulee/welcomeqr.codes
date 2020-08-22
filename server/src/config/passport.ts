@@ -4,10 +4,12 @@ import _ from 'lodash'
 
 import * as mongoose from 'mongoose'
 
-import Environment from '../providers/Environment'
+import Env from '../providers/Environment'
 
 import { User, UserDocument } from '../models/User'
 import { IRequest, IResponse, INext } from '../interfaces'
+
+import jwt from 'jsonwebtoken'
 
 const LocalStrategy = passportLocal.Strategy
 
@@ -47,10 +49,11 @@ const GoogleStrategy = require('passport-google-oauth').OAuth2Strategy
 
 const url = process.env.NODE_ENV === 'production' ? 'https://welcomeqr.codes' : 'http://localhost:1980'
 
-passport.use(new GoogleStrategy({
-	clientID: Environment.config().googleClientId,
-	clientSecret: Environment.config().googleSecret,
-	callbackURL: `${url}/auth/google/callback`
+passport.use(new GoogleStrategy(
+	{
+		clientID: Env.get().googleClientId,
+		clientSecret: Env.get().googleSecret,
+		callbackURL: `${url}/auth/google/callback`
 	},
 	async (req: any, accessToken: any, refreshToken: any, profile: any, done: any) => {
 
@@ -63,7 +66,9 @@ passport.use(new GoogleStrategy({
 				if (existingUser) {
 					// req.flash('errors', { msg: 'There is already a Google account that belongs to you. Sign in with that account or delete it, then link it with your current account.' })
 					return done(err)
+
 				} else {
+
 					User.findById(req.user.id, (err, user) => {
 						if (err) {
 							return done(err)
@@ -79,6 +84,7 @@ passport.use(new GoogleStrategy({
 				}
 			})
 		} else {
+
 			User.findOne({ google: profile.id }, (err, existingUser) => {
 				if (err) {
 					return done(err)
@@ -118,7 +124,36 @@ export const isAuthenticated = (req: IRequest, res: IResponse, next: INext) => {
 }
 
 export const isAuthorized = (req: IRequest, res: IResponse, next: INext) => {
+
 	const provider = req.path.split('/').slice(-1)[0]
+
 	const user = req.session.user as UserDocument
+
 	if (_.find(user.tokens, { kind: provider })) { next() } else { res.redirect(`/auth/${provider}`) }
+
+}
+
+export const authenticateToken = (req, res, next) => {
+
+	// Gather the jwt access token from the request header
+	const authHeader = req.headers['authorization']
+
+	const token = authHeader && authHeader.split(' ')[1]
+
+	if (token == null) { return res.sendStatus(401) } // if there isn't any token
+
+	jwt.verify(token, Env.get().tokenSecret as string, (err: any, user: any) => {
+
+		if (err) { return res.sendStatus(403) }
+
+		req.user = user
+
+		next() // pass the execution off to whatever request the client intended
+	})
+}
+
+export const generateAccessToken = (userid: string) => {
+
+	return jwt.sign(userid, Env.get().tokenSecret, { expiresIn: `${1000 * 60 * 60 * 24}s` })
+
 }
