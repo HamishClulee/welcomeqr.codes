@@ -14,7 +14,7 @@ const passportLocal = require("passport-local");
 const lodash_1 = require("lodash");
 const mongoose = require("mongoose");
 const Environment_1 = require("../providers/Environment");
-const jsonwebtoken_1 = require("jsonwebtoken");
+const jwt = require('jsonwebtoken');
 const User_1 = require("../models/User");
 const LocalStrategy = passportLocal.Strategy;
 passport.serializeUser((user, done) => {
@@ -117,7 +117,7 @@ exports.isReqAllowed = (req, res, next) => {
     if (token == null) {
         return res.sendStatus(401);
     } // if there isn't any token
-    jsonwebtoken_1.default.verify(token, Environment_1.default.get().tokenSecret, (err, user) => {
+    jwt.verify(token, Environment_1.default.get().tokenSecret, (err, user) => {
         if (err) {
             return res.sendStatus(403);
         }

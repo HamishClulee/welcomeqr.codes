@@ -5,7 +5,7 @@ import _ from 'lodash'
 import * as mongoose from 'mongoose'
 
 import Env from '../providers/Environment'
-import jwt from 'jsonwebtoken'
+const jwt = require('jsonwebtoken')
 
 import { User, UserDocument } from '../models/User'
 import { IRequest, IResponse, INext } from '../interfaces'

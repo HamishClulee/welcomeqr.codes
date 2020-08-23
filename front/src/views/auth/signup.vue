@@ -88,18 +88,6 @@ export default {
             this.servermsg = msg
         })
     },
-    created () {
-        this.$QAuth.authenticate(false).then(res => {
-            this.$store.commit('IS_AUTHED', res.data.user)
-            EventBus.$emit(MESSAGES, {
-                is: true,
-                msg: `You are now already logged in as ${res.data.user.email}!`,
-                color: 'secondary',
-                black: false,
-            })
-            this.$router.push({ path: '/app/manage' })
-        })
-    },
     methods: {
         submit(e) {
             e.preventDefault()
@@ -110,6 +98,7 @@ export default {
                         this.servermsg = res.data.userError
                     } else {
                         this.$store.commit('IS_AUTHED', res.data.user)
+                        this.$QAuth.settoken(res.data.user.token)
                         EventBus.$emit(MESSAGES, {
                             is: true,
                             msg: `You are now logged in! Welcome ${res.data.user.email}!`,
@@ -202,5 +191,4 @@ export default {
 .google-btn .btn-text 
     margin: 10px 14px 40px 40px
     color: $medium-gray
-
 </style>

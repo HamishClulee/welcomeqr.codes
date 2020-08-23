@@ -139,12 +139,9 @@ class Express {
 
 		this.app.get('*', express.static(path.join(__dirname, '../../dist/front-end')))
 
-		console.log('>>> Test new env setup: --> ', Env.get().sendGridSecret)
-
 		this.app.listen(PORT, (_error: any) => {
-			if (_error) {
-				return console.log('Error: ', _error)
-			}
+
+			if (_error) { return console.log('Error: ', _error) }
 
 			Log.info(
 				`Server :: Running @ ${process.env.NODE_ENV === 'production' ? PROD_URL : DEV_URL} :: in ${process.env.NODE_ENV} mode`

@@ -75,31 +75,6 @@ export default {
             },
         }
     },
-    created () {
-
-        // For auth failure redirects from ExpressJS
-        const para = new URLSearchParams(window.location.search)
-        if (para.get('redirect') === 'true') {
-            EventBus.$emit(MESSAGES, {
-                is: true,
-                msg: `Please log in or create an account to use the editor.`,
-                color: 'secondary',
-                black: false,
-            })
-        } else {
-            this.$QAuth.authenticate(false).then(res => { 
-                this.$store.commit('IS_AUTHED', res.data.user)
-                EventBus.$emit(MESSAGES, {
-                    is: true,
-                    msg: `You are now already logged in as ${res.data.user.email}!`,
-                    color: 'secondary',
-                    black: false,
-                })
-                this.$router.push({ path: '/app/manage' })
-            })
-        }
-
-    },
     mounted() {
         EventBus.$on(SERVER_AUTH_ERROR_MESSAGE, msg => {
             this.servermsg = msg
@@ -130,6 +105,7 @@ export default {
             if (res.data.userError) {
                 this.servermsg = res.data.userError
             } else {
+                this.$QAuth.settoken(res.data.user.token)
                 this.$store.commit('IS_AUTHED', res.data.user)
                 EventBus.$emit(MESSAGES, {
                     is: true,

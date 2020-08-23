@@ -108,7 +108,6 @@ class Express {
             disableDotRule: true
         }));
         this.app.get('*', express.static(path.join(__dirname, '../../dist/front-end')));
-        console.log('>>> Test new env setup: --> ', Environment_1.default.get().sendGridSecret);
         this.app.listen(PORT, (_error) => {
             if (_error) {
                 return console.log('Error: ', _error);

@@ -1,10 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const Environment_1 = require("../providers/Environment");
-const jsonwebtoken_1 = require("jsonwebtoken");
+const jwt = require('jsonwebtoken');
 const Log_1 = require("./Log");
 const generateAccessToken = (userid) => {
-    return jsonwebtoken_1.default.sign(userid, Environment_1.default.get().tokenSecret, { expiresIn: `${1000 * 60 * 60 * 24}s` });
+    return jwt.sign(userid, Environment_1.default.get().tokenSecret, { expiresIn: `${1000 * 60 * 60 * 24}s` });
 };
 const Clean = {
     settings: function (res, user) {
@@ -43,7 +43,7 @@ const Clean = {
             subdom: user.subdom,
             role: user.role,
             tier: user.accountTier,
-            token: generateAccessToken(user._id)
+            token: generateAccessToken({ id: user._id })
         };
     },
     buildSettings: function (user) {
@@ -54,7 +54,7 @@ const Clean = {
             subdom: user.subdom,
             role: user.role,
             tier: user.accountTier,
-            token: generateAccessToken(user._id),
+            token: generateAccessToken({ id: user._id }),
             allowsemails: user.allowEmails,
             isemailverified: user.emailVerified
         };

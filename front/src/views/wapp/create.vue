@@ -114,23 +114,11 @@ export default {
     
     },
     created() {
-        // EventBus.$emit(LOADING, true)
-        // this.$QAuth.authenticate().then(res => {
-        //     this.$store.commit('IS_AUTHED', res.data.user)
-        EventBus.$emit(LOADING, false)
-        this.authinprog = false
-        //     this.$QEdit.getHTML().then(res => {
-        //         if (res.data.editor && res.data.editor.html) {
-        //             this.editor.setHTML(res.data.editor.html)
-        //         }
-                
-        //     })
-        // }).catch(err => {
-        //     this.$router.push({ name: 'login', query: { 'redirect': true } })
-        //     this.$store.commit('IS_AUTHED', err.response.data.user)
-        //     EventBus.$emit(LOADING, false)
-        //     this.authinprog = false
-        // })
+        this.$QEdit.getHTML().then(res => {
+            if (res.data.editor && res.data.editor.html) {
+                this.editor.setHTML(res.data.editor.html)
+            }
+        })
     },
     mounted () {
         const edel = document.getElementById( 'editor' )

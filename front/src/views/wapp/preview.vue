@@ -18,22 +18,11 @@ export default {
         }
     },
     created() {
-        // EventBus.$emit(LOADING, true)
-        // this.$QAuth.authenticate().then(res => {
-        //     this.$store.commit('IS_AUTHED', res.data.user)
-        //     EventBus.$emit(LOADING, false)
-        //     this.authinprog = false
-        //     this.$QEdit.getHTML().then(htmlRes => {
-        //         if (htmlRes.data.editor && htmlRes.data.editor.html) {
-        //             this.html = htmlRes.data.editor.html
-        //         }
-        //     } )
-        // }).catch(err => {
-        //     this.$router.push({ name: 'login', query: { 'redirect': true } })
-        //     this.$store.commit('IS_AUTHED', err.response.data.user)
-        //     EventBus.$emit(LOADING, false)
-        //     this.authinprog = false
-        // })
+        this.$QEdit.getHTML().then(htmlRes => {
+            if (htmlRes.data.editor && htmlRes.data.editor.html) {
+                this.html = htmlRes.data.editor.html
+            }
+        })
     },
     methods: {
         backtoedit() {

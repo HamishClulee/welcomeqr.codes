@@ -2,7 +2,7 @@ import { UserDocument } from '../models/User'
 import { IResponse } from '../interfaces'
 
 import Env from '../providers/Environment'
-import jwt from 'jsonwebtoken'
+const jwt = require('jsonwebtoken')
 
 import Log from './Log'
 
@@ -21,7 +21,7 @@ interface SettingsResponse extends AuthResponse {
 	isemailverified: boolean,
 }
 
-const generateAccessToken = (userid: string) => {
+const generateAccessToken = (userid: any) => {
 
 	return jwt.sign(userid, Env.get().tokenSecret, { expiresIn: `${1000 * 60 * 60 * 24}s` })
 
@@ -86,7 +86,7 @@ const Clean = {
 			subdom: user.subdom,
 			role: user.role,
 			tier: user.accountTier,
-			token: generateAccessToken(user._id)
+			token: generateAccessToken({ id: user._id})
 		}
 
 	},
@@ -100,7 +100,7 @@ const Clean = {
 			subdom: user.subdom,
 			role: user.role,
 			tier: user.accountTier,
-			token: generateAccessToken(user._id),
+			token: generateAccessToken({ id: user._id}),
 			allowsemails: user.allowEmails,
 			isemailverified: user.emailVerified
 		}
