@@ -4,7 +4,6 @@ const Environment_1 = require("../providers/Environment");
 const Log_1 = require("./Log");
 const jwt = require('jsonwebtoken');
 const generateAccessToken = (userid) => {
-    console.log(userid);
     return jwt.sign(userid, Environment_1.default.get().tokenSecret, { expiresIn: `2 days` });
 };
 const Clean = {

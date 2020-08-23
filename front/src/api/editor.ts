@@ -2,6 +2,7 @@ import axios, { AxiosInstance, AxiosPromise, AxiosError } from 'axios'
 import { APIResponse } from '@I/IEditor'
 import { QUser } from '@I/IUser'
 import { EventBus, LOADING, SERVER_AUTH_ERROR_MESSAGE } from '../EventBus'
+import Vue from 'vue'
 
 axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem('QToken')}`
 
@@ -25,14 +26,12 @@ export class QEdit {
 
             if (error.response && error.response.status >= 400 && error.response.status < 500) {
 
-                // window.location.href = process.env.NODE_ENV === 'development' ? 'http://localhost:8080' : 'https://welcomeqr.codes'
-
+                Vue.prototype.$router.push({ name: 'login' })
                 EventBus.$emit(SERVER_AUTH_ERROR_MESSAGE, error.response.data.userError)
                 EventBus.$emit(LOADING, false)
+                this.removetoken()
                 
             }
-
-            // this.removetoken()
 
             return Promise.reject(error)
         })
@@ -67,5 +66,9 @@ export class QEdit {
     gettoken(): string {
         let token = localStorage.getItem('QToken')
         return token ? token : ''
+    }
+
+    removetoken(): void {
+        localStorage.setItem('QToken', '')
     }
 }
