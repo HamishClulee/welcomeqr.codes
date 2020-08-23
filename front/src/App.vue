@@ -47,8 +47,8 @@ import {
     LOADING,
     MESSAGES,
     SITEMODAL,
+    EDITOR_ERROR,
 } from './EventBus.ts'
-import { EDITOR_ERROR } from './EventBus'
 
 // useful cludge
 let __proxy

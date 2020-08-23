@@ -1,8 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const Environment_1 = require("../providers/Environment");
-const jwt = require('jsonwebtoken');
 const Log_1 = require("./Log");
+const jwt = require('jsonwebtoken');
 const generateAccessToken = (userid) => {
     return jwt.sign(userid, Environment_1.default.get().tokenSecret, { expiresIn: `${1000 * 60 * 60 * 24}s` });
 };

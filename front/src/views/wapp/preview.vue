@@ -8,7 +8,7 @@
 </template>
 
 <script>
-import { EventBus, LOADING } from '../../EventBus'
+import { EventBus, LOADING, EDITOR_ERROR } from '../../EventBus'
 export default {
     name: 'preview',
     data () {
@@ -18,12 +18,15 @@ export default {
         }
     },
     created() {
+        EventBus.$emit(LOADING, true)
         this.$QEdit.getHTML().then(htmlRes => {
             if (htmlRes.data.editor && htmlRes.data.editor.html) {
                 this.html = htmlRes.data.editor.html
             }
+            EventBus.$emit(LOADING, false)
         }).catch(err => {
-            this.$QAuth.authenticate()
+            EventBus.$emit(EDITOR_ERROR)
+            EventBus.$emit(LOADING, false)
         })
     },
     methods: {

@@ -114,6 +114,7 @@ export default {
     
     },
     created() {
+        EventBus.$emit(LOADING, true)
         this.$QEdit.getHTML()
             .then(res => {
 
@@ -121,16 +122,14 @@ export default {
                     this.editor.setHTML(res.data.editor.html)
                 }
 
+                EventBus.$emit(LOADING, false)
+
             })
-            .catch(err => { // could simply be a server side error, but check auth just in case
-                this.EventBus.$emit(EDITOR_ERROR)
-                this.EventBus.$emit(LOADING, true)
-                this.$QAuth.authenticate().then(res => {
-
-                    // Auth is okay
-                    this.EventBus.$emit(LOADING, false)
-
-                })
+            .catch(err => { 
+                // if error code is > 500 its a server error not an auth issue
+                // if the error code is 4XX then it will be caught by the axios interceptor
+                EventBus.$emit(EDITOR_ERROR)
+                EventBus.$emit(LOADING, false)
             })
     },
     mounted () {

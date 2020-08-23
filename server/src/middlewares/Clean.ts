@@ -2,9 +2,10 @@ import { UserDocument } from '../models/User'
 import { IResponse } from '../interfaces'
 
 import Env from '../providers/Environment'
-const jwt = require('jsonwebtoken')
 
 import Log from './Log'
+
+const jwt = require('jsonwebtoken')
 
 interface AuthResponse {
 	email: string | null,

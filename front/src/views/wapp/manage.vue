@@ -77,26 +77,12 @@ export default {
             authinprog: true,
         }
     },
-    created() {
-        // EventBus.$emit(LOADING, true)
-        // this.$QAuth.authenticate(true).then(res => {
-        //     this.$store.commit('IS_AUTHED', res.data.user)
-        //     if (res.data.user.subdom) {
-        //         this.subdom = res.data.user.subdom
-        //     }
-        EventBus.$emit(LOADING, false)
-        this.authinprog = false
-        // }).catch(err => {
-        //     this.$router.push({ name: 'login', query: { 'redirect': true } })
-        //     this.$store.commit('IS_AUTHED', err.response.data.user)
-        //     EventBus.$emit(LOADING, false)
-        //     this.authinprog = false
-        // })
-    },
     methods: {
         getrandomsubdom() {
             this.$QEdit.generateRandomSubDom().then(res => {
                 this.$refs['subdom'].$data.val = res.data.content
+            }).catch(err => {
+                debugger
             })
         },
         checksubdom(e) {
@@ -105,6 +91,10 @@ export default {
             this.$QEdit.checksubdom(this.subdom).then(res =>{
                 this.checking = false
                 this.subdomok = res.data.okay
+            }).catch(err => { 
+                // if error code is > 500 its a server error not an auth issue
+                // if the error code is 4XX then it will be caught by the axios interceptor
+                EventBus.$emit(EDITOR_ERROR)
             })
         },
         submitsubdom() {
@@ -113,6 +103,10 @@ export default {
                     this.proceed = true
                     this.$store.commit('IS_AUTHED', res.data.user)
                 }
+            }).catch(err => { 
+                // if error code is > 500 its a server error not an auth issue
+                // if the error code is 4XX then it will be caught by the axios interceptor
+                EventBus.$emit(EDITOR_ERROR)
             })
         },
     },

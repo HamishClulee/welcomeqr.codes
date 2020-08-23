@@ -1,13 +1,9 @@
-import axios, { AxiosError, AxiosResponse, AxiosInstance, AxiosPromise } from 'axios'
+import axios, { AxiosInstance, AxiosPromise, AxiosError } from 'axios'
 import { APIResponse } from '@I/IEditor'
 import { QUser } from '@I/IUser'
+import { EventBus, LOADING, SERVER_AUTH_ERROR_MESSAGE } from '../EventBus'
 
-export function ErrStr(error: AxiosError): string {
-    if (error.response && error.response.data.status) {
-        return error.response.data.status
-    }
-    return 'Something went wrong - please try again.'
-}
+axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem('QToken')}`
 
 export class QEdit {
 
@@ -23,20 +19,26 @@ export class QEdit {
         })
 
         this.ax.interceptors.response.use(res => res, (error: AxiosError ) => {
-            if (
-                error.response
-                && error.response.status > 400
-                && error.response.status < 500
-                && error.response.data.intercept
-            ) 
-            {
-                // TODO implement error behaviour
+
+            if (error.response && error.response.status >= 400 && error.response.status < 500) {
+
+                // window.location.href = process.env.NODE_ENV === 'development' ? 'http://localhost:8080' : 'https://welcomeqr.codes'
+
+                EventBus.$emit(SERVER_AUTH_ERROR_MESSAGE, error.response.data.userError)
+                EventBus.$emit(LOADING, false)
+
+                debugger
+                
             }
+
+            // this.removetoken()
+
             return Promise.reject(error)
         })
+
     }
 
-
+    // All the editor routes are protected via session cookie and JWT token
     submitnew(html: string, user: QUser, name: string, intercept = true): AxiosPromise<APIResponse> {
         return this.ax.post('/submitnew', { intercept, html, user, name })
     }

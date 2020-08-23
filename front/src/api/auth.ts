@@ -1,15 +1,7 @@
 import axios, { AxiosError, AxiosInstance, AxiosPromise } from 'axios'
 import { QUser } from '@I/IUser'
-import { EventBus, LOADING, SERVER_AUTH_ERROR_MESSAGE } from '../EventBus'
 
 axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem('QToken')}`
-
-export const ErrStr = (error: AxiosError): string => {
-    if (error.response && error.response.data.status) {
-        return error.response.data.status
-    }
-    return 'Something went wrong - please try again.'
-}
 
 export class QAuth {
 
@@ -17,7 +9,7 @@ export class QAuth {
     private DEV_CLIENT = 'http://localhost:8080'
     private PROD_BASE = 'https://welcomeqr.codes'
 
-    private BASE_URL = process.env.NODE_ENV === 'development' ? `${this.DEV_SERV}/auth/login` : `${this.PROD_BASE}/auth/login`
+    private BASE_URL = process.env.NODE_ENV === 'development' ? `${this.DEV_SERV}/auth` : `${this.PROD_BASE}/auth`
     private AUTH_URL = process.env.NODE_ENV === 'development' ? `${this.DEV_CLIENT}/?redirect=true` : `${this.PROD_BASE}/?redirect=true`
 
     ax: AxiosInstance;
@@ -29,21 +21,6 @@ export class QAuth {
             withCredentials: true,
         })
 
-        this.ax.interceptors.response.use(res => res, (error: AxiosError ) => {
-
-            if (error.response && error.response.status > 400) {
-
-                window.location.href = this.AUTH_URL
-
-                EventBus.$emit(SERVER_AUTH_ERROR_MESSAGE, error.response.data.userError)
-                EventBus.$emit(LOADING, false)
-                
-            }
-
-            this.removetoken()
-
-            return Promise.reject(error)
-        })
     }
 
     settoken(token: string): void {
