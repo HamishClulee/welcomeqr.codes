@@ -18,11 +18,16 @@ export default {
         }
     },
     created() {
+        debugger
         EventBus.$emit(LOADING, true)
-        this.$QEdit.getHTML().then(htmlRes => {
-            if (htmlRes.data.editor && htmlRes.data.editor.html) {
-                this.html = htmlRes.data.editor.html
+
+        this.$QEdit.getHTML().then(res => {
+            debugger
+
+            if (res.data.content && res.data.content.html) {
+                this.html = res.data.content.html
             }
+
             EventBus.$emit(LOADING, false)
         }).catch(err => {
             EventBus.$emit(EDITOR_ERROR)

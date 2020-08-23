@@ -8,7 +8,6 @@ import Clean from '../middlewares/Clean'
 import * as adjective from '../resources/words/adjectives'
 import * as noun from '../resources/words/nouns'
 import * as adverb from '../resources/words/adverbs'
-import Log from '../middlewares/Log'
 
 const SUBDOMS_ID = '5e52678609948c1e0ec9994f'
 let SUBDOMS: string[] = []
@@ -90,8 +89,6 @@ export const _precaching = () => {
 export const generateRandomSubDom = (req: IRequest, res: IResponse) => {
 
 	try {
-
-		console.log('Inside first line of try catch for Gen Random Subdom')
 
 		const randInd = (len: number): number => {
 			return Math.floor(Math.random() * Math.floor(len - 1))

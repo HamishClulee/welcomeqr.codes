@@ -140,22 +140,22 @@ export default {
     },
     created() {
         EventBus.$emit(LOADING, true)
-        this.$QEdit.getHTML()
-            .then(res => {
+        this.$QEdit.getHTML().then(res => {
 
-                if (res.data.editor && res.data.editor.html) {
-                    this.editor.setHTML(res.data.editor.html)
-                }
+            debugger
 
-                EventBus.$emit(LOADING, false)
+            if (res.data.content && res.data.content.html) {
+                this.editor.setHTML(res.data.content.html)
+            }
 
-            })
-            .catch(err => { 
-                // if error code is > 500 its a server error not an auth issue
-                // if the error code is 4XX then it will be caught by the axios interceptor
-                EventBus.$emit(EDITOR_ERROR)
-                EventBus.$emit(LOADING, false)
-            })
+            EventBus.$emit(LOADING, false)
+
+        }).catch(err => { 
+            // if error code is > 500 its a server error not an auth issue
+            // if the error code is 4XX then it will be caught by the axios interceptor
+            EventBus.$emit(EDITOR_ERROR)
+            EventBus.$emit(LOADING, false)
+        })
     },
     mounted () {
         const edel = document.getElementById( 'editor' )

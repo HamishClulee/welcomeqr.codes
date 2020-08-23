@@ -62,7 +62,6 @@ exports._precaching = () => {
 };
 exports.generateRandomSubDom = (req, res) => {
     try {
-        console.log('Inside first line of try catch for Gen Random Subdom');
         const randInd = (len) => {
             return Math.floor(Math.random() * Math.floor(len - 1));
         };
