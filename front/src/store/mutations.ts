@@ -13,7 +13,7 @@ const mutations = {
         state.user.email = details.email
         state.user.id = details.id
         state.user.subdom = details.subdom
-        if (details.id !== null) details.authed ? qAuth.settoken(details.id) : qAuth.removetoken()
+        if (details.token !== null) details.authed ? qAuth.settoken(details.token) : qAuth.removetoken()
         else qAuth.removetoken()
     },
     [SET_WINDOW_SIZE]: (state: State) => {

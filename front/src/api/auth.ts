@@ -19,6 +19,9 @@ export class QAuth {
         this.ax = axios.create({
             baseURL: this.BASE_URL,
             withCredentials: true,
+            headers: {
+                Authorization  : `Bearer ${this.gettoken()}`,
+            },
         })
 
     }
@@ -35,6 +38,11 @@ export class QAuth {
         return !!localStorage.getItem('QToken') && localStorage.getItem('QToken') !== ''
     }
 
+    gettoken(): string {
+        let token = localStorage.getItem('QToken')
+        return token ? token : ''
+    }
+
     authenticate(): AxiosPromise<QUser> {
         return this.ax.post('/auth_challenge', { })
     }
@@ -48,6 +56,7 @@ export class QAuth {
     }
 
     logout(): AxiosPromise<QUser> {
+        this.removetoken()
         return this.ax.post('/logout')
     }
 

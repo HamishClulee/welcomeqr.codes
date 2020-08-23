@@ -52,7 +52,7 @@
                         @click="togglecanvas">
                             <router-link :to="{ path: '/auth/login'}">Login / SignUp</router-link>
                     </div>
-                    <div class="account-settings" v-if="isauthed">
+                    <div class="account-settings">
                         <div
                             class="canvas-item account"
                             @click="togglecanvas">
@@ -91,7 +91,9 @@ export default {
                 this.canvasopen = !this.canvasopen
             }, 200)
         },
-        routehome() { this.$router.push({ path: '/'})},
+        routehome() {
+            this.$router.push({ path: '/'})
+        },
         logout() {
             this.$QAuth.logout().then(res => {
                 this.$store.commit('IS_AUTHED', res.data.user)
@@ -101,7 +103,7 @@ export default {
                     color: 'secondary',
                     black: false,
                 })
-                this.$router.push({ path: '/auth' })
+                this.$router.push({ path: '/auth/login' })
             })
         },
     },

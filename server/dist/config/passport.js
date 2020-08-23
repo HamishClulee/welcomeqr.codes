@@ -27,7 +27,6 @@ passport.deserializeUser((id, done) => {
         });
     }
     else {
-        console.log('saved new user !');
         const _user = new User_1.User();
         _user.save();
     }

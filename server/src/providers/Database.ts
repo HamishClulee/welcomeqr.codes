@@ -18,7 +18,6 @@ export class Database {
 		mongoose.connect(dsn, options, (error: MongoError) => {
 			if (error) {
 				Log.info('Failed to connect to the Mongo server!!')
-				console.log(error)
 				throw error
 			} else {
 				Log.info('connected to mongo server at: ' + dsn)

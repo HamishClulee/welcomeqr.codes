@@ -59,7 +59,7 @@ class Express {
             next();
         });
         /** ---------------------------------------  APP ROUTING  --------------------------------- */
-        /** -------------- Auth -------------- */
+        /** -------------- Auth & Account -------------- */
         // Local
         this.app.post('/auth/login', QAuth.login);
         this.app.post('/auth/signup', QAuth.signup);
@@ -68,8 +68,10 @@ class Express {
         this.app.post('/auth/verify_email', QAuth.verifyemail);
         this.app.post('/auth/forgot', QAuth.forgotpassword);
         this.app.post('/auth/reset', QAuth.resetpassword);
+        // Account settings
         this.app.post('/auth/toggle_subscribe', auth.isReqAllowed, QAuth.togglesubscribe);
         this.app.post('/auth/user_settings', auth.isReqAllowed, QAuth.usersettings);
+        // Plumbing and Misc
         this.app.post('/auth/contact', QAuth.contact);
         // Google
         this.app.get('/auth/google', passport.authenticate('google', { scope: ['email'] }));
@@ -82,6 +84,8 @@ class Express {
         this.app.post('/api/submitsubdom', auth.isReqAllowed, editor.submitSubdom);
         this.app.post('/api/gethtmlforuser', auth.isReqAllowed, editor.getHTML);
         this.app.post('/api/generatesubdom', auth.isReqAllowed, editor.generateRandomSubDom);
+        // Future proofing against the day that we have 10 million subdoms, basically load
+        // them into memory at spin up to make access faster
         editor._precaching();
         /** ---------------------------------------  IMAGE STORAGE  --------------------------------- */
         const storage = multer.diskStorage({

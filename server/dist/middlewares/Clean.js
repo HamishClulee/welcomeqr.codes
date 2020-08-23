@@ -4,7 +4,8 @@ const Environment_1 = require("../providers/Environment");
 const Log_1 = require("./Log");
 const jwt = require('jsonwebtoken');
 const generateAccessToken = (userid) => {
-    return jwt.sign(userid, Environment_1.default.get().tokenSecret, { expiresIn: `${1000 * 60 * 60 * 24}s` });
+    console.log(userid);
+    return jwt.sign(userid, Environment_1.default.get().tokenSecret, { expiresIn: `2 days` });
 };
 const Clean = {
     settings: function (res, user) {
@@ -43,7 +44,12 @@ const Clean = {
             subdom: user.subdom,
             role: user.role,
             tier: user.accountTier,
-            token: generateAccessToken({ id: user._id })
+            token: generateAccessToken({
+                userid: user._id,
+                email: user.email,
+                role: user.role,
+                subdom: user.subdom
+            })
         };
     },
     buildSettings: function (user) {
@@ -54,7 +60,12 @@ const Clean = {
             subdom: user.subdom,
             role: user.role,
             tier: user.accountTier,
-            token: generateAccessToken({ id: user._id }),
+            token: generateAccessToken({
+                userid: user._id,
+                email: user.email,
+                role: user.role,
+                subdom: user.subdom
+            }),
             allowsemails: user.allowEmails,
             isemailverified: user.emailVerified
         };

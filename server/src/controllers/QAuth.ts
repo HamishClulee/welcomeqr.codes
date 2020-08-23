@@ -107,7 +107,7 @@ export const logout = async (req: IRequest, res: IResponse) => {
 
 		await req.logout()
 
-		return Clean.deny(res, 401)
+		return Clean.deny(res, 200)
 
 	} catch (e) {
 

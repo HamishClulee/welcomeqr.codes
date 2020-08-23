@@ -68,6 +68,7 @@ export default {
                     black: false,
                 })
             })
+            this.$router.push({ name: 'login' })
         },
     },
     computed: {

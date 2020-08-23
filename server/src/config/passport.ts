@@ -22,7 +22,6 @@ passport.deserializeUser<any, any>((id, done) => {
 			done(err, user)
 		})
 	} else {
-		console.log('saved new user !')
 		const _user = new User()
 		_user.save()
 	}
@@ -131,12 +130,11 @@ passport.use(new GoogleStrategy(
 export const isReqAllowed = (req: IRequest, res: IResponse, next: INext) => {
 
 	const authHeader = req.headers['authorization']
-
 	const token = authHeader && authHeader.split(' ')[1]
 
 	if (token == null) { return res.sendStatus(401) } // if there isn't any token
 
-	jwt.verify(token, Env.get().tokenSecret as string, (err: any, user: any) => {
+	jwt.verify(token, Env.get().tokenSecret, (err: any, user: any) => {
 
 		if (err) { return res.sendStatus(403) }
 

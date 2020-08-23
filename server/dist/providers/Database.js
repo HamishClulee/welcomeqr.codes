@@ -14,7 +14,6 @@ class Database {
         mongoose.connect(dsn, options, (error) => {
             if (error) {
                 Log_1.default.info('Failed to connect to the Mongo server!!');
-                console.log(error);
                 throw error;
             }
             else {

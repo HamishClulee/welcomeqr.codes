@@ -1,6 +1,7 @@
 <template>
-    <main class="create-con" @click="checkWhatsOpen" v-show="!authinprog">
+    <main class="create-con" @click="checkWhatsOpen">
 
+        <!-- TOPBAR -->
         <createtopbar
             @save="usersaved"
             @preview="usersaved(() => { $router.push({ path: '/app/preview' })})">
@@ -8,8 +9,17 @@
 
         <section class="content-container">
 
+            <!-- SIDEBAR -->
             <createsidebar
-                v-bind="{ editor, isBold, isItalic, showColorPicker, showFontSize, isList, showImageModal }"
+                v-bind="{ 
+                    editor,
+                    isBold,
+                    isItalic,
+                    showColorPicker,
+                    showFontSize,
+                    isList,
+                    showImageModal
+                }"
                 @bold="changeBold"
                 @italic="changeItalic"
                 @colorpicker="showColorPicker = !showColorPicker"
@@ -26,6 +36,7 @@
 
             <!-- ---- EDITOR WINDOW MAIN PANEL ENDS -->
 
+            <!-- MODALS / POPUPS -->
             <myupload
                 field="img"
                 @crop-success="cropSuccess"
@@ -41,12 +52,27 @@
                 img-format="png">
             </myupload>
 
-            <chrome-picker @input="setTextColour" id="color-picker-parent-target" class="color-picker" v-if="showColorPicker" v-model="colors" />
+            <chrome-picker
+                @input="setTextColour"
+                id="color-picker-parent-target"
+                class="color-picker"
+                v-if="showColorPicker"
+                v-model="colors" 
+            ></chrome-picker>
 
-            <linkmodal :show="showLinkModal" @callback="insertLink" @closemodal="showLinkModal = false"></linkmodal>
+            <linkmodal
+                :show="showLinkModal"
+                @callback="insertLink"
+                @closemodal="showLinkModal = false"
+            ></linkmodal>
 
             <div class="font-size-container" v-show="showFontSize">
-                <multiselect class="font-size" @select="setFontSize" v-model="fontSize" :options="fontSizeOptions"></multiselect>
+                <multiselect 
+                    class="font-size"
+                    @select="setFontSize"
+                    v-model="fontSize"
+                    :options="fontSizeOptions"
+                ></multiselect>
             </div>
 
         </section>
@@ -74,7 +100,6 @@ export default {
     },
     data () {
         return {
-            authinprog: true,
             fontSize: '16px',
             showFontSize: false,
             fontSizeOptions: [

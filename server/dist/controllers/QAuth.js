@@ -88,7 +88,7 @@ exports.signup = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
 exports.logout = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         yield req.logout();
-        return Clean_1.default.deny(res, 401);
+        return Clean_1.default.deny(res, 200);
     }
     catch (e) {
         return Clean_1.default.authError('logout', `caught error: ${e}`, res);

@@ -1,5 +1,5 @@
 <template>
-    <main class="preview-container" v-show="!authinprog">
+    <main class="preview-container">
         <section class="preview-html-container" v-html="html">
             <!-- Server side HTML will display here -->
         </section>

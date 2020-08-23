@@ -76,12 +76,6 @@ export default {
         }
 
     },
-    beforeCreate() {
-        // if token exists, maybe user already has a session, pass false so auth failure doesnt redirect user to /auth
-        if(this.$QAuth.checktoken()) this.$QAuth.authenticate().then(res => {
-            this.$store.commit('IS_AUTHED', res.data.user)
-        })
-    },
     created() {
         // set state ui vars
         this.SET_WINDOW_SIZE()

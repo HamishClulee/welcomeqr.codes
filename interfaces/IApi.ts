@@ -3,6 +3,7 @@ export interface AuthResponse {
     id: string | null,
     authed: boolean,
     subdom: string | null,
+    token: string | null
 }
 
 export interface HTMLResponse {

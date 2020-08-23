@@ -16,6 +16,9 @@ export class QEdit {
         this.ax = axios.create({
             baseURL: this.BASE_URL,
             withCredentials: true,
+            headers: {
+                Authorization  : `Bearer ${this.gettoken()}`,
+            },
         })
 
         this.ax.interceptors.response.use(res => res, (error: AxiosError ) => {
@@ -26,8 +29,6 @@ export class QEdit {
 
                 EventBus.$emit(SERVER_AUTH_ERROR_MESSAGE, error.response.data.userError)
                 EventBus.$emit(LOADING, false)
-
-                debugger
                 
             }
 
@@ -61,5 +62,10 @@ export class QEdit {
 
     generateRandomSubDom(): AxiosPromise<APIResponse> {
         return this.ax.post('/generatesubdom')
+    }
+
+    gettoken(): string {
+        let token = localStorage.getItem('QToken')
+        return token ? token : ''
     }
 }

@@ -1,5 +1,5 @@
 <template>
-  <section class="manage-container" v-show="!authinprog">
+  <section class="manage-container">
 
     <h6 v-if="!getuser.subdom" class="h6">We need some details before you can get started</h6>
 
@@ -53,7 +53,7 @@
 </template>
 
 <script>
-import { EventBus, LOADING } from '../../EventBus'
+import { EventBus, LOADING, EDITOR_ERROR } from '../../EventBus'
 import { mapGetters } from 'vuex'
 
 import qinput from '../../components/forms/qinput'
@@ -74,7 +74,6 @@ export default {
             checking: false,
             subdomok: false,
             proceed: false,
-            authinprog: true,
         }
     },
     methods: {
@@ -82,7 +81,7 @@ export default {
             this.$QEdit.generateRandomSubDom().then(res => {
                 this.$refs['subdom'].$data.val = res.data.content
             }).catch(err => {
-                debugger
+                EventBus.$emit(EDITOR_ERROR)
             })
         },
         checksubdom(e) {
