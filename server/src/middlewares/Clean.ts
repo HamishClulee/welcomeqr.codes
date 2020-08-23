@@ -35,19 +35,19 @@ const Clean = {
 
 	},
 
-	deny: function(res: IResponse, status: number = 403, msg: string = '', intercept: boolean = false): IResponse {
+	deny: function(res: IResponse, status: number = 403, msg: string = ''): IResponse {
 
 		let _user = this.killUser()
 
-		return res.status(status).send({ msg, user: _user, intercept })
+		return res.status(status).send({ msg, user: _user })
 
 	},
 
-	approve: function(res: IResponse, status: number, user: UserDocument, msg: string = '', intercept: boolean = false): IResponse {
+	approve: function(res: IResponse, status: number, user: UserDocument, msg: string = ''): IResponse {
 
 		let _user = this.buildUser(user)
 
-		return res.status(status).send({ msg, user: _user, intercept })
+		return res.status(status).send({ msg, user: _user })
 
 	},
 
@@ -115,11 +115,11 @@ const Clean = {
 
 	},
 
-	authError: function(funcname: string, e: any, res: IResponse, intercept: boolean): IResponse {
+	authError: function(funcname: string, e: any, res: IResponse): IResponse {
 
 		Log.error(`Function Name: ${ funcname } :: ${String(e)} :: User Auth Failure`, [Log.TAG_AUTH])
 
-		return res.status(403).send({ userContent: 'Ice cream machine broke, ok, have a nice day', e, user: this.killUser(), intercept })
+		return res.status(403).send({ userContent: 'Ice cream machine broke, ok, have a nice day', e, user: this.killUser() })
 
 	}
 

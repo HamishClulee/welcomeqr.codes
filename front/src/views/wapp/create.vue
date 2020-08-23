@@ -61,7 +61,7 @@ import myupload from 'vue-image-crop-upload'
 import { Chrome } from 'vue-color'
 import multiselect from 'vue-multiselect'
 import { mapGetters } from 'vuex'
-import { EventBus, LOADING } from '../../EventBus'
+import { EventBus, LOADING, EDITOR_ERROR } from '../../EventBus'
 export default {
     name: 'create',
     components: {
@@ -114,11 +114,24 @@ export default {
     
     },
     created() {
-        this.$QEdit.getHTML().then(res => {
-            if (res.data.editor && res.data.editor.html) {
-                this.editor.setHTML(res.data.editor.html)
-            }
-        })
+        this.$QEdit.getHTML()
+            .then(res => {
+
+                if (res.data.editor && res.data.editor.html) {
+                    this.editor.setHTML(res.data.editor.html)
+                }
+
+            })
+            .catch(err => { // could simply be a server side error, but check auth just in case
+                this.EventBus.$emit(EDITOR_ERROR)
+                this.EventBus.$emit(LOADING, true)
+                this.$QAuth.authenticate().then(res => {
+
+                    // Auth is okay
+                    this.EventBus.$emit(LOADING, false)
+
+                })
+            })
     },
     mounted () {
         const edel = document.getElementById( 'editor' )
@@ -139,8 +152,8 @@ export default {
             if (this.showColorPicker && !el.contains(e.target)) this.showColorPicker = false
         },
         usersaved(cb = () => {}) {
-            console.log(this.editor.getHTML())
-            // this.$QEdit.submitnew(this.editor.getHTML(), this.getuser, false).then(res => cb())
+            // console.log(this.editor.getHTML())
+            this.$QEdit.submitnew(this.editor.getHTML(), this.getuser, false).then(res => cb())
         },
         setFontSize(e) { 
             this.editor['setFontSize'] (e)

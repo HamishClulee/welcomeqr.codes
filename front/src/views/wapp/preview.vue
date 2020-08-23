@@ -22,6 +22,8 @@ export default {
             if (htmlRes.data.editor && htmlRes.data.editor.html) {
                 this.html = htmlRes.data.editor.html
             }
+        }).catch(err => {
+            this.$QAuth.authenticate()
         })
     },
     methods: {

@@ -23,19 +23,19 @@ export const login = (req: IRequest, res: IResponse, next: INext): any => {
 
 	const errors = validate.validationResult(req)
 
-	if (!errors.isEmpty()) { return Clean.authError('login', `Validation error: ${String(errors)}`, res, req.body.intercept) }
+	if (!errors.isEmpty()) { return Clean.authError('login', `Validation error: ${String(errors)}`, res) }
 
 	try {
 
 		passport.authenticate('local', (err: Error, user: UserDocument, info: IVerifyOptions) => {
 
-			if (err) { return Clean.authError('login::passport::err', err, res, req.body.intercept) }
+			if (err) { return Clean.authError('login::passport::err', err, res) }
 
-			if (!user) { return Clean.authError('login::passport::no-user', err, res, req.body.intercept) }
+			if (!user) { return Clean.authError('login::passport::no-user', err, res) }
 
 			req.logIn(user, (err) => {
 
-				if (err) { return Clean.authError('login::passport::login-err', err, res, req.body.intercept) }
+				if (err) { return Clean.authError('login::passport::login-err', err, res) }
 
 				return Clean.approve(res, 200, user)
 
@@ -44,7 +44,7 @@ export const login = (req: IRequest, res: IResponse, next: INext): any => {
 
 	} catch (e) {
 
-		return Clean.authError('login', `caught error: ${e}`, res, req.body.intercept)
+		return Clean.authError('login', `caught error: ${e}`, res)
 
 	}
 
@@ -59,7 +59,7 @@ export const signup = async (req: IRequest, res: IResponse) => {
 
 	const errors = validate.validationResult(req)
 
-	if (!errors.isEmpty()) { return Clean.authError('login', `Validation error: ${errors.array()}`, res, req.body.intercept) }
+	if (!errors.isEmpty()) { return Clean.authError('login', `Validation error: ${errors.array()}`, res) }
 
 	try {
 
@@ -96,7 +96,7 @@ export const signup = async (req: IRequest, res: IResponse) => {
 
 	} catch (e) {
 
-		return Clean.authError('signup', `caught error: ${e}`, res, req.body.intercept)
+		return Clean.authError('signup', `caught error: ${e}`, res)
 
 	}
 }
@@ -111,26 +111,26 @@ export const logout = async (req: IRequest, res: IResponse) => {
 
 	} catch (e) {
 
-		return Clean.authError('logout', `caught error: ${e}`, res, req.body.intercept)
+		return Clean.authError('logout', `caught error: ${e}`, res)
 
 	}
 }
 
-export const sessionchallenge = async (req: IRequest, res: IResponse) => {
+export const authchallenge = async (req: IRequest, res: IResponse) => {
 
 	try {
 
-		if (!req.session.passport) { return Clean.deny(res, 403, 'No session', req.body.intercept) }
+		if (!req.session.passport) { return Clean.deny(res, 403, 'No session') }
 
 		const user = await User.findOne({ _id: req.session.passport.user })
 
-		if (user) { return Clean.approve(res, 200, user, 'Auth success', req.body.intercept) }
+		if (user) { return Clean.approve(res, 200, user, 'Auth success') }
 
-		return Clean.deny(res, 401, 'You do not exist', req.body.intercept)
+		return Clean.deny(res, 401, 'You do not exist')
 
 	} catch (e) {
 
-		return Clean.authError('session challenge', `caught error: ${e}`, res, req.body.intercept)
+		return Clean.authError('session challenge', `caught error: ${e}`, res)
 
 	}
 }
@@ -149,7 +149,7 @@ export const togglesubscribe = async (req: IRequest, res: IResponse) => {
 
 	} catch (e) {
 
-		return Clean.authError('toggle subscribe', `caught error: ${e}`, res, req.body.intercept)
+		return Clean.authError('toggle subscribe', `caught error: ${e}`, res)
 
 	}
 }
@@ -171,7 +171,7 @@ export const verifyemail = async (req: IRequest, res, IResponse) => {
 
 	} catch (e) {
 
-		return Clean.authError('verify email', `caught error: ${e}`, res, req.body.intercept)
+		return Clean.authError('verify email', `caught error: ${e}`, res)
 
 	}
 }
@@ -210,7 +210,7 @@ export const resetpassword = async (req: IRequest, res, IResponse) => {
 
 	} catch (e) {
 
-		return Clean.authError('reset password', `caught error: ${e}`, res, req.body.intercept)
+		return Clean.authError('reset password', `caught error: ${e}`, res)
 
 	}
 }
@@ -246,7 +246,7 @@ export const forgotpassword = async (req: IRequest, res: IResponse) => {
 
 	} catch (e) {
 
-		return Clean.authError('forgot password', `caught error: ${e}`, res, req.body.intercept)
+		return Clean.authError('forgot password', `caught error: ${e}`, res)
 
 	}
 }
@@ -265,7 +265,7 @@ export const usersettings = async (req: IRequest, res: IResponse) => {
 
 	} catch (e) {
 
-		return Clean.authError('user settings', `caught error: ${e}`, res, req.body.intercept)
+		return Clean.authError('user settings', `caught error: ${e}`, res)
 
 	}
 }

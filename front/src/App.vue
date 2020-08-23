@@ -48,6 +48,7 @@ import {
     MESSAGES,
     SITEMODAL,
 } from './EventBus.ts'
+import { EDITOR_ERROR } from './EventBus'
 
 // useful cludge
 let __proxy
@@ -77,9 +78,9 @@ export default {
     },
     beforeCreate() {
         // if token exists, maybe user already has a session, pass false so auth failure doesnt redirect user to /auth
-        // if(this.$QAuth.checktoken()) this.$QAuth.authenticate(true).then(res => {
-        //     this.$store.commit('IS_AUTHED', res.data.user)
-        // })
+        if(this.$QAuth.checktoken()) this.$QAuth.authenticate().then(res => {
+            this.$store.commit('IS_AUTHED', res.data.user)
+        })
     },
     created() {
         // set state ui vars
@@ -87,8 +88,10 @@ export default {
         this.SET_SCROLL_LOCATION()
     },
     mounted () {
+
         // EventBus handling global loading spinner, user message pop up and site wide modals
         EventBus.$on(LOADING, is => { this.showGlobalSpinner = is })
+
         EventBus.$on(MESSAGES, deets => {
             this.showUserMessage = deets.is
             this.msg = deets.msg || ''
@@ -103,6 +106,13 @@ export default {
             } else {
                 this.showsitemodal = false
             }
+        })
+
+        EventBus.$on(EDITOR_ERROR, () => {
+            this.showUserMessage = true
+            this.msg = 'Something went wrong, we have been notified, try again soon!'
+            this.sass = 'primary'
+            this.black = false
         })
 
         // For auth failure redirects from ExpressJS

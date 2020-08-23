@@ -10,13 +10,13 @@ const Clean = {
     settings: function (res, user) {
         return res.status(200).send({ user: this.buildSettings(user) });
     },
-    deny: function (res, status = 403, msg = '', intercept = false) {
+    deny: function (res, status = 403, msg = '') {
         let _user = this.killUser();
-        return res.status(status).send({ msg, user: _user, intercept });
+        return res.status(status).send({ msg, user: _user });
     },
-    approve: function (res, status, user, msg = '', intercept = false) {
+    approve: function (res, status, user, msg = '') {
         let _user = this.buildUser(user);
-        return res.status(status).send({ msg, user: _user, intercept });
+        return res.status(status).send({ msg, user: _user });
     },
     success: function (res, status, content = {}, msg = '') {
         return res.status(status).send({ msg, content });
@@ -63,9 +63,9 @@ const Clean = {
         Log_1.default.error(`Function Name: ${funcname} :: ${String(e)}`, [Log_1.default.TAG_API_ERROR]);
         return res.status(501).send({ userContent: 'Ice cream machine broke, ok, have a nice day', e });
     },
-    authError: function (funcname, e, res, intercept) {
+    authError: function (funcname, e, res) {
         Log_1.default.error(`Function Name: ${funcname} :: ${String(e)} :: User Auth Failure`, [Log_1.default.TAG_AUTH]);
-        return res.status(403).send({ userContent: 'Ice cream machine broke, ok, have a nice day', e, user: this.killUser(), intercept });
+        return res.status(403).send({ userContent: 'Ice cream machine broke, ok, have a nice day', e, user: this.killUser() });
     }
 };
 exports.default = Clean;
