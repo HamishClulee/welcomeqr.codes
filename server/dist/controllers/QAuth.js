@@ -94,7 +94,7 @@ exports.logout = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         return Clean_1.default.authError('logout', `caught error: ${e}`, res);
     }
 });
-exports.authchallenge = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.getuser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         if (!req.session.passport) {
             return Clean_1.default.deny(res, 403, 'No session');

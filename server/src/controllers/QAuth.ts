@@ -116,8 +116,7 @@ export const logout = async (req: IRequest, res: IResponse) => {
 	}
 }
 
-export const authchallenge = async (req: IRequest, res: IResponse) => {
-
+export const getuser = async (req: IRequest, res: IResponse) => {
 	try {
 
 		if (!req.session.passport) { return Clean.deny(res, 403, 'No session') }

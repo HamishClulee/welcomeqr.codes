@@ -1,7 +1,9 @@
 <template>
     <main class="preview-container">
         <section class="preview-html-container" v-html="html">
+
             <!-- Server side HTML will display here -->
+            
         </section>
         <button class="floating-fixed" @click="backtoedit"></button>
     </main>
@@ -18,20 +20,22 @@ export default {
         }
     },
     created() {
-        debugger
+
         EventBus.$emit(LOADING, true)
 
         this.$QEdit.getHTML().then(res => {
-            debugger
 
             if (res.data.content && res.data.content.html) {
                 this.html = res.data.content.html
             }
 
             EventBus.$emit(LOADING, false)
+
         }).catch(err => {
+
             EventBus.$emit(EDITOR_ERROR)
             EventBus.$emit(LOADING, false)
+
         })
     },
     methods: {

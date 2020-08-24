@@ -142,8 +142,6 @@ export default {
         EventBus.$emit(LOADING, true)
         this.$QEdit.getHTML().then(res => {
 
-            debugger
-
             if (res.data.content && res.data.content.html) {
                 this.editor.setHTML(res.data.content.html)
             }

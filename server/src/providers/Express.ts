@@ -80,7 +80,7 @@ class Express {
 		this.app.post('/auth/login', QAuth.login)
 		this.app.post('/auth/signup', QAuth.signup)
 		this.app.post('/auth/logout', QAuth.logout)
-		this.app.post('/auth/auth_challenge', auth.isReqAllowed, QAuth.authchallenge)
+		this.app.post('/auth/get_user', auth.isReqAllowed, QAuth.getuser)
 		this.app.post('/auth/verify_email', QAuth.verifyemail)
 		this.app.post('/auth/forgot', QAuth.forgotpassword)
 		this.app.post('/auth/reset', QAuth.resetpassword)

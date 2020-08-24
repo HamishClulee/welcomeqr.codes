@@ -44,11 +44,15 @@ export class QAuth {
     }
 
     authenticate(): AxiosPromise<QUser> {
-        return this.ax.post('/auth_challenge', { })
+        return this.ax.post('/auth_challenge', {})
     }
 
-    usersettings(intercept = true): AxiosPromise<QUser> {
-        return this.ax.post('/user_settings', { intercept })
+    getuser(): AxiosPromise<QUser> {
+        return this.ax.post('get_user', {})
+    }
+
+    usersettings(): AxiosPromise<QUser> {
+        return this.ax.post('/user_settings', {})
     }
 
     togglesubscribe(subscribe: boolean): AxiosPromise<QUser> {
@@ -60,16 +64,16 @@ export class QAuth {
         return this.ax.post('/logout')
     }
 
-    signup(email: string, password: string, confirm: string, intercept = false): AxiosPromise<QUser> {
-        return this.ax.post('/signup', { email, password, confirm, intercept })
+    signup(email: string, password: string, confirm: string): AxiosPromise<QUser> {
+        return this.ax.post('/signup', { email, password, confirm })
     }
 
-    login(email: string, password: string, intercept = false): AxiosPromise<QUser> {
-        return this.ax.post('/login', { email, password, intercept })
+    login(email: string, password: string): AxiosPromise<QUser> {
+        return this.ax.post('/login', { email, password })
     }
 
     forgot(email: string): AxiosPromise<QUser> {
-        return this.ax.post('/forgot', { email, intercept: false })
+        return this.ax.post('/forgot', { email })
     }
 
     reset(token: string, password: string, confirm: string): AxiosPromise<QUser> {
