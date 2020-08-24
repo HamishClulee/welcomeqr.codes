@@ -18,6 +18,16 @@ const noun = require("../resources/words/nouns");
 const adverb = require("../resources/words/adverbs");
 const SUBDOMS_ID = '5e52678609948c1e0ec9994f';
 let SUBDOMS = [];
+exports.getHtmlBySubDom = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const query = { submdom: { $eq: req.body.subdom } };
+        const editor = yield Editor_1.Editor.findOne(query);
+        return Clean_1.default.success(res, 200, { html: editor.html });
+    }
+    catch (e) {
+        return Clean_1.default.apiError('submitNew', e, res);
+    }
+});
 exports.submitNew = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         let query = { 'userid': req.session.passport.user };

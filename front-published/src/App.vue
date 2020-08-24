@@ -17,13 +17,14 @@ export default {
         return {
             authinprog: true,
             html: `<h1 class='h1'>Nothing saved yet</h1>`,
+            devdom: 'unethically-congressional-helplessness',
         }
     },
     created() {
 
         EventBus.$emit(LOADING, true)
 
-        SERVER.post('get_html_by_subdomain', { subdom: this.getsubdomfromurl() }).then(res => {
+        SERVER.post('/public/get_html_by_subdomain', { subdom: this.getsubdomfromurl() }).then(res => {
 
             if (res.data.content && res.data.content.html) {
                 this.html = res.data.content.html
@@ -40,7 +41,8 @@ export default {
     },
     methods: {
         getsubdomfromurl() {
-
+            if (process.env.NODE_ENV === 'development') return this.devdonm
+            else return window.location.host.split('.')[0]
         },
     },
 }

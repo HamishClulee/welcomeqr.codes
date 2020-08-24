@@ -12,6 +12,22 @@ import * as adverb from '../resources/words/adverbs'
 const SUBDOMS_ID = '5e52678609948c1e0ec9994f'
 let SUBDOMS: string[] = []
 
+export const getHtmlBySubDom = async(req: IRequest, res: IResponse) => {
+	try {
+
+		const query = { submdom: { $eq: req.body.subdom } }
+
+		const editor = await Editor.findOne(query)
+
+		return Clean.success(res, 200, { html: editor.html })
+
+	} catch (e) {
+
+		return Clean.apiError('submitNew', e, res)
+
+	}
+}
+
 export const submitNew = async (req: IRequest, res: IResponse) => {
 
 	try {

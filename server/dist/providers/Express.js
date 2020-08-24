@@ -79,11 +79,14 @@ class Express {
             res.redirect('/?googleauth=true');
         });
         /** -------------- Editor -------------- */
+        // Protected
         this.app.post('/api/submitnew', auth.isReqAllowed, editor.submitNew);
         this.app.post('/api/checksubdom', auth.isReqAllowed, editor.checkSubdom);
         this.app.post('/api/submitsubdom', auth.isReqAllowed, editor.submitSubdom);
         this.app.post('/api/gethtmlforuser', auth.isReqAllowed, editor.getHTML);
         this.app.post('/api/generatesubdom', auth.isReqAllowed, editor.generateRandomSubDom);
+        // Public
+        this.app.post('/public/get_html_by_subdomain', editor.getHtmlBySubDom);
         // Future proofing against the day that we have 10 million subdoms, basically load
         // them into memory at spin up to make access faster
         editor._precaching();
