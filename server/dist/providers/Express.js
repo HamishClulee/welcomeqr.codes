@@ -48,24 +48,22 @@ class Express {
         }
         this.app.use(passport.initialize());
         this.app.use(passport.session());
+        // Middleware
         this.app.use((req, res, next) => {
-            res.setHeader('Access-Control-Allow-Origin', 'https://often-deodorant-jogging.welcomeqr.codes');
+            res.setHeader('Access-Control-Allow-Origin', 'https://*.welcomeqr.codes');
             res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,Content-Type');
-            res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, DELETE');
+            res.setHeader('Access-Control-Allow-Methods', 'GET, POST');
+            res.locals.user = req.session.user;
             next();
         });
         this.app.use(cors({
             origin: process.env.NODE_ENV !== 'production' ?
                 [DEV_URL, '/\.google.com\.com$/']
-                : [PROD_URL, 'often-deodorant-jogging.welcomeqr.codes', '/\.google.com\.com$/'],
+                : [PROD_URL, '/\.welcomeqr\.codes$/', '/\.google.com\.com$/'],
             credentials: true
         }));
         // this.app.use(lusca.xframe('SAMEORIGIN'))
         // this.app.use(lusca.xssProtection(true))
-        this.app.use((req, res, next) => {
-            res.locals.user = req.session.user;
-            next();
-        });
         /** ---------------------------------------  APP ROUTING  --------------------------------- */
         /** -------------- Auth & Account -------------- */
         // Local

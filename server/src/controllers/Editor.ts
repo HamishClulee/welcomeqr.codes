@@ -21,11 +21,7 @@ export const getHtmlBySubDom = async(req: IRequest, res: IResponse) => {
 
 		const query = { subdom: { $eq: req.body.subdom } }
 
-		Log.error(`Value of query ====> ${JSON.stringify(query)} ****`)
-
 		const editor = await Editor.findOne(query)
-
-		Log.error(`Value of editor ====> ${editor} ****`)
 
 		return Clean.success(res, 200, { html: editor.html })
 
@@ -40,19 +36,15 @@ export const submitNew = async (req: IRequest, res: IResponse) => {
 
 	try {
 
-		let query = { 'userid': req.session.passport.user }
+		const query = { 'userid': req.session.passport.user }
 
 		const decoded = jwt.decode(req.header('Authorization').split(' ')[1])
 
-		Log.error(`Value of decoded ===> ${JSON.stringify(decoded)}`)
+		const update = { 'html': req.body.html, 'subdom': decoded.subdom }
 
-		let update = { 'html': req.body.html, 'subdom': decoded.subdom }
+		const options = { 'upsert': true, 'new': true, 'setDefaultsOnInsert': true }
 
-		let options = { 'upsert': true, 'new': true, 'setDefaultsOnInsert': true }
-
-		let logme = await Editor.findOneAndUpdate(query, update, options)
-
-		Log.error(`Value of decoded ===> ${JSON.stringify(logme)}`)
+		await Editor.findOneAndUpdate(query, update, options)
 
 		return Clean.success(res, 200)
 
@@ -89,7 +81,7 @@ export const submitSubdom = async (req: IRequest, res: IResponse) => {
 
 export const checkSubdom = (req: IRequest, res: IResponse) => {
 
-	let okay = SUBDOMS.indexOf(req.body.subdom) === -1
+	const okay = SUBDOMS.indexOf(req.body.subdom) === -1
 
 	return res.status(200).send({ intercept: false, okay })
 }

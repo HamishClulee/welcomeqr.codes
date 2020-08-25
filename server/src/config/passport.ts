@@ -130,15 +130,9 @@ passport.use(new GoogleStrategy(
 
 export const isReqAllowed = (req: IRequest, res: IResponse, next: INext) => {
 
-	Log.error(`Inside isReqAllowed`)
-
 	const authHeader = req.headers['authorization']
 
-	Log.error(`Value of authHeader => ${authHeader}`)
-
 	const token = authHeader && authHeader.split(' ')[1]
-
-	Log.error(`Value of token => ${token}`)
 
 	if (token == null) { return res.sendStatus(401) } // if there isn't any token
 

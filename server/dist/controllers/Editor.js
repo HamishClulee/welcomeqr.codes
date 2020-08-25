@@ -16,16 +16,13 @@ const Clean_1 = require("../middlewares/Clean");
 const adjective = require("../resources/words/adjectives");
 const noun = require("../resources/words/nouns");
 const adverb = require("../resources/words/adverbs");
-const Log_1 = require("../middlewares/Log");
 const SUBDOMS_ID = '5e52678609948c1e0ec9994f';
 let SUBDOMS = [];
 const jwt = require('jsonwebtoken');
 exports.getHtmlBySubDom = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const query = { subdom: { $eq: req.body.subdom } };
-        Log_1.default.error(`Value of query ====> ${JSON.stringify(query)} ****`);
         const editor = yield Editor_1.Editor.findOne(query);
-        Log_1.default.error(`Value of editor ====> ${editor} ****`);
         return Clean_1.default.success(res, 200, { html: editor.html });
     }
     catch (e) {
@@ -34,13 +31,11 @@ exports.getHtmlBySubDom = (req, res) => __awaiter(void 0, void 0, void 0, functi
 });
 exports.submitNew = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        let query = { 'userid': req.session.passport.user };
+        const query = { 'userid': req.session.passport.user };
         const decoded = jwt.decode(req.header('Authorization').split(' ')[1]);
-        Log_1.default.error(`Value of decoded ===> ${JSON.stringify(decoded)}`);
-        let update = { 'html': req.body.html, 'subdom': decoded.subdom };
-        let options = { 'upsert': true, 'new': true, 'setDefaultsOnInsert': true };
-        let logme = yield Editor_1.Editor.findOneAndUpdate(query, update, options);
-        Log_1.default.error(`Value of decoded ===> ${JSON.stringify(logme)}`);
+        const update = { 'html': req.body.html, 'subdom': decoded.subdom };
+        const options = { 'upsert': true, 'new': true, 'setDefaultsOnInsert': true };
+        yield Editor_1.Editor.findOneAndUpdate(query, update, options);
         return Clean_1.default.success(res, 200);
     }
     catch (e) {
@@ -62,7 +57,7 @@ exports.submitSubdom = (req, res) => __awaiter(void 0, void 0, void 0, function*
     }
 });
 exports.checkSubdom = (req, res) => {
-    let okay = SUBDOMS.indexOf(req.body.subdom) === -1;
+    const okay = SUBDOMS.indexOf(req.body.subdom) === -1;
     return res.status(200).send({ intercept: false, okay });
 };
 exports.getHTML = (req, res) => __awaiter(void 0, void 0, void 0, function* () {

@@ -16,7 +16,6 @@ const mongoose = require("mongoose");
 const Environment_1 = require("../providers/Environment");
 const jwt = require('jsonwebtoken');
 const User_1 = require("../models/User");
-const Log_1 = require("../middlewares/Log");
 const LocalStrategy = passportLocal.Strategy;
 passport.serializeUser((user, done) => {
     done(null, user.id);
@@ -112,11 +111,8 @@ passport.use(new GoogleStrategy({
     }
 })));
 exports.isReqAllowed = (req, res, next) => {
-    Log_1.default.error(`Inside isReqAllowed`);
     const authHeader = req.headers['authorization'];
-    Log_1.default.error(`Value of authHeader => ${authHeader}`);
     const token = authHeader && authHeader.split(' ')[1];
-    Log_1.default.error(`Value of token => ${token}`);
     if (token == null) {
         return res.sendStatus(401);
     } // if there isn't any token
