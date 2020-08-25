@@ -24,7 +24,7 @@ export default {
 
         EventBus.$emit(LOADING, true)
 
-        SERVER.post('/public/get_html_by_subdomain', { subdom: this.getsubdomfromurl() }).then(res => {
+        SERVER.post('/api/get_html_by_subdomain', { subdom: this.getsubdomfromurl() }).then(res => {
 
             if (res.data.content && res.data.content.html) {
                 this.html = res.data.content.html

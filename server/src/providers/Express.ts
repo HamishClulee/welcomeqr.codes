@@ -123,7 +123,7 @@ class Express {
 		this.app.post('/api/generatesubdom', auth.isReqAllowed, editor.generateRandomSubDom)
 
 		// Public
-		this.app.post('/public/get_html_by_subdomain', editor.getHtmlBySubDom)
+		this.app.post('/api/get_html_by_subdomain', editor.getHtmlBySubDom)
 
 		// Future proofing against the day that we have 10 million subdoms, basically load
 		// them into memory at spin up to make access faster

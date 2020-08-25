@@ -13,6 +13,7 @@ const SUBDOMS_ID = '5e52678609948c1e0ec9994f'
 let SUBDOMS: string[] = []
 
 export const getHtmlBySubDom = async(req: IRequest, res: IResponse) => {
+
 	try {
 
 		const query = { submdom: { $eq: req.body.subdom } }
