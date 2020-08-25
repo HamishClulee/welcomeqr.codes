@@ -16,7 +16,7 @@ const forgot = () => import('../views/auth/forgot.vue')
 const account = () => import('../views/account/account.vue')
 
 /** Tester routes */
-
+const getHtml = () => import('../views/testendpoint.vue')
 
 /** Create App routes */
 const wapp = () => import('../views/wapp.vue')
@@ -247,6 +247,18 @@ const routes = [
     // -------------------------------------------------------------------
     // --------------------------- PLUMBING
     // -------------------------------------------------------------------
+    {
+        path: '/testgethtml',
+        name: 'testgethtml',
+        component: getHtml,
+        beforeEnter: (to: any, from: any, next: any) => {
+            overwritemetas({
+                title: '',
+                description: '',
+                index: false,
+            }, next)
+        },
+    },
     {
         path: '*',
         name: 'notfound',

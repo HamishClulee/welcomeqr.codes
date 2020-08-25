@@ -71,4 +71,9 @@ export class QEdit {
     removetoken(): void {
         localStorage.setItem('QToken', '')
     }
+
+    // tester
+    getHtmlBySub(): AxiosPromise<APIResponse> {
+        return this.ax.post('/get_html_by_subdomain')
+    }
 }

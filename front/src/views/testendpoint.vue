@@ -9,8 +9,8 @@
 </template>
 
 <script>
-import { EventBus, LOADING, EDITOR_ERROR } from './EventBus'
-import SERVER from './api'
+import { EventBus, LOADING, EDITOR_ERROR } from '../EventBus'
+
 export default {
     name: 'app',
     data () {
@@ -23,7 +23,7 @@ export default {
 
         EventBus.$emit(LOADING, true)
 
-        SERVER.post('/api/get_html_by_subdomain', { subdom: this.getsubdomfromurl() }).then(res => {
+        this.$QEdit.getHtmlBySub( {subdom: this.getsubdomfromurl() }).then(res => {
 
             if (res.data.content && res.data.content.html) {
                 this.html = res.data.content.html
@@ -41,7 +41,8 @@ export default {
     methods: {
         getsubdomfromurl() {
             if (process.env.NODE_ENV === 'development') return this.devdonm
-            else return window.location.host.split('.')[0]
+            // else return window.location.host.split('.')[0]
+            else return 'often-deodorant-jogging'
         },
     },
 }
