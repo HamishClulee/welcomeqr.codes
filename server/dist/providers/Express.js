@@ -49,7 +49,7 @@ class Express {
         this.app.use(passport.initialize());
         this.app.use(passport.session());
         this.app.use(cors({
-            origin: process.env.NODE_ENV !== 'production' ? [DEV_URL, '/\.google.com\.com$/'] : [PROD_URL, '/\.google.com\.com$/'],
+            origin: process.env.NODE_ENV !== 'production' ? [DEV_URL, '/\.google.com\.com$/'] : [PROD_URL, 'https://*.welcomeqr.codes', '/\.google.com\.com$/'],
             credentials: true
         }));
         // this.app.use(lusca.xframe('SAMEORIGIN'))
