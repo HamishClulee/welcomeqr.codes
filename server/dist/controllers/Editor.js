@@ -22,7 +22,7 @@ let SUBDOMS = [];
 exports.getHtmlBySubDom = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const query = { subdom: { $eq: req.body.subdom } };
-        Log_1.default.error(`Value of query ====> ${query} ****`);
+        Log_1.default.error(`Value of query ====> ${JSON.stringify(query)} ****`);
         const editor = yield Editor_1.Editor.findOne(query);
         Log_1.default.error(`Value of editor ====> ${editor} ****`);
         return Clean_1.default.success(res, 200, { html: editor.html });

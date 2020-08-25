@@ -19,7 +19,7 @@ export const getHtmlBySubDom = async(req: IRequest, res: IResponse) => {
 
 		const query = { subdom: { $eq: req.body.subdom } }
 
-		Log.error(`Value of query ====> ${query} ****`)
+		Log.error(`Value of query ====> ${JSON.stringify(query)} ****`)
 
 		const editor = await Editor.findOne(query)
 
