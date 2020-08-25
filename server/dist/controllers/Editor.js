@@ -16,12 +16,15 @@ const Clean_1 = require("../middlewares/Clean");
 const adjective = require("../resources/words/adjectives");
 const noun = require("../resources/words/nouns");
 const adverb = require("../resources/words/adverbs");
+const Log_1 = require("../middlewares/Log");
 const SUBDOMS_ID = '5e52678609948c1e0ec9994f';
 let SUBDOMS = [];
 exports.getHtmlBySubDom = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const query = { submdom: { $eq: req.body.subdom } };
+        const query = { subdom: { $eq: req.body.subdom } };
+        Log_1.default.error(`Value of query ====> ${query} ****`);
         const editor = yield Editor_1.Editor.findOne(query);
+        Log_1.default.error(`Value of editor ====> ${editor} ****`);
         return Clean_1.default.success(res, 200, { html: editor.html });
     }
     catch (e) {

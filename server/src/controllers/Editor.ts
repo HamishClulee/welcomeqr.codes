@@ -8,6 +8,7 @@ import Clean from '../middlewares/Clean'
 import * as adjective from '../resources/words/adjectives'
 import * as noun from '../resources/words/nouns'
 import * as adverb from '../resources/words/adverbs'
+import Log from '../middlewares/Log'
 
 const SUBDOMS_ID = '5e52678609948c1e0ec9994f'
 let SUBDOMS: string[] = []
@@ -16,9 +17,13 @@ export const getHtmlBySubDom = async(req: IRequest, res: IResponse) => {
 
 	try {
 
-		const query = { submdom: { $eq: req.body.subdom } }
+		const query = { subdom: { $eq: req.body.subdom } }
+
+		Log.error(`Value of query ====> ${query} ****`)
 
 		const editor = await Editor.findOne(query)
+
+		Log.error(`Value of editor ====> ${editor} ****`)
 
 		return Clean.success(res, 200, { html: editor.html })
 
