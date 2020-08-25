@@ -19,6 +19,7 @@ const adverb = require("../resources/words/adverbs");
 const Log_1 = require("../middlewares/Log");
 const SUBDOMS_ID = '5e52678609948c1e0ec9994f';
 let SUBDOMS = [];
+const jwt = require('jsonwebtoken');
 exports.getHtmlBySubDom = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const query = { subdom: { $eq: req.body.subdom } };
@@ -34,9 +35,12 @@ exports.getHtmlBySubDom = (req, res) => __awaiter(void 0, void 0, void 0, functi
 exports.submitNew = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         let query = { 'userid': req.session.passport.user };
-        let update = { html: req.body.html };
-        let options = { upsert: true, new: true, setDefaultsOnInsert: true };
-        yield Editor_1.Editor.findOneAndUpdate(query, update, options);
+        const decoded = jwt.decode(req.header('Authorization').split(' ')[1]);
+        Log_1.default.error(`Value of decoded ===> ${JSON.stringify(decoded)}`);
+        let update = { 'html': req.body.html, 'subdom': decoded.subdom };
+        let options = { 'upsert': true, 'new': true, 'setDefaultsOnInsert': true };
+        let logme = yield Editor_1.Editor.findOneAndUpdate(query, update, options);
+        Log_1.default.error(`Value of decoded ===> ${JSON.stringify(logme)}`);
         return Clean_1.default.success(res, 200);
     }
     catch (e) {
