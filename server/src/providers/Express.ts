@@ -59,14 +59,12 @@ class Express {
 		this.app.use(passport.initialize())
 		this.app.use(passport.session())
 
-		// this.app.use(function (req, res, next) {
-		// 	if (req.headers.origin.includes('welcomeqr.codes')) {
-		// 		res.setHeader('Access-Control-Allow-Origin', 'http://' + req.headers.origin)
-		// 		res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,Content-Type')
-		// 		res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, DELETE')
-		// 	}
-		// 	next()
-		// })
+		this.app.use((req, res, next) => {
+			res.setHeader('Access-Control-Allow-Origin', 'https://often-deodorant-jogging.welcomeqr.codes')
+			res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,Content-Type')
+			res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, DELETE')
+			next()
+		})
 
 		this.app.use(cors({
 			origin:
