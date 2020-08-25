@@ -59,7 +59,7 @@ class Express {
         this.app.use(cors({
             origin: process.env.NODE_ENV !== 'production' ?
                 [DEV_URL, '/\.google.com\.com$/']
-                : [PROD_URL, '/\.welcomeqr\.codes$/', '/\.google.com\.com$/'],
+                : [PROD_URL, 'often-deodorant-jogging.welcomeqr.codes', '/\.google.com\.com$/'],
             credentials: true
         }));
         // this.app.use(lusca.xframe('SAMEORIGIN'))
