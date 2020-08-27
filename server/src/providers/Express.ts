@@ -63,9 +63,17 @@ class Express {
 
 		// Middleware
 		this.app.use((req, res, next) => {
+
 			Log.error(`Value of req.origin =====> ${req.header('origin')}`)
 			Log.error(`Value of tldjs =====> ${JSON.stringify(tldjs.parse(req.header('origin')))}`)
-			res.setHeader('Access-Control-Allow-Origin', req.header('origin'))
+
+			const tld = tldjs.parse(req.header('origin'))
+
+			if (process.env.NODE_ENV === 'production' && tld.isValid && tld.domain === 'welcomeqr.codes' ) {
+				Log.error(`Inside header block`)
+				res.setHeader('Access-Control-Allow-Origin', req.header('origin'))
+			}
+
 			res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,Content-Type')
 			res.setHeader('Access-Control-Allow-Methods', 'GET, POST')
 			res.locals.user = req.session.user
