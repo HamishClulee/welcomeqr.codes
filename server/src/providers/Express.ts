@@ -20,6 +20,8 @@ import * as QAuth from '../controllers/QAuth'
 import Env from './Environment'
 import Log from '../middlewares/Log'
 
+const tldjs = require('tldjs')
+
 /** App Constants */
 const PORT = 1980
 const DEV_URL = Env.get().devUrl
@@ -61,6 +63,9 @@ class Express {
 
 		// Middleware
 		this.app.use((req, res, next) => {
+			Log.error(`Value of req.origin =====> ${req.get('origin')}`)
+			Log.error(`Value of tldjs =====> ${JSON.stringify(tldjs.parse(req.get('origin')))}`)
+			res.setHeader('Access-Control-Allow-Origin', req.get('origin'))
 			res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,Content-Type')
 			res.setHeader('Access-Control-Allow-Methods', 'GET, POST')
 			res.locals.user = req.session.user

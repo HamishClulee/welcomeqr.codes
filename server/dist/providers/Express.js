@@ -17,6 +17,7 @@ const QAuth = require("../controllers/QAuth");
 /** Middlewares */
 const Environment_1 = require("./Environment");
 const Log_1 = require("../middlewares/Log");
+const tldjs = require('tldjs');
 /** App Constants */
 const PORT = 1980;
 const DEV_URL = Environment_1.default.get().devUrl;
@@ -50,6 +51,9 @@ class Express {
         this.app.use(passport.session());
         // Middleware
         this.app.use((req, res, next) => {
+            Log_1.default.error(`Value of req.origin =====> ${req.get('origin')}`);
+            Log_1.default.error(`Value of tldjs =====> ${JSON.stringify(tldjs.parse(req.get('origin')))}`);
+            res.setHeader('Access-Control-Allow-Origin', req.get('origin'));
             res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,Content-Type');
             res.setHeader('Access-Control-Allow-Methods', 'GET, POST');
             res.locals.user = req.session.user;
