@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
+    "build": "vue-cli-service build  --skip-plugin @vue/cli-plugin-pwa,pwa",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
@@ -16,7 +16,6 @@
   "devDependencies": {
     "@vue/cli-plugin-babel": "^4.5.0",
     "@vue/cli-plugin-eslint": "^4.5.0",
-    "@vue/cli-plugin-pwa": "^4.5.0",
     "@vue/cli-service": "^4.5.0",
     "@vue/eslint-config-airbnb": "^5.0.2",
     "babel-eslint": "^10.1.0",
