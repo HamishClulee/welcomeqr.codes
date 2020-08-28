@@ -7,11 +7,11 @@ yarn build
 
 echo "---------------------- Building front. ---------------------------------------"
 cd ../front
-yarn build --fix --skip-plugin @vue/cli-plugin-pwa
+yarn build --fix --skip-plugin @vue/cli-plugin-pwa,pwa
 
 echo "---------------------- Building front-published. -----------------------------"
 cd ../front-published
-yarn build --fix --skip-plugin @vue/cli-plugin-pwa
+yarn build --fix --skip-plugin @vue/cli-plugin-pwa,pwa
 cd ..
 
 echo "---------------------- Copying static assets to /server/dist. ----------------"

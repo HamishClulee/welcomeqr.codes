@@ -58,7 +58,7 @@ export default {
 
 <style lang="sass" scoped>
 .preview-container
-    width: 80vw
+    width: 98%
     margin-left: auto
     margin-right: auto
     margin-top: 50px
@@ -68,5 +68,4 @@ export default {
     flex-direction: column
     width: 100%
     max-width: 100%
-    overflow-y: hidden
 </style>
