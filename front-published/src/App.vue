@@ -1,22 +1,31 @@
 <template>
     <main class="preview-container">
-        <section class="preview-html-container" v-html="html">
+        <section class="preview-html-container" v-if="html !== null" v-html="html">
 
             <!-- Server side HTML will display here -->
             
         </section>
+        <section v-else class="four-oh-four">
+            <notfound></notfound>
+        </section>
+        <qrfooter></qrfooter>
     </main>
 </template>
 
 <script>
 import { EventBus, LOADING, EDITOR_ERROR } from './EventBus'
 import SERVER from './api'
+import notfound from './components/notfound'
+import qrfooter from './components/qrfooter'
 export default {
     name: 'app',
+    components: {
+        notfound,
+        qrfooter,
+    },
     data () {
         return {
-            html: `<h1 class='h1'>Nothing saved yet</h1>`,
-            devdom: 'unethically-congressional-helplessness',
+            html: null,
         }
     },
     created() {
@@ -40,7 +49,7 @@ export default {
     },
     methods: {
         getsubdomfromurl() {
-            if (process.env.NODE_ENV === 'development') return this.devdonm
+            if (process.env.NODE_ENV === 'development') return 'unethically-congressional-helplessness'
             else return window.location.host.split('.')[0]
         },
     },

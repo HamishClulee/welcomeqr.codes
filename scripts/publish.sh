@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
 cd front-published
-echo pwd
-kill -9 $(lsof -t -i:8080)
-yarn serve --fix
+kill -9 $(lsof -t -i:7070)
+yarn serve --fix --port 7070 --open

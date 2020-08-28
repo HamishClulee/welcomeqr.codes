@@ -51,11 +51,8 @@ class Express {
         this.app.use(passport.session());
         // Middleware
         this.app.use((req, res, next) => {
-            Log_1.default.error(`Value of req.origin =====> ${req.header('origin')}`);
-            Log_1.default.error(`Value of tldjs =====> ${JSON.stringify(tldjs.parse(req.header('origin')))}`);
             const tld = tldjs.parse(req.header('origin'));
             if (process.env.NODE_ENV === 'production' && tld.isValid && tld.domain === 'welcomeqr.codes') {
-                Log_1.default.error(`Inside header block`);
                 res.setHeader('Access-Control-Allow-Origin', req.header('origin'));
             }
             res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,Content-Type');
@@ -65,7 +62,7 @@ class Express {
         });
         this.app.use(cors({
             origin: process.env.NODE_ENV !== 'production' ?
-                [DEV_URL, '/\.google.com\.com$/']
+                [DEV_URL, 'http://localhost:7070', '/\.google.com\.com$/']
                 : [PROD_URL, '/\.welcomeqr\.codes$/', '/\.google.com\.com$/'],
             credentials: true
         }));
