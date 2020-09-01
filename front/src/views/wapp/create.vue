@@ -4,7 +4,8 @@
         <!-- TOPBAR -->
         <createtopbar
             @save="usersaved"
-            @preview="usersaved(() => { $router.push({ path: '/app/preview' })})">
+            @preview="usersaved(() => { $router.push({ path: '/app/preview' })})"
+            @publish="userpublished">
         </createtopbar>
 
         <section class="content-container">
@@ -87,7 +88,14 @@ import myupload from 'vue-image-crop-upload'
 import { Chrome } from 'vue-color'
 import multiselect from 'vue-multiselect'
 import { mapGetters } from 'vuex'
-import { EventBus, LOADING, EDITOR_ERROR } from '../../EventBus'
+import {
+    EventBus,
+    LOADING,
+    MESSAGES,
+    EDITOR_ERROR,
+    SAVE_SUCCESS_PL,
+    PUBLISH_SUCCESS_PL,
+} from '../../EventBus'
 export default {
     name: 'create',
     components: {
@@ -175,7 +183,17 @@ export default {
         },
         usersaved(cb = () => {}) {
             // console.log(this.editor.getHTML())
-            this.$QEdit.submitnew(this.editor.getHTML(), this.getuser, false).then(res => cb())
+            this.$QEdit.submitnew(this.editor.getHTML(), this.getuser, false).then(res => {
+                cb()
+                EventBus.$emit(MESSAGES, SAVE_SUCCESS_PL)
+            })
+        },
+        userpublished(cb = () => {}) {
+            // console.log(this.editor.getHTML())
+            this.$QEdit.submitnew(this.editor.getHTML(), this.getuser, false).then(res => {
+                cb()
+                EventBus.$emit(MESSAGES, PUBLISH_SUCCESS_PL)
+            })
         },
         setFontSize(e) { 
             this.editor['setFontSize'] (e)

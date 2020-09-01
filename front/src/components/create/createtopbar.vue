@@ -6,29 +6,39 @@
             </div>
         </div>
 
-        <div class="top-bar-middle"><h6 class="h6">https://{{ getuser.subdom }}.welcomeqr.codes</h6></div>
+        <a
+            :href="`https://${getuser.subdom}.welcomeqr.codes`"
+            target="_blank"
+            class="top-bar-middle"
+        >
+            <h6 class="h6">https://{{ getuser.subdom }}.welcomeqr.codes</h6>
+        </a>
 
         <div class="top-bar-right">
 
-            <router-link tag="div" :to="{ name: 'manage'}" class="top-bar-item-container">
-                <qicon icon="cog" color="secondary" size="small"></qicon>
-                <div class="tiny-text">OPTIONS</div>
-            </router-link>
+            <button class="button link top-bar-item-container" @click="$emit('save')">
+                SAVE
+            </button>
 
-            <div :to="{ name: 'manage'}" class="top-bar-item-container" @click="$emit('save')">
-                <qicon icon="file-tick" color="secondary" size="small"></qicon>
-                <div class="tiny-text">SAVE</div>
+            <button class="button secondary top-bar-item-container" @click="$emit('preview')">
+                PREVIEW
+            </button>
+
+            <button class="button secondary top-bar-item-container" @click="$emit('publish')">
+                PUBLISH
+            </button>
+
+            <div class="hamburger" v-if="!showdrawer" @click="showdrawer = true">
+                <div class="line"></div>
+                <div class="line"></div>
+                <div class="line"></div>
+            </div>
+            <div class="big-x" v-else @click="showdrawer = false">
+                <div class="line"></div>
+                <div class="line"></div>
             </div>
 
-            <div class="top-bar-item-container" @click="$emit('preview')">
-                <qicon icon="eye" color="secondary" size="small"></qicon>
-                <div class="tiny-text">PREVIEW</div>
-            </div>
-
-            <div class="top-bar-item-container" @click="$emit('publish')">
-                <qicon icon="cloud-up" color="secondary" size="small"></qicon>
-                <div class="tiny-text">PUBLISH</div>
-            </div>
+            <rightdrawer v-if="showdrawer" @closedrawer="showdrawer = false"></rightdrawer>
 
         </div>
 
@@ -36,12 +46,17 @@
 </template>
 
 <script>
-import qicon from '../icon/qicon'
 import { mapGetters } from 'vuex'
+import rightdrawer from '../nav/rightdrawer'
 export default {
     name: 'createtopbar',
     components: {
-        qicon,
+        rightdrawer,
+    },
+    data () {
+        return {
+            showdrawer: false,
+        }
     },
     methods: {
         routehome () {
@@ -60,7 +75,7 @@ export default {
 .button
     margin: 0 10px
 .h6
-    color: $medium-gray
+    color: $link
     margin-left: 20px
     font-size: 1em
     margin-bottom: 5px
@@ -111,8 +126,36 @@ export default {
     cursor: pointer
     &:hover
         opacity: 0.8
-.tiny-text
-    font-size: 0.7em
+.hamburger
+    display: flex
+    flex-direction: column
+    width: 50px
+    height: 80px
+    align-items: flex-end
+    justify-content: center
+    cursor: pointer
+    margin-right: 20px
+    .line
+        height: 2px
+        width: 25px
+        background-color: $font
+        margin-top: 4px
+.big-x
+    cursor: pointer
+    padding: 10px
+    &:hover
+        opacity: 0.8
+    .line
+        background-color: $font
+        transform: rotate(-45deg)
+        transition: all 1s ease
+        &:first-child
+            transition: all 1s ease
+            transform: rotate(45deg)
+            position: relative
+            top: 2px
+        height: 2px
+        width: 20px
 // .publish
 //     background: center / contain no-repeat url("/svg/cloud-up.svg")
 //     background-size: unset

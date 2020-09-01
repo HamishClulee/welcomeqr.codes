@@ -194,7 +194,9 @@ export const isReqAllowed = (req: IRequest, res: IResponse, next: INext) => {
 		})
 
 	} else {
+
 		return Clean.deny(res, 200)
+
 	}
 }
 
