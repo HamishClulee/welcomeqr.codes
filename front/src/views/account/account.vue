@@ -68,16 +68,10 @@ export default {
                     black: false,
                 })
             })
-            this.$router.push({ name: 'login' })
         },
     },
     computed: {
         ...mapGetters(['isauthed'],),
-    },
-    watch: {
-        isauthed: function(v) {
-            if (!v) this.$router.push({ name: 'home'})
-        },
     },
 }
 </script>

@@ -118,15 +118,20 @@ exports.isReqAllowed = (req, res, next) => {
     if (token == null && req.isAuthenticated()) {
         // No token exists but a session does exist
         // => grant user a token
-        const user = req.session.user;
-        const sess = {
-            userid: user._id,
-            email: user.email,
-            role: user.role,
-            subdom: user.subdom
-        };
-        jwt.sign(sess, Environment_1.default.get().tokenSecret, { expiresIn: `2 days` });
-        next();
+        User_1.User.findOne({ _id: req.session.passport.user }, (user, err) => {
+            Log_1.default.error(`Inside User.findOne`);
+            if (err) {
+                return Clean_1.default.deny(res, 403, 'DB error of some sort.');
+            }
+            const sess = {
+                userid: user._id,
+                email: user.email,
+                role: user.role,
+                subdom: user.subdom
+            };
+            jwt.sign(sess, Environment_1.default.get().tokenSecret, { expiresIn: `2 days` });
+            next();
+        });
     }
     else if (token === null && !req.isAuthenticated()) {
         // No session, No Token
@@ -134,6 +139,7 @@ exports.isReqAllowed = (req, res, next) => {
         return Clean_1.default.deny(res);
     }
     else if (token && req.isAuthenticated()) {
+        Log_1.default.error(`Inside third if block`);
         // session and token exist
         // => verify token
         jwt.verify(token, Environment_1.default.get().tokenSecret, (err, user) => {
@@ -150,6 +156,9 @@ exports.isReqAllowed = (req, res, next) => {
                 next();
             }
         });
+    }
+    else {
+        return Clean_1.default.deny(res, 200);
     }
 };
 exports.isAuthorized = (req, res, next) => {

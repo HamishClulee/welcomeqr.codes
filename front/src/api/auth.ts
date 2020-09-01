@@ -46,12 +46,14 @@ export class QAuth {
 
             store.commit('IS_AUTHED', res.data.user)
 
-            EventBus.$emit(MESSAGES, {
-                is: true,
-                msg: `Welcome back ${res.data.user.email}!`,
-                color: 'secondary',
-                black: false,
-            })
+            if (res.data.user.email !== null) {
+                EventBus.$emit(MESSAGES, {
+                    is: true,
+                    msg: `Welcome back ${res.data.user.email}!`,
+                    color: 'secondary',
+                    black: false,
+                })
+            }
 
         })
 

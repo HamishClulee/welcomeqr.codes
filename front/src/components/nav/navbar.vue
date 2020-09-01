@@ -52,7 +52,7 @@
                         @click="togglecanvas">
                             <router-link :to="{ path: '/auth/login'}">Login / SignUp</router-link>
                     </div>
-                    <div class="account-settings">
+                    <div class="account-settings" v-if="isauthed">
                         <div
                             class="canvas-item account"
                             @click="togglecanvas">
@@ -63,7 +63,7 @@
                         </div>
                         <div
                             class="canvas-item account"
-                            @click="togglecanvas">
+                            @click="togglecanvas" >
                                 <button class="button" @click="logout">LOGOUT</button>
                         </div>
                     </div>
@@ -103,7 +103,7 @@ export default {
                     color: 'secondary',
                     black: false,
                 })
-                this.$router.push({ path: '/auth/login' })
+                if (this.$route.path !== '/') this.$router.push({ path: '/' })
             })
         },
     },

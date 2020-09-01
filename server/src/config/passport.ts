@@ -140,18 +140,23 @@ export const isReqAllowed = (req: IRequest, res: IResponse, next: INext) => {
 		// No token exists but a session does exist
 		// => grant user a token
 
-		const user = req.session.user as UserDocument
+		User.findOne({ _id: req.session.passport.user }, (user, err) => {
 
-		const sess = {
-			userid: user._id,
-			email: user.email,
-			role: user.role,
-			subdom: user.subdom
-		}
+			Log.error(`Inside User.findOne`)
 
-		jwt.sign(sess, Env.get().tokenSecret, { expiresIn: `2 days` })
+			if (err) { return Clean.deny(res, 403, 'DB error of some sort.') }
 
-		next()
+			const sess = {
+				userid: user._id,
+				email: user.email,
+				role: user.role,
+				subdom: user.subdom
+			}
+
+			jwt.sign(sess, Env.get().tokenSecret, { expiresIn: `2 days` })
+
+			next()
+		})
 
 	} else if (token === null && !req.isAuthenticated()) {
 
@@ -161,6 +166,8 @@ export const isReqAllowed = (req: IRequest, res: IResponse, next: INext) => {
 		return Clean.deny(res)
 
 	} else if (token && req.isAuthenticated()) {
+
+		Log.error(`Inside third if block`)
 
 		// session and token exist
 		// => verify token
@@ -186,6 +193,8 @@ export const isReqAllowed = (req: IRequest, res: IResponse, next: INext) => {
 
 		})
 
+	} else {
+		return Clean.deny(res, 200)
 	}
 }
 
