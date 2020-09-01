@@ -7,14 +7,14 @@ import { QEdit } from './api/editor'
 
 Vue.config.productionTip = false
 
-const qAuth = new QAuth()
-Vue.prototype.$QAuth = qAuth
-Vue.prototype.$QEdit = new QEdit()
-
 new Vue({
     router,
     store,
     render: h => h(App),
 }).$mount('#app')
+
+const qAuth = new QAuth(store)
+Vue.prototype.$QAuth = qAuth
+Vue.prototype.$QEdit = new QEdit()
 
 export default qAuth

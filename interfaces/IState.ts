@@ -1,7 +1,7 @@
 import { QUser } from './IUser'
 
 export interface State {
-    user: QUser,
+    user: QUser['user'],
     ui: UI,
 }
 export interface UI {

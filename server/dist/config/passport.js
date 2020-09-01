@@ -16,6 +16,8 @@ const mongoose = require("mongoose");
 const Environment_1 = require("../providers/Environment");
 const jwt = require('jsonwebtoken');
 const User_1 = require("../models/User");
+const Log_1 = require("../middlewares/Log");
+const Clean_1 = require("../middlewares/Clean");
 const LocalStrategy = passportLocal.Strategy;
 passport.serializeUser((user, done) => {
     done(null, user.id);
@@ -113,21 +115,42 @@ passport.use(new GoogleStrategy({
 exports.isReqAllowed = (req, res, next) => {
     const authHeader = req.headers['authorization'];
     const token = authHeader && authHeader.split(' ')[1];
-    if (token == null) {
-        return res.sendStatus(401);
-    } // if there isn't any token
-    jwt.verify(token, Environment_1.default.get().tokenSecret, (err, user) => {
-        if (err) {
-            return res.sendStatus(403);
-        }
-        req.user = user;
-        if (req.isAuthenticated()) {
-            next();
-        }
-        else {
-            res.redirect('/?authRedirect=true');
-        }
-    });
+    if (token == null && req.isAuthenticated()) {
+        // No token exists but a session does exist
+        // => grant user a token
+        const user = req.session.user;
+        const sess = {
+            userid: user._id,
+            email: user.email,
+            role: user.role,
+            subdom: user.subdom
+        };
+        jwt.sign(sess, Environment_1.default.get().tokenSecret, { expiresIn: `2 days` });
+        next();
+    }
+    else if (token === null && !req.isAuthenticated()) {
+        // No session, No Token
+        // => deny/kill user
+        return Clean_1.default.deny(res);
+    }
+    else if (token && req.isAuthenticated()) {
+        // session and token exist
+        // => verify token
+        jwt.verify(token, Environment_1.default.get().tokenSecret, (err, user) => {
+            if (err) {
+                // Token exists but failed verification
+                // This is a big red flag, I think
+                Log_1.default.error(`Token modified by userid ===> ${JSON.stringify(req.session.user)}`, [
+                    Log_1.default.TAG_FAILED_CHALLENGE,
+                    Log_1.default.TAG_AUTH
+                ]);
+                return Clean_1.default.deny(res);
+            }
+            else {
+                next();
+            }
+        });
+    }
 };
 exports.isAuthorized = (req, res, next) => {
     const provider = req.path.split('/').slice(-1)[0];

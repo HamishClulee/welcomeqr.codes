@@ -22,9 +22,9 @@ interface SettingsResponse extends AuthResponse {
 	isemailverified: boolean,
 }
 
-const generateAccessToken = (userid: any) => {
+const generateAccessToken = (user: any) => {
 
-	return jwt.sign(userid, Env.get().tokenSecret, { expiresIn: `2 days` })
+	return jwt.sign(user, Env.get().tokenSecret, { expiresIn: `2 days` })
 
 }
 

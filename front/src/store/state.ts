@@ -6,6 +6,8 @@ const state: State = {
         id: null,
         authed: false,
         subdom: null,
+        role: null,
+        tier: null,
     },
     ui: {
         windowWidth: 0,

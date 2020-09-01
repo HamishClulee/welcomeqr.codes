@@ -10,6 +10,7 @@ const jwt = require('jsonwebtoken')
 import { User, UserDocument } from '../models/User'
 import { IRequest, IResponse, INext } from '../interfaces'
 import Log from '../middlewares/Log'
+import Clean from '../middlewares/Clean'
 
 const LocalStrategy = passportLocal.Strategy
 
@@ -134,17 +135,58 @@ export const isReqAllowed = (req: IRequest, res: IResponse, next: INext) => {
 
 	const token = authHeader && authHeader.split(' ')[1]
 
-	if (token == null) { return res.sendStatus(401) } // if there isn't any token
+	if (token == null && req.isAuthenticated()) {
 
-	jwt.verify(token, Env.get().tokenSecret, (err: any, user: any) => {
+		// No token exists but a session does exist
+		// => grant user a token
 
-		if (err) { return res.sendStatus(403) }
+		const user = req.session.user as UserDocument
 
-		req.user = user
+		const sess = {
+			userid: user._id,
+			email: user.email,
+			role: user.role,
+			subdom: user.subdom
+		}
 
-		if (req.isAuthenticated()) { next() } else { res.redirect('/?authRedirect=true') }
+		jwt.sign(sess, Env.get().tokenSecret, { expiresIn: `2 days` })
 
-	})
+		next()
+
+	} else if (token === null && !req.isAuthenticated()) {
+
+		// No session, No Token
+		// => deny/kill user
+
+		return Clean.deny(res)
+
+	} else if (token && req.isAuthenticated()) {
+
+		// session and token exist
+		// => verify token
+
+		jwt.verify(token, Env.get().tokenSecret, (err: any, user: any) => {
+
+			if (err) {
+
+				// Token exists but failed verification
+				// This is a big red flag, I think
+				Log.error(`Token modified by userid ===> ${JSON.stringify(req.session.user)}`, [
+					Log.TAG_FAILED_CHALLENGE,
+					Log.TAG_AUTH
+				])
+
+				return Clean.deny(res)
+
+			} else {
+
+				next()
+
+			}
+
+		})
+
+	}
 }
 
 export const isAuthorized = (req: IRequest, res: IResponse, next: INext) => {

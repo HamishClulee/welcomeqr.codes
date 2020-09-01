@@ -56,7 +56,7 @@
 <script>
 import qinput from '../../components/forms/qinput'
 import { EventBus, MESSAGES, LOADING, SERVER_AUTH_ERROR_MESSAGE } from '../../EventBus'
-
+import { settoken } from '../../api/token'
 export default {
     name: 'login',
     components: {
@@ -76,9 +76,18 @@ export default {
         }
     },
     mounted() {
-        EventBus.$on(SERVER_AUTH_ERROR_MESSAGE, msg => {
-            this.servermsg = msg
-        })
+
+        const params = new URLSearchParams(window.location.search)
+
+        if (params.get('authRedirect') === 'true') {
+            EventBus.$emit(MESSAGES, {
+                is: true,
+                msg: 'You need to be logged in to view that page!',
+                color: 'tertiary',
+                black: false,
+            })
+
+        }
     },
     methods: {
         submit(e) {
@@ -105,7 +114,7 @@ export default {
             if (res.data.userError) {
                 this.servermsg = res.data.userError
             } else {
-                this.$QAuth.settoken(res.data.user.token)
+                settoken(res.data.user.token)
                 this.$store.commit('IS_AUTHED', res.data.user)
                 EventBus.$emit(MESSAGES, {
                     is: true,

@@ -1,5 +1,5 @@
 <template>
-  <section class="manage-container" v-show="!fetchinprog">
+  <section class="manage-container">
 
     <h6 v-if="!getuser.subdom" class="h6">We need some details before you can get started</h6>
 
@@ -76,33 +76,6 @@ export default {
             proceed: false,
             fetchinprog: true,
         }
-    },
-    created() {
-        EventBus.$emit(LOADING, true)
-        this.$QAuth.getuser().then(res => {
-
-            this.$store.commit('IS_AUTHED', res.data.user)
-
-            if (res.data.user.subdom) {
-                this.subdom = res.data.user.subdom
-            }
-
-            EventBus.$emit(MESSAGES, {
-                is: true,
-                msg: 'Welcome back!',
-                color: 'secondary',
-                black: false,
-            })
-            EventBus.$emit(LOADING, false)
-            this.fetchinprog = false
-
-        }).catch(err => {
-
-            EventBus.$emit(EDITOR_ERROR)
-            EventBus.$emit(LOADING, false)
-            this.fetchinprog = false
-
-        })
     },
     methods: {
         getrandomsubdom() {

@@ -1,5 +1,11 @@
-import axios, { AxiosError, AxiosInstance, AxiosPromise } from 'axios'
+import axios, { AxiosResponse, AxiosInstance, AxiosPromise } from 'axios'
 import { QUser } from '@I/IUser'
+
+import Vuex from 'vuex'
+
+import { EventBus, LOADING, MESSAGES, EDITOR_ERROR } from '../EventBus'
+
+import { gettoken, settoken, removetoken } from './token'
 
 axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem('QToken')}`
 
@@ -14,41 +20,45 @@ export class QAuth {
 
     ax: AxiosInstance;
 
-    constructor() {
+    /** 
+     * Store is passed to allow getuser to make commit 
+     * Only called from main.ts on app spin up
+     * */
+    constructor(store: any) {
 
         this.ax = axios.create({
             baseURL: this.BASE_URL,
             withCredentials: true,
             headers: {
-                Authorization  : `Bearer ${this.gettoken()}`,
+                Authorization  : `Bearer ${gettoken()}`,
             },
+        })
+
+
+
+        /** 
+         * This is called when ever the app is spun up
+         * Done in background, no UI reflection 
+        */
+        this.getuser().then(res => {
+
+            if (res.data.user.token !== null && res.data.user.token) settoken(res.data.user.token)
+
+            store.commit('IS_AUTHED', res.data.user)
+
+            EventBus.$emit(MESSAGES, {
+                is: true,
+                msg: `Welcome back ${res.data.user.email}!`,
+                color: 'secondary',
+                black: false,
+            })
+
         })
 
     }
 
-    settoken(token: string): void {
-        localStorage.setItem('QToken', token)
-    }
-
-    removetoken(): void {
-        localStorage.removeItem('QToken')
-    }
-
-    checktoken(): Boolean {
-        return !!localStorage.getItem('QToken') && localStorage.getItem('QToken') !== ''
-    }
-
-    gettoken(): string {
-        let token = localStorage.getItem('QToken')
-        return token ? token : ''
-    }
-
-    authenticate(): AxiosPromise<QUser> {
-        return this.ax.post('/auth_challenge', {})
-    }
-
     getuser(): AxiosPromise<QUser> {
-        return this.ax.post('get_user', {})
+        return this.ax.post('user', {})
     }
 
     usersettings(): AxiosPromise<QUser> {
@@ -60,7 +70,7 @@ export class QAuth {
     }
 
     logout(): AxiosPromise<QUser> {
-        this.removetoken()
+        removetoken()
         return this.ax.post('/logout')
     }
 

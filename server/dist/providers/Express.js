@@ -78,6 +78,10 @@ class Express {
         this.app.post('/auth/verify_email', QAuth.verifyemail);
         this.app.post('/auth/forgot', QAuth.forgotpassword);
         this.app.post('/auth/reset', QAuth.resetpassword);
+        // Helper for frontend, checks if session exists
+        // if session => ensures JWT is granted
+        // if session & JWT => returns the user linked to the session
+        this.app.post('/auth/user', auth.isReqAllowed, QAuth.getuser);
         // Account settings
         this.app.post('/auth/toggle_subscribe', auth.isReqAllowed, QAuth.togglesubscribe);
         this.app.post('/auth/user_settings', auth.isReqAllowed, QAuth.usersettings);

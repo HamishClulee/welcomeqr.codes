@@ -35,6 +35,8 @@ const testhtml = () => import('../views/testhtml.vue')
 
 import overwritemetas from '../utils/seo'
 
+import { EventBus, MESSAGES, EDITOR_ERROR } from '../EventBus'
+
 Vue.use(VueRouter)
 
 const routes = [
@@ -83,6 +85,9 @@ const routes = [
     {
         path: '/account',
         name: 'account',
+        meta: {
+            requiresAuth: true,
+        },
         component: account,
         beforeEnter: (to: any, from: any, next: any) => {
             overwritemetas({
@@ -157,6 +162,9 @@ const routes = [
     {
         path: '/app',
         name: 'wapp',
+        meta: {
+            requiresAuth: true,
+        },
         component: wapp,
         redirect: '/app/manage',
         beforeEnter: (to: any, from: any, next: any) => {
@@ -171,6 +179,9 @@ const routes = [
                 path: '/app/manage',
                 name: 'manage',
                 component: manage,
+                meta: {
+                    requiresAuth: true,
+                },
                 beforeEnter: (to: any, from: any, next: any) => {
                     overwritemetas({
                         title: 'Welcome QR | Manage',
@@ -183,6 +194,9 @@ const routes = [
                 path: '/app/create',
                 name: 'create',
                 component: create,
+                meta: {
+                    requiresAuth: true,
+                },
                 beforeEnter: (to: any, from: any, next: any) => {
                     overwritemetas({
                         title: 'Welcome QR | Create Your Site',
@@ -195,6 +209,9 @@ const routes = [
                 path: '/app/preview',
                 name: 'preview',
                 component: preview,
+                meta: {
+                    requiresAuth: true,
+                },
                 beforeEnter: (to: any, from: any, next: any) => {
                     overwritemetas({
                         title: 'Welcome QR | Preview',
@@ -280,6 +297,22 @@ const router = new VueRouter({
     scrollBehavior (to, from, savedPosition) {
         return savedPosition ? savedPosition : { x: 0, y: 0 }
     },
+})
+
+const tokenOk = () => {
+
+    return !!localStorage.getItem('QToken') && localStorage.getItem('QToken') !== ''
+
+}
+
+router.beforeEach((to, from, next) => {
+
+    if (to.meta.requiresAuth && !tokenOk()) {
+
+        next({ name: 'login', query: { authRedirect: 'true' } })
+
+    } else { next() }
+
 })
 
 export default router

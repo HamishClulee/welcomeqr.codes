@@ -2,6 +2,9 @@ import axios, { AxiosInstance, AxiosPromise, AxiosError } from 'axios'
 import { APIResponse } from '@I/IEditor'
 import { QUser } from '@I/IUser'
 import { EventBus, LOADING, SERVER_AUTH_ERROR_MESSAGE } from '../EventBus'
+
+import {gettoken, removetoken} from './token'
+
 import Vue from 'vue'
 
 axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem('QToken')}`
@@ -18,7 +21,7 @@ export class QEdit {
             baseURL: this.BASE_URL,
             withCredentials: true,
             headers: {
-                Authorization  : `Bearer ${this.gettoken()}`,
+                Authorization  : `Bearer ${gettoken()}`,
             },
         })
 
@@ -29,7 +32,7 @@ export class QEdit {
                 Vue.prototype.$router.push({ name: 'login' })
                 EventBus.$emit(SERVER_AUTH_ERROR_MESSAGE, error.response.data.userError)
                 EventBus.$emit(LOADING, false)
-                this.removetoken()
+                removetoken()
                 
             }
 
@@ -61,15 +64,6 @@ export class QEdit {
 
     generateRandomSubDom(): AxiosPromise<APIResponse> {
         return this.ax.post('/generatesubdom')
-    }
-
-    gettoken(): string {
-        let token = localStorage.getItem('QToken')
-        return token ? token : ''
-    }
-
-    removetoken(): void {
-        localStorage.setItem('QToken', '')
     }
 
     // tester

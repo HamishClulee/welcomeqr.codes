@@ -3,8 +3,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const Environment_1 = require("../providers/Environment");
 const Log_1 = require("./Log");
 const jwt = require('jsonwebtoken');
-const generateAccessToken = (userid) => {
-    return jwt.sign(userid, Environment_1.default.get().tokenSecret, { expiresIn: `2 days` });
+const generateAccessToken = (user) => {
+    return jwt.sign(user, Environment_1.default.get().tokenSecret, { expiresIn: `2 days` });
 };
 const Clean = {
     settings: function (res, user) {

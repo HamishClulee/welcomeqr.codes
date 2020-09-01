@@ -34,7 +34,7 @@
         <displaysection sassclass="secondary">
             <p>
                 We provide you with eveything you need; an awesome online editor and easily downloadable files.
-                Your guests simply scan the QR we provide and are directed to your fully custonisable web site.
+                Your guests simply scan the QR we provide and are directed to your fully customisable web site.
                 Want to make a change? It'll only take a few seconds, literally!
             </p>
             <h1 class="h1">

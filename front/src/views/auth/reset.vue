@@ -48,7 +48,6 @@
 </template>
 
 <script>
-import SERVER from '../../api'
 import qinput from '../../components/forms/qinput'
 import { EventBus, MESSAGES, LOADING, SERVER_AUTH_ERROR_MESSAGE } from '../../EventBus'
 export default {
