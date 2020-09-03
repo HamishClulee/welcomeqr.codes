@@ -59,23 +59,31 @@ passport.use(new GoogleStrategy({
     clientSecret: Environment_1.default.get().googleSecret,
     callbackURL: `${url}/auth/google/callback`
 }, (req, accessToken, refreshToken, profile, done) => __awaiter(void 0, void 0, void 0, function* () {
+    Log_1.default.error(`Touched passport google authenticate`);
     if (req.user) {
+        Log_1.default.error(`Inside if req user`);
         User_1.User.findOne({ google: profile.id }, (err, existingUser) => {
             if (err) {
+                Log_1.default.error(`Inside user.FindOne - first err -> ${JSON.stringify(err)}`);
                 return done(err);
             }
             if (existingUser) {
                 // req.flash('errors', { msg: 'There is already a Google account that belongs to you. Sign in with that account or delete it, then link it with your current account.' })
+                Log_1.default.error(`Inside user.FindOne - second err -> ${JSON.stringify(err)}`);
                 return done(err);
             }
             else {
+                Log_1.default.error(`Inside user.FindOne - else block`);
                 User_1.User.findById(req.user.id, (err, user) => {
                     if (err) {
+                        Log_1.default.error(`Inside user.findById - err block -> ${JSON.stringify(err)}`);
                         return done(err);
                     }
                     user.google = profile.id;
                     user.tokens.push({ kind: 'google', accessToken });
+                    Log_1.default.error(`Inside user.findById - tokens saved to user`);
                     user.save((err) => {
+                        Log_1.default.error(`Inside user.findById - complete user => ${JSON.stringify(user)}`);
                         // req.flash('info', { msg: 'Google account has been linked.' })
                         return done(err, user);
                     });
@@ -84,22 +92,27 @@ passport.use(new GoogleStrategy({
         });
     }
     else {
+        Log_1.default.error(`Inside new user, no email exists`);
         User_1.User.findOne({ google: profile.id }, (err, existingUser) => {
             if (err) {
+                Log_1.default.error(`New email - first err -> ${JSON.stringify(err)}`);
                 return done(err);
             }
             if (existingUser) {
+                Log_1.default.error(`New email - second err -> ${JSON.stringify(err)}`);
                 return done(null, existingUser);
             }
             User_1.User.findOne({ email: profile.emails[0].value }, (err, existingEmailUser) => {
                 if (err) {
+                    Log_1.default.error(`New email - third err -> ${JSON.stringify(err)}`);
                     return done(err);
                 }
                 if (existingEmailUser) {
-                    // req.flash('errors', { msg: 'There is already an account using this email address. Sing in to that accoount and link it with Google manually from Account Settings.' })
-                    return done(err);
+                    Log_1.default.error(`New email - forth err -> ${JSON.stringify(err)}`);
+                    return done(err, existingEmailUser);
                 }
                 else {
+                    Log_1.default.error(`New email - creating new user -> ${JSON.stringify(err)}`);
                     const user = new User_1.User();
                     user.email = profile.emails[0].value;
                     user.google = profile.id;
@@ -113,13 +126,15 @@ passport.use(new GoogleStrategy({
     }
 })));
 exports.isReqAllowed = (req, res, next) => {
+    Log_1.default.error(`Touched isReqAllowed`);
     const authHeader = req.headers['authorization'];
     const token = authHeader && authHeader.split(' ')[1];
     if (token == null && req.isAuthenticated()) {
         // No token exists but a session does exist
         // => grant user a token
+        Log_1.default.info(`Value of session === > ${JSON.stringify(req.session)}`);
         User_1.User.findOne({ _id: req.session.passport.user }, (user, err) => {
-            Log_1.default.error(`Inside User.findOne`);
+            Log_1.default.error(`Inside User.findOne == value of user ===> ${JSON.stringify(user)}`);
             if (err) {
                 return Clean_1.default.deny(res, 403, 'DB error of some sort.');
             }

@@ -17,6 +17,7 @@ const QAuth = require("../controllers/QAuth");
 /** Middlewares */
 const Environment_1 = require("./Environment");
 const Log_1 = require("../middlewares/Log");
+const jwt = require('jsonwebtoken');
 const tldjs = require('tldjs');
 /** App Constants */
 const PORT = 1980;
@@ -90,7 +91,14 @@ class Express {
         // Google
         this.app.get('/auth/google', passport.authenticate('google', { scope: ['email'] }));
         this.app.get('/auth/google/callback', passport.authenticate('google', { failureRedirect: '/?redirect=true' }), (req, res) => {
-            res.redirect('/?googleauth=true');
+            let token = jwt.sign({
+                userid: req.session.passport.user
+            }, Environment_1.default.get().tokenSecret, { expiresIn: `2 days` });
+            res.set('q-token', token);
+            res.redirect(`http://localhost:8080/authcb?token=${token.split('.').join('~')}`);
+            // Log.error(`req passport ==> ${JSON.stringify(thing)}`)
+            // Log.error(`req passport ==> ${JSON.stringify(req.session)}`)
+            // Clean.approve(res, 200, {'email': null, 'id': null, 'authed': false, 'subdom': null, 'role': null, 'tier': null, 'token': null})
         });
         /** -------------- Editor -------------- */
         // Protected

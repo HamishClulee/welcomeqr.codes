@@ -32,10 +32,9 @@ const contact = () => import('../views/contact.vue')
 /** Misc plumbing routes */
 const notfound = () => import('../views/notfound.vue')
 const testhtml = () => import('../views/testhtml.vue')
+const authcb = () => import('../views/authcb.vue')
 
 import overwritemetas from '../utils/seo'
-
-import { EventBus, MESSAGES, EDITOR_ERROR } from '../EventBus'
 
 Vue.use(VueRouter)
 
@@ -100,6 +99,19 @@ const routes = [
     // -------------------------------------------------------------------
     // --------------------------- AUTH
     // -------------------------------------------------------------------
+    {
+        path: '/authcb',
+        name: 'authcb',
+        meta: {
+            requiresAuth: false,
+        },
+        component: authcb,
+        beforeEnter: (to: any, from: any, next: any) => {
+            overwritemetas({
+                index: false,
+            }, next)
+        },
+    },
     {
         path: '/auth',
         name: 'auth',
@@ -169,8 +181,6 @@ const routes = [
         redirect: '/app/manage',
         beforeEnter: (to: any, from: any, next: any) => {
             overwritemetas({
-                title: '',
-                description: ``,
                 index: false,
             }, next)
         },
@@ -255,8 +265,6 @@ const routes = [
         component: testhtml,
         beforeEnter: (to: any, from: any, next: any) => {
             overwritemetas({
-                title: '',
-                description: '',
                 index: false,
             }, next)
         },

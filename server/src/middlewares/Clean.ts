@@ -44,7 +44,7 @@ const Clean = {
 
 	},
 
-	approve: function(res: IResponse, status: number, user: UserDocument, msg: string = ''): IResponse {
+	approve: function(res: IResponse, status: number, user: any, msg: string = ''): IResponse {
 
 		let _user = this.buildUser(user)
 

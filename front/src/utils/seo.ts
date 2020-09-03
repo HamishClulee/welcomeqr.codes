@@ -1,6 +1,6 @@
 interface Meta {
-  title: string,
-  description: string,
+  title?: string,
+  description?: string,
   index: boolean,
 }
 
@@ -11,8 +11,8 @@ const overwritemetas = (meta: Meta | null = null, next: any): void => {
 
     if (meta) {
 
-        title.text = meta.title
-        des.content = meta.description
+        title.text = meta.title ? meta.title : ''
+        des.content = meta.description ? meta.description : ''
 
         if (meta.index === false) {
 

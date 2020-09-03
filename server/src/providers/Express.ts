@@ -19,7 +19,9 @@ import * as QAuth from '../controllers/QAuth'
 /** Middlewares */
 import Env from './Environment'
 import Log from '../middlewares/Log'
+import Clean from '../middlewares/Clean'
 
+const jwt = require('jsonwebtoken')
 const tldjs = require('tldjs')
 
 /** App Constants */
@@ -115,13 +117,21 @@ class Express {
 		this.app.post('/auth/contact', QAuth.contact)
 
 		// Google
-		this.app.get('/auth/google',
-			passport.authenticate('google', { scope: ['email'] }))
+		this.app.get('/auth/google', passport.authenticate('google', { scope: ['email'] }))
 
-		this.app.get('/auth/google/callback',
-			passport.authenticate('google', { failureRedirect: '/?redirect=true' }),
+		this.app.get('/auth/google/callback', passport.authenticate('google', { failureRedirect: '/?redirect=true' }),
 			(req, res) => {
-				res.redirect('/?googleauth=true')
+
+				let token = jwt.sign({
+					userid: req.session.passport.user
+				}, Env.get().tokenSecret, { expiresIn: `2 days` })
+
+				res.set('q-token', token)
+				res.redirect(`http://localhost:8080/authcb?token=${token.split('.').join('~')}`)
+
+				// Log.error(`req passport ==> ${JSON.stringify(thing)}`)
+				// Log.error(`req passport ==> ${JSON.stringify(req.session)}`)
+				// Clean.approve(res, 200, {'email': null, 'id': null, 'authed': false, 'subdom': null, 'role': null, 'tier': null, 'token': null})
 		})
 
 		/** -------------- Editor -------------- */
