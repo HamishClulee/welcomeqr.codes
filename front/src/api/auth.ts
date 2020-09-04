@@ -1,11 +1,9 @@
 import axios, { AxiosResponse, AxiosInstance, AxiosPromise } from 'axios'
 import { QUser } from '@I/IUser'
 
-import Vuex from 'vuex'
+import { EventBus, MESSAGES, welcomeback } from '../EventBus'
 
-import { EventBus, LOADING, MESSAGES, EDITOR_ERROR } from '../EventBus'
-
-import { gettoken, settoken, removetoken } from './token'
+import { settoken, removetoken } from './token'
 
 axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem('QToken')}`
 
@@ -16,7 +14,6 @@ export class QAuth {
     private PROD_BASE = 'https://welcomeqr.codes'
 
     private BASE_URL = process.env.NODE_ENV === 'development' ? `${this.DEV_SERV}/auth` : `${this.PROD_BASE}/auth`
-    private AUTH_URL = process.env.NODE_ENV === 'development' ? `${this.DEV_CLIENT}/?redirect=true` : `${this.PROD_BASE}/?redirect=true`
 
     ax: AxiosInstance;
 
@@ -30,11 +27,17 @@ export class QAuth {
             baseURL: this.BASE_URL,
             withCredentials: true,
             headers: {
-                Authorization  : `Bearer ${gettoken()}`,
+                Authorization  : `Bearer ${localStorage.getItem('QToken')}`,
             },
         })
 
-
+        axios.interceptors.request.use(config => {
+            config.headers.common['Authorization'] = `Bearer ${localStorage.getItem('QToken')}`
+            console.log('AXIOS req intercept =====> ', config)
+            return config
+        }, (error) => {
+            return Promise.reject(error)
+        })
 
         /** 
          * This is called when ever the app is spun up
@@ -47,12 +50,7 @@ export class QAuth {
             store.commit('IS_AUTHED', res.data.user)
 
             if (res.data.user.email !== null) {
-                EventBus.$emit(MESSAGES, {
-                    is: true,
-                    msg: `Welcome back ${res.data.user.email}!`,
-                    color: 'secondary',
-                    black: false,
-                })
+                EventBus.$emit(MESSAGES, welcomeback(res.data.user.email))
             }
 
         })

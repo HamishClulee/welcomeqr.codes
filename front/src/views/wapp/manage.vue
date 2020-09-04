@@ -36,8 +36,8 @@
     </template>
 
     <template v-else>
-        <h4 class="h4">Your subdomain is</h4>
-        <h5 class="h5">https://{{ getuser.subdom }}.welcomeqr.codes</h5>
+        <h4 class="h4">Your URL is</h4>
+        <a :href="`https://${getuser.subdom}.welcomeqr.codes`"><h5 class="h5">https://{{ getuser.subdom }}.welcomeqr.codes</h5></a>
         <h6 class="h6">Any websites you publish will be hosted at that address</h6>
         <router-link class="button" tag="button" :to="{ path: '/app/create'}">Start editing</router-link>
     </template>    

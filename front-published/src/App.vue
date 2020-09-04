@@ -49,7 +49,7 @@ export default {
     },
     methods: {
         getsubdomfromurl() {
-            if (process.env.NODE_ENV === 'development') return 'unethically-congressional-helplessness'
+            if (process.env.NODE_ENV === 'development') return 'fully-left-footed-vulnerability'
             else return window.location.host.split('.')[0]
         },
     },

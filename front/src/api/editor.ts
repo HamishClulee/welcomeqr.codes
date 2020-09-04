@@ -3,7 +3,7 @@ import { APIResponse } from '@I/IEditor'
 import { QUser } from '@I/IUser'
 import { EventBus, LOADING, SERVER_AUTH_ERROR_MESSAGE } from '../EventBus'
 
-import {gettoken, removetoken} from './token'
+import { removetoken } from './token'
 
 import Vue from 'vue'
 
@@ -21,8 +21,16 @@ export class QEdit {
             baseURL: this.BASE_URL,
             withCredentials: true,
             headers: {
-                Authorization  : `Bearer ${gettoken()}`,
+                Authorization  : `Bearer ${localStorage.getItem('QToken')}`,
             },
+        })
+
+        axios.interceptors.request.use(config => {
+            config.headers.common['Authorization'] = `Bearer ${localStorage.getItem('QToken')}`
+            console.log('AXIOS req intercept =====> ', config)
+            return config
+        }, (error) => {
+            return Promise.reject(error)
         })
 
         this.ax.interceptors.response.use(res => res, (error: AxiosError ) => {

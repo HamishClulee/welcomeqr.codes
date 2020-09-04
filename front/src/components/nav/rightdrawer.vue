@@ -7,15 +7,26 @@
 
         <div class="drawer-section">
             <router-link class="drawer-item link" :to="{ name: 'account' }">Account</router-link>
-            <button class="button secondary logout">logout</button>
+            <button class="button secondary logout" @click="logout()">logout</button>
         </div>
 
     </section>
 </template>
 
 <script>
+import { EventBus, MESSAGES, LOGGED_OUT } from '../../EventBus'
+
 export default {
     name: 'rightdrawer',
+    methods: {
+        logout() {
+            this.$QAuth.logout().then(res => {
+                this.$store.commit('IS_AUTHED', res.data.user)
+                EventBus.$emit(MESSAGES, LOGGED_OUT)
+                if (this.$route.path !== '/') this.$router.push({ path: '/' })
+            })
+        },
+    },
 }
 </script>
 

@@ -123,16 +123,17 @@ class Express {
 		this.app.get('/auth/google/callback', passport.authenticate('google', { failureRedirect: '/?redirect=true' }),
 			(req, res) => {
 
+				// This feels like an ugly cludge, signing the token with only the ID,
+				// sending that token to the client, so the client can make a new request
+				// for a properly signed token
+				// solution ==> make the user object available here
+
 				let token = jwt.sign({
 					userid: req.session.passport.user
 				}, Env.get().tokenSecret, { expiresIn: `2 days` })
 
-				res.set('q-token', token)
+				// scrub the jwt for usage in query param using '~'
 				res.redirect(`${BASE_URL}/authcb?token=${token.split('.').join('~')}`)
-
-				// Log.error(`req passport ==> ${JSON.stringify(thing)}`)
-				// Log.error(`req passport ==> ${JSON.stringify(req.session)}`)
-				// Clean.approve(res, 200, {'email': null, 'id': null, 'authed': false, 'subdom': null, 'role': null, 'tier': null, 'token': null})
 		})
 
 		/** -------------- Editor -------------- */

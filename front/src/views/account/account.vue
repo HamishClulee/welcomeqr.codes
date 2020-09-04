@@ -30,12 +30,11 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import { EventBus, MESSAGES, LOADING } from '../../EventBus'
+import { EventBus, MESSAGES, LOADING, LOGGED_OUT } from '../../EventBus'
 import pagesection from '../../components/pagesection'
 import verify from './verify'
 import unsub from './unsub'
-// import changepass from './changepass'
-// import unlinkgoogle from './unlinkgoogle'
+
 export default {
     name: 'account',
     components: {
@@ -61,12 +60,7 @@ export default {
         logout() {
             this.$QAuth.logout().then(res => {
                 this.$store.commit('IS_AUTHED', res.data.user)
-                EventBus.$emit(MESSAGES, {
-                    is: true,
-                    msg: `You are now logged out!`,
-                    color: 'secondary',
-                    black: false,
-                })
+                EventBus.$emit(MESSAGES, LOGGED_OUT)
             })
         },
     },

@@ -23,15 +23,7 @@ export default {
                 EventBus.$emit(LOADING, false)
                 this.$router.push({ name: 'manage' })
 
-            }).catch(err => {
-
-                this.$router.push({ name: 'login', query: { authRedirect: true } })
-
             })
-        } else {
-
-            this.$router.push({ name: 'login', query: { authRedirect: true } })
-
         }
     },
 }

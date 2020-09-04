@@ -21,3 +21,19 @@ export const PUBLISH_SUCCESS_PL = {
     color: 'highlight',
     black: false,
 }
+
+export const LOGGED_OUT = {
+    is: true,
+    msg: 'You are now logged out!',
+    color: 'secondary',
+    black: false,
+}
+
+export const welcomeback = (email: string) => {
+    return {
+        is: true,
+        msg: `Welcome back ${email}!`,
+        color: 'secondary',
+        black: false,
+    }
+}

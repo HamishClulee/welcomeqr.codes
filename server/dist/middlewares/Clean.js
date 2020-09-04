@@ -4,6 +4,7 @@ const Environment_1 = require("../providers/Environment");
 const Log_1 = require("./Log");
 const jwt = require('jsonwebtoken');
 const generateAccessToken = (user) => {
+    Log_1.default.error(`Value of 'user' in generateAccessToken ===> ${JSON.stringify(user)}`);
     return jwt.sign(user, Environment_1.default.get().tokenSecret, { expiresIn: `2 days` });
 };
 const Clean = {

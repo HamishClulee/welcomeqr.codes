@@ -15,7 +15,10 @@ import Clean from '../middlewares/Clean'
 const LocalStrategy = passportLocal.Strategy
 
 passport.serializeUser<any, any>((user, done) => {
-	done(null, user.id)
+
+	Log.error(`Inside passport.serializeUser == VALUE OF 'user' ==== >>> ${JSON.stringify(user)}`)
+
+	done(null, user._id)
 })
 
 passport.deserializeUser<any, any>((id, done) => {
@@ -71,7 +74,7 @@ passport.use(new GoogleStrategy(
 
 		if (req.user) {
 
-			Log.error(`Inside if req user`)
+			Log.error(`Inside if req user ====> VALUE of req.user ==== >>> ${JSON.stringify(req.user)}`)
 
 			User.findOne({ google: profile.id }, (err, existingUser) => {
 
@@ -83,7 +86,7 @@ passport.use(new GoogleStrategy(
 				if (existingUser) {
 					// req.flash('errors', { msg: 'There is already a Google account that belongs to you. Sign in with that account or delete it, then link it with your current account.' })
 					Log.error(`Inside user.FindOne - second err -> ${JSON.stringify(err)}`)
-					return done(err)
+					return done(err, existingUser)
 
 				} else {
 
@@ -121,21 +124,23 @@ passport.use(new GoogleStrategy(
 				}
 
 				if (existingUser) {
-					Log.error(`New email - second err -> ${JSON.stringify(err)}`)
+					Log.error(`New email - second err -> ${JSON.stringify(existingUser)}`)
 					return done(null, existingUser)
 				}
 
+				Log.error(`Value of profile ==> RETURNED FROM GOOGLE  ===> ${JSON.stringify(profile)}`)
+
 				User.findOne({ email: profile.emails[0].value }, (err, existingEmailUser) => {
 					if (err) {
-						Log.error(`New email - third err -> ${JSON.stringify(err)}`)
+						Log.error(`New email - THIS IS THE BAD JUJU -> ${JSON.stringify(err)}`)
 						return done(err)
 					}
 
 					if (existingEmailUser) {
 
-						Log.error(`New email - forth err -> ${JSON.stringify(err)}`)
+						Log.error(`New email - Value of existing user with existing email -> ${JSON.stringify(existingEmailUser) || '**empty**'}`)
 
-						return done(err, existingEmailUser)
+						return done(null, existingEmailUser)
 
 					} else {
 
@@ -147,6 +152,8 @@ passport.use(new GoogleStrategy(
 						user.tokens.push({ kind: 'google', accessToken })
 
 						user.save((err) => {
+
+							Log.error(`New email - ERROR SAVING EMAIL? -> ${JSON.stringify(err)}`)
 							return done(err, user)
 						})
 					}
@@ -171,22 +178,35 @@ export const isReqAllowed = (req: IRequest, res: IResponse, next: INext) => {
 
 		Log.info(`Value of session === > ${JSON.stringify(req.session)}`)
 
-		User.findOne({ _id: req.session.passport.user }, (user, err) => {
+		User.findOne({ _id: req.session.passport.user }, (err, user) => {
 
-			Log.error(`Inside User.findOne == value of user =====> ${JSON.stringify(user)}`)
+			if (!err) {
 
-			if (err) { return Clean.deny(res, 403, 'DB error of some sort.') }
+				const sess = {
+					userid: user._id,
+					email: user.email,
+					role: user.role,
+					subdom: user.subdom
+				}
 
-			const sess = {
-				userid: user._id,
-				email: user.email,
-				role: user.role,
-				subdom: user.subdom
+				Log.error(`Inside isReqAllowed == value of user =====> ${JSON.stringify(sess)}`)
+
+				jwt.sign(sess, Env.get().tokenSecret, { expiresIn: `2 days` })
+
+				next()
+
+			} else {
+
+				Log.info(`Some thing strange happened in isReqAllowed, error thrown === > ${JSON.stringify(err) || '**empty**'}`)
+
+				req.logout()
+
+				Log.info(`Value of session (after req.logout) === > ${JSON.stringify(req.session)}`)
+
+				return Clean.deny(res, 403, 'DB error of some sort.')
+
 			}
 
-			jwt.sign(sess, Env.get().tokenSecret, { expiresIn: `2 days` })
-
-			next()
 		})
 
 	} else if (token === null && !req.isAuthenticated()) {
