@@ -173,7 +173,7 @@ export const isReqAllowed = (req: IRequest, res: IResponse, next: INext) => {
 
 		User.findOne({ _id: req.session.passport.user }, (user, err) => {
 
-			Log.error(`Inside User.findOne == value of user ===> ${JSON.stringify(user)}`)
+			Log.error(`Inside User.findOne == value of user =====> ${JSON.stringify(user)}`)
 
 			if (err) { return Clean.deny(res, 403, 'DB error of some sort.') }
 

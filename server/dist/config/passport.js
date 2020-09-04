@@ -134,7 +134,7 @@ exports.isReqAllowed = (req, res, next) => {
         // => grant user a token
         Log_1.default.info(`Value of session === > ${JSON.stringify(req.session)}`);
         User_1.User.findOne({ _id: req.session.passport.user }, (user, err) => {
-            Log_1.default.error(`Inside User.findOne == value of user ===> ${JSON.stringify(user)}`);
+            Log_1.default.error(`Inside User.findOne == value of user =====> ${JSON.stringify(user)}`);
             if (err) {
                 return Clean_1.default.deny(res, 403, 'DB error of some sort.');
             }
