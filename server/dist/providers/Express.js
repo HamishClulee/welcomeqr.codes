@@ -23,6 +23,7 @@ const tldjs = require('tldjs');
 const PORT = 1980;
 const DEV_URL = Environment_1.default.get().devUrl;
 const PROD_URL = Environment_1.default.get().prodUrl;
+const BASE_URL = process.env.NODE_ENV === 'development' ? DEV_URL : PROD_URL;
 const RedisStore = require('connect-redis')(session);
 const redisClient = redis.createClient();
 class Express {
@@ -95,7 +96,7 @@ class Express {
                 userid: req.session.passport.user
             }, Environment_1.default.get().tokenSecret, { expiresIn: `2 days` });
             res.set('q-token', token);
-            res.redirect(`http://localhost:8080/authcb?token=${token.split('.').join('~')}`);
+            res.redirect(`${BASE_URL}/authcb?token=${token.split('.').join('~')}`);
             // Log.error(`req passport ==> ${JSON.stringify(thing)}`)
             // Log.error(`req passport ==> ${JSON.stringify(req.session)}`)
             // Clean.approve(res, 200, {'email': null, 'id': null, 'authed': false, 'subdom': null, 'role': null, 'tier': null, 'token': null})

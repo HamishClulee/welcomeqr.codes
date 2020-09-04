@@ -28,6 +28,7 @@ const tldjs = require('tldjs')
 const PORT = 1980
 const DEV_URL = Env.get().devUrl
 const PROD_URL = Env.get().prodUrl
+const BASE_URL = process.env.NODE_ENV === 'development' ? DEV_URL : PROD_URL
 
 const RedisStore = require('connect-redis')(session)
 const redisClient = redis.createClient()
@@ -127,7 +128,7 @@ class Express {
 				}, Env.get().tokenSecret, { expiresIn: `2 days` })
 
 				res.set('q-token', token)
-				res.redirect(`http://localhost:8080/authcb?token=${token.split('.').join('~')}`)
+				res.redirect(`${BASE_URL}/authcb?token=${token.split('.').join('~')}`)
 
 				// Log.error(`req passport ==> ${JSON.stringify(thing)}`)
 				// Log.error(`req passport ==> ${JSON.stringify(req.session)}`)
