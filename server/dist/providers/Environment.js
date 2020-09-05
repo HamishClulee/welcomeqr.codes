@@ -8,6 +8,7 @@ class Env {
         const env = process.env.NODE_ENV;
         const prodUrl = process.env.PROD_URL;
         const devUrl = process.env.DEV_URL;
+        const devPubUrl = process.env.DEV_PUB_URL;
         const baseUrl = process.env.NODE_ENV === 'production' ? prodUrl : devUrl;
         const port = process.env.PORT || 1980;
         const appSecret = process.env.APP_SECRET || 'This is your responsibility!';
@@ -33,6 +34,7 @@ class Env {
         return {
             internalEmail,
             baseUrl,
+            devPubUrl,
             sendGridSecret,
             googleClientId,
             googleSecret,

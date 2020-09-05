@@ -31,9 +31,9 @@ exports.getHtmlBySubDom = (req, res) => __awaiter(void 0, void 0, void 0, functi
 });
 exports.submitNew = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const query = { 'userid': req.session.passport.user };
+        const query = { 'userid': req.session.passport.user._id };
         const decoded = jwt.decode(req.header('Authorization').split(' ')[1]);
-        const update = { 'html': req.body.html, 'subdom': decoded.subdom };
+        const update = { 'html': req.body.html, 'subdom': req.body.user.subdom };
         const options = { 'upsert': true, 'new': true, 'setDefaultsOnInsert': true };
         yield Editor_1.Editor.findOneAndUpdate(query, update, options);
         return Clean_1.default.success(res, 200);
@@ -47,7 +47,7 @@ exports.submitSubdom = (req, res) => __awaiter(void 0, void 0, void 0, function*
         if (SUBDOMS.indexOf(req.body.subdom) === -1) {
             SUBDOMS.push(req.body.subdom);
             yield Subdom_1.Subdom.updateOne({ '_id': SUBDOMS_ID }, { subdoms: SUBDOMS }, { upsert: true });
-            yield User_1.User.updateOne({ '_id': req.session.passport.user }, { subdom: req.body.subdom });
+            yield User_1.User.updateOne({ '_id': req.session.passport.user._id }, { subdom: req.body.subdom });
             const user = yield User_1.User.findOne({ '_id': req.session.passport.user });
             return Clean_1.default.approve(res, 200, user);
         }
@@ -62,7 +62,7 @@ exports.checkSubdom = (req, res) => {
 };
 exports.getHTML = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const editor = yield Editor_1.Editor.findOne({ 'userid': req.session.passport.user });
+        const editor = yield Editor_1.Editor.findOne({ 'userid': req.session.passport.user._id });
         return Clean_1.default.success(res, 200, editor);
     }
     catch (e) {

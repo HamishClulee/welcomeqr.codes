@@ -24,8 +24,6 @@ interface SettingsResponse extends AuthResponse {
 
 const generateAccessToken = (user: any) => {
 
-	Log.error(`Value of 'user' in generateAccessToken ===> ${JSON.stringify(user)}`)
-
 	return jwt.sign(user, Env.get().tokenSecret, { expiresIn: `2 days` })
 
 }

@@ -80,6 +80,7 @@ export default {
         const params = new URLSearchParams(window.location.search)
 
         if (params.get('authRedirect') === 'true') {
+
             EventBus.$emit(MESSAGES, {
                 is: true,
                 msg: 'You need to be logged in to view that page!',

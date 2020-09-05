@@ -16,14 +16,12 @@ const LocalStrategy = passportLocal.Strategy
 
 passport.serializeUser<any, any>((user, done) => {
 
-	Log.error(`Inside passport.serializeUser == VALUE OF 'user' ==== >>> ${JSON.stringify(user)}`)
-
-	done(null, user._id)
+	done(null, user)
 })
 
-passport.deserializeUser<any, any>((id, done) => {
-	if (mongoose.Types.ObjectId.isValid(id)) {
-		User.findById(id, (err, user) => {
+passport.deserializeUser<any, any>((user, done) => {
+	if (mongoose.Types.ObjectId.isValid(user._id)) {
+		User.findById(user._id, (err, user) => {
 			done(err, user)
 		})
 	} else {
@@ -70,102 +68,43 @@ passport.use(new GoogleStrategy(
 	},
 	async (req: any, accessToken: any, refreshToken: any, profile: any, done: any) => {
 
-		Log.error(`Touched passport google authenticate`)
+		/**
+		 * => Get email from profile
+		 * => Check if email exists in Users table
+		 * => If user exists => log them in (grant token and session)
+		 * => If no User exists => Save new User => log them in (grant token and session)
+		 */
 
-		if (req.user) {
+		User.findOne({ email: profile.emails[0].value }, (err, existingUser) => {
 
-			Log.error(`Inside if req user ====> VALUE of req.user ==== >>> ${JSON.stringify(req.user)}`)
+			if (!err && existingUser) {
 
-			User.findOne({ google: profile.id }, (err, existingUser) => {
+				return done(false, existingUser)
 
-				if (err) {
-					Log.error(`Inside user.FindOne - first err -> ${JSON.stringify(err)}`)
-					return done(err)
-				}
+			} else if (!err && !existingUser) {
 
-				if (existingUser) {
-					// req.flash('errors', { msg: 'There is already a Google account that belongs to you. Sign in with that account or delete it, then link it with your current account.' })
-					Log.error(`Inside user.FindOne - second err -> ${JSON.stringify(err)}`)
-					return done(err, existingUser)
+				const newUser = new User()
+				newUser.email = profile.emails[0].value
 
-				} else {
+				newUser.save((err) => {
 
-					Log.error(`Inside user.FindOne - else block`)
-
-					User.findById(req.user.id, (err, user) => {
-						if (err) {
-							Log.error(`Inside user.findById - err block -> ${JSON.stringify(err)}`)
-							return done(err)
-						}
-
-						user.google = profile.id
-						user.tokens.push({ kind: 'google', accessToken })
-
-						Log.error(`Inside user.findById - tokens saved to user`)
-
-						user.save((err) => {
-
-							Log.error(`Inside user.findById - complete user => ${JSON.stringify(user)}`)
-							// req.flash('info', { msg: 'Google account has been linked.' })
-							return done(err, user)
-						})
-					})
-				}
-			})
-		} else {
-
-			Log.error(`Inside new user, no email exists`)
-
-			User.findOne({ google: profile.id }, (err, existingUser) => {
-				if (err) {
-
-					Log.error(`New email - first err -> ${JSON.stringify(err)}`)
-					return done(err)
-				}
-
-				if (existingUser) {
-					Log.error(`New email - second err -> ${JSON.stringify(existingUser)}`)
-					return done(null, existingUser)
-				}
-
-				Log.error(`Value of profile ==> RETURNED FROM GOOGLE  ===> ${JSON.stringify(profile)}`)
-
-				User.findOne({ email: profile.emails[0].value }, (err, existingEmailUser) => {
-					if (err) {
-						Log.error(`New email - THIS IS THE BAD JUJU -> ${JSON.stringify(err)}`)
-						return done(err)
-					}
-
-					if (existingEmailUser) {
-
-						Log.error(`New email - Value of existing user with existing email -> ${JSON.stringify(existingEmailUser) || '**empty**'}`)
-
-						return done(null, existingEmailUser)
-
+					if (!err) {
+						return done(null, newUser)
 					} else {
-
-						Log.error(`New email - creating new user -> ${JSON.stringify(err)}`)
-						const user = new User()
-
-						user.email = profile.emails[0].value
-						user.google = profile.id
-						user.tokens.push({ kind: 'google', accessToken })
-
-						user.save((err) => {
-
-							Log.error(`New email - ERROR SAVING EMAIL? -> ${JSON.stringify(err)}`)
-							return done(err, user)
-						})
+						return done(err, null)
 					}
+
 				})
-			})
-		}
+			} else {
+
+				return done(err, null)
+
+			}
+		})
 	})
 )
 
 export const isReqAllowed = (req: IRequest, res: IResponse, next: INext) => {
-
-	Log.error(`Touched isReqAllowed`)
 
 	const authHeader = req.headers['authorization']
 
@@ -176,32 +115,15 @@ export const isReqAllowed = (req: IRequest, res: IResponse, next: INext) => {
 		// No token exists but a session does exist
 		// => grant user a token
 
-		Log.info(`Value of session === > ${JSON.stringify(req.session)}`)
-
-		User.findOne({ _id: req.session.passport.user }, (err, user) => {
+		User.findOne({ _id: req.session.passport.user._id }, (err, user) => {
 
 			if (!err) {
-
-				const sess = {
-					userid: user._id,
-					email: user.email,
-					role: user.role,
-					subdom: user.subdom
-				}
-
-				Log.error(`Inside isReqAllowed == value of user =====> ${JSON.stringify(sess)}`)
-
-				jwt.sign(sess, Env.get().tokenSecret, { expiresIn: `2 days` })
 
 				next()
 
 			} else {
 
-				Log.info(`Some thing strange happened in isReqAllowed, error thrown === > ${JSON.stringify(err) || '**empty**'}`)
-
 				req.logout()
-
-				Log.info(`Value of session (after req.logout) === > ${JSON.stringify(req.session)}`)
 
 				return Clean.deny(res, 403, 'DB error of some sort.')
 
@@ -218,8 +140,6 @@ export const isReqAllowed = (req: IRequest, res: IResponse, next: INext) => {
 
 	} else if (token && req.isAuthenticated()) {
 
-		Log.error(`Inside third if block`)
-
 		// session and token exist
 		// => verify token
 
@@ -228,7 +148,6 @@ export const isReqAllowed = (req: IRequest, res: IResponse, next: INext) => {
 			if (err) {
 
 				// Token exists but failed verification
-				// This is a big red flag, I think
 				Log.error(`Token modified by userid ===> ${JSON.stringify(req.session.user)}`, [
 					Log.TAG_FAILED_CHALLENGE,
 					Log.TAG_AUTH

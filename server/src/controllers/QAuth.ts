@@ -13,6 +13,7 @@ import Env from '../providers/Environment'
 import Clean from '../middlewares/Clean'
 
 const SendGrid = require('@sendgrid/mail')
+const jwt = require('jsonwebtoken')
 
 export const login = (req: IRequest, res: IResponse, next: INext): any => {
 
@@ -119,11 +120,14 @@ export const logout = async (req: IRequest, res: IResponse) => {
 export const getuser = async (req: IRequest, res: IResponse) => {
 	try {
 
-		if (!req.session.passport) { return Clean.deny(res, 403, 'No session') }
+		if (!req.session.passport.user._id) { return Clean.deny(res, 403, 'No session') }
 
-		const user = await User.findOne({ _id: req.session.passport.user })
+		const user = await User.findOne({ _id: req.session.passport.user._id })
 
-		if (user) { return Clean.approve(res, 200, user, 'Auth success') }
+		if (user) {
+
+			return Clean.approve(res, 200, user, 'Auth success')
+		}
 
 		return Clean.deny(res, 401, 'You do not exist')
 
@@ -138,9 +142,9 @@ export const togglesubscribe = async (req: IRequest, res: IResponse) => {
 
 	try {
 
-		if (!req.session.passport) { return Clean.deny(res, 401, 'No user logged in') }
+		if (!req.session.passport.user._id) { return Clean.deny(res, 401, 'No user logged in') }
 
-		const user = await User.findOneAndUpdate({ _id: req.session.passport.user }, { allowEmails: req.body.subscribe }, { new: true })
+		const user = await User.findOneAndUpdate({ _id: req.session.passport.user._id }, { allowEmails: req.body.subscribe }, { new: true })
 
 		if (!user) { return Clean.deny(res, 403, 'Account with that email address does not exist.') }
 
@@ -256,7 +260,7 @@ export const usersettings = async (req: IRequest, res: IResponse) => {
 
 		if (!req.session.passport) { return Clean.deny(res, 403, 'No user logged in.') }
 
-		const user = await User.findOne({ _id: req.session.passport.user })
+		const user = await User.findOne({ _id: req.session.passport.user._id })
 
 		if (!user) { return Clean.deny(res, 403, 'No user exists.') }
 

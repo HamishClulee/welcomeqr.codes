@@ -18,6 +18,7 @@ const User_1 = require("../models/User");
 const Environment_1 = require("../providers/Environment");
 const Clean_1 = require("../middlewares/Clean");
 const SendGrid = require('@sendgrid/mail');
+const jwt = require('jsonwebtoken');
 exports.login = (req, res, next) => {
     validate.check('email', 'E-mail cannot be blank').notEmpty();
     validate.check('email', 'E-mail is not valid').isEmail();
@@ -96,10 +97,10 @@ exports.logout = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
 });
 exports.getuser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        if (!req.session.passport) {
+        if (!req.session.passport.user._id) {
             return Clean_1.default.deny(res, 403, 'No session');
         }
-        const user = yield User_1.User.findOne({ _id: req.session.passport.user });
+        const user = yield User_1.User.findOne({ _id: req.session.passport.user._id });
         if (user) {
             return Clean_1.default.approve(res, 200, user, 'Auth success');
         }
@@ -111,10 +112,10 @@ exports.getuser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
 });
 exports.togglesubscribe = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        if (!req.session.passport) {
+        if (!req.session.passport.user._id) {
             return Clean_1.default.deny(res, 401, 'No user logged in');
         }
-        const user = yield User_1.User.findOneAndUpdate({ _id: req.session.passport.user }, { allowEmails: req.body.subscribe }, { new: true });
+        const user = yield User_1.User.findOneAndUpdate({ _id: req.session.passport.user._id }, { allowEmails: req.body.subscribe }, { new: true });
         if (!user) {
             return Clean_1.default.deny(res, 403, 'Account with that email address does not exist.');
         }
@@ -197,7 +198,7 @@ exports.usersettings = (req, res) => __awaiter(void 0, void 0, void 0, function*
         if (!req.session.passport) {
             return Clean_1.default.deny(res, 403, 'No user logged in.');
         }
-        const user = yield User_1.User.findOne({ _id: req.session.passport.user });
+        const user = yield User_1.User.findOne({ _id: req.session.passport.user._id });
         if (!user) {
             return Clean_1.default.deny(res, 403, 'No user exists.');
         }

@@ -20,6 +20,7 @@ import * as QAuth from '../controllers/QAuth'
 import Env from './Environment'
 import Log from '../middlewares/Log'
 import Clean from '../middlewares/Clean'
+import { IRequest, IResponse } from '../interfaces'
 
 const jwt = require('jsonwebtoken')
 const tldjs = require('tldjs')
@@ -28,6 +29,7 @@ const tldjs = require('tldjs')
 const PORT = 1980
 const DEV_URL = Env.get().devUrl
 const PROD_URL = Env.get().prodUrl
+const DEV_PUB_URL = Env.get().devPubUrl
 const BASE_URL = process.env.NODE_ENV === 'development' ? DEV_URL : PROD_URL
 
 const RedisStore = require('connect-redis')(session)
@@ -84,7 +86,7 @@ class Express {
 		this.app.use(cors({
 			origin:
 				process.env.NODE_ENV !== 'production' ?
-					[DEV_URL, 'http://localhost:7070', '/\.google.com\.com$/']
+					[DEV_URL, DEV_PUB_URL, '/\.google.com\.com$/']
 					: [PROD_URL, '/\.welcomeqr\.codes$/', '/\.google.com\.com$/'],
 			credentials: true
 		}))
@@ -120,20 +122,43 @@ class Express {
 		// Google
 		this.app.get('/auth/google', passport.authenticate('google', { scope: ['email'] }))
 
-		this.app.get('/auth/google/callback', passport.authenticate('google', { failureRedirect: '/?redirect=true' }),
-			(req, res) => {
+		this.app.get('/auth/google/callback', passport.authenticate(
+			'google',
+			{
+				failureRedirect: `${BASE_URL}/?authRedirect=true`
+				// successRedirect: `${BASE_URL}/app/manage`
+			}
+		),
+		(req: IRequest, res: IResponse) => {
+
+			req.logIn(req.session.passport.user, (err) => {
+
+				if (err) { return Clean.authError('login::passport::login-err', err, res) }
+
+				const tokenPayload = {
+					userid: req.session.passport.user._id,
+					email: req.session.passport.user.email,
+					role: req.session.passport.user.role,
+					subdom: req.session.passport.user.subdom
+				}
+
+				const token = jwt.sign(tokenPayload, Env.get().tokenSecret, { expiresIn: `2 days` })
+
+				res.redirect(`${BASE_URL}/authcb?token=${token.split('.').join('~')}`)
+
+			})
 
 				// This feels like an ugly cludge, signing the token with only the ID,
 				// sending that token to the client, so the client can make a new request
 				// for a properly signed token
 				// solution ==> make the user object available here
 
-				let token = jwt.sign({
-					userid: req.session.passport.user
-				}, Env.get().tokenSecret, { expiresIn: `2 days` })
+				// let token = jwt.sign({
+				// 	userid: req.session.passport.user
+				// }, Env.get().tokenSecret, { expiresIn: `2 days` })
 
 				// scrub the jwt for usage in query param using '~'
-				res.redirect(`${BASE_URL}/authcb?token=${token.split('.').join('~')}`)
+				// res.redirect(`${BASE_URL}/authcb?token=${token.split('.').join('~')}`)
 		})
 
 		/** -------------- Editor -------------- */
