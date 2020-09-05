@@ -58,14 +58,15 @@ export default {
 
 <style lang="sass" scoped>
 .preview-container
-    width: 98%
+    width: 100%
+    margin-top: 30px
+.preview-html-container
     margin-left: auto
     margin-right: auto
-    margin-top: 50px
-    min-height: 80vh
-.preview-html-container
     display: flex
     flex-direction: column
-    width: 100%
-    max-width: 100%
+    width: 98%
+    max-width: 1600px
+    overflow-x: hidden !important
+    min-height: 90vh
 </style>
