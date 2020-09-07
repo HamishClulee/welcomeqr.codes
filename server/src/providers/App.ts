@@ -36,6 +36,7 @@ class App {
 		const queueMonitorPort: number = Env.get().queueMonitorHttpPort
 
 		if (isQueueMonitorEnabled) {
+
 			kue.app.listen(queueMonitorPort)
 
 			console.log('\x1b[33m%s\x1b[0m', `Queue Monitor :: Running @ 'http://localhost:${queueMonitorPort}'`)

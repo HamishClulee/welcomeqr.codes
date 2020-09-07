@@ -28,8 +28,9 @@
             
         </transition-group>
 
-
         <usermessages v-bind="{ msg, black, sass }" v-if="showUserMessage"></usermessages>
+
+        <sitemodal contains="smallscreen" v-if="windowWidth < 620"></sitemodal>
         
 	</section>
 </template>
@@ -37,11 +38,11 @@
 <script>
 import navbar from './components/nav/navbar'
 import qrfooter from './components/nav/qrfooter'
-import sitemodal from './components/sitemodal/sitemodal'
 import usermessages from './components/usermessages'
 import loading from './components/loading'
 import debounce from './utils/functions'
-import { mapMutations } from 'vuex'
+import sitemodal from './components/sitemodal/sitemodal'
+import { mapGetters, mapMutations } from 'vuex'
 import { 
     EventBus,
     LOADING,
@@ -160,6 +161,7 @@ export default {
         showfooter() {
             return ['auth'].indexOf(this.$route.name) === -1
         },
+        ...mapGetters(['windowWidth']),
     },
 }
 </script>

@@ -3,9 +3,9 @@
         <div class="modal-background" @click="closeModal" @keydown.esc="closeModal"></div>
         <div class="modal-card">
 
-            <div class="modal-card-head">
+            <!-- <div class="modal-card-head">
                 <div class="close-icon" aria-label="close" @click="closeModal"></div>
-            </div>
+            </div> -->
 
             <div class="modal-card-content">
 
@@ -14,6 +14,8 @@
                 <editormodal v-if="contains === 'editor'"></editormodal>
 
                 <previewmodal v-if="contains === 'preview'"></previewmodal>
+
+                <smallscreenmodal v-if="contains === 'smallscreen'"></smallscreenmodal>
 
                 <!-- <authmodal :contains="contains" v-if="contains === 'login' || contains == 'signup'"></authmodal> -->
 
@@ -26,11 +28,12 @@
 import detailsmodal from './content/detailsmodal'
 import editormodal from './content/editormodal'
 import previewmodal from './content/previewmodal'
+import smallscreenmodal from './content/smallscreen'
 import { EventBus, SITEMODAL } from '../../EventBus.ts'
 export default {
     name: 'sitemodal',
     components: {
-        detailsmodal, editormodal, previewmodal,
+        detailsmodal, editormodal, previewmodal, smallscreenmodal,
     },
     props: {
         contains: {
@@ -68,7 +71,7 @@ export default {
     overflow-y: hidden
     overflow-x: hidden
     background-color: black
-    opacity: 0.8
+    opacity: 0.90
     top: 0
     left: 0
     right: 0
@@ -84,12 +87,11 @@ export default {
     right: 0
     top: 0
     bottom: 0
-    margin: auto
+    margin: 50% auto
     display: flex
     flex-direction: column
-    overflow-y: auto
+    overflow-y: hidden !important
     align-items: center
-    height: 85%
     border-radius: 20px
     @media (min-width: 0px) and (max-width: 1080px) 
         font-size: 80%
