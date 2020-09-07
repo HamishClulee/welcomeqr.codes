@@ -3,21 +3,9 @@
         <div class="modal-background" @click="closeModal" @keydown.esc="closeModal"></div>
         <div class="modal-card">
 
-            <!-- <div class="modal-card-head">
-                <div class="close-icon" aria-label="close" @click="closeModal"></div>
-            </div> -->
-
             <div class="modal-card-content">
 
-                <detailsmodal v-if="contains === 'details'"></detailsmodal>
-
-                <editormodal v-if="contains === 'editor'"></editormodal>
-
-                <previewmodal v-if="contains === 'preview'"></previewmodal>
-
                 <smallscreenmodal v-if="contains === 'smallscreen'"></smallscreenmodal>
-
-                <!-- <authmodal :contains="contains" v-if="contains === 'login' || contains == 'signup'"></authmodal> -->
 
             </div>
         </div>
@@ -25,15 +13,12 @@
 </template>
 
 <script>
-import detailsmodal from './content/detailsmodal'
-import editormodal from './content/editormodal'
-import previewmodal from './content/previewmodal'
 import smallscreenmodal from './content/smallscreen'
 import { EventBus, SITEMODAL } from '../../EventBus.ts'
 export default {
     name: 'sitemodal',
     components: {
-        detailsmodal, editormodal, previewmodal, smallscreenmodal,
+        smallscreenmodal,
     },
     props: {
         contains: {

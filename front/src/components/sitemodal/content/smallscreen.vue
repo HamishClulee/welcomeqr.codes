@@ -43,4 +43,6 @@ export default {
         font-size: 1.7em
         font-family: $heading-font
         color: lighten($font, 40)
+    img
+        height: 50px
 </style>
