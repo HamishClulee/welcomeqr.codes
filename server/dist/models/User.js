@@ -43,9 +43,7 @@ const userSchema = new mongoose.Schema({
         default: Role.User
     },
     subdom: { type: String || null, default: null },
-    editors: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Editor' }],
-    google: String,
-    tokens: Array
+    editors: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Editor' }]
 }, { timestamps: true });
 userSchema.pre('save', function save(next) {
     const user = this;
