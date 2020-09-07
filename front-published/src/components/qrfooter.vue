@@ -34,7 +34,7 @@ export default {
     min-width: 400px
     margin-left: auto
     margin-right: auto
-    height: 30vh
+    height: 10vh
     min-height: 400px
     .logo-container
         width: 20%

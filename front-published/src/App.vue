@@ -5,6 +5,7 @@
             <!-- Server side HTML will display here -->
             
         </section>
+        <loading v-else-if="loading"></loading>
         <section v-else class="four-oh-four">
             <notfound></notfound>
         </section>
@@ -17,20 +18,21 @@ import { EventBus, LOADING, EDITOR_ERROR } from './EventBus'
 import SERVER from './api'
 import notfound from './components/notfound'
 import qrfooter from './components/qrfooter'
+import loading from './components/loading'
 export default {
     name: 'app',
     components: {
         notfound,
         qrfooter,
+        loading,
     },
     data () {
         return {
             html: null,
+            loading: true,
         }
     },
     created() {
-
-        EventBus.$emit(LOADING, true)
 
         SERVER.post('/api/get_html_by_subdomain', { subdom: this.getsubdomfromurl() }).then(res => {
 
@@ -38,12 +40,11 @@ export default {
                 this.html = res.data.content.html
             }
 
-            EventBus.$emit(LOADING, false)
+            this.loading = false
 
         }).catch(err => {
 
-            EventBus.$emit(EDITOR_ERROR)
-            EventBus.$emit(LOADING, false)
+            this.loading = false
 
         })
     },
