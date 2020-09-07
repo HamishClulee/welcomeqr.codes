@@ -8,6 +8,7 @@ const bodyParser = require("body-parser");
 const history = require("connect-history-api-fallback");
 const cors = require("cors");
 const redis = require("redis");
+const lusca = require("lusca");
 const passport = require("passport");
 const multer = require("multer");
 const editor = require("../controllers/Editor");
@@ -40,8 +41,8 @@ class Express {
         this.app.use(session({
             cookie: {
                 // sameSite: true,
-                maxAge: 1000 * 60 * 60 * 24 // One Day
-                // secure: false
+                maxAge: 1000 * 60 * 60 * 24,
+                secure: process.env.NODE_ENV === 'production' ? true : false
             },
             saveUninitialized: false,
             resave: false,
@@ -70,8 +71,10 @@ class Express {
                 : [PROD_URL, '/\.welcomeqr\.codes$/', '/\.google.com\.com$/'],
             credentials: true
         }));
-        // this.app.use(lusca.xframe('SAMEORIGIN'))
-        // this.app.use(lusca.xssProtection(true))
+        if (process.env.NODE_ENV === 'production') {
+            this.app.use(lusca.xframe('SAMEORIGIN'));
+            this.app.use(lusca.xssProtection(true));
+        }
         /** ---------------------------------------  APP ROUTING  --------------------------------- */
         /** -------------- Auth & Account -------------- */
         // Local

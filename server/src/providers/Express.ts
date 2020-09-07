@@ -52,8 +52,8 @@ class Express {
 		this.app.use(session({
 			cookie: {
 				// sameSite: true,
-				maxAge: 1000 * 60 * 60 * 24 // One Day
-				// secure: false
+				maxAge: 1000 * 60 * 60 * 24, // One Day
+				secure: process.env.NODE_ENV === 'production' ? true : false
 			},
 			saveUninitialized: false,
 			resave: false,
@@ -91,8 +91,10 @@ class Express {
 			credentials: true
 		}))
 
-		// this.app.use(lusca.xframe('SAMEORIGIN'))
-		// this.app.use(lusca.xssProtection(true))
+		if (process.env.NODE_ENV === 'production') {
+			this.app.use(lusca.xframe('SAMEORIGIN'))
+			this.app.use(lusca.xssProtection(true))
+		}
 
 		/** ---------------------------------------  APP ROUTING  --------------------------------- */
 
