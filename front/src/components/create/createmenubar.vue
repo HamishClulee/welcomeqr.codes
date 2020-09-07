@@ -77,21 +77,31 @@ export default {
 .create-sidebar-con
     padding: 5px
     font-family: $body-font
-    height: 100vh
-    border-right: 1px solid $light-gray
+    height: 120px
+    border-top: 1px solid $light-gray
     display: flex
-    flex-direction: column
+    align-items: center
+    justify-content: center
+    flex-direction: row
     position: fixed
-    top: 60px
+    bottom: 0
+    left: 0
+    right: 0
     box-shadow: 0 1px 2px rgba(0,0,0,0.24)
+    background: white
+    z-index: 5
 span, .span
     cursor: pointer
-    margin: 4px
-    border: 1px solid #adadad
+    height: 10px
+    width: 10px
+    border-radius: 5px
+    box-shadow: 0px 3px 3px rgba(0,0,0,0.2)
+    margin: 8px
+    border: 1px solid darken(#efefef, 10)
     padding: 20px
     font-family: $body-font
 .active-button
-    border-bottom: 2px solid $secondary 
+    border-top: 2px solid $secondary 
 .inactive-button
     display: flex
     border-bottom: 2px solid $light-gray

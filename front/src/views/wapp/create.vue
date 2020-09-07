@@ -10,27 +10,6 @@
 
         <section class="content-container">
 
-            <!-- SIDEBAR -->
-            <createsidebar
-                v-bind="{ 
-                    editor,
-                    isBold,
-                    isItalic,
-                    showColorPicker,
-                    showFontSize,
-                    isList,
-                    showImageModal
-                }"
-                @bold="changeBold"
-                @italic="changeItalic"
-                @colorpicker="showColorPicker = !showColorPicker"
-                @linkmodal="showLinkModal = true"
-                @fontsize="showFontSize = !showFontSize"
-                @list="changeList"
-                @showimagemodal="showImageModal = !showImageModal"
-                @removeallformats="removeAllFormats">
-            </createsidebar>
-
             <!-- ---- EDITOR WINDOW MAIN PANEL ---- -->
 
             <div id="editor"></div>
@@ -77,12 +56,32 @@
             </div>
 
         </section>
+                    <!-- SIDEBAR -->
+            <createmenubar
+                v-bind="{ 
+                    editor,
+                    isBold,
+                    isItalic,
+                    showColorPicker,
+                    showFontSize,
+                    isList,
+                    showImageModal
+                }"
+                @bold="changeBold"
+                @italic="changeItalic"
+                @colorpicker="showColorPicker = !showColorPicker"
+                @linkmodal="showLinkModal = true"
+                @fontsize="showFontSize = !showFontSize"
+                @list="changeList"
+                @showimagemodal="showImageModal = !showImageModal"
+                @removeallformats="removeAllFormats">
+            </createmenubar>
     </main>
 </template>
 
 <script>
 import createtopbar from '../../components/create/createtopbar'
-import createsidebar from '../../components/create/createsidebar'
+import createmenubar from '../../components/create/createmenubar'
 import linkmodal from '../../components/linkmodal.vue'
 import myupload from 'vue-image-crop-upload'
 import { Chrome } from 'vue-color'
@@ -99,7 +98,7 @@ import {
 export default {
     name: 'create',
     components: {
-        createsidebar,
+        createmenubar,
         createtopbar,
         linkmodal,
         myupload,
