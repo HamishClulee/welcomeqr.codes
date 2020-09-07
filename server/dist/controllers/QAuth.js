@@ -17,9 +17,10 @@ const ForgotPassword = require("../resources/emails/forgot");
 const User_1 = require("../models/User");
 const Environment_1 = require("../providers/Environment");
 const Clean_1 = require("../middlewares/Clean");
+const Log_1 = require("../middlewares/Log");
 const SendGrid = require('@sendgrid/mail');
 const jwt = require('jsonwebtoken');
-exports.login = (req, res, next) => {
+exports.login = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     validate.check('email', 'E-mail cannot be blank').notEmpty();
     validate.check('email', 'E-mail is not valid').isEmail();
     validate.check('password', 'Password cannot be blank').notEmpty();
@@ -29,6 +30,12 @@ exports.login = (req, res, next) => {
         return Clean_1.default.authError('login', `Validation error: ${String(errors)}`, res);
     }
     try {
+        /**
+         * I think passport and the try catch should be enough to catch the case where a user
+         * who has signed up with an OAuth provided, and there fore doesnt have a passpord,
+         * tries to log in using a password.
+         * => time will tell.
+         */
         passport.authenticate('local', (err, user, info) => {
             if (err) {
                 return Clean_1.default.authError('login::passport::err', err, res);
@@ -47,7 +54,7 @@ exports.login = (req, res, next) => {
     catch (e) {
         return Clean_1.default.authError('login', `caught error: ${e}`, res);
     }
-};
+});
 exports.signup = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     validate.check('email', 'E-mail cannot be blank').notEmpty();
     validate.check('email', 'E-mail is not valid').isEmail();
@@ -58,29 +65,71 @@ exports.signup = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         return Clean_1.default.authError('login', `Validation error: ${errors.array()}`, res);
     }
     try {
-        const token = yield require('crypto').randomBytes(48, (err, buffer) => {
-            return buffer.toString('hex');
-        });
-        let existinguser = yield User_1.User.findOne({ email: req.body.email });
-        if (existinguser) {
-            return Clean_1.default.approve(res, 200, existinguser);
-        }
-        const user = new User_1.User({
-            email: req.body.email,
-            password: req.body.password,
-            emailVerifyToken: token
-        });
-        yield user.save();
-        req.logIn(user, () => {
-            SendGrid.setApiKey(process.env.SENDGRID_API_KEY);
-            SendGrid.send({
-                to: user.email,
-                from: 'noreply@welcomeqr.codes',
-                subject: 'A warm welcome from Welcome QR Codes',
-                html: WelcomeEmail.build(`${Environment_1.default.get().baseUrl}/account?token=${token}`)
+        let existingUser = yield User_1.User.findOne({ email: req.body.email });
+        /**
+         * Primary use case for sign ups; the user doesnt exist
+         * => sign them up, send a welcome email, add to the db and log them in
+         */
+        if (!existingUser) {
+            const token = require('crypto').randomBytes(48, (err, buffer) => {
+                return buffer.toString('hex');
             });
-            return Clean_1.default.approve(res, 200, user);
-        });
+            const user = new User_1.User({
+                email: req.body.email,
+                password: req.body.password,
+                emailVerifyToken: token
+            });
+            yield user.save();
+            req.logIn(existingUser, (err) => {
+                if (err) {
+                    return Clean_1.default.authError('login::passport::login-err', err, res);
+                }
+                SendGrid.setApiKey(process.env.SENDGRID_API_KEY);
+                SendGrid.send({
+                    to: user.email,
+                    from: 'noreply@welcomeqr.codes',
+                    subject: 'A warm welcome from Welcome QR Codes',
+                    html: WelcomeEmail.build(`${Environment_1.default.get().baseUrl}/account?token=${token}`)
+                });
+                return Clean_1.default.approve(res, 200, existingUser);
+            });
+            /**
+             * User has an active session and a a password set, meaning they have already signed up and logged in
+             * => send approval and user details
+             */
+        }
+        else if (req.session.passport.user && existingUser.password) {
+            return Clean_1.default.approve(res, 200, existingUser);
+            /**
+             * User exists and has a password, meaning they have already signed up previously, but dont currently have a session
+             * => grant the user a new session
+             */
+        }
+        else if (existingUser && !req.session.passport.user && existingUser.password) {
+            req.logIn(existingUser, (err) => {
+                if (err) {
+                    return Clean_1.default.authError('login::passport::login-err', err, res);
+                }
+                return Clean_1.default.approve(res, 200, existingUser);
+            });
+            /**
+             * User exists from an OAuth login/signup, but doesnt have a password set so cant use a password to login
+             * => set password in db and grant user a session
+             */
+        }
+        else if (existingUser && !req.session.passport.user && !existingUser.password) {
+            const updatedUser = yield User_1.User.findOneAndUpdate({ email: req.body.email }, { password: req.body.password }, { new: true });
+            req.logIn(updatedUser, (err) => {
+                if (err) {
+                    return Clean_1.default.authError('login::passport::login-err', err, res);
+                }
+                return Clean_1.default.approve(res, 200, updatedUser);
+            });
+        }
+        // if code reaches this point, something is seriosuly wrong
+        // ¯\_(ツ)_/¯
+        // Log as an error
+        Log_1.default.error(`Funcname:: signup :: fell through all cases no errors thrown`);
     }
     catch (e) {
         return Clean_1.default.authError('signup', `caught error: ${e}`, res);

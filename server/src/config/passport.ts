@@ -1,5 +1,6 @@
 import * as passport from 'passport'
 import * as passportLocal from 'passport-local'
+import * as WelcomeEmail from '../resources/emails/welcome'
 import _ from 'lodash'
 
 import * as mongoose from 'mongoose'
@@ -13,6 +14,8 @@ import Log from '../middlewares/Log'
 import Clean from '../middlewares/Clean'
 
 const LocalStrategy = passportLocal.Strategy
+
+const SendGrid = require('@sendgrid/mail')
 
 passport.serializeUser<any, any>((user, done) => {
 
@@ -79,16 +82,39 @@ passport.use(new GoogleStrategy(
 
 			if (!err && existingUser) {
 
+				/**
+				 * User exists, return it
+				 */
 				return done(false, existingUser)
 
 			} else if (!err && !existingUser) {
 
-				const newUser = new User()
-				newUser.email = profile.emails[0].value
+				const token = require('crypto').randomBytes(48, (err, buffer) => {
+					return buffer.toString('hex')
+				})
+
+				const newUser: UserDocument = new User({
+					email: profile.emails[0].value,
+					password: null,
+					emailVerifyToken: token
+				})
 
 				newUser.save((err) => {
 
 					if (!err) {
+
+						/**
+						 * Send the Welcome to email to the new user
+						 */
+						SendGrid.setApiKey(Env.get().sendGridSecret)
+
+						SendGrid.send({
+							to: newUser.email,
+							from: 'noreply@welcomeqr.codes',
+							subject: 'A warm welcome from Welcome QR Codes',
+							html: WelcomeEmail.build(`${Env.get().baseUrl}/account?token=${token}`)
+						})
+
 						return done(null, newUser)
 					} else {
 						return done(err, null)
@@ -168,14 +194,4 @@ export const isReqAllowed = (req: IRequest, res: IResponse, next: INext) => {
 		return Clean.deny(res, 200)
 
 	}
-}
-
-export const isAuthorized = (req: IRequest, res: IResponse, next: INext) => {
-
-	const provider = req.path.split('/').slice(-1)[0]
-
-	const user = req.session.user as UserDocument
-
-	if (_.find(user.tokens, { kind: provider })) { next() } else { res.redirect(`/auth/${provider}`) }
-
 }

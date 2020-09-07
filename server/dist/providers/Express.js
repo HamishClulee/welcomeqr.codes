@@ -13,7 +13,7 @@ const passport = require("passport");
 const multer = require("multer");
 const editor = require("../controllers/Editor");
 const auth = require("../config/passport");
-/** All Auth Routes */
+/** All Auth functions */
 const QAuth = require("../controllers/QAuth");
 /** Middlewares */
 const Environment_1 = require("./Environment");
@@ -40,7 +40,7 @@ class Express {
         this.app.use(bodyParser.urlencoded({ extended: true }));
         this.app.use(session({
             cookie: {
-                // sameSite: true,
+                // sameSite: process.env.NODE_ENV === 'production' ? true : false,
                 maxAge: 1000 * 60 * 60 * 24,
                 secure: process.env.NODE_ENV === 'production' ? true : false
             },
@@ -65,6 +65,12 @@ class Express {
             res.locals.user = req.session.user;
             next();
         });
+        /**
+         * CORS --
+         * In Prod => allow from google and all subdoms & welcomeqr and all subdoms
+         * In Dev => allow from google and all subdoms and the local host ports used in dev
+         * Dev is probably okay to just be * but ¯\_(ツ)_/¯
+         */
         this.app.use(cors({
             origin: process.env.NODE_ENV !== 'production' ?
                 [DEV_URL, DEV_PUB_URL, '/\.google.com\.com$/']
@@ -76,6 +82,9 @@ class Express {
             this.app.use(lusca.xssProtection(true));
         }
         /** ---------------------------------------  APP ROUTING  --------------------------------- */
+        /**
+         * Refactor this to use Express.Router, it's getting messy!
+         */
         /** -------------- Auth & Account -------------- */
         // Local
         this.app.post('/auth/login', QAuth.login);
@@ -100,6 +109,10 @@ class Express {
             failureRedirect: `${BASE_URL}/?authRedirect=true`
             // successRedirect: `${BASE_URL}/app/manage`
         }), (req, res) => {
+            /**
+             * Google has returned the email address and verified it, log the user in
+             * and grant them a token
+             */
             req.logIn(req.session.passport.user, (err) => {
                 if (err) {
                     return Clean_1.default.authError('login::passport::login-err', err, res);
@@ -111,17 +124,9 @@ class Express {
                     subdom: req.session.passport.user.subdom
                 };
                 const token = jwt.sign(tokenPayload, Environment_1.default.get().tokenSecret, { expiresIn: `2 days` });
+                // redirect to the FE component set to eat the token and deal with FE auth
                 res.redirect(`${BASE_URL}/authcb?token=${token.split('.').join('~')}`);
             });
-            // This feels like an ugly cludge, signing the token with only the ID,
-            // sending that token to the client, so the client can make a new request
-            // for a properly signed token
-            // solution ==> make the user object available here
-            // let token = jwt.sign({
-            // 	userid: req.session.passport.user
-            // }, Env.get().tokenSecret, { expiresIn: `2 days` })
-            // scrub the jwt for usage in query param using '~'
-            // res.redirect(`${BASE_URL}/authcb?token=${token.split('.').join('~')}`)
         });
         /** -------------- Editor -------------- */
         // Protected

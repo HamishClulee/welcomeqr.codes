@@ -11,11 +11,12 @@ import { IVerifyOptions } from 'passport-local'
 
 import Env from '../providers/Environment'
 import Clean from '../middlewares/Clean'
+import Log from '../middlewares/Log'
 
 const SendGrid = require('@sendgrid/mail')
 const jwt = require('jsonwebtoken')
 
-export const login = (req: IRequest, res: IResponse, next: INext): any => {
+export const login = async (req: IRequest, res: IResponse, next: INext) => {
 
 	validate.check('email', 'E-mail cannot be blank').notEmpty()
 	validate.check('email', 'E-mail is not valid').isEmail()
@@ -28,6 +29,12 @@ export const login = (req: IRequest, res: IResponse, next: INext): any => {
 
 	try {
 
+		/**
+		 * I think passport and the try catch should be enough to catch the case where a user
+		 * who has signed up with an OAuth provided, and there fore doesnt have a passpord,
+		 * tries to log in using a password.
+		 * => time will tell.
+		 */
 		passport.authenticate('local', (err: Error, user: UserDocument, info: IVerifyOptions) => {
 
 			if (err) { return Clean.authError('login::passport::err', err, res) }
@@ -64,36 +71,87 @@ export const signup = async (req: IRequest, res: IResponse) => {
 
 	try {
 
-		const token = await require('crypto').randomBytes(48, (err, buffer) => {
-			return buffer.toString('hex')
-		})
+		let existingUser = await User.findOne({ email: req.body.email })
 
-		let existinguser = await User.findOne({ email: req.body.email })
+		/**
+		 * Primary use case for sign ups; the user doesnt exist
+		 * => sign them up, send a welcome email, add to the db and log them in
+		 */
+		if (!existingUser) {
 
-		if (existinguser) { return Clean.approve(res, 200, existinguser) }
-
-		const user: UserDocument = new User({
-			email: req.body.email,
-			password: req.body.password,
-			emailVerifyToken: token
-		})
-
-		await user.save()
-
-		req.logIn(user, () => {
-
-			SendGrid.setApiKey(process.env.SENDGRID_API_KEY)
-
-			SendGrid.send({
-				to: user.email,
-				from: 'noreply@welcomeqr.codes',
-				subject: 'A warm welcome from Welcome QR Codes',
-				html: WelcomeEmail.build(`${Env.get().baseUrl}/account?token=${token}`)
+			const token = require('crypto').randomBytes(48, (err, buffer) => {
+				return buffer.toString('hex')
 			})
 
-			return Clean.approve(res, 200, user)
+			const user: UserDocument = new User({
+				email: req.body.email,
+				password: req.body.password,
+				emailVerifyToken: token
+			})
 
-		})
+			await user.save()
+
+			req.logIn(existingUser, (err) => {
+
+				if (err) { return Clean.authError('login::passport::login-err', err, res) }
+
+				SendGrid.setApiKey(process.env.SENDGRID_API_KEY)
+
+				SendGrid.send({
+					to: user.email,
+					from: 'noreply@welcomeqr.codes',
+					subject: 'A warm welcome from Welcome QR Codes',
+					html: WelcomeEmail.build(`${Env.get().baseUrl}/account?token=${token}`)
+				})
+
+				return Clean.approve(res, 200, existingUser)
+
+			})
+
+		/**
+		 * User has an active session and a a password set, meaning they have already signed up and logged in
+		 * => send approval and user details
+		 */
+		} else if (req.session.passport.user && existingUser.password) {
+
+			return Clean.approve(res, 200, existingUser)
+
+		/**
+		 * User exists and has a password, meaning they have already signed up previously, but dont currently have a session
+		 * => grant the user a new session
+		 */
+		} else if (existingUser && !req.session.passport.user && existingUser.password) {
+
+			req.logIn(existingUser, (err) => {
+
+				if (err) { return Clean.authError('login::passport::login-err', err, res) }
+
+				return Clean.approve(res, 200, existingUser)
+
+			})
+
+		/**
+		 * User exists from an OAuth login/signup, but doesnt have a password set so cant use a password to login
+		 * => set password in db and grant user a session
+		 */
+		} else if (existingUser && !req.session.passport.user && !existingUser.password) {
+
+			const updatedUser = await User.findOneAndUpdate({ email: req.body.email }, { password: req.body.password }, { new: true })
+
+			req.logIn(updatedUser, (err) => {
+
+				if (err) { return Clean.authError('login::passport::login-err', err, res) }
+
+				return Clean.approve(res, 200, updatedUser)
+
+			})
+
+		}
+
+		// if code reaches this point, something is seriosuly wrong
+		// ¯\_(ツ)_/¯
+		// Log as an error
+		Log.error(`Funcname:: signup :: fell through all cases no errors thrown`)
 
 	} catch (e) {
 

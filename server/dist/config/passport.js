@@ -11,7 +11,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const passport = require("passport");
 const passportLocal = require("passport-local");
-const lodash_1 = require("lodash");
+const WelcomeEmail = require("../resources/emails/welcome");
 const mongoose = require("mongoose");
 const Environment_1 = require("../providers/Environment");
 const jwt = require('jsonwebtoken');
@@ -19,6 +19,7 @@ const User_1 = require("../models/User");
 const Log_1 = require("../middlewares/Log");
 const Clean_1 = require("../middlewares/Clean");
 const LocalStrategy = passportLocal.Strategy;
+const SendGrid = require('@sendgrid/mail');
 passport.serializeUser((user, done) => {
     done(null, user);
 });
@@ -67,13 +68,32 @@ passport.use(new GoogleStrategy({
      */
     User_1.User.findOne({ email: profile.emails[0].value }, (err, existingUser) => {
         if (!err && existingUser) {
+            /**
+             * User exists, return it
+             */
             return done(false, existingUser);
         }
         else if (!err && !existingUser) {
-            const newUser = new User_1.User();
-            newUser.email = profile.emails[0].value;
+            const token = require('crypto').randomBytes(48, (err, buffer) => {
+                return buffer.toString('hex');
+            });
+            const newUser = new User_1.User({
+                email: profile.emails[0].value,
+                password: null,
+                emailVerifyToken: token
+            });
             newUser.save((err) => {
                 if (!err) {
+                    /**
+                     * Send the Welcome to email to the new user
+                     */
+                    SendGrid.setApiKey(Environment_1.default.get().sendGridSecret);
+                    SendGrid.send({
+                        to: newUser.email,
+                        from: 'noreply@welcomeqr.codes',
+                        subject: 'A warm welcome from Welcome QR Codes',
+                        html: WelcomeEmail.build(`${Environment_1.default.get().baseUrl}/account?token=${token}`)
+                    });
                     return done(null, newUser);
                 }
                 else {
@@ -126,16 +146,6 @@ exports.isReqAllowed = (req, res, next) => {
     }
     else {
         return Clean_1.default.deny(res, 200);
-    }
-};
-exports.isAuthorized = (req, res, next) => {
-    const provider = req.path.split('/').slice(-1)[0];
-    const user = req.session.user;
-    if (lodash_1.default.find(user.tokens, { kind: provider })) {
-        next();
-    }
-    else {
-        res.redirect(`/auth/${provider}`);
     }
 };
 //# sourceMappingURL=passport.js.map
