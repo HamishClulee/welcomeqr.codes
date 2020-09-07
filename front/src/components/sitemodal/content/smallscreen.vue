@@ -7,7 +7,7 @@
             Check back soon, or switch to a device with a larger screen!
         </h4>
 
-        <img src="/svg/smalllogo.svg" />
+        <img src="/svg/smallogo.svg" />
     </div>
 </template>
 
