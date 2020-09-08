@@ -109,10 +109,12 @@ passport.use(new GoogleStrategy({
 exports.isReqAllowed = (req, res, next) => {
     const authHeader = req.headers['authorization'];
     const token = authHeader && authHeader.split(' ')[1];
+    Log_1.default.error(`[isReqAllowed] value of req.isAuthenticated ==> ${req.isAuthenticated} == value of req.session.passport.user ${JSON.stringify(req.session.passport.user)}`);
+    Log_1.default.error(`[isReqAllowed] value of token ==> ${token ? token : '** no token exists **'}`);
+    Log_1.default.error(`[isReqAllowed] value of req.user ==> ${JSON.stringify(req.user)}`);
     if (token == null && req.isAuthenticated()) {
         // No token exists but a session does exist
         // => grant user a token
-        Log_1.default.error(`[isReqAllowed] value of req.isAuthenticated ==> ${req.isAuthenticated} == value of req.session.passport.user ${JSON.stringify(req.session.passport.user)}`);
         next();
     }
     else if (token === null && !req.isAuthenticated()) {
@@ -139,6 +141,14 @@ exports.isReqAllowed = (req, res, next) => {
     }
     else {
         return Clean_1.default.deny(res, 400, 'From else in isReqAllowed');
+    }
+};
+exports.isAuthenticated = (req, res, next) => {
+    if (req.isAuthenticated()) {
+        return next();
+    }
+    else {
+        res.redirect('/?authRedirect=true');
     }
 };
 //# sourceMappingURL=passport.js.map

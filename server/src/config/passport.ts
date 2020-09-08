@@ -121,6 +121,7 @@ passport.use(new GoogleStrategy(
 					}
 
 				})
+
 			} else {
 
 				return done(err, null)
@@ -136,13 +137,16 @@ export const isReqAllowed = (req: IRequest, res: IResponse, next: INext) => {
 
 	const token = authHeader && authHeader.split(' ')[1]
 
+	Log.error(`[isReqAllowed] value of req.isAuthenticated ==> ${req.isAuthenticated} == value of req.session.passport.user ${JSON.stringify(req.session.passport.user)}`)
+
+	Log.error(`[isReqAllowed] value of token ==> ${token ? token : '** no token exists **'}`)
+
+	Log.error(`[isReqAllowed] value of req.user ==> ${JSON.stringify(req.user)}`)
+
 	if (token == null && req.isAuthenticated()) {
 
 		// No token exists but a session does exist
 		// => grant user a token
-
-		Log.error(`[isReqAllowed] value of req.isAuthenticated ==> ${req.isAuthenticated} == value of req.session.passport.user ${JSON.stringify(req.session.passport.user)}`)
-
 		next()
 
 	} else if (token === null && !req.isAuthenticated()) {
@@ -182,4 +186,8 @@ export const isReqAllowed = (req: IRequest, res: IResponse, next: INext) => {
 		return Clean.deny(res, 400, 'From else in isReqAllowed')
 
 	}
+}
+
+export const isAuthenticated = (req: IRequest, res: IResponse, next: INext) => {
+	if (req.isAuthenticated()) { return next() } else { res.redirect('/?authRedirect=true') }
 }
