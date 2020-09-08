@@ -145,7 +145,7 @@ export const isReqAllowed = (req: IRequest, res: IResponse, next: INext) => {
 
 	const token = authHeader && authHeader.split(' ')[1]
 
-	Log.error(`[isReqAllowed] value of req.isAuthenticated ==> ${req.isAuthenticated} == value of req.session.passport.user ${JSON.stringify(req.session.passport.user || 'req-session-etc doesnt exist')}`)
+	Log.error(`[isReqAllowed] value of req.isAuthenticated ==> ${req.isAuthenticated} == value of req.session.passport.user ${JSON.stringify(req.session || 'req-session-etc doesnt exist')}`)
 
 	Log.error(`[isReqAllowed] value of token ==> ${token ? token : '** no token exists **'}`)
 
@@ -172,12 +172,6 @@ export const isReqAllowed = (req: IRequest, res: IResponse, next: INext) => {
 		jwt.verify(token, Env.get().tokenSecret, (err: any, user: any) => {
 
 			if (err) {
-
-				// Token exists but failed verification
-				Log.error(`Token modified by userid ===> ${JSON.stringify(req.session.user)}`, [
-					Log.TAG_FAILED_CHALLENGE,
-					Log.TAG_AUTH
-				])
 
 				return Clean.deny(res, 401, 'token && req.isAuthenticated()')
 
