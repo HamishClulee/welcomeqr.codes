@@ -98,7 +98,7 @@ span, .span
     box-shadow: 0px 3px 3px rgba(0,0,0,0.2)
     margin: 8px
     border: 1px solid darken(#efefef, 10)
-    padding: 20px
+    padding: 15px
     font-family: $body-font
 .active-button
     border-top: 2px solid $secondary 

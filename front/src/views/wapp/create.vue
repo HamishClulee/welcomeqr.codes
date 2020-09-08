@@ -95,6 +95,7 @@ import {
     SAVE_SUCCESS_PL,
     PUBLISH_SUCCESS_PL,
 } from '../../EventBus'
+import { checktoken } from '../../api/token'
 export default {
     name: 'create',
     components: {
@@ -146,21 +147,26 @@ export default {
     
     },
     created() {
-        EventBus.$emit(LOADING, true)
-        this.$QEdit.getHTML().then(res => {
+        if (checktoken()) {
+            EventBus.$emit(LOADING, true)
+            this.$QEdit.getHTML().then(res => {
 
-            if (res.data.content && res.data.content.html) {
-                this.editor.setHTML(res.data.content.html)
-            }
+                if (res.data.content && res.data.content.html) {
+                    this.editor.setHTML(res.data.content.html)
+                }
 
-            EventBus.$emit(LOADING, false)
+                EventBus.$emit(LOADING, false)
 
-        }).catch(err => { 
-            // if error code is > 500 its a server error not an auth issue
-            // if the error code is 4XX then it will be caught by the axios interceptor
-            EventBus.$emit(EDITOR_ERROR)
-            EventBus.$emit(LOADING, false)
-        })
+            }).catch(err => { 
+                // if error code is > 500 its a server error not an auth issue
+                // if the error code is 4XX then it will be caught by the axios interceptor
+                EventBus.$emit(EDITOR_ERROR)
+                EventBus.$emit(LOADING, false)
+            })
+        } else {
+            this.$router.push({ name: 'home' })
+        }
+
     },
     mounted () {
         const edel = document.getElementById( 'editor' )

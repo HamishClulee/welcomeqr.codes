@@ -59,6 +59,7 @@ import { mapGetters } from 'vuex'
 import qinput from '../../components/forms/qinput'
 import loadinginline from '../../components/loadinginline'
 import qicon from '../../components/icon/qicon'
+import { checktoken } from '../../api/token'
 
 export default {
     name: 'manage',
@@ -76,6 +77,9 @@ export default {
             proceed: false,
             fetchinprog: true,
         }
+    },
+    created() {
+        if (!checktoken()) this.$router.push({ name: 'home' })
     },
     methods: {
         getrandomsubdom() {

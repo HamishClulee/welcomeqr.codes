@@ -11,6 +11,8 @@
 
 <script>
 import { EventBus, LOADING, EDITOR_ERROR } from '../../EventBus'
+import { checktoken } from '../../api/token'
+
 export default {
     name: 'preview',
     data () {
@@ -21,22 +23,30 @@ export default {
     },
     created() {
 
-        EventBus.$emit(LOADING, true)
+        if (checktoken()) {
+            
+            EventBus.$emit(LOADING, true)
 
-        this.$QEdit.getHTML().then(res => {
+            this.$QEdit.getHTML().then(res => {
 
-            if (res.data.content && res.data.content.html) {
-                this.html = res.data.content.html
-            }
+                if (res.data.content && res.data.content.html) {
+                    this.html = res.data.content.html
+                }
 
-            EventBus.$emit(LOADING, false)
+                EventBus.$emit(LOADING, false)
 
-        }).catch(err => {
+            }).catch(err => {
 
-            EventBus.$emit(EDITOR_ERROR)
-            EventBus.$emit(LOADING, false)
+                EventBus.$emit(EDITOR_ERROR)
+                EventBus.$emit(LOADING, false)
 
-        })
+            })
+        } else {
+
+            this.$router.push({ name: 'home' })
+
+        }
+
     },
     methods: {
         backtoedit() {
