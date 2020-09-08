@@ -71,7 +71,9 @@ export const signup = async (req: IRequest, res: IResponse) => {
 
 	try {
 
-		let existingUser = await User.findOne({ email: req.body.email })
+		const existingUser = await User.findOne({ email: req.body.email })
+
+		Log.info(`Value of existingUser ===> ${JSON.stringify(existingUser)}`)
 
 		/**
 		 * Primary use case for sign ups; the user doesnt exist
@@ -89,22 +91,22 @@ export const signup = async (req: IRequest, res: IResponse) => {
 				emailVerifyToken: token
 			})
 
-			await user.save()
+			const _user = await user.save()
 
-			req.logIn(existingUser, (err) => {
+			req.logIn(_user, (err) => {
 
 				if (err) { return Clean.authError('login::passport::login-err', err, res) }
 
 				SendGrid.setApiKey(process.env.SENDGRID_API_KEY)
 
 				SendGrid.send({
-					to: user.email,
+					to: _user.email,
 					from: 'noreply@welcomeqr.codes',
 					subject: 'A warm welcome from Welcome QR Codes',
 					html: WelcomeEmail.build(`${Env.get().baseUrl}/account?token=${token}`)
 				})
 
-				return Clean.approve(res, 200, existingUser)
+				return Clean.approve(res, 200, _user)
 
 			})
 
@@ -112,7 +114,7 @@ export const signup = async (req: IRequest, res: IResponse) => {
 		 * User has an active session and a a password set, meaning they have already signed up and logged in
 		 * => send approval and user details
 		 */
-		} else if (req.session.passport.user && existingUser.password) {
+		} else if (req.session.passport.user && existingUser && existingUser.password) {
 
 			return Clean.approve(res, 200, existingUser)
 
@@ -120,7 +122,7 @@ export const signup = async (req: IRequest, res: IResponse) => {
 		 * User exists and has a password, meaning they have already signed up previously, but dont currently have a session
 		 * => grant the user a new session
 		 */
-		} else if (existingUser && !req.session.passport.user && existingUser.password) {
+		} else if (!req.session.passport.user && existingUser && existingUser.password) {
 
 			req.logIn(existingUser, (err) => {
 
@@ -134,7 +136,9 @@ export const signup = async (req: IRequest, res: IResponse) => {
 		 * User exists from an OAuth login/signup, but doesnt have a password set so cant use a password to login
 		 * => set password in db and grant user a session
 		 */
-		} else if (existingUser && !req.session.passport.user && !existingUser.password) {
+		} else { // (!req.session.passport.user && existingUser && !existingUser.password) {
+
+			Log.error(`Inside else if -> no session, existingUser, no password`)
 
 			const updatedUser = await User.findOneAndUpdate({ email: req.body.email }, { password: req.body.password }, { new: true })
 
@@ -151,7 +155,7 @@ export const signup = async (req: IRequest, res: IResponse) => {
 		// if code reaches this point, something is seriosuly wrong
 		// ¯\_(ツ)_/¯
 		// Log as an error
-		Log.error(`Funcname:: signup :: fell through all cases no errors thrown`)
+		// Log.error(`Funcname:: signup :: fell through all cases no errors thrown`)
 
 	} catch (e) {
 

@@ -1,4 +1,4 @@
 #!/usr/bin/env bash
 cd front
-kill -9 $(lsof -t -i:8080)
-yarn serve --fix --open
+kill $(lsof -i tcp:8080 | tail -n +2 | awk '{ print $2 }')
+yarn serve --fix

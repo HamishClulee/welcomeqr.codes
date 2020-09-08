@@ -50,7 +50,7 @@ export default {
     },
     methods: {
         getsubdomfromurl() {
-            if (process.env.NODE_ENV === 'development') return 'offensively-predicted-specimen'
+            if (process.env.NODE_ENV === 'development') return 'heavily-uncomfortable-computing'
             else return window.location.host.split('.')[0]
         },
     },

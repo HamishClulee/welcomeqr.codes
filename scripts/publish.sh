@@ -1,4 +1,4 @@
 #!/usr/bin/env bash
 cd front-published
-kill -9 $(lsof -t -i:7070)
-yarn serve --fix --port 7070 --open
+kill $(lsof -i tcp:7070 | tail -n +2 | awk '{ print $2 }')
+yarn serve --fix --port 7070

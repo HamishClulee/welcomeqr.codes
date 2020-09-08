@@ -48,6 +48,7 @@ export default {
     border: 1px solid $light-gray
     font-family: $body-font
     font-size: 1.3em
+    z-index: 6
 .primary
     background: $primary
 .secondary
