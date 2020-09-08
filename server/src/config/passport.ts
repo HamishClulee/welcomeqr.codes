@@ -20,16 +20,24 @@ const SendGrid = require('@sendgrid/mail')
 passport.serializeUser<any, any>((user, done) => {
 
 	done(null, user)
+
 })
 
 passport.deserializeUser<any, any>((user, done) => {
+
 	if (mongoose.Types.ObjectId.isValid(user._id)) {
+
 		User.findById(user._id, (err, user) => {
+
 			done(err, user)
+
 		})
+
 	} else {
+
 		const _user = new User()
 		_user.save()
+
 	}
 })
 
@@ -137,11 +145,11 @@ export const isReqAllowed = (req: IRequest, res: IResponse, next: INext) => {
 
 	const token = authHeader && authHeader.split(' ')[1]
 
-	Log.error(`[isReqAllowed] value of req.isAuthenticated ==> ${req.isAuthenticated} == value of req.session.passport.user ${JSON.stringify(req.session.passport.user)}`)
+	Log.error(`[isReqAllowed] value of req.isAuthenticated ==> ${req.isAuthenticated} == value of req.session.passport.user ${JSON.stringify(req.session.passport.user || 'req-session-etc doesnt exist')}`)
 
 	Log.error(`[isReqAllowed] value of token ==> ${token ? token : '** no token exists **'}`)
 
-	Log.error(`[isReqAllowed] value of req.user ==> ${JSON.stringify(req.user)}`)
+	Log.error(`[isReqAllowed] value of req.user ==> ${JSON.stringify(req.user ? req.user : 'req.user doesnt exist')}`)
 
 	if (token == null && req.isAuthenticated()) {
 

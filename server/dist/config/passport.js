@@ -109,9 +109,9 @@ passport.use(new GoogleStrategy({
 exports.isReqAllowed = (req, res, next) => {
     const authHeader = req.headers['authorization'];
     const token = authHeader && authHeader.split(' ')[1];
-    Log_1.default.error(`[isReqAllowed] value of req.isAuthenticated ==> ${req.isAuthenticated} == value of req.session.passport.user ${JSON.stringify(req.session.passport.user)}`);
+    Log_1.default.error(`[isReqAllowed] value of req.isAuthenticated ==> ${req.isAuthenticated} == value of req.session.passport.user ${JSON.stringify(req.session.passport.user || 'req-session-etc doesnt exist')}`);
     Log_1.default.error(`[isReqAllowed] value of token ==> ${token ? token : '** no token exists **'}`);
-    Log_1.default.error(`[isReqAllowed] value of req.user ==> ${JSON.stringify(req.user)}`);
+    Log_1.default.error(`[isReqAllowed] value of req.user ==> ${JSON.stringify(req.user ? req.user : 'req.user doesnt exist')}`);
     if (token == null && req.isAuthenticated()) {
         // No token exists but a session does exist
         // => grant user a token
