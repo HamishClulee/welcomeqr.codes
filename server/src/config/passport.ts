@@ -141,28 +141,16 @@ export const isReqAllowed = (req: IRequest, res: IResponse, next: INext) => {
 		// No token exists but a session does exist
 		// => grant user a token
 
-		User.findOne({ _id: req.session.passport.user._id }, (err, user) => {
+		Log.error(`[isReqAllowed] value of req.isAuthenticated ==> ${req.isAuthenticated} == value of req.session.passport.user ${JSON.stringify(req.session.passport.user)}`)
 
-			if (!err) {
-
-				next()
-
-			} else {
-
-				req.logout()
-
-				return Clean.deny(res, 403, 'DB error of some sort.')
-
-			}
-
-		})
+		next()
 
 	} else if (token === null && !req.isAuthenticated()) {
 
 		// No session, No Token
 		// => deny/kill user
 
-		return Clean.deny(res)
+		return Clean.deny(res, 402, 'token === null && !req.isAuthenticated()')
 
 	} else if (token && req.isAuthenticated()) {
 
@@ -179,7 +167,7 @@ export const isReqAllowed = (req: IRequest, res: IResponse, next: INext) => {
 					Log.TAG_AUTH
 				])
 
-				return Clean.deny(res)
+				return Clean.deny(res, 401, 'token && req.isAuthenticated()')
 
 			} else {
 
@@ -191,7 +179,7 @@ export const isReqAllowed = (req: IRequest, res: IResponse, next: INext) => {
 
 	} else {
 
-		return Clean.deny(res, 200)
+		return Clean.deny(res, 400, 'From else in isReqAllowed')
 
 	}
 }

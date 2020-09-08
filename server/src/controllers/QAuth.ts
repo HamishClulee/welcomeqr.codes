@@ -185,7 +185,7 @@ export const logout = async (req: IRequest, res: IResponse) => {
 export const getuser = async (req: IRequest, res: IResponse) => {
 	try {
 
-		if (!req.session.passport.user._id) { return Clean.deny(res, 403, 'No session') }
+		if (!req.user) { return Clean.deny(res, 403, 'No session - no user') }
 
 		const user = await User.findOne({ _id: req.session.passport.user._id })
 
@@ -207,7 +207,7 @@ export const togglesubscribe = async (req: IRequest, res: IResponse) => {
 
 	try {
 
-		if (!req.session.passport.user._id) { return Clean.deny(res, 401, 'No user logged in') }
+		if (!req.user) { return Clean.deny(res, 401, 'No user logged in') }
 
 		const user = await User.findOneAndUpdate({ _id: req.session.passport.user._id }, { allowEmails: req.body.subscribe }, { new: true })
 

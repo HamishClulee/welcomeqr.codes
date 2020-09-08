@@ -150,8 +150,8 @@ exports.logout = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
 });
 exports.getuser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        if (!req.session.passport.user._id) {
-            return Clean_1.default.deny(res, 403, 'No session');
+        if (!req.user) {
+            return Clean_1.default.deny(res, 403, 'No session - no user');
         }
         const user = yield User_1.User.findOne({ _id: req.session.passport.user._id });
         if (user) {
@@ -165,7 +165,7 @@ exports.getuser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
 });
 exports.togglesubscribe = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        if (!req.session.passport.user._id) {
+        if (!req.user) {
             return Clean_1.default.deny(res, 401, 'No user logged in');
         }
         const user = yield User_1.User.findOneAndUpdate({ _id: req.session.passport.user._id }, { allowEmails: req.body.subscribe }, { new: true });

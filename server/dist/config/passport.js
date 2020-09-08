@@ -112,20 +112,13 @@ exports.isReqAllowed = (req, res, next) => {
     if (token == null && req.isAuthenticated()) {
         // No token exists but a session does exist
         // => grant user a token
-        User_1.User.findOne({ _id: req.session.passport.user._id }, (err, user) => {
-            if (!err) {
-                next();
-            }
-            else {
-                req.logout();
-                return Clean_1.default.deny(res, 403, 'DB error of some sort.');
-            }
-        });
+        Log_1.default.error(`[isReqAllowed] value of req.isAuthenticated ==> ${req.isAuthenticated} == value of req.session.passport.user ${JSON.stringify(req.session.passport.user)}`);
+        next();
     }
     else if (token === null && !req.isAuthenticated()) {
         // No session, No Token
         // => deny/kill user
-        return Clean_1.default.deny(res);
+        return Clean_1.default.deny(res, 402, 'token === null && !req.isAuthenticated()');
     }
     else if (token && req.isAuthenticated()) {
         // session and token exist
@@ -137,7 +130,7 @@ exports.isReqAllowed = (req, res, next) => {
                     Log_1.default.TAG_FAILED_CHALLENGE,
                     Log_1.default.TAG_AUTH
                 ]);
-                return Clean_1.default.deny(res);
+                return Clean_1.default.deny(res, 401, 'token && req.isAuthenticated()');
             }
             else {
                 next();
@@ -145,7 +138,7 @@ exports.isReqAllowed = (req, res, next) => {
         });
     }
     else {
-        return Clean_1.default.deny(res, 200);
+        return Clean_1.default.deny(res, 400, 'From else in isReqAllowed');
     }
 };
 //# sourceMappingURL=passport.js.map
