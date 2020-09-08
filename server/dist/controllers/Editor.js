@@ -16,6 +16,7 @@ const Clean_1 = require("../middlewares/Clean");
 const adjective = require("../resources/words/adjectives");
 const noun = require("../resources/words/nouns");
 const adverb = require("../resources/words/adverbs");
+const Log_1 = require("../middlewares/Log");
 const SUBDOMS_ID = '5e52678609948c1e0ec9994f';
 let SUBDOMS = [];
 const jwt = require('jsonwebtoken');
@@ -23,7 +24,7 @@ exports.getHtmlBySubDom = (req, res) => __awaiter(void 0, void 0, void 0, functi
     try {
         const query = { subdom: { $eq: req.body.subdom } };
         const editor = yield Editor_1.Editor.findOne(query);
-        return Clean_1.default.success(res, 200, { html: editor.html });
+        return Clean_1.default.success(res, 200, { html: editor.html }, 'getHtmlBySubDom satisfied.');
     }
     catch (e) {
         return Clean_1.default.apiError('submitNew', e, res);
@@ -36,7 +37,7 @@ exports.submitNew = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
         const update = { 'html': req.body.html, 'subdom': req.body.user.subdom };
         const options = { 'upsert': true, 'new': true, 'setDefaultsOnInsert': true };
         yield Editor_1.Editor.findOneAndUpdate(query, update, options);
-        return Clean_1.default.success(res, 200);
+        return Clean_1.default.success(res, 200, {}, 'submitNew completed.');
     }
     catch (e) {
         return Clean_1.default.apiError('submitNew', e, res);
@@ -48,8 +49,11 @@ exports.submitSubdom = (req, res) => __awaiter(void 0, void 0, void 0, function*
             SUBDOMS.push(req.body.subdom);
             yield Subdom_1.Subdom.updateOne({ '_id': SUBDOMS_ID }, { subdoms: SUBDOMS }, { upsert: true });
             yield User_1.User.updateOne({ '_id': req.session.passport.user._id }, { subdom: req.body.subdom });
-            const user = yield User_1.User.findOne({ '_id': req.session.passport.user });
-            return Clean_1.default.approve(res, 200, user);
+            const user = yield User_1.User.findOne({ '_id': req.session.passport.user._id });
+            if (!user) {
+                return Clean_1.default.failure(res, 501, 'submitSubdom => no user exists.');
+            }
+            return Clean_1.default.approve(res, 200, user, `submitSubdom completed.`);
         }
     }
     catch (e) {
@@ -58,11 +62,15 @@ exports.submitSubdom = (req, res) => __awaiter(void 0, void 0, void 0, function*
 });
 exports.checkSubdom = (req, res) => {
     const okay = SUBDOMS.indexOf(req.body.subdom) === -1;
-    return res.status(200).send({ intercept: false, okay });
+    return Clean_1.default.success(res, 200, { okay }, `Subdom okay.`);
 };
 exports.getHTML = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const editor = yield Editor_1.Editor.findOne({ 'userid': req.session.passport.user._id });
+        if (!editor) {
+            return Clean_1.default.failure(res, 501, `getHTML => No Editor found.`);
+        }
+        Log_1.default.error(`[Function] getHTML  == value of req.session.passport.user ==> ${req.session.passport.user}`);
         return Clean_1.default.success(res, 200, editor);
     }
     catch (e) {

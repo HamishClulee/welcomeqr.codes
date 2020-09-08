@@ -24,13 +24,15 @@ interface SettingsResponse extends AuthResponse {
 
 const generateAccessToken = (user: any) => {
 
-	return jwt.sign(user, Env.get().tokenSecret, { expiresIn: `2 days` })
+	return jwt.sign(user, Env.get().tokenSecret, { expiresIn: `30 days` })
 
 }
 
 const Clean = {
 
 	settings: function(res, user: UserDocument): SettingsResponse {
+
+		Log.info(`[From Clean Settings] Value of user => ${user}`)
 
 		return res.status(200).send({ user: this.buildSettings(user) })
 
@@ -40,6 +42,8 @@ const Clean = {
 
 		let _user = this.killUser()
 
+		Log.info(`[From Clean Deny] Sending a ${status}, with message => ${msg}`)
+
 		return res.status(status).send({ msg, user: _user })
 
 	},
@@ -48,17 +52,23 @@ const Clean = {
 
 		let _user = this.buildUser(user)
 
+		Log.info(`[From Clean Approve] Sending a ${status}, with user => ${JSON.stringify(_user)} and message => ${msg}`)
+
 		return res.status(status).send({ msg, user: _user })
 
 	},
 
 	success: function(res: IResponse, status: number, content: any = {}, msg: string = ''): IResponse {
 
+		Log.info(`[From Clean Success] Sending a ${status}, with content => ${JSON.stringify(content)} and message => ${msg}`)
+
 		return res.status(status).send({ msg, content })
 
 	},
 
 	failure: function(res: IResponse, status: number, content: any = {}, msg: string = ''): IResponse {
+
+		Log.info(`[From Clean Failure] Sending a ${status}, with content => ${JSON.stringify(content)} and message => ${msg}`)
 
 		return res.status(status).send({ msg, content })
 

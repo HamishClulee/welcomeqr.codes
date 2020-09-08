@@ -23,7 +23,7 @@ export const getHtmlBySubDom = async(req: IRequest, res: IResponse) => {
 
 		const editor = await Editor.findOne(query)
 
-		return Clean.success(res, 200, { html: editor.html })
+		return Clean.success(res, 200, { html: editor.html }, 'getHtmlBySubDom satisfied.')
 
 	} catch (e) {
 
@@ -46,7 +46,7 @@ export const submitNew = async (req: IRequest, res: IResponse) => {
 
 		await Editor.findOneAndUpdate(query, update, options)
 
-		return Clean.success(res, 200)
+		return Clean.success(res, 200, {}, 'submitNew completed.')
 
 	} catch (e) {
 
@@ -67,9 +67,15 @@ export const submitSubdom = async (req: IRequest, res: IResponse) => {
 
 			await User.updateOne({ '_id': req.session.passport.user._id }, { subdom: req.body.subdom })
 
-			const user = await User.findOne({ '_id': req.session.passport.user })
+			const user = await User.findOne({ '_id': req.session.passport.user._id })
 
-			return Clean.approve(res, 200, user)
+			if (!user) {
+
+				return Clean.failure(res, 501, 'submitSubdom => no user exists.')
+
+			}
+
+			return Clean.approve(res, 200, user, `submitSubdom completed.`)
 		}
 
 	} catch (e) {
@@ -83,7 +89,7 @@ export const checkSubdom = (req: IRequest, res: IResponse) => {
 
 	const okay = SUBDOMS.indexOf(req.body.subdom) === -1
 
-	return res.status(200).send({ intercept: false, okay })
+	return Clean.success(res, 200, { okay }, `Subdom okay.`)
 }
 
 export const getHTML = async (req: IRequest, res: IResponse) => {
@@ -91,6 +97,14 @@ export const getHTML = async (req: IRequest, res: IResponse) => {
 	try {
 
 		const editor = await Editor.findOne({ 'userid': req.session.passport.user._id })
+
+		if (!editor) {
+
+			return Clean.failure(res, 501, `getHTML => No Editor found.`)
+
+		}
+
+		Log.error(`[Function] getHTML  == value of req.session.passport.user ==> ${req.session.passport.user}`)
 
 		return Clean.success(res, 200, editor)
 
