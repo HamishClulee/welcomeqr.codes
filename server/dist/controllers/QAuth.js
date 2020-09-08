@@ -81,6 +81,8 @@ exports.signup = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
                 emailVerifyToken: token
             });
             const _user = yield user.save();
+            Log_1.default.error(`Value of user, just saved with await ===> ${user}`);
+            Log_1.default.error(`Value of _user, after saving ===> ${_user}`);
             req.logIn(_user, (err) => {
                 if (err) {
                     return Clean_1.default.authError('login::passport::login-err', err, res);
@@ -95,18 +97,18 @@ exports.signup = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
                 return Clean_1.default.approve(res, 200, _user);
             });
             /**
-             * User has an active session and a a password set, meaning they have already signed up and logged in
+             * User has an active session and a password set, meaning they have already signed up and logged in
              * => send approval and user details
              */
         }
-        else if (req.session.passport.user && existingUser && existingUser.password) {
+        else if (req.user && existingUser && existingUser.password) {
             return Clean_1.default.approve(res, 200, existingUser);
             /**
              * User exists and has a password, meaning they have already signed up previously, but dont currently have a session
              * => grant the user a new session
              */
         }
-        else if (!req.session.passport.user && existingUser && existingUser.password) {
+        else if (!req.user && existingUser && existingUser.password) {
             req.logIn(existingUser, (err) => {
                 if (err) {
                     return Clean_1.default.authError('login::passport::login-err', err, res);

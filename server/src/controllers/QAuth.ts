@@ -93,6 +93,9 @@ export const signup = async (req: IRequest, res: IResponse) => {
 
 			const _user = await user.save()
 
+			Log.error(`Value of user, just saved with await ===> ${user}`)
+			Log.error(`Value of _user, after saving ===> ${_user}`)
+
 			req.logIn(_user, (err) => {
 
 				if (err) { return Clean.authError('login::passport::login-err', err, res) }
@@ -111,10 +114,10 @@ export const signup = async (req: IRequest, res: IResponse) => {
 			})
 
 		/**
-		 * User has an active session and a a password set, meaning they have already signed up and logged in
+		 * User has an active session and a password set, meaning they have already signed up and logged in
 		 * => send approval and user details
 		 */
-		} else if (req.session.passport.user && existingUser && existingUser.password) {
+		} else if (req.user && existingUser && existingUser.password) {
 
 			return Clean.approve(res, 200, existingUser)
 
@@ -122,7 +125,7 @@ export const signup = async (req: IRequest, res: IResponse) => {
 		 * User exists and has a password, meaning they have already signed up previously, but dont currently have a session
 		 * => grant the user a new session
 		 */
-		} else if (!req.session.passport.user && existingUser && existingUser.password) {
+		} else if (!req.user && existingUser && existingUser.password) {
 
 			req.logIn(existingUser, (err) => {
 
