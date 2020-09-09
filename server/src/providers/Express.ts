@@ -21,6 +21,7 @@ import Env from './Environment'
 import Log from '../middlewares/Log'
 import Clean from '../middlewares/Clean'
 import { IRequest, IResponse } from '../interfaces'
+import { User } from '../models/User'
 
 const jwt = require('jsonwebtoken')
 const tldjs = require('tldjs')
@@ -52,11 +53,11 @@ class Express {
 		this.app.use(session({
 			cookie: {
 				// sameSite: process.env.NODE_ENV === 'production' ? true : false,
-				maxAge: 1000 * 60 * 60 * 24, // One Day
-				secure: process.env.NODE_ENV === 'production' ? true : false
+				maxAge: 1000 * 60 * 60 * 24 // One Day
+				// secure: process.env.NODE_ENV === 'production' ? true : false
 			},
-			saveUninitialized: false,
-			resave: false,
+			saveUninitialized: true,
+			resave: true,
 			secret: Env.get().appSecret,
 			store: new RedisStore({ client: redisClient })
 		}))
@@ -79,7 +80,7 @@ class Express {
 
 			res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,Content-Type')
 			res.setHeader('Access-Control-Allow-Methods', 'GET, POST')
-			res.locals.user = req.session.user
+
 			next()
 		})
 
@@ -97,10 +98,10 @@ class Express {
 			credentials: true
 		}))
 
-		if (process.env.NODE_ENV === 'production') {
-			this.app.use(lusca.xframe('SAMEORIGIN'))
-			this.app.use(lusca.xssProtection(true))
-		}
+		// if (process.env.NODE_ENV === 'production') {
+		// 	this.app.use(lusca.xframe('SAMEORIGIN'))
+		// 	this.app.use(lusca.xssProtection(true))
+		// }
 
 		/** ---------------------------------------  APP ROUTING  --------------------------------- */
 
@@ -114,7 +115,6 @@ class Express {
 		this.app.post('/auth/login', QAuth.login)
 		this.app.post('/auth/signup', QAuth.signup)
 		this.app.post('/auth/logout', QAuth.logout)
-		this.app.post('/auth/get_user', auth.isReqAllowed, QAuth.getuser)
 		this.app.post('/auth/verify_email', QAuth.verifyemail)
 		this.app.post('/auth/forgot', QAuth.forgotpassword)
 		this.app.post('/auth/reset', QAuth.resetpassword)
@@ -138,32 +138,38 @@ class Express {
 			'google',
 			{
 				failureRedirect: `${BASE_URL}/?authRedirect=true`
-				// successRedirect: `${BASE_URL}/app/manage`
 			}
 		),
-		(req: IRequest, res: IResponse) => {
+		async (req: IRequest, res: IResponse) => {
 
 			/**
 			 * Google has returned the email address and verified it, log the user in
 			 * and grant them a token
 			 */
-			req.logIn(req.session.passport.user, (err) => {
+			const _user = await User.findOne({ _id: req.user._id })
 
-				if (err) { return Clean.authError('login::passport::login-err', err, res) }
+			if (_user) {
+				req.logIn(_user, (err) => {
 
-				const tokenPayload = {
-					userid: req.session.passport.user._id,
-					email: req.session.passport.user.email,
-					role: req.session.passport.user.role,
-					subdom: req.session.passport.user.subdom
-				}
+					if (err) { return Clean.authError('login::passport::login-err', err, res) }
 
-				const token = jwt.sign(tokenPayload, Env.get().tokenSecret, { expiresIn: `2 days` })
+					const tokenPayload = {
+						userid: _user._id,
+						email: _user.email,
+						role: _user.role,
+						subdom: _user.subdom
+					}
 
-				// redirect to the FE component set to eat the token and deal with FE auth
-				res.redirect(`${BASE_URL}/authcb?token=${token.split('.').join('~')}`)
+					const token = jwt.sign(tokenPayload, Env.get().tokenSecret, { expiresIn: `2 days` })
 
-			})
+					// redirect to the FE component set to eat the token and deal with FE auth
+					res.redirect(`${BASE_URL}/authcb?token=${token.split('.').join('~')}`)
+
+				})
+			} else {
+				Log.info(`[Passport Google Success CB] No user found when using findOne(req.user._id)`)
+				return Clean.authError('Passport Google Success CB', 'No user found when using findOne(req.user._id)', res)
+			}
 
 		})
 

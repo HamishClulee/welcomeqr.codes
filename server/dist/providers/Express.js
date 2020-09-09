@@ -1,4 +1,13 @@
 "use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const express = require("express");
 const path = require("path");
@@ -8,7 +17,6 @@ const bodyParser = require("body-parser");
 const history = require("connect-history-api-fallback");
 const cors = require("cors");
 const redis = require("redis");
-const lusca = require("lusca");
 const passport = require("passport");
 const multer = require("multer");
 const editor = require("../controllers/Editor");
@@ -19,6 +27,7 @@ const QAuth = require("../controllers/QAuth");
 const Environment_1 = require("./Environment");
 const Log_1 = require("../middlewares/Log");
 const Clean_1 = require("../middlewares/Clean");
+const User_1 = require("../models/User");
 const jwt = require('jsonwebtoken');
 const tldjs = require('tldjs');
 /** App Constants */
@@ -41,11 +50,11 @@ class Express {
         this.app.use(session({
             cookie: {
                 // sameSite: process.env.NODE_ENV === 'production' ? true : false,
-                maxAge: 1000 * 60 * 60 * 24,
-                secure: process.env.NODE_ENV === 'production' ? true : false
+                maxAge: 1000 * 60 * 60 * 24 // One Day
+                // secure: process.env.NODE_ENV === 'production' ? true : false
             },
-            saveUninitialized: false,
-            resave: false,
+            saveUninitialized: true,
+            resave: true,
             secret: Environment_1.default.get().appSecret,
             store: new RedisStore({ client: redisClient })
         }));
@@ -62,7 +71,6 @@ class Express {
             }
             res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,Content-Type');
             res.setHeader('Access-Control-Allow-Methods', 'GET, POST');
-            res.locals.user = req.session.user;
             next();
         });
         /**
@@ -77,10 +85,10 @@ class Express {
                 : [PROD_URL, '/\.welcomeqr\.codes$/', '/\.google.com\.com$/'],
             credentials: true
         }));
-        if (process.env.NODE_ENV === 'production') {
-            this.app.use(lusca.xframe('SAMEORIGIN'));
-            this.app.use(lusca.xssProtection(true));
-        }
+        // if (process.env.NODE_ENV === 'production') {
+        // 	this.app.use(lusca.xframe('SAMEORIGIN'))
+        // 	this.app.use(lusca.xssProtection(true))
+        // }
         /** ---------------------------------------  APP ROUTING  --------------------------------- */
         /**
          * Refactor this to use Express.Router, it's getting messy!
@@ -90,7 +98,6 @@ class Express {
         this.app.post('/auth/login', QAuth.login);
         this.app.post('/auth/signup', QAuth.signup);
         this.app.post('/auth/logout', QAuth.logout);
-        this.app.post('/auth/get_user', auth.isReqAllowed, QAuth.getuser);
         this.app.post('/auth/verify_email', QAuth.verifyemail);
         this.app.post('/auth/forgot', QAuth.forgotpassword);
         this.app.post('/auth/reset', QAuth.resetpassword);
@@ -107,27 +114,33 @@ class Express {
         this.app.get('/auth/google', passport.authenticate('google', { scope: ['email'] }));
         this.app.get('/auth/google/callback', passport.authenticate('google', {
             failureRedirect: `${BASE_URL}/?authRedirect=true`
-            // successRedirect: `${BASE_URL}/app/manage`
-        }), (req, res) => {
+        }), (req, res) => __awaiter(this, void 0, void 0, function* () {
             /**
              * Google has returned the email address and verified it, log the user in
              * and grant them a token
              */
-            req.logIn(req.session.passport.user, (err) => {
-                if (err) {
-                    return Clean_1.default.authError('login::passport::login-err', err, res);
-                }
-                const tokenPayload = {
-                    userid: req.session.passport.user._id,
-                    email: req.session.passport.user.email,
-                    role: req.session.passport.user.role,
-                    subdom: req.session.passport.user.subdom
-                };
-                const token = jwt.sign(tokenPayload, Environment_1.default.get().tokenSecret, { expiresIn: `2 days` });
-                // redirect to the FE component set to eat the token and deal with FE auth
-                res.redirect(`${BASE_URL}/authcb?token=${token.split('.').join('~')}`);
-            });
-        });
+            const _user = yield User_1.User.findOne({ _id: req.user._id });
+            if (_user) {
+                req.logIn(_user, (err) => {
+                    if (err) {
+                        return Clean_1.default.authError('login::passport::login-err', err, res);
+                    }
+                    const tokenPayload = {
+                        userid: _user._id,
+                        email: _user.email,
+                        role: _user.role,
+                        subdom: _user.subdom
+                    };
+                    const token = jwt.sign(tokenPayload, Environment_1.default.get().tokenSecret, { expiresIn: `2 days` });
+                    // redirect to the FE component set to eat the token and deal with FE auth
+                    res.redirect(`${BASE_URL}/authcb?token=${token.split('.').join('~')}`);
+                });
+            }
+            else {
+                Log_1.default.info(`[Passport Google Success CB] No user found when using findOne(req.user._id)`);
+                return Clean_1.default.authError('Passport Google Success CB', 'No user found when using findOne(req.user._id)', res);
+            }
+        }));
         /** -------------- Editor -------------- */
         // Protected
         this.app.post('/api/submitnew', auth.isReqAllowed, editor.submitNew);

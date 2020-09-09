@@ -94,7 +94,7 @@ export default {
             if (e) this.subdom = e
             this.$QEdit.checksubdom(this.subdom).then(res =>{
                 this.checking = false
-                this.subdomok = res.data.okay
+                this.subdomok = res.data.content.okay
             }).catch(err => { 
                 // if error code is > 500 its a server error not an auth issue
                 // if the error code is 4XX then it will be caught by the axios interceptor

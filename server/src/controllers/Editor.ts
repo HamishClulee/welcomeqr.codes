@@ -36,9 +36,7 @@ export const submitNew = async (req: IRequest, res: IResponse) => {
 
 	try {
 
-		const query = { 'userid': req.session.passport.user._id }
-
-		const decoded = jwt.decode(req.header('Authorization').split(' ')[1])
+		const query = { 'userid': String(req.user._id) }
 
 		const update = { 'html': req.body.html, 'subdom': req.body.user.subdom }
 
@@ -65,9 +63,9 @@ export const submitSubdom = async (req: IRequest, res: IResponse) => {
 
 			await Subdom.updateOne({ '_id': SUBDOMS_ID }, { subdoms: SUBDOMS }, { upsert: true })
 
-			await User.updateOne({ '_id': req.session.passport.user._id }, { subdom: req.body.subdom })
+			await User.updateOne({ '_id': req.user._id }, { subdom: req.body.subdom })
 
-			const user = await User.findOne({ '_id': req.session.passport.user._id })
+			const user = await User.findOne({ '_id': req.user._id })
 
 			if (!user) {
 
@@ -96,7 +94,7 @@ export const getHTML = async (req: IRequest, res: IResponse) => {
 
 	try {
 
-		const editor = await Editor.findOne({ 'userid': req.session.passport.user._id })
+		const editor = await Editor.findOne({ 'userid': req.user._id })
 
 		if (!editor) {
 

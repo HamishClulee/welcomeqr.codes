@@ -51,7 +51,7 @@ export const login = async (req: IRequest, res: IResponse, next: INext) => {
 
 				if (err) { return Clean.authError('login::passport::login-err', err, res) }
 
-				Log.error(`[QAuth local login] inside passport callback == req.logIn called successfully == to check - value of req.user => ${req.user || '*** no user :( ***'}`)
+				Log.error(`[QAuth local login] inside passport callback == req.logIn called successfully == to check - value of req.user => ${JSON.stringify(req.user || '*** no user :( ***')}`)
 
 				return Clean.approve(res, 200, user, '[QAuth login] req.logIn called successfully')
 
@@ -195,7 +195,7 @@ export const getuser = async (req: IRequest, res: IResponse) => {
 
 		if (!req.user) { return Clean.deny(res, 403, 'No session - no user') }
 
-		const user = await User.findOne({ _id: req.session.passport.user._id })
+		const user = await User.findOne({ _id: req.user._id })
 
 		if (user) {
 
@@ -217,7 +217,7 @@ export const togglesubscribe = async (req: IRequest, res: IResponse) => {
 
 		if (!req.user) { return Clean.deny(res, 401, 'No user logged in') }
 
-		const user = await User.findOneAndUpdate({ _id: req.session.passport.user._id }, { allowEmails: req.body.subscribe }, { new: true })
+		const user = await User.findOneAndUpdate({ _id: req.user._id }, { allowEmails: req.body.subscribe }, { new: true })
 
 		if (!user) { return Clean.deny(res, 403, 'Account with that email address does not exist.') }
 
@@ -333,7 +333,7 @@ export const usersettings = async (req: IRequest, res: IResponse) => {
 
 		if (!req.session.passport) { return Clean.deny(res, 403, 'No user logged in.') }
 
-		const user = await User.findOne({ _id: req.session.passport.user._id })
+		const user = await User.findOne({ _id: req.user._id })
 
 		if (!user) { return Clean.deny(res, 403, 'No user exists.') }
 

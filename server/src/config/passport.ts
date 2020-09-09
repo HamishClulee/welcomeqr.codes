@@ -18,32 +18,18 @@ const LocalStrategy = passportLocal.Strategy
 const SendGrid = require('@sendgrid/mail')
 
 passport.serializeUser<any, any>((user, done) => {
-
-	Log.error(`[passport serializeUser] Value of user ==> ${JSON.stringify(user || '** no user here **')}`)
-
-	done(null, user)
-
+	done(null, user.id)
 })
 
-passport.deserializeUser<any, any>((user, done) => {
-
-	if (mongoose.Types.ObjectId.isValid(user._id)) {
-
-		Log.error(`[passport deserializeUser] Calling User.findById == value of user ==> ${JSON.stringify(user || '** no user here **')}`)
-
-		User.findById(user._id, (err, user) => {
-
+passport.deserializeUser<any, any>((id, done) => {
+	if (mongoose.Types.ObjectId.isValid(id)) {
+		User.findById(id, (err, user) => {
 			done(err, user)
-
 		})
-
 	} else {
-
-		Log.error(`[passport deserializeUser] inside else block ==`)
-
+		console.log('saved new user !')
 		const _user = new User()
 		_user.save()
-
 	}
 })
 
@@ -152,11 +138,13 @@ export const isReqAllowed = (req: IRequest, res: IResponse, next: INext) => {
 
 	const token = authHeader && authHeader.split(' ')[1]
 
-	Log.error(`[isReqAllowed] value of req.isAuthenticated ==> ${req.isAuthenticated()} == value of req.session.passport.user ${JSON.stringify(req.session || 'req-session-etc doesnt exist')}`)
+	Log.info(`[isReqAllowed] value of req.isAuthenticated ==> ${req.isAuthenticated()}`)
 
-	Log.error(`[isReqAllowed] value of token ==> ${token ? token : '** no token exists **'}`)
+	Log.info(`[isReqAllowed] value of req.session ${JSON.stringify(req.session || 'req-session doesnt exist')}`)
 
-	Log.error(`[isReqAllowed] value of req.user ==> ${JSON.stringify(req.user ? req.user : 'req.user doesnt exist')}`)
+	Log.info(`[isReqAllowed] value of token ==> ${token ? token : '** no token exists **'}`)
+
+	Log.info(`[isReqAllowed] value of req.user ==> ${JSON.stringify(req.user ? req.user : 'req.user doesnt exist')}`)
 
 	if (token == null && req.isAuthenticated()) {
 

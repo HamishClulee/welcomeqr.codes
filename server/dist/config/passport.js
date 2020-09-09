@@ -21,18 +21,16 @@ const Clean_1 = require("../middlewares/Clean");
 const LocalStrategy = passportLocal.Strategy;
 const SendGrid = require('@sendgrid/mail');
 passport.serializeUser((user, done) => {
-    Log_1.default.error(`[passport serializeUser] Value of user ==> ${JSON.stringify(user || '** no user here **')}`);
-    done(null, user);
+    done(null, user.id);
 });
-passport.deserializeUser((user, done) => {
-    if (mongoose.Types.ObjectId.isValid(user._id)) {
-        Log_1.default.error(`[passport deserializeUser] Calling User.findById == value of user ==> ${JSON.stringify(user || '** no user here **')}`);
-        User_1.User.findById(user._id, (err, user) => {
+passport.deserializeUser((id, done) => {
+    if (mongoose.Types.ObjectId.isValid(id)) {
+        User_1.User.findById(id, (err, user) => {
             done(err, user);
         });
     }
     else {
-        Log_1.default.error(`[passport deserializeUser] inside else block ==`);
+        console.log('saved new user !');
         const _user = new User_1.User();
         _user.save();
     }
@@ -113,9 +111,10 @@ passport.use(new GoogleStrategy({
 exports.isReqAllowed = (req, res, next) => {
     const authHeader = req.headers['authorization'];
     const token = authHeader && authHeader.split(' ')[1];
-    Log_1.default.error(`[isReqAllowed] value of req.isAuthenticated ==> ${req.isAuthenticated()} == value of req.session.passport.user ${JSON.stringify(req.session || 'req-session-etc doesnt exist')}`);
-    Log_1.default.error(`[isReqAllowed] value of token ==> ${token ? token : '** no token exists **'}`);
-    Log_1.default.error(`[isReqAllowed] value of req.user ==> ${JSON.stringify(req.user ? req.user : 'req.user doesnt exist')}`);
+    Log_1.default.info(`[isReqAllowed] value of req.isAuthenticated ==> ${req.isAuthenticated()}`);
+    Log_1.default.info(`[isReqAllowed] value of req.session ${JSON.stringify(req.session || 'req-session doesnt exist')}`);
+    Log_1.default.info(`[isReqAllowed] value of token ==> ${token ? token : '** no token exists **'}`);
+    Log_1.default.info(`[isReqAllowed] value of req.user ==> ${JSON.stringify(req.user ? req.user : 'req.user doesnt exist')}`);
     if (token == null && req.isAuthenticated()) {
         // No token exists but a session does exist
         // => grant user a token

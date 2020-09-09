@@ -50,7 +50,7 @@ exports.login = (req, res, next) => __awaiter(void 0, void 0, void 0, function* 
                 if (err) {
                     return Clean_1.default.authError('login::passport::login-err', err, res);
                 }
-                Log_1.default.error(`[QAuth local login] inside passport callback == req.logIn called successfully == to check - value of req.user => ${req.user || '*** no user :( ***'}`);
+                Log_1.default.error(`[QAuth local login] inside passport callback == req.logIn called successfully == to check - value of req.user => ${JSON.stringify(req.user || '*** no user :( ***')}`);
                 return Clean_1.default.approve(res, 200, user, '[QAuth login] req.logIn called successfully');
             });
         })(req, res);
@@ -157,7 +157,7 @@ exports.getuser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         if (!req.user) {
             return Clean_1.default.deny(res, 403, 'No session - no user');
         }
-        const user = yield User_1.User.findOne({ _id: req.session.passport.user._id });
+        const user = yield User_1.User.findOne({ _id: req.user._id });
         if (user) {
             return Clean_1.default.approve(res, 200, user, 'Auth success');
         }
@@ -172,7 +172,7 @@ exports.togglesubscribe = (req, res) => __awaiter(void 0, void 0, void 0, functi
         if (!req.user) {
             return Clean_1.default.deny(res, 401, 'No user logged in');
         }
-        const user = yield User_1.User.findOneAndUpdate({ _id: req.session.passport.user._id }, { allowEmails: req.body.subscribe }, { new: true });
+        const user = yield User_1.User.findOneAndUpdate({ _id: req.user._id }, { allowEmails: req.body.subscribe }, { new: true });
         if (!user) {
             return Clean_1.default.deny(res, 403, 'Account with that email address does not exist.');
         }
@@ -255,7 +255,7 @@ exports.usersettings = (req, res) => __awaiter(void 0, void 0, void 0, function*
         if (!req.session.passport) {
             return Clean_1.default.deny(res, 403, 'No user logged in.');
         }
-        const user = yield User_1.User.findOne({ _id: req.session.passport.user._id });
+        const user = yield User_1.User.findOne({ _id: req.user._id });
         if (!user) {
             return Clean_1.default.deny(res, 403, 'No user exists.');
         }
