@@ -4,7 +4,7 @@ import * as cluster from 'cluster'
 import App from './providers/App'
 import NativeEvent from './exception/NativeEvent'
 
-if (cluster.isMaster && process.env.NODE_ENV !== 'development') {
+if (cluster.isMaster) {
 	/**
 	 * Catches the process events
 	 */

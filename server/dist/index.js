@@ -4,7 +4,7 @@ const os = require("os");
 const cluster = require("cluster");
 const App_1 = require("./providers/App");
 const NativeEvent_1 = require("./exception/NativeEvent");
-if (cluster.isMaster && process.env.NODE_ENV !== 'development') {
+if (cluster.isMaster) {
     /**
      * Catches the process events
      */
