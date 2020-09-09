@@ -21,6 +21,7 @@ const Log_1 = require("../middlewares/Log");
 const SendGrid = require('@sendgrid/mail');
 const jwt = require('jsonwebtoken');
 exports.login = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    Log_1.default.error(`[QAuth local login touched]`);
     validate.check('email', 'E-mail cannot be blank').notEmpty();
     validate.check('email', 'E-mail is not valid').isEmail();
     validate.check('password', 'Password cannot be blank').notEmpty();
@@ -30,13 +31,15 @@ exports.login = (req, res, next) => __awaiter(void 0, void 0, void 0, function* 
         return Clean_1.default.authError('login', `Validation error: ${String(errors)}`, res);
     }
     try {
+        Log_1.default.error(`[QAuth local login validation passed]`);
         /**
          * I think passport and the try catch should be enough to catch the case where a user
-         * who has signed up with an OAuth provided, and there fore doesnt have a passpord,
+         * who has signed up with an OAuth provided, and there fore doesnt have a password,
          * tries to log in using a password.
          * => time will tell.
          */
         passport.authenticate('local', (err, user, info) => {
+            Log_1.default.error(`[QAuth local login] inside passport callback == value of user => ${user || ' * no user exists * '}`);
             if (err) {
                 return Clean_1.default.authError('login::passport::err', err, res);
             }
@@ -47,7 +50,8 @@ exports.login = (req, res, next) => __awaiter(void 0, void 0, void 0, function* 
                 if (err) {
                     return Clean_1.default.authError('login::passport::login-err', err, res);
                 }
-                return Clean_1.default.approve(res, 200, user);
+                Log_1.default.error(`[QAuth local login] inside passport callback == req.logIn called successfully == to check - value of req.user => ${req.user || '*** no user :( ***'}`);
+                return Clean_1.default.approve(res, 200, user, '[QAuth login] req.logIn called successfully');
             });
         })(req, res);
     }
