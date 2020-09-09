@@ -19,6 +19,8 @@ const SendGrid = require('@sendgrid/mail')
 
 passport.serializeUser<any, any>((user, done) => {
 
+	Log.error(`[passport serializeUser] Value of user ==> ${JSON.stringify(user || '** no user here **')}`)
+
 	done(null, user)
 
 })
@@ -27,6 +29,8 @@ passport.deserializeUser<any, any>((user, done) => {
 
 	if (mongoose.Types.ObjectId.isValid(user._id)) {
 
+		Log.error(`[passport deserializeUser] Calling User.findById == value of user ==> ${JSON.stringify(user || '** no user here **')}`)
+
 		User.findById(user._id, (err, user) => {
 
 			done(err, user)
@@ -34,6 +38,8 @@ passport.deserializeUser<any, any>((user, done) => {
 		})
 
 	} else {
+
+		Log.error(`[passport deserializeUser] inside else block ==`)
 
 		const _user = new User()
 		_user.save()
@@ -57,6 +63,8 @@ passport.use(new LocalStrategy({ usernameField: 'email' }, (email, password, don
 			if (err) { return done(err, null) }
 
 			if (isMatch) {
+
+				Log.error(`[passport.use(new LocalStrategy] calling done == value of user ==> ${JSON.stringify(user || '** no user here **')}`)
 				return done(null, user)
 			}
 

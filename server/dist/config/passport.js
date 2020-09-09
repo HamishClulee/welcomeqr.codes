@@ -21,15 +21,18 @@ const Clean_1 = require("../middlewares/Clean");
 const LocalStrategy = passportLocal.Strategy;
 const SendGrid = require('@sendgrid/mail');
 passport.serializeUser((user, done) => {
+    Log_1.default.error(`[passport serializeUser] Value of user ==> ${JSON.stringify(user || '** no user here **')}`);
     done(null, user);
 });
 passport.deserializeUser((user, done) => {
     if (mongoose.Types.ObjectId.isValid(user._id)) {
+        Log_1.default.error(`[passport deserializeUser] Calling User.findById == value of user ==> ${JSON.stringify(user || '** no user here **')}`);
         User_1.User.findById(user._id, (err, user) => {
             done(err, user);
         });
     }
     else {
+        Log_1.default.error(`[passport deserializeUser] inside else block ==`);
         const _user = new User_1.User();
         _user.save();
     }
@@ -47,6 +50,7 @@ passport.use(new LocalStrategy({ usernameField: 'email' }, (email, password, don
                 return done(err, null);
             }
             if (isMatch) {
+                Log_1.default.error(`[passport.use(new LocalStrategy] calling done == value of user ==> ${JSON.stringify(user || '** no user here **')}`);
                 return done(null, user);
             }
             return done(null, null, { message: 'Invalid email or password.' });
