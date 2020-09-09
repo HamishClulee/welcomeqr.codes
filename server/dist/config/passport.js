@@ -123,14 +123,14 @@ exports.isReqAllowed = (req, res, next) => {
     else if (token === null && !req.isAuthenticated()) {
         // No session, No Token
         // => deny/kill user
-        return Clean_1.default.deny(res, 402, 'token === null && !req.isAuthenticated()');
+        return Clean_1.default.deny(res, 403, 'token === null && !req.isAuthenticated()');
     }
     else if (token && req.isAuthenticated()) {
         // session and token exist
         // => verify token
         jwt.verify(token, Environment_1.default.get().tokenSecret, (err, user) => {
             if (err) {
-                return Clean_1.default.deny(res, 401, 'token && req.isAuthenticated()');
+                return Clean_1.default.deny(res, 403, 'token && req.isAuthenticated()');
             }
             else {
                 next();
@@ -138,7 +138,7 @@ exports.isReqAllowed = (req, res, next) => {
         });
     }
     else {
-        return Clean_1.default.deny(res, 406, 'From else in isReqAllowed');
+        return Clean_1.default.deny(res, 403, 'From else in isReqAllowed');
     }
 };
 exports.isAuthenticated = (req, res, next) => {

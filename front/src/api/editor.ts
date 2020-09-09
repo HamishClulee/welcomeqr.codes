@@ -27,7 +27,6 @@ export class QEdit {
 
         axios.interceptors.request.use(config => {
             config.headers.common['Authorization'] = `Bearer ${localStorage.getItem('QToken')}`
-            console.log('AXIOS req intercept =====> ', config)
             return config
         }, (error) => {
             return Promise.reject(error)
