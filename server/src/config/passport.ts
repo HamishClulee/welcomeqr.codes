@@ -157,7 +157,7 @@ export const isReqAllowed = (req: IRequest, res: IResponse, next: INext) => {
 		// No session, No Token
 		// => deny/kill user
 
-		return Clean.deny(res, 402, 'token === null && !req.isAuthenticated()')
+		return Clean.deny(res, 403, 'token === null && !req.isAuthenticated()')
 
 	} else if (token && req.isAuthenticated()) {
 
@@ -168,7 +168,7 @@ export const isReqAllowed = (req: IRequest, res: IResponse, next: INext) => {
 
 			if (err) {
 
-				return Clean.deny(res, 401, 'token && req.isAuthenticated()')
+				return Clean.deny(res, 403, 'token && req.isAuthenticated()')
 
 			} else {
 
@@ -180,7 +180,7 @@ export const isReqAllowed = (req: IRequest, res: IResponse, next: INext) => {
 
 	} else {
 
-		return Clean.deny(res, 406, 'From else in isReqAllowed')
+		return Clean.deny(res, 403, 'From else in isReqAllowed')
 
 	}
 }
