@@ -37,19 +37,19 @@ passport.deserializeUser((user, done) => {
 passport.use(new LocalStrategy({ usernameField: 'email' }, (email, password, done) => {
     User_1.User.findOne({ email: email.toLowerCase() }, (err, user) => {
         if (err) {
-            return done(err);
+            return done(err, null);
         }
         if (!user) {
             return done(undefined, false, { message: `Email ${email} not found.` });
         }
         user.comparePassword(password, (err, isMatch) => {
             if (err) {
-                return done(err);
+                return done(err, null);
             }
             if (isMatch) {
-                return done(undefined, user);
+                return done(null, user);
             }
-            return done(undefined, false, { message: 'Invalid email or password.' });
+            return done(null, null, { message: 'Invalid email or password.' });
         });
     });
 }));
@@ -109,7 +109,7 @@ passport.use(new GoogleStrategy({
 exports.isReqAllowed = (req, res, next) => {
     const authHeader = req.headers['authorization'];
     const token = authHeader && authHeader.split(' ')[1];
-    Log_1.default.error(`[isReqAllowed] value of req.isAuthenticated ==> ${req.isAuthenticated} == value of req.session.passport.user ${JSON.stringify(req.session || 'req-session-etc doesnt exist')}`);
+    Log_1.default.error(`[isReqAllowed] value of req.isAuthenticated ==> ${req.isAuthenticated()} == value of req.session.passport.user ${JSON.stringify(req.session || 'req-session-etc doesnt exist')}`);
     Log_1.default.error(`[isReqAllowed] value of token ==> ${token ? token : '** no token exists **'}`);
     Log_1.default.error(`[isReqAllowed] value of req.user ==> ${JSON.stringify(req.user ? req.user : 'req.user doesnt exist')}`);
     if (token == null && req.isAuthenticated()) {
@@ -135,7 +135,7 @@ exports.isReqAllowed = (req, res, next) => {
         });
     }
     else {
-        return Clean_1.default.deny(res, 400, 'From else in isReqAllowed');
+        return Clean_1.default.deny(res, 406, 'From else in isReqAllowed');
     }
 };
 exports.isAuthenticated = (req, res, next) => {

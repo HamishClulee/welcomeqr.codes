@@ -45,7 +45,7 @@ passport.use(new LocalStrategy({ usernameField: 'email' }, (email, password, don
 
 	User.findOne({ email: email.toLowerCase() }, (err, user: any) => {
 
-		if (err) { return done(err) }
+		if (err) { return done(err, null) }
 
 		if (!user) {
 
@@ -54,14 +54,13 @@ passport.use(new LocalStrategy({ usernameField: 'email' }, (email, password, don
 
 		user.comparePassword(password, (err: Error, isMatch: boolean) => {
 
-			if (err) { return done(err) }
+			if (err) { return done(err, null) }
 
 			if (isMatch) {
-
-				return done(undefined, user)
+				return done(null, user)
 			}
 
-			return done(undefined, false, { message: 'Invalid email or password.' })
+			return done(null, null, { message: 'Invalid email or password.' })
 		})
 
 	})
@@ -145,7 +144,7 @@ export const isReqAllowed = (req: IRequest, res: IResponse, next: INext) => {
 
 	const token = authHeader && authHeader.split(' ')[1]
 
-	Log.error(`[isReqAllowed] value of req.isAuthenticated ==> ${req.isAuthenticated} == value of req.session.passport.user ${JSON.stringify(req.session || 'req-session-etc doesnt exist')}`)
+	Log.error(`[isReqAllowed] value of req.isAuthenticated ==> ${req.isAuthenticated()} == value of req.session.passport.user ${JSON.stringify(req.session || 'req-session-etc doesnt exist')}`)
 
 	Log.error(`[isReqAllowed] value of token ==> ${token ? token : '** no token exists **'}`)
 
@@ -185,7 +184,7 @@ export const isReqAllowed = (req: IRequest, res: IResponse, next: INext) => {
 
 	} else {
 
-		return Clean.deny(res, 400, 'From else in isReqAllowed')
+		return Clean.deny(res, 406, 'From else in isReqAllowed')
 
 	}
 }
