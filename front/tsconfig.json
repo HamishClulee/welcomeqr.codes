@@ -27,11 +27,12 @@
     ]
   },
   "include": [
-    "src/**/*.ts",
-    "src/**/*.tsx",
-    "src/**/*.vue",
-    "tests/**/*.ts",
-    "tests/**/*.tsx"
+    "main-app/src/**/*.ts",
+    "main-app/src/**/*.vue",
+    "subdoms-app/src/**/*.ts",
+    "subdoms-app/src/**/*.vue",
+    "shared/**/*.ts",
+    "shared/**/*.vue"
   ],
   "exclude": [
     "node_modules",

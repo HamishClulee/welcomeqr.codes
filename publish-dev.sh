@@ -1,2 +1,2 @@
 #!/usr/bin/env bash
-./scripts/publish.sh & ./scripts/server.sh
+./scripts/front-subdoms.sh & ./scripts/server.sh
