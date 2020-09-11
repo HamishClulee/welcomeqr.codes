@@ -1,5 +1,6 @@
 <template>
     <main class="preview-container">
+
         <section class="preview-html-container" v-if="html !== null" v-html="html">
 
             <!-- Server side HTML will display here -->

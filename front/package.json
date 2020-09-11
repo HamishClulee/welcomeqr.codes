@@ -4,11 +4,11 @@
   "private": true,
   "scripts": {
 
-    "serve:main": "env VUE_CLI_SERVICE_CONFIG_PATH=\"$PWD/vue.config.main.js\" vue-cli-service serve --port 8080 main-app/src/main.ts --fix --skip-plugin @vue/cli-plugin-pwa,pwa --dest main-app/dist",
-    "build:main": "env VUE_CLI_SERVICE_CONFIG_PATH=\"$PWD/vue.config.main.js\" vue-cli-service build --dest main-app/dist main-app/src/main.ts",
+    "serve:main": "env APP_TYPE=\"main-app\" vue-cli-service serve main-app/src/main.ts --fix --skip-plugin @vue/cli-plugin-pwa,pwa",
+    "build:main": "env APP_TYPE=\"main-app\" vue-cli-service build",
 
-    "serve:subdoms": "env VUE_CLI_SERVICE_CONFIG_PATH=\"$PWD/vue.config.subdoms.js\" vue-cli-service serve --port 7070 subdoms-app/src/main.ts",
-    "build:subdoms": "env VUE_CLI_SERVICE_CONFIG_PATH=\"$PWD/vue.config.subdoms.js\" vue-cli-service build --dest subdoms-app/dist subdoms-app/src/main.ts --fix --skip-plugin @vue/cli-plugin-pwa,pwa"
+    "serve:subdoms": "env APP_TYPE=\"subdoms-app\" vue-cli-service serve",
+    "build:subdoms": "env APP_TYPE=\"subdoms-app\" vue-cli-service build --fix --skip-plugin @vue/cli-plugin-pwa,pwa"
 
   },
   "dependencies": {
