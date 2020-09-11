@@ -5,6 +5,8 @@ interface Meta {
 }
 
 const overwritemetas = (meta: Meta | null = null, next: any): void => {
+    
+    if (process.env.NODE_ENV === 'development' && next) return next()
 
     const des: HTMLMetaElement = document.getElementById('__meta_description') as HTMLMetaElement
     const title: HTMLTitleElement = document.getElementsByTagName('title')[0] as HTMLTitleElement
@@ -37,7 +39,7 @@ const overwritemetas = (meta: Meta | null = null, next: any): void => {
                 // suppress any console errors
                 if (next) {
 
-                    next()
+                    return next()
 
                 }
 

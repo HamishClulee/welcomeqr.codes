@@ -3,13 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-
-    "serve:main": "env VUE_CLI_SERVICE_CONFIG_PATH=\"$PWD/vue.config.main.js\" vue-cli-service serve main-app/src/main.ts",
-    "build:main": "env VUE_CLI_SERVICE_CONFIG_PATH=\"$PWD/vue.config.main.js\" vue-cli-service build --dest main-app/src/dist main-app/src/main.ts",
-
-    "serve:subdoms": "env VUE_CLI_SERVICE_CONFIG_PATH=\"$PWD/vue.config.subdoms.js\" vue-cli-service serve --port 7070 subdoms-app/src/main.ts",
-    "build:subdoms": "env VUE_CLI_SERVICE_CONFIG_PATH=\"$PWD/vue.config.subdoms.js\" vue-cli-service build --dest subdoms-app/src/dist subdoms-app/src/main.ts"
-
+    "serve:main": "env APP_TYPE=\"main-app\" vue-cli-service serve --fix --skip-plugin @vue/cli-plugin-pwa,pwa main-app/src/main.ts",
+    "build:main": "env APP_TYPE=\"main-app\" vue-cli-service build main-app/src/main.ts",
+    "serve:subdoms": "env APP_TYPE=\"subdoms-app\" vue-cli-service serve subdoms-app/src/main.ts",
+    "build:subdoms": "env APP_TYPE=\"subdoms-app\" vue-cli-service build --fix --skip-plugin @vue/cli-plugin-pwa,pwa subdoms-app/src/main.ts"
   },
   "dependencies": {
     "@types/vivus": "^0.4.0",
@@ -36,7 +33,6 @@
     "sass-loader": "^8.0.0",
     "style-resources-loader": "^1.3.3",
     "typescript": "~3.5.3",
-    "vue-cli-plugin-webpack-bundle-analyzer": "^2.0.0",
     "vue-color": "^2.7.0",
     "vue-image-crop-upload": "^2.5.0",
     "vue-multiselect": "^2.1.6",

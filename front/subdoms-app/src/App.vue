@@ -1,5 +1,6 @@
 <template>
     <main class="preview-container">
+
         <section class="preview-html-container" v-if="html !== null" v-html="html">
 
             <!-- Server side HTML will display here -->
@@ -18,6 +19,7 @@ import { EventBus, LOADING, EDITOR_ERROR } from './EventBus'
 import notfound from '@shared/components/notfound'
 import qrfooter from '@shared/components/qrfooter'
 import loading from '@shared/components/loading'
+
 export default {
     name: 'app',
     components: {
@@ -33,7 +35,7 @@ export default {
     },
     created() {
 
-        this.$QEdit.getHtmlBySub({ subdom: this.getsubdomfromurl() }).then(res => {
+        this.$QEdit.getHtmlBySub(this.getsubdomfromurl()).then(res => {
 
             if (res.data.content && res.data.content.html) {
                 this.html = res.data.content.html
@@ -49,7 +51,7 @@ export default {
     },
     methods: {
         getsubdomfromurl() {
-            if (process.env.NODE_ENV === 'development') return 'heavily-uncomfortable-computing'
+            if (process.env.NODE_ENV === 'development') return 'easily-sleepy-comedian'
             else return window.location.host.split('.')[0]
         },
     },
