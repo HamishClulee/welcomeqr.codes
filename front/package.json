@@ -3,13 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-
-    "serve:main": "env APP_TYPE=\"main-app\" vue-cli-service serve main-app/src/main.ts --fix --skip-plugin @vue/cli-plugin-pwa,pwa",
-    "build:main": "env APP_TYPE=\"main-app\" vue-cli-service build",
-
-    "serve:subdoms": "env APP_TYPE=\"subdoms-app\" vue-cli-service serve",
-    "build:subdoms": "env APP_TYPE=\"subdoms-app\" vue-cli-service build --fix --skip-plugin @vue/cli-plugin-pwa,pwa"
-
+    "serve:main": "env APP_TYPE=\"main-app\" vue-cli-service serve --fix --skip-plugin @vue/cli-plugin-pwa,pwa main-app/src/main.ts",
+    "build:main": "env APP_TYPE=\"main-app\" vue-cli-service build main-app/src/main.ts",
+    "serve:subdoms": "env APP_TYPE=\"subdoms-app\" vue-cli-service serve subdoms-app/src/main.ts",
+    "build:subdoms": "env APP_TYPE=\"subdoms-app\" vue-cli-service build --fix --skip-plugin @vue/cli-plugin-pwa,pwa subdoms-app/src/main.ts"
   },
   "dependencies": {
     "@types/vivus": "^0.4.0",
