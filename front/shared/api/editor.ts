@@ -74,7 +74,7 @@ export class QEdit {
     }
 
     // tester
-    getHtmlBySub(): AxiosPromise<APIResponse> {
-        return this.ax.post('/get_html_by_subdomain')
+    getHtmlBySub(subdom: string): AxiosPromise<APIResponse> {
+        return this.ax.post('/get_html_by_subdomain', { subdom })
     }
 }

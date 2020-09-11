@@ -1,4 +1,4 @@
-// import './style/index.sass'
+import './style/index.sass'
 import Vue from 'vue'
 import App from './App.vue'
 import { QEdit } from '../../shared/api/editor'

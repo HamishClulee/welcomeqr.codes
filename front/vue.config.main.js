@@ -6,9 +6,10 @@ const addStyleResource = (rule) => {
         .loader('style-resources-loader')
         .options({
             patterns: [
-                path.resolve(__dirname, './subdoms-app/src/style/index.sass'),
+                path.resolve(__dirname, 'main-app/src/style/index.sass'),
             ],
-        })
+        }
+    )
 
 }
 
@@ -19,12 +20,7 @@ module.exports = {
         config.resolve.alias.set('@I', path.resolve(__dirname, '../interfaces'))
         config.resolve.alias.set('@shared', path.resolve(__dirname, './shared'))
     },
-    pluginOptions: {
-        webpackBundleAnalyzer: {
-            openAnalyzer: false,
-        },
-    },
     devServer: {
-        disableHostCheck: true,
+        port: 8080
     },
 }

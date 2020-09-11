@@ -9,11 +9,11 @@ yarn build
 
 echo "---------------------- Building front-main. ------------------------------"
 cd ../front
-yarn build:main --fix --skip-plugin @vue/cli-plugin-pwa,pwa
+yarn build:main
 
 
 echo "---------------------- Building front-subdoms. ---------------------------"
-yarn build:subdoms --fix --skip-plugin @vue/cli-plugin-pwa,pwa
+yarn build:subdoms
 cd ..
 
 
@@ -37,3 +37,4 @@ ssh hamishclulee@welcomeqr.codes 'cd /var/www/welcomeqr.codes && sudo git reset 
 
 
 echo "---------------------- Deploy complete. Have a nice day. -----------------"
+exit 0
