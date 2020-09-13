@@ -47,6 +47,10 @@ const userSchema = new mongoose.Schema({
 }, { timestamps: true });
 userSchema.pre('save', function save(next) {
     const user = this;
+    if (!user.emailVerifyToken) {
+        const token = require('crypto').randomBytes(Math.ceil(64 / 2)).toString('hex');
+        user.emailVerifyToken = token ? token : null;
+    }
     if (!user.isModified('password')) {
         return next();
     }

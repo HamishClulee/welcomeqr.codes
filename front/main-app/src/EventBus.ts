@@ -37,3 +37,10 @@ export const welcomeback = (email: string) => {
         black: false,
     }
 }
+
+export const EMAIL_VERIFY_FAILURE = {
+    is: true,
+    msg: 'Something went wrong, we have been notified, try again soon!',
+    color: 'highlight',
+    black: false,
+}

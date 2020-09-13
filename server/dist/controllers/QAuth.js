@@ -14,6 +14,7 @@ const passport = require("passport");
 const WelcomeEmail = require("../resources/emails/welcome");
 const ResetEmail = require("../resources/emails/resetconfirm");
 const ForgotPassword = require("../resources/emails/forgot");
+const VerifyEmail = require("../resources/emails/verifyemail");
 const User_1 = require("../models/User");
 const Environment_1 = require("../providers/Environment");
 const Clean_1 = require("../middlewares/Clean");
@@ -76,9 +77,7 @@ exports.signup = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
          * => sign them up, send a welcome email, add to the db and log them in
          */
         if (!existingUser) {
-            const token = require('crypto').randomBytes(48, (err, buffer) => {
-                return buffer.toString('hex');
-            });
+            const token = require('crypto').randomBytes(Math.ceil(64 / 2)).toString('hex');
             const user = new User_1.User({
                 email: req.body.email,
                 password: req.body.password,
@@ -182,19 +181,46 @@ exports.togglesubscribe = (req, res) => __awaiter(void 0, void 0, void 0, functi
         return Clean_1.default.authError('toggle subscribe', `caught error: ${e}`, res);
     }
 });
-exports.verifyemail = (req, res, IResponse) => __awaiter(void 0, void 0, void 0, function* () {
+exports.sendverifyemail = (req, res, IResponse) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const user = yield User_1.User.findOne({ _id: req.user });
+        if (!user) {
+            return Clean_1.default.deny(res, 401, 'No user exists.');
+        }
+        if (user.emailVerified) {
+            return Clean_1.default.failure(res, 502, 'Email already verified');
+        }
+        else if (user.emailVerifyToken) {
+            SendGrid.setApiKey(process.env.SENDGRID_API_KEY);
+            SendGrid.send({
+                to: user.email,
+                from: 'noreply@welcomeqr.codes',
+                subject: 'Please verify your email.',
+                html: VerifyEmail.build(`${Environment_1.default.get().baseUrl}/verify-your-email?token=${user.emailVerifyToken}`)
+            });
+            return Clean_1.default.approve(res, 200, user);
+        }
+        else {
+            return Clean_1.default.failure(res, 502, 'No email verify token in db.');
+        }
+    }
+    catch (e) {
+        return Clean_1.default.authError('verify email', `caught error: ${e}`, res);
+    }
+});
+exports.verifyemailtoken = (req, res, IResponse) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const user = yield User_1.User.findOne({ emailVerifyToken: req.body.token });
         if (!user) {
             return Clean_1.default.deny(res, 401, 'Verify token is invalid or has expired.');
         }
         user.emailVerified = true;
-        user.emailVerifyToken = undefined;
+        user.emailVerifyToken = 'verified';
         yield user.save();
         return Clean_1.default.approve(res, 200, user);
     }
     catch (e) {
-        return Clean_1.default.authError('verify email', `caught error: ${e}`, res);
+        return Clean_1.default.authError('verifyemailtoken', `caught error: ${e}`, res);
     }
 });
 exports.resetpassword = (req, res, IResponse) => __awaiter(void 0, void 0, void 0, function* () {
@@ -228,9 +254,7 @@ exports.resetpassword = (req, res, IResponse) => __awaiter(void 0, void 0, void 
 });
 exports.forgotpassword = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const token = require('crypto').randomBytes(48, (err, buffer) => {
-            return buffer.toString('hex');
-        });
+        const token = require('crypto').randomBytes(Math.ceil(64 / 2)).toString('hex');
         const user = yield User_1.User.findOne({ email: req.body.email });
         if (!user) {
             return Clean_1.default.deny(res, 403, 'No user.');

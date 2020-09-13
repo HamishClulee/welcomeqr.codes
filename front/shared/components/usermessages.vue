@@ -45,9 +45,10 @@ export default {
     left: 20px
     padding: 15px 40px
     border-radius: 3px
-    border: 1px solid $light-gray
+    border: none
     font-family: $body-font
     font-size: 1.3em
+    z-index: 10
 .primary
     background: $primary
 .secondary

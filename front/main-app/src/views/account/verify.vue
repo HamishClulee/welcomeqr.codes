@@ -5,13 +5,14 @@
 
         <button class="button" v-if="!user.isemailverified" @click="verify">verify</button>
 
-        <h6 v-else class="h4">{{ servermsg }}</h6>
+        <h6 class="h4">{{ servermsg }}</h6>
 
     </section>
 </template>
 
 <script>
-import { EventBus, MESSAGES, LOADING } from '../../EventBus'
+import { mapGetters } from 'vuex'
+import { EventBus, MESSAGES, LOADING, EMAIL_VERIFY_FAILURE } from '../../EventBus'
 export default {
     name: 'verify',
     props: {
@@ -28,9 +29,14 @@ export default {
     methods: {
         verify() {
             const params = new URLSearchParams(window.location.search)
-            this.$QAuth.verifyemail(params.get('token')).then(res => {
-                this.servermsg = 'Email verified.'
-                this.$store.commit('IS_AUTHED', res.data.user)
+            this.$QAuth.requestverifyemail().then(() => {
+
+                this.servermsg = 
+                `We have sent you an email at ${this.getuser.email}, 
+                please follow the instructions in the email to complete the verification process`
+
+            }).catch(() => {
+                EventBus.$emit(MESSAGES, EMAIL_VERIFY_FAILURE)
             })
         },
     },
@@ -38,8 +44,13 @@ export default {
         verifystatus() {
             return this.user.isemailverified ? 'verified, thank you!' : 'unverified, please click the button below to verify!'
         },
+        ...mapGetters(['getuser']),
     },
 }
 </script>
 
-<style lang="sass" scoped></style>
+<style lang="sass" scoped>
+.h4
+    font-size: 1.4em
+    color: $secondary
+</style>

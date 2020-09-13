@@ -2,6 +2,8 @@ import * as bcrypt from 'bcrypt-nodejs'
 import * as mongoose from 'mongoose'
 import { EditorDocument } from './Editor'
 
+import Log from '../middlewares/Log'
+
 // ----------------------------------------------------------------------------
 // TypeScript Defs ------------------------------------------------------------
 // ----------------------------------------------------------------------------
@@ -70,6 +72,13 @@ const userSchema = new mongoose.Schema({
 userSchema.pre('save', function save(next) {
 
 	const user = this as UserDocument
+
+	if (!user.emailVerifyToken) {
+
+		const token = require('crypto').randomBytes(Math.ceil(64 / 2)).toString('hex')
+
+		user.emailVerifyToken = token ? token : null
+	}
 
 	if (!user.isModified('password')) { return next() }
 

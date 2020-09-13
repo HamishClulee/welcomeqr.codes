@@ -11,6 +11,7 @@ const login = () => import('../views/auth/login.vue')
 const signup = () => import('../views/auth/signup.vue')
 const reset = () => import('../views/auth/reset.vue')
 const forgot = () => import('../views/auth/forgot.vue')
+const verifyemail = () => import ('../views/auth/verifyemail.vue')
 
 /** Account routes */
 const account = () => import('../views/account/account.vue')
@@ -273,15 +274,19 @@ const routes = [
     // --------------------------- PLUMBING
     // -------------------------------------------------------------------
     {
+        path: '/verify-your-email',
+        name: 'verifyemail',
+        component: verifyemail,
+        beforeEnter: (to: any, from: any, next: any) => {
+            overwritemetas({ index: false }, next)
+        },
+    },
+    {
         path: '/testgethtml',
         name: 'testgethtml',
         component: getHtml,
         beforeEnter: (to: any, from: any, next: any) => {
-            overwritemetas({
-                title: '',
-                description: '',
-                index: false,
-            }, next)
+            overwritemetas({ index: false }, next)
         },
     },
     {
@@ -289,11 +294,7 @@ const routes = [
         name: 'notfound',
         component: notfound,
         beforeEnter: (to: any, from: any, next: any) => {
-            overwritemetas({
-                title: '',
-                description: '',
-                index: false,
-            }, next)
+            overwritemetas({ index: false}, next)
         },
     },
 ]

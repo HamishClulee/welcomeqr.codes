@@ -4,6 +4,7 @@ import * as passport from 'passport'
 import * as WelcomeEmail from '../resources/emails/welcome'
 import * as ResetEmail from '../resources/emails/resetconfirm'
 import * as ForgotPassword from '../resources/emails/forgot'
+import * as VerifyEmail from '../resources/emails/verifyemail'
 
 import { UserDocument, User } from '../models/User'
 import { IRequest, IResponse, INext } from '../interfaces'
@@ -89,9 +90,7 @@ export const signup = async (req: IRequest, res: IResponse) => {
 		 */
 		if (!existingUser) {
 
-			const token = require('crypto').randomBytes(48, (err, buffer) => {
-				return buffer.toString('hex')
-			})
+			const token = require('crypto').randomBytes(Math.ceil(64 / 2)).toString('hex')
 
 			const user: UserDocument = new User({
 				email: req.body.email,
@@ -230,7 +229,45 @@ export const togglesubscribe = async (req: IRequest, res: IResponse) => {
 	}
 }
 
-export const verifyemail = async (req: IRequest, res, IResponse) => {
+export const sendverifyemail = async (req: IRequest, res, IResponse) => {
+	try {
+
+		const user = await User.findOne({ _id: req.user })
+
+		if (!user) { return Clean.deny(res, 401, 'No user exists.') }
+
+		if (user.emailVerified) {
+
+			return Clean.failure(res, 502, 'Email already verified')
+
+		} else if (user.emailVerifyToken) {
+
+			SendGrid.setApiKey(process.env.SENDGRID_API_KEY)
+
+			SendGrid.send({
+				to: user.email,
+				from: 'noreply@welcomeqr.codes',
+				subject: 'Please verify your email.',
+				html: VerifyEmail.build(`${Env.get().baseUrl}/verify-your-email?token=${user.emailVerifyToken}`)
+			})
+
+			return Clean.approve(res, 200, user)
+
+		} else {
+
+			return Clean.failure(res, 502, 'No email verify token in db.')
+
+		}
+
+	} catch (e) {
+
+		return Clean.authError('verify email', `caught error: ${e}`, res)
+
+	}
+
+}
+
+export const verifyemailtoken = async (req: IRequest, res, IResponse) => {
 
 	try {
 
@@ -239,7 +276,7 @@ export const verifyemail = async (req: IRequest, res, IResponse) => {
 		if (!user) { return Clean.deny(res, 401, 'Verify token is invalid or has expired.') }
 
 		user.emailVerified = true
-		user.emailVerifyToken = undefined
+		user.emailVerifyToken = 'verified'
 
 		await user.save()
 
@@ -247,7 +284,7 @@ export const verifyemail = async (req: IRequest, res, IResponse) => {
 
 	} catch (e) {
 
-		return Clean.authError('verify email', `caught error: ${e}`, res)
+		return Clean.authError('verifyemailtoken', `caught error: ${e}`, res)
 
 	}
 }
@@ -295,11 +332,7 @@ export const forgotpassword = async (req: IRequest, res: IResponse) => {
 
 	try {
 
-		const token = require('crypto').randomBytes(48, (err, buffer) => {
-
-			return buffer.toString('hex')
-
-		})
+		const token = require('crypto').randomBytes(Math.ceil(64 / 2)).toString('hex')
 
 		const user = await User.findOne({ email: req.body.email })
 

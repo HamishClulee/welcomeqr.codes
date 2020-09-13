@@ -76,9 +76,7 @@ passport.use(new GoogleStrategy({
             return done(false, existingUser);
         }
         else if (!err && !existingUser) {
-            const token = require('crypto').randomBytes(48, (err, buffer) => {
-                return buffer.toString('hex');
-            });
+            const token = require('crypto').randomBytes(Math.ceil(64 / 2)).toString('hex');
             const newUser = new User_1.User({
                 email: profile.emails[0].value,
                 password: null,

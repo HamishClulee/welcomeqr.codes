@@ -89,8 +89,12 @@ export class QAuth {
         return this.ax.post('/reset', { token, password, confirm })
     }
 
-    verifyemail(token: string): AxiosPromise<QUser> {
-        return this.ax.post('/verify_email', { token })
+    requestverifyemail(): AxiosPromise<QUser> {
+        return this.ax.post('/send_verify_email')
+    }
+
+    verifyemailtoken(token: string): AxiosPromise<QUser> {
+        return this.ax.post('/verify_email_token', { token })
     }
 
     contact(email: string, name: string, message: string, selectval: string): AxiosPromise<QUser> {

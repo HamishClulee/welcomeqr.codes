@@ -51,7 +51,7 @@ export default {
     },
     methods: {
         getsubdomfromurl() {
-            if (process.env.NODE_ENV === 'development') return 'easily-sleepy-comedian'
+            if (process.env.NODE_ENV === 'development') return 'fully-aggressive-owner'
             else return window.location.host.split('.')[0]
         },
     },

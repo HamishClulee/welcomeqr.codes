@@ -1,5 +1,3 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
 const html = `<!DOCTYPE html>
 <html>
 <head>
@@ -261,8 +259,8 @@ const html = `<!DOCTYPE html>
   <!-- end body -->
 
 </body>
-</html>`;
-exports.build = (url) => {
-    return html.split('<% url %>').join(url);
-};
-//# sourceMappingURL=verifyemail.js.map
+</html>`
+
+export const build = (url) => {
+	return html.split('<% url %>').join(url)
+}
