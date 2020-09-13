@@ -61,6 +61,7 @@ export default {
             this.$QAuth.logout().then(res => {
                 this.$store.commit('IS_AUTHED', res.data.user)
                 EventBus.$emit(MESSAGES, LOGGED_OUT)
+                this.$route.name !== 'home' ? this.$router.push({ name: 'home' }) : null
             })
         },
     },
