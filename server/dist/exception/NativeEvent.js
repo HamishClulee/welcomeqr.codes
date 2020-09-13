@@ -4,23 +4,29 @@ const Log_1 = require("../middlewares/Log");
 class NativeEvent {
     cluster(_cluster) {
         // Catch cluster listening event...
-        _cluster.on('listening', (worker) => Log_1.default.info(`Server :: Cluster with ProcessID '${worker.process.pid}' Connected!`));
+        _cluster.on('listening', () => {
+            // Cluster listenting
+        });
         // Catch cluster once it is back online event...
-        _cluster.on('online', (worker) => Log_1.default.info(`Server :: Cluster with ProcessID '${worker.process.pid}' has responded after it was forked! `));
+        _cluster.on('online', () => {
+            // Cluster online
+        });
         // Catch cluster disconnect event...
-        _cluster.on('disconnect', (worker) => Log_1.default.warn(`Server :: Cluster with ProcessID '${worker.process.pid}' Disconnected!`));
+        _cluster.on('disconnect', () => {
+            // Cluster disconnected
+        });
         // Catch cluster exit event...
         _cluster.on('exit', (worker, code, signal) => {
-            Log_1.default.warn(`Server :: Cluster with ProcessID '${worker.process.pid}' is Dead with Code '${code}, and signal: '${signal}'`);
+            Log_1.default.warn(`NativeEventExit`, `Cluster with ProcessID '${worker.process.pid}' is Dead with Code '${code}, and signal: '${signal}'`);
             // Ensuring a new cluster will start if an old one dies
             _cluster.fork();
         });
     }
     process() {
         // Catch the Process's uncaught-exception
-        process.on('uncaughtException', (exception) => Log_1.default.error(exception.stack));
+        process.on('uncaughtException', (exception) => Log_1.default.error(`NativeEventUncaughtExcpt`, exception.stack));
         // Catch the Process's warning event
-        process.on('warning', (warning) => Log_1.default.warn(warning.stack));
+        process.on('warning', (warning) => Log_1.default.warn(`NativeEventWarning`, warning.stack));
     }
 }
 exports.default = new NativeEvent;

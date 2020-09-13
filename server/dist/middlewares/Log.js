@@ -16,53 +16,48 @@ class Log {
         let _timeString = `${this.ensureTwoDigits(this.today.getHours())}:${this.ensureTwoDigits(this.today.getMinutes())}:${this.ensureTwoDigits(this.today.getSeconds())}`;
         this.baseDir = path.join(__dirname, '../../.logs/');
         this.fileName = `${_dateString}.log`;
-        this.linePrefix = `[${_dateString} ${_timeString}]`;
+        this.linePrefix = `${_dateString} ${_timeString}`;
     }
     ensureTwoDigits(term, offset = false) {
         term = offset ? (term + 1) : term;
         return ('0' + term).slice(-2);
     }
     // Adds INFO prefix string to the log string
-    info(_string, tags = []) {
-        this.addLog('INFO', _string, tags);
+    info(category, _string, tags = []) {
+        this.addLog('INFO', category, _string, tags);
     }
     // Adds WARN prefix string to the log string
-    warn(_string, tags = []) {
-        this.addLog('WARN', _string, tags);
+    warn(category, _string, tags = []) {
+        this.addLog('WARN', category, _string, tags);
     }
     // Adds ERROR prefix string to the log string
-    error(_string, tags = []) {
+    error(category, _string, tags = []) {
         // Line break and show the first line
-        console.log('\x1b[31m%s\x1b[0m', '[ERROR] :: ' + _string.split(/r?\n/)[0]);
-        this.addLog('ERROR', _string);
-    }
-    // Adds the custom prefix string to the log string
-    custom(_filename, _string) {
-        this.addLog(_filename, _string);
+        // console.log('\x1b[31m%s\x1b[0m', '[ERROR] :: ' + _string.split(/r?\n/)[0])
+        this.addLog('ERROR', category, _string, tags);
     }
     /**
      * Creates the file if does not exist, and
      * append the log kind & string into the file.
      */
-    addLog(_kind, _string, tags = []) {
-        if (process.env.NODE_ENV === 'development') {
-            console.log(_string);
-        }
+    addLog(_level, _category, _string, tags = []) {
         const _that = this;
-        _kind = _kind.toUpperCase();
+        _level = _level.toUpperCase();
         const addTags = () => {
             let result = '';
             if (tags) {
                 tags.forEach(tag => {
-                    result += `[${tag}] `;
+                    result += `{~{ ${tag} }~} `;
                 });
             }
             return result;
         };
         fs.open(`${_that.baseDir}${_that.fileName}`, 'a', (_err, _fileDescriptor) => {
             if (!_err && _fileDescriptor) {
+                // in dev only, used for debugging
+                // if (process.env.NODE_ENV === 'development') { console.log(`[[${_that.linePrefix}]] [[${_level}]] [[${_category}]] [[${_string}]] [[${addTags()}]] \n\n`) }
                 // Append to file and close it
-                fs.appendFile(_fileDescriptor, `${_that.linePrefix} [${_kind}] ${addTags()}${_string}\n`, (_err) => {
+                fs.appendFile(_fileDescriptor, `${_that.linePrefix}~~${_level}~~${_category}~~${addTags()}~~${_string} \n`, (_err) => {
                     if (!_err) {
                         fs.close(_fileDescriptor, (_err) => {
                             if (!_err) {

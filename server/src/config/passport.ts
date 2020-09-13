@@ -49,8 +49,6 @@ passport.use(new LocalStrategy({ usernameField: 'email' }, (email, password, don
 			if (err) { return done(err, null) }
 
 			if (isMatch) {
-
-				Log.error(`[passport.use(new LocalStrategy] calling done == value of user ==> ${JSON.stringify(user || '** no user here **')}`)
 				return done(null, user)
 			}
 
@@ -135,14 +133,6 @@ export const isReqAllowed = (req: IRequest, res: IResponse, next: INext) => {
 	const authHeader = req.headers['authorization']
 
 	const token = authHeader && authHeader.split(' ')[1]
-
-	Log.info(`[isReqAllowed] value of req.isAuthenticated ==> ${req.isAuthenticated()}`)
-
-	Log.info(`[isReqAllowed] value of req.session ${JSON.stringify(req.session || 'req-session doesnt exist')}`)
-
-	Log.info(`[isReqAllowed] value of token ==> ${token ? token : '** no token exists **'}`)
-
-	Log.info(`[isReqAllowed] value of req.user ==> ${JSON.stringify(req.user ? req.user : 'req.user doesnt exist')}`)
 
 	if (token == null && req.isAuthenticated()) {
 

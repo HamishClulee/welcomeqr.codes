@@ -16,7 +16,6 @@ const mongoose = require("mongoose");
 const Environment_1 = require("../providers/Environment");
 const jwt = require('jsonwebtoken');
 const User_1 = require("../models/User");
-const Log_1 = require("../middlewares/Log");
 const Clean_1 = require("../middlewares/Clean");
 const LocalStrategy = passportLocal.Strategy;
 const SendGrid = require('@sendgrid/mail');
@@ -48,7 +47,6 @@ passport.use(new LocalStrategy({ usernameField: 'email' }, (email, password, don
                 return done(err, null);
             }
             if (isMatch) {
-                Log_1.default.error(`[passport.use(new LocalStrategy] calling done == value of user ==> ${JSON.stringify(user || '** no user here **')}`);
                 return done(null, user);
             }
             return done(null, null, { message: 'Invalid email or password.' });
@@ -109,10 +107,6 @@ passport.use(new GoogleStrategy({
 exports.isReqAllowed = (req, res, next) => {
     const authHeader = req.headers['authorization'];
     const token = authHeader && authHeader.split(' ')[1];
-    Log_1.default.info(`[isReqAllowed] value of req.isAuthenticated ==> ${req.isAuthenticated()}`);
-    Log_1.default.info(`[isReqAllowed] value of req.session ${JSON.stringify(req.session || 'req-session doesnt exist')}`);
-    Log_1.default.info(`[isReqAllowed] value of token ==> ${token ? token : '** no token exists **'}`);
-    Log_1.default.info(`[isReqAllowed] value of req.user ==> ${JSON.stringify(req.user ? req.user : 'req.user doesnt exist')}`);
     if (token == null && req.isAuthenticated()) {
         // No token exists but a session does exist
         // => grant user a token

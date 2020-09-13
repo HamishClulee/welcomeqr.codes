@@ -13,11 +13,8 @@ class Database {
         mongoose.set('useFindAndModify', false);
         mongoose.connect(dsn, options, (error) => {
             if (error) {
-                Log_1.default.info('Failed to connect to the Mongo server!!');
+                Log_1.default.error(`DataBaseError`, `Failed to connect to the Mongo server!!`);
                 throw error;
-            }
-            else {
-                Log_1.default.info('connected to mongo server at: ' + dsn);
             }
         });
     }

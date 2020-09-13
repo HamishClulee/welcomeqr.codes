@@ -19,8 +19,6 @@ const jwt = require('jsonwebtoken')
 
 export const login = async (req: IRequest, res: IResponse, next: INext) => {
 
-	Log.error(`[QAuth local login touched]`)
-
 	validate.check('email', 'E-mail cannot be blank').notEmpty()
 	validate.check('email', 'E-mail is not valid').isEmail()
 	validate.check('password', 'Password cannot be blank').notEmpty()
@@ -32,8 +30,6 @@ export const login = async (req: IRequest, res: IResponse, next: INext) => {
 
 	try {
 
-		Log.error(`[QAuth local login validation passed]`)
-
 		/**
 		 * I think passport and the try catch should be enough to catch the case where a user
 		 * who has signed up with an OAuth provided, and there fore doesnt have a password,
@@ -42,8 +38,6 @@ export const login = async (req: IRequest, res: IResponse, next: INext) => {
 		 */
 		passport.authenticate('local', (err: Error, user: UserDocument, info: IVerifyOptions) => {
 
-			Log.error(`[QAuth local login] inside passport callback == value of user => ${user || ' * no user exists * '}`)
-
 			if (err) { return Clean.authError('login::passport::err', err, res) }
 
 			if (!user) { return Clean.authError('login::passport::no-user', err, res) }
@@ -51,8 +45,6 @@ export const login = async (req: IRequest, res: IResponse, next: INext) => {
 			req.logIn(user, (err) => {
 
 				if (err) { return Clean.authError('login::passport::login-err', err, res) }
-
-				Log.error(`[QAuth local login] inside passport callback == req.logIn called successfully == to check - value of req.user => ${JSON.stringify(req.user || '*** no user :( ***')}`)
 
 				return Clean.approve(res, 200, user, '[QAuth login] req.logIn called successfully')
 
@@ -82,8 +74,6 @@ export const signup = async (req: IRequest, res: IResponse) => {
 
 		const existingUser = await User.findOne({ email: req.body.email })
 
-		Log.info(`Value of existingUser ===> ${JSON.stringify(existingUser)}`)
-
 		/**
 		 * Primary use case for sign ups; the user doesnt exist
 		 * => sign them up, send a welcome email, add to the db and log them in
@@ -99,9 +89,6 @@ export const signup = async (req: IRequest, res: IResponse) => {
 			})
 
 			const _user = await user.save()
-
-			Log.error(`Value of user, just saved with await ===> ${user}`)
-			Log.error(`Value of _user, after saving ===> ${_user}`)
 
 			req.logIn(_user, (err) => {
 
@@ -148,8 +135,6 @@ export const signup = async (req: IRequest, res: IResponse) => {
 		 */
 		} else { // (!req.session.passport.user && existingUser && !existingUser.password) {
 
-			Log.error(`Inside else if -> no session, existingUser, no password`)
-
 			const updatedUser = await User.findOneAndUpdate({ email: req.body.email }, { password: req.body.password }, { new: true })
 
 			req.logIn(updatedUser, (err) => {
@@ -164,8 +149,6 @@ export const signup = async (req: IRequest, res: IResponse) => {
 
 		// if code reaches this point, something is seriosuly wrong
 		// ¯\_(ツ)_/¯
-		// Log as an error
-		// Log.error(`Funcname:: signup :: fell through all cases no errors thrown`)
 
 	} catch (e) {
 

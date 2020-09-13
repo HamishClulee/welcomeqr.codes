@@ -21,11 +21,11 @@ const passport = require("passport");
 const multer = require("multer");
 const editor = require("../controllers/Editor");
 const auth = require("../config/passport");
+const admin = require("../controllers/Admin");
 /** All Auth functions */
 const QAuth = require("../controllers/QAuth");
 /** Middlewares */
 const Environment_1 = require("./Environment");
-const Log_1 = require("../middlewares/Log");
 const Clean_1 = require("../middlewares/Clean");
 const User_1 = require("../models/User");
 const jwt = require('jsonwebtoken');
@@ -138,10 +138,11 @@ class Express {
                 });
             }
             else {
-                Log_1.default.info(`[Passport Google Success CB] No user found when using findOne(req.user._id)`);
                 return Clean_1.default.authError('Passport Google Success CB', 'No user found when using findOne(req.user._id)', res);
             }
         }));
+        /** --------------Admin -------------- */
+        this.app.post('/admin/get_log_by_day', auth.isReqAllowed, admin.getLogByDay);
         /** -------------- Editor -------------- */
         // Protected
         this.app.post('/api/submitnew', auth.isReqAllowed, editor.submitNew);
@@ -183,7 +184,6 @@ class Express {
             if (_error) {
                 return console.log('Error: ', _error);
             }
-            Log_1.default.info(`Server :: Running @ ${process.env.NODE_ENV === 'production' ? PROD_URL : DEV_URL} :: in ${process.env.NODE_ENV} mode`, [Log_1.default.TAG_RESTARTED]);
             return console.log('\x1b[33m%s\x1b[0m', `Server :: Running @ 'http://localhost:${PORT}' :: in ${process.env.NODE_ENV} mode`);
         });
     }

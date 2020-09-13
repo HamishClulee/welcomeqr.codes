@@ -5,6 +5,9 @@ import VueRouter from 'vue-router'
 const home = () => import('../views/home.vue')
 const pricing = () => import('../views/pricing.vue')
 
+/** Admin routes */
+const adminmain = () => import('../views/admin/adminmain.vue')
+
 /** Auth routes */
 const auth = () => import('../views/auth.vue')
 const login = () => import('../views/auth/login.vue')
@@ -78,6 +81,16 @@ const routes = [
                 index: true,
             }, next)
         },
+    },
+    // -------------------------------------------------------------------
+    // --------------------------- ADMIN
+    // -------------------------------------------------------------------
+    {
+        path: '/admin',
+        name: 'adminmain',
+        meta: { requiresAuth: true, requiresAdmin: true },
+        component: adminmain,
+        beforeEnter: (to: any, from: any, next: any) => { overwritemetas({ index: false }, next)},
     },
     // -------------------------------------------------------------------
     // --------------------------- ACCOUNT

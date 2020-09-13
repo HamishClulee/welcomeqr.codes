@@ -6,18 +6,14 @@ const dotenv = require("dotenv");
 const Express_1 = require("./Express");
 const Database_1 = require("./Database");
 const Environment_1 = require("./Environment");
-const Log_1 = require("../middlewares/Log");
 class App {
     loadConfiguration() {
-        Log_1.default.info('Configuration :: Booting @ Master...');
         dotenv.config({ path: path.join(__dirname, '../../.env') });
     }
     loadDatabase() {
-        Log_1.default.info('Database :: Booting @ Master...');
         Database_1.Database.init();
     }
     loadServer() {
-        Log_1.default.info('Server :: Booting @ Master...');
         Express_1.default.init();
     }
     loadQueue() {

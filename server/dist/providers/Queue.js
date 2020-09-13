@@ -2,7 +2,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const kue = require("kue");
 const Environment_1 = require("./Environment");
-const Log_1 = require("../middlewares/Log");
 class Queue {
     constructor() {
         this.jobs = kue.createQueue({
@@ -14,7 +13,7 @@ class Queue {
             }
         });
         this.jobs
-            .on('job enqueue', (_id, _type) => Log_1.default.info(`Queue :: #${_id} Processing of type '${_type}'`))
+            .on('job enqueue', (_id, _type) => { })
             .on('job complete', (_id) => this.removeProcessedJob(_id));
     }
     dispatch(_jobName, _args, _callback) {
@@ -22,7 +21,6 @@ class Queue {
         this.process(_jobName, 3, _callback);
     }
     removeProcessedJob(_id) {
-        Log_1.default.info(`Queue :: #${_id} Processed`);
         kue.Job.get(_id, (_err, _job) => {
             if (_err) {
                 return;
@@ -31,7 +29,6 @@ class Queue {
                 if (_err) {
                     throw _err;
                 }
-                Log_1.default.info(`Queue :: #${_id} Removed Processed Job`);
             });
         });
     }

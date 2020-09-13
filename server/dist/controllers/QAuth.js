@@ -18,11 +18,9 @@ const VerifyEmail = require("../resources/emails/verifyemail");
 const User_1 = require("../models/User");
 const Environment_1 = require("../providers/Environment");
 const Clean_1 = require("../middlewares/Clean");
-const Log_1 = require("../middlewares/Log");
 const SendGrid = require('@sendgrid/mail');
 const jwt = require('jsonwebtoken');
 exports.login = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    Log_1.default.error(`[QAuth local login touched]`);
     validate.check('email', 'E-mail cannot be blank').notEmpty();
     validate.check('email', 'E-mail is not valid').isEmail();
     validate.check('password', 'Password cannot be blank').notEmpty();
@@ -32,7 +30,6 @@ exports.login = (req, res, next) => __awaiter(void 0, void 0, void 0, function* 
         return Clean_1.default.authError('login', `Validation error: ${String(errors)}`, res);
     }
     try {
-        Log_1.default.error(`[QAuth local login validation passed]`);
         /**
          * I think passport and the try catch should be enough to catch the case where a user
          * who has signed up with an OAuth provided, and there fore doesnt have a password,
@@ -40,7 +37,6 @@ exports.login = (req, res, next) => __awaiter(void 0, void 0, void 0, function* 
          * => time will tell.
          */
         passport.authenticate('local', (err, user, info) => {
-            Log_1.default.error(`[QAuth local login] inside passport callback == value of user => ${user || ' * no user exists * '}`);
             if (err) {
                 return Clean_1.default.authError('login::passport::err', err, res);
             }
@@ -51,7 +47,6 @@ exports.login = (req, res, next) => __awaiter(void 0, void 0, void 0, function* 
                 if (err) {
                     return Clean_1.default.authError('login::passport::login-err', err, res);
                 }
-                Log_1.default.error(`[QAuth local login] inside passport callback == req.logIn called successfully == to check - value of req.user => ${JSON.stringify(req.user || '*** no user :( ***')}`);
                 return Clean_1.default.approve(res, 200, user, '[QAuth login] req.logIn called successfully');
             });
         })(req, res);
@@ -71,7 +66,6 @@ exports.signup = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     }
     try {
         const existingUser = yield User_1.User.findOne({ email: req.body.email });
-        Log_1.default.info(`Value of existingUser ===> ${JSON.stringify(existingUser)}`);
         /**
          * Primary use case for sign ups; the user doesnt exist
          * => sign them up, send a welcome email, add to the db and log them in
@@ -84,8 +78,6 @@ exports.signup = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
                 emailVerifyToken: token
             });
             const _user = yield user.save();
-            Log_1.default.error(`Value of user, just saved with await ===> ${user}`);
-            Log_1.default.error(`Value of _user, after saving ===> ${_user}`);
             req.logIn(_user, (err) => {
                 if (err) {
                     return Clean_1.default.authError('login::passport::login-err', err, res);
@@ -124,7 +116,6 @@ exports.signup = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
              */
         }
         else { // (!req.session.passport.user && existingUser && !existingUser.password) {
-            Log_1.default.error(`Inside else if -> no session, existingUser, no password`);
             const updatedUser = yield User_1.User.findOneAndUpdate({ email: req.body.email }, { password: req.body.password }, { new: true });
             req.logIn(updatedUser, (err) => {
                 if (err) {
@@ -135,8 +126,6 @@ exports.signup = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         }
         // if code reaches this point, something is seriosuly wrong
         // ¯\_(ツ)_/¯
-        // Log as an error
-        // Log.error(`Funcname:: signup :: fell through all cases no errors thrown`)
     }
     catch (e) {
         return Clean_1.default.authError('signup', `caught error: ${e}`, res);

@@ -12,6 +12,7 @@ import * as multer from 'multer'
 
 import * as editor from '../controllers/Editor'
 import * as auth from '../config/passport'
+import * as admin from '../controllers/Admin'
 
 /** All Auth functions */
 import * as QAuth from '../controllers/QAuth'
@@ -168,11 +169,14 @@ class Express {
 
 				})
 			} else {
-				Log.info(`[Passport Google Success CB] No user found when using findOne(req.user._id)`)
 				return Clean.authError('Passport Google Success CB', 'No user found when using findOne(req.user._id)', res)
 			}
 
 		})
+
+		/** --------------Admin -------------- */
+
+		this.app.post('/admin/get_log_by_day', auth.isReqAllowed, admin.getLogByDay)
 
 		/** -------------- Editor -------------- */
 		// Protected
@@ -222,10 +226,6 @@ class Express {
 		this.app.listen(PORT, (_error: any) => {
 
 			if (_error) { return console.log('Error: ', _error) }
-
-			Log.info(
-				`Server :: Running @ ${process.env.NODE_ENV === 'production' ? PROD_URL : DEV_URL} :: in ${process.env.NODE_ENV} mode`
-			, [Log.TAG_RESTARTED])
 
 			return console.log('\x1b[33m%s\x1b[0m', `Server :: Running @ 'http://localhost:${PORT}' :: in ${process.env.NODE_ENV} mode`)
 		})

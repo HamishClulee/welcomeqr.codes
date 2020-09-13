@@ -102,8 +102,6 @@ export const getHTML = async (req: IRequest, res: IResponse) => {
 
 		}
 
-		Log.error(`[Function] getHTML  == value of req.session.passport.user ==> ${req.session.passport.user}`)
-
 		return Clean.success(res, 200, editor)
 
 	} catch (e) {
