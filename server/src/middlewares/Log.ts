@@ -19,7 +19,7 @@ class Log {
 
 	constructor() {
 
-		let _dateString = `${this.today.getFullYear()}-${this.ensureTwoDigits(this.today.getMonth())}-${this.ensureTwoDigits(this.today.getDate())}`
+		let _dateString = `${this.today.getFullYear()}-${this.ensureTwoDigits(this.today.getMonth(), true)}-${this.ensureTwoDigits(this.today.getDate())}`
 
 		let _timeString = `${this.ensureTwoDigits(this.today.getHours())}:${this.ensureTwoDigits(this.today.getMinutes())}:${this.ensureTwoDigits(this.today.getSeconds())}`
 
@@ -28,7 +28,8 @@ class Log {
 		this.linePrefix = `[${_dateString} ${_timeString}]`
 	}
 
-	private ensureTwoDigits(term: number): string {
+	private ensureTwoDigits(term: number, offset = false): string {
+		term = offset ? (term + 1) : term
 		return ('0' + term).slice(-2)
 	}
 

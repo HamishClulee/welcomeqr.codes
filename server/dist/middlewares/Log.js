@@ -12,13 +12,14 @@ class Log {
         this.TAG_RESTARTED = 'RESTARTED';
         this.TAG_API_ERROR = 'API_ERROR';
         this.today = new Date();
-        let _dateString = `${this.today.getFullYear()}-${this.ensureTwoDigits(this.today.getMonth())}-${this.ensureTwoDigits(this.today.getDate())}`;
+        let _dateString = `${this.today.getFullYear()}-${this.ensureTwoDigits(this.today.getMonth(), true)}-${this.ensureTwoDigits(this.today.getDate())}`;
         let _timeString = `${this.ensureTwoDigits(this.today.getHours())}:${this.ensureTwoDigits(this.today.getMinutes())}:${this.ensureTwoDigits(this.today.getSeconds())}`;
         this.baseDir = path.join(__dirname, '../../.logs/');
         this.fileName = `${_dateString}.log`;
         this.linePrefix = `[${_dateString} ${_timeString}]`;
     }
-    ensureTwoDigits(term) {
+    ensureTwoDigits(term, offset = false) {
+        term = offset ? (term + 1) : term;
         return ('0' + term).slice(-2);
     }
     // Adds INFO prefix string to the log string
