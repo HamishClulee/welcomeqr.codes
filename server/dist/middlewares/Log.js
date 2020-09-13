@@ -27,7 +27,7 @@ class Log {
         this.linePrefix = `[${_dateString} ${_timeString}]`;
     }
     ensureTwoDigits(term) {
-        return '0' + String((term + 1)).slice(-2);
+        return ('0' + term).slice(-2);
     }
     // Adds INFO prefix string to the log string
     info(_string, tags = []) {
