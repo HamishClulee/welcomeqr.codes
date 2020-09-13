@@ -12,16 +12,8 @@ class Log {
         this.TAG_RESTARTED = 'RESTARTED';
         this.TAG_API_ERROR = 'API_ERROR';
         this.today = new Date();
-        let _dateString = `
-			${this.today.getFullYear()}
-			-${this.ensureTwoDigits(this.today.getMonth())}
-			-${this.ensureTwoDigits(this.today.getDate())}
-		`;
-        let _timeString = `
-			${this.ensureTwoDigits(this.today.getHours())}
-			:${this.ensureTwoDigits(this.today.getMinutes())}
-			:${this.ensureTwoDigits(this.today.getSeconds())}
-		`;
+        let _dateString = `${this.today.getFullYear()}-${this.ensureTwoDigits(this.today.getMonth())}-${this.ensureTwoDigits(this.today.getDate())}`;
+        let _timeString = `${this.ensureTwoDigits(this.today.getHours())}:${this.ensureTwoDigits(this.today.getMinutes())}:${this.ensureTwoDigits(this.today.getSeconds())}`;
         this.baseDir = path.join(__dirname, '../../.logs/');
         this.fileName = `${_dateString}.log`;
         this.linePrefix = `[${_dateString} ${_timeString}]`;
