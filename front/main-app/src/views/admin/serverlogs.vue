@@ -85,6 +85,7 @@ import {
     MESSAGES,
     NEED_TO_BE_LOGGED_IN,
 } from '../../EventBus'
+import { LOADING } from '../../../../subdoms-app/src/EventBus'
 export default {
     name: 'serverlogs',
     components: {
@@ -103,11 +104,14 @@ export default {
     // },
     mounted () {
 
+        EventBus.$emit(LOADING, true)
+
         this.getLogs()
 
         this.$QAdmin.getalllogfilenames().then(res => {
 
             this.loglist = ensureclean(res.data.content)
+            EventBus.$emit(LOADING, false)
 
         }).catch(err => this.handleHTTPError(err))
     },
@@ -122,6 +126,8 @@ export default {
             }).catch(err => this.handleHTTPError(err))
         },
         handleHTTPError(err) {
+
+            EventBus.$emit(LOADING, false)
 
             if (err.response.status === 406) {
 
