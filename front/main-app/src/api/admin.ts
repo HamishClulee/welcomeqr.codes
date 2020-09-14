@@ -1,11 +1,17 @@
 import axios, { AxiosResponse, AxiosInstance, AxiosPromise } from 'axios'
 import { QUser } from '@I/IUser'
-
-import { EventBus, MESSAGES, welcomeback } from '../EventBus'
-
-import { settoken, removetoken } from './token'
-
 axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem('QToken')}`
+
+interface ErrorPayload {
+    time: Date,
+    userAgent: string,
+    info?: string
+    message?: string,
+    url?: string,
+    line?: number,
+    column?: number,
+    error?:  Error,
+}
 
 export class QAdmin {
 
@@ -58,5 +64,9 @@ export class QAdmin {
 
     getalllogfilenames(): AxiosPromise<QUser> {
         return this.ax.post('get_all_log_filenames')
+    }
+
+    clientsideerror(errdeets: ErrorPayload): AxiosPromise<QUser> {
+        return this.ax.post('new_client_side_error', { errdeets })
     }
 }

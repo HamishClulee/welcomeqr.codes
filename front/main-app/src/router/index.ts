@@ -7,6 +7,9 @@ const pricing = () => import('../views/pricing.vue')
 
 /** Admin routes */
 const adminmain = () => import('../views/admin/adminmain.vue')
+const serverlogs = () => import('../views/admin/serverlogs.vue')
+const userreports = () => import('../views/admin/userreports.vue')
+
 
 /** Auth routes */
 const auth = () => import('../views/auth.vue')
@@ -88,9 +91,26 @@ const routes = [
     {
         path: '/admin',
         name: 'adminmain',
+        redirect: { name: 'serverlogs' },
         meta: { requiresAuth: true, requiresAdmin: true },
         component: adminmain,
         beforeEnter: (to: any, from: any, next: any) => { overwritemetas({ index: false }, next)},
+        children: [
+            {
+                path: '/admin/server-logs',
+                name: 'serverlogs',
+                meta: { requiresAuth: true, requiresAdmin: true },
+                component: serverlogs,
+                beforeEnter: (to: any, from: any, next: any) => { overwritemetas({ index: false }, next) },
+            },
+            // {
+            //     path: '/admin/user-reports',
+            //     name: 'userreports',
+            //     meta: { requiresAuth: true, requiresAdmin: true },
+            //     component: userreports,
+            //     beforeEnter: (to: any, from: any, next: any) => { overwritemetas({ index: false }, next) },
+            // },
+        ],
     },
     // -------------------------------------------------------------------
     // --------------------------- ACCOUNT
@@ -290,9 +310,7 @@ const routes = [
         path: '/verify-your-email',
         name: 'verifyemail',
         component: verifyemail,
-        beforeEnter: (to: any, from: any, next: any) => {
-            overwritemetas({ index: false }, next)
-        },
+        beforeEnter: (to: any, from: any, next: any) => { overwritemetas({ index: false }, next) },
     },
     {
         path: '/testgethtml',

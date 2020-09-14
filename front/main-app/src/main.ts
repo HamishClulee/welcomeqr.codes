@@ -9,6 +9,26 @@ import { QEdit } from '../../shared/api/editor'
 
 Vue.config.productionTip = false
 
+Vue.prototype.$QAdmin = new QAdmin()
+Vue.prototype.$QEdit = new QEdit()
+
+Vue.config.errorHandler = (error, vm, info) => {
+    Vue.prototype.$QAdmin.clientsideerror({
+        time: new Date(),
+        userAgent: navigator.userAgent,
+        error, info,
+    })
+}
+
+window.onerror = (message, url, line, column, error) => {
+    Vue.prototype.$QAdmin.clientsideerror({
+        time: new Date(),
+        userAgent: navigator.userAgent,
+        message, url, line, column, error,
+    })
+    return false
+}
+
 new Vue({
     router,
     store,
@@ -17,7 +37,4 @@ new Vue({
 
 const qAuth = new QAuth(store)
 Vue.prototype.$QAuth = qAuth
-Vue.prototype.$QAdmin = new QAdmin()
-Vue.prototype.$QEdit = new QEdit()
-
 export default qAuth

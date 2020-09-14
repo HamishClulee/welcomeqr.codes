@@ -178,6 +178,7 @@ class Express {
 
 		this.app.post('/admin/get_log_by_day', auth.isReqAllowed, admin.getLogByDay)
 		this.app.post('/admin/get_all_log_filenames', auth.isReqAllowed, admin.getAllLogFilenames)
+		this.app.post('/admin/new_client_side_error', admin.newClientSideError)
 
 		/** -------------- Editor -------------- */
 		// Protected

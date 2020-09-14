@@ -33,6 +33,10 @@ class Log {
 		return ('0' + term).slice(-2)
 	}
 
+	public client(category: string, _string: string, tags: string[] = []): void {
+		this.addLog('CLIENT', category, _string, tags)
+	}
+
 	// Adds INFO prefix string to the log string
 	public info (category: string, _string: string, tags: string[] = []): void {
 		this.addLog('INFO', category, _string, tags)

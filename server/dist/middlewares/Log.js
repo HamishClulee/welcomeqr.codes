@@ -22,6 +22,9 @@ class Log {
         term = offset ? (term + 1) : term;
         return ('0' + term).slice(-2);
     }
+    client(category, _string, tags = []) {
+        this.addLog('CLIENT', category, _string, tags);
+    }
     // Adds INFO prefix string to the log string
     info(category, _string, tags = []) {
         this.addLog('INFO', category, _string, tags);

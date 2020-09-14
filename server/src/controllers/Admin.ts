@@ -73,3 +73,17 @@ export const getAllLogFilenames = (req: IRequest, res: IResponse) => {
 	}
 
 }
+
+export const newClientSideError = (req: IRequest, res: IResponse) => {
+
+	try {
+
+		Log.client('test', JSON.stringify(req.body.errdeets))
+
+	} catch (e) {
+
+		return Clean.apiError('getAllLogFilenames', e, res)
+
+	}
+
+}

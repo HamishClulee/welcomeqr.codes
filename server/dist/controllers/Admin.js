@@ -1,6 +1,7 @@
 'use strict';
 Object.defineProperty(exports, "__esModule", { value: true });
 const Clean_1 = require("../middlewares/Clean");
+const Log_1 = require("../middlewares/Log");
 const fs = require('fs');
 const path = require('path');
 const ensureTwoDigits = (term, offset = false) => {
@@ -46,6 +47,14 @@ exports.getAllLogFilenames = (req, res) => {
             });
             Clean_1.default.success(res, 200, logs, `All log file names`);
         });
+    }
+    catch (e) {
+        return Clean_1.default.apiError('getAllLogFilenames', e, res);
+    }
+};
+exports.newClientSideError = (req, res) => {
+    try {
+        Log_1.default.client('test', JSON.stringify(req.body.errdeets));
     }
     catch (e) {
         return Clean_1.default.apiError('getAllLogFilenames', e, res);
