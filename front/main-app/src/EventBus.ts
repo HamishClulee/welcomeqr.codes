@@ -44,3 +44,10 @@ export const EMAIL_VERIFY_FAILURE = {
     color: 'highlight',
     black: false,
 }
+
+export const NEED_TO_BE_LOGGED_IN = {
+    is: true,
+    msg: 'You need to be logged in to view that page!',
+    color: 'tertiary',
+    black: false,
+}

@@ -79,6 +79,12 @@
 <script>
 import { transform, ensureclean } from './transformlogs'
 import multiselect from 'vue-multiselect'
+import {
+    EDITOR_ERROR,
+    EventBus,
+    MESSAGES,
+    NEED_TO_BE_LOGGED_IN,
+} from '../../EventBus'
 export default {
     name: 'serverlogs',
     components: {
@@ -92,13 +98,18 @@ export default {
             selectval: '',
         }
     },
+    // created() {
+    //     if (this.getuser.role !== 'ADMIN') this.$router.push({ name: 'home' }) 
+    // },
     mounted () {
 
         this.getLogs()
 
         this.$QAdmin.getalllogfilenames().then(res => {
+
             this.loglist = ensureclean(res.data.content)
-        })
+
+        }).catch(err => this.handleHTTPError(err))
     },
     methods: {
         setActiveLevel(level) {
@@ -108,7 +119,20 @@ export default {
             this.dayslog = []
             this.$QAdmin.getlogbyday(this.selectval).then(res => {
                 this.dayslog = transform(res.data.content)
-            })
+            }).catch(err => this.handleHTTPError(err))
+        },
+        handleHTTPError(err) {
+
+            if (err.response.status === 406) {
+
+                EventBus.$emit(MESSAGES, NEED_TO_BE_LOGGED_IN)
+                this.$router.push({ name: 'login' })
+
+            } else if (err.response.status > 500) {
+
+                EventBus.$emit(MESSAGES, EDITOR_ERROR)
+
+            }
         },
     },
     watch: {

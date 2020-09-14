@@ -12,6 +12,7 @@ import { User, UserDocument } from '../models/User'
 import { IRequest, IResponse, INext } from '../interfaces'
 import Log from '../middlewares/Log'
 import Clean from '../middlewares/Clean'
+import { readBufferWithDetectedEncoding } from 'tslint/lib/utils'
 
 const LocalStrategy = passportLocal.Strategy
 
@@ -175,4 +176,21 @@ export const isReqAllowed = (req: IRequest, res: IResponse, next: INext) => {
 
 export const isAuthenticated = (req: IRequest, res: IResponse, next: INext) => {
 	if (req.isAuthenticated()) { return next() } else { res.redirect('/?authRedirect=true') }
+}
+
+export const isAdmin = async (req: IRequest, res: IResponse, next: INext) => {
+
+	if (req.isAuthenticated()) {
+
+		const user = await User.findOne({ _id: req.user })
+
+		if (user && user.role === 'ADMIN') {
+
+			next()
+
+		} else {
+			return Clean.deny(res, 406, 'Admin user not found')
+		}
+
+	} else { return Clean.deny(res, 406, 'Final block in isAdmin.') }
 }

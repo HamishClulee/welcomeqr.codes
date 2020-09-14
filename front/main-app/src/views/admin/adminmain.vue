@@ -19,9 +19,15 @@
 </template>
 
 <script>
-
+import { mapGetters } from 'vuex'
 export default {
     name: 'adminmain',
+    // created() {
+    //     if (this.getuser.role !== 'ADMIN') this.$router.push({ name: 'home' }) 
+    // },
+    computed: {
+        ...mapGetters(['getuser']),
+    },
 }
 </script>
 

@@ -12,22 +12,37 @@ Vue.config.productionTip = false
 Vue.prototype.$QAdmin = new QAdmin()
 Vue.prototype.$QEdit = new QEdit()
 
+/* eslint-disable no-console */
 Vue.config.errorHandler = (error, vm, info) => {
+
+    if (process.env.NODE_ENV === 'development') {
+        console.error(error, vm, info)
+    }
+
     Vue.prototype.$QAdmin.clientsideerror({
         time: new Date(),
         userAgent: navigator.userAgent,
         error, info,
     })
+
+    return false
 }
 
 window.onerror = (message, url, line, column, error) => {
+
+    if (process.env.NODE_ENV === 'development') {
+        console.error(message, url, line, column, error)
+    }
+
     Vue.prototype.$QAdmin.clientsideerror({
         time: new Date(),
         userAgent: navigator.userAgent,
         message, url, line, column, error,
     })
+
     return false
 }
+/* eslint-enable no-console */
 
 new Vue({
     router,

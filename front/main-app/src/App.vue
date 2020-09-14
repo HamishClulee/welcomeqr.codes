@@ -113,12 +113,9 @@ export default {
         // For auth failure redirects from ExpressJS
         const para = new URLSearchParams(window.location.search)
         if (para.get('redirect') === 'true') {
-            EventBus.$emit(MESSAGES, {
-                is: true,
-                msg: 'You need to be logged in to view that page!',
-                color: 'tertiary',
-                black: false,
-            })
+
+            EventBus.$emit(MESSAGES, NEED_TO_BE_LOGGED_IN)
+
             this.$router.push({ path: '/auth/login?redirect=true' })
         }
 

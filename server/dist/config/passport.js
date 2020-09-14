@@ -141,4 +141,18 @@ exports.isAuthenticated = (req, res, next) => {
         res.redirect('/?authRedirect=true');
     }
 };
+exports.isAdmin = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    if (req.isAuthenticated()) {
+        const user = yield User_1.User.findOne({ _id: req.user });
+        if (user && user.role === 'ADMIN') {
+            next();
+        }
+        else {
+            return Clean_1.default.deny(res, 406, 'Admin user not found');
+        }
+    }
+    else {
+        return Clean_1.default.deny(res, 406, 'Final block in isAdmin.');
+    }
+});
 //# sourceMappingURL=passport.js.map
