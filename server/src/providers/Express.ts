@@ -177,6 +177,7 @@ class Express {
 		/** --------------Admin -------------- */
 
 		this.app.post('/admin/get_log_by_day', auth.isReqAllowed, admin.getLogByDay)
+		this.app.post('/admin/get_all_log_filenames', auth.isReqAllowed, admin.getAllLogFilenames)
 
 		/** -------------- Editor -------------- */
 		// Protected

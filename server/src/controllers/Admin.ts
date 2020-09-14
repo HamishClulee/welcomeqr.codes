@@ -6,11 +6,25 @@ import Log from '../middlewares/Log'
 const fs = require('fs')
 const path = require('path')
 
+const ensureTwoDigits = (term: number, offset = false): string => {
+	term = offset ? (term + 1) : term
+	return ('0' + term).slice(-2)
+}
+
 export const getLogByDay = (req: IRequest, res: IResponse) => {
 
 	try {
 
-		let filePath = path.join(__dirname, '../../.logs/2020-09-13.log')
+		let day
+		let today = new Date()
+
+		if (!req.body.day) {
+			day = `${today.getFullYear()}-${ensureTwoDigits(today.getMonth(), true)}-${ensureTwoDigits(today.getDate())}`
+		} else {
+			day = req.body.day
+		}
+
+		let filePath = path.join(__dirname, `../../.logs/${day}.log`)
 		let stat = fs.statSync(filePath)
 
 		fs.readFile(filePath, 'utf8', function(err, data) {
@@ -31,4 +45,31 @@ export const getLogByDay = (req: IRequest, res: IResponse) => {
 		return Clean.apiError('getLogByDay', e, res)
 
 	}
+}
+
+export const getAllLogFilenames = (req: IRequest, res: IResponse) => {
+
+	try {
+
+		const logs = []
+
+		fs.readdir(path.join(__dirname, `../../.logs/`), function (err, files) {
+
+			if (err) {
+				return console.log('Unable to scan directory: ' + err)
+			}
+
+			files.forEach(function (file) {
+				logs.push(file.slice(0, -4))
+			})
+
+			Clean.success(res, 200, logs, `All log file names`)
+		})
+
+	} catch (e) {
+
+		return Clean.apiError('getAllLogFilenames', e, res)
+
+	}
+
 }

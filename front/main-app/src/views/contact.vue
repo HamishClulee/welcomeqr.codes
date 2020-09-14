@@ -82,7 +82,6 @@ export default {
 }
 </script>
 
-<style src="vue-multiselect/dist/vue-multiselect.min.css"></style>
 <style lang="sass" scoped>
 .contact-page-container
     height: 100vh

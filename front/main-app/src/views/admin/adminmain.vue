@@ -21,30 +21,43 @@
         <section class="server-logs-container">
 
             <section class="controls-container">
-                <h6>Filter Logs By Category</h6>
-                <span class="category-container">
-                    <span 
-                        class="category-item category-error"
-                        :class="activeLevel === 'ERROR' ? 'active-cat' : 'inactive-cat'"
-                        @click="setActiveLevel('ERROR')"
-                    >ERROR</span>
-                    <span 
-                        class="category-item category-info" 
-                        :class="activeLevel === 'INFO' ? 'active-cat' : 'inactive-cat'"
-                        @click="setActiveLevel('INFO')"
-                    >INFO</span>
-                    <span 
-                        class="category-item category-warning" 
-                        :class="activeLevel === 'WARNING' ? 'active-cat' : 'inactive-cat'"
-                        @click="setActiveLevel('WARNING')"
-                    >WARNING</span>
-                    <span 
-                        class="category-item category-none"
-                        :class="activeLevel === null ? 'active-cat' : 'inactive-cat'"
-                        @click="setActiveLevel(null)"
-                    >NONE</span>
-                </span>
+
+                <section class="category-container">
+                    <h6>Filter Logs By Category</h6>
+                    <span class="categories-actual">
+                        <span 
+                            class="category-item category-error"
+                            :class="activeLevel === 'ERROR' ? 'active-cat' : 'inactive-cat'"
+                            @click="setActiveLevel('ERROR')"
+                        >ERROR</span>
+                        <span 
+                            class="category-item category-info" 
+                            :class="activeLevel === 'INFO' ? 'active-cat' : 'inactive-cat'"
+                            @click="setActiveLevel('INFO')"
+                        >INFO</span>
+                        <span 
+                            class="category-item category-warning" 
+                            :class="activeLevel === 'WARNING' ? 'active-cat' : 'inactive-cat'"
+                            @click="setActiveLevel('WARNING')"
+                        >WARNING</span>
+                        <span 
+                            class="category-item category-none"
+                            :class="activeLevel === null ? 'active-cat' : 'inactive-cat'"
+                            @click="setActiveLevel(null)"
+                        >NONE</span>
+                    </span>
+                </section>
+
+
+                <section class="log-list-container">
+                    <h6>Get Specific Date</h6>
+                    <multiselect
+                        v-model="selectval"
+                        :options="loglist"
+                    ></multiselect>
+                </section>
             </section>
+
 
             <table>
                 <thead>
@@ -79,23 +92,45 @@
 </template>
 
 <script>
-import { transform } from './transformlogs'
+import { transform, ensureclean } from './transformlogs'
+import multiselect from 'vue-multiselect'
 export default {
     name: 'adminmain',
+    components: {
+        multiselect,
+    },
     data () {
         return {
             activeLevel: 'ERROR',
+            loglist: [],
             dayslog: [],
+            selectval: '',
         }
     },
     mounted () {
-        this.$QAdmin.getlogbyday().then(res => {
-            this.dayslog = transform(res.data.content)
+
+        this.getLogs()
+
+        this.$QAdmin.getalllogfilenames().then(res => {
+            this.loglist = ensureclean(res.data.content)
         })
     },
     methods: {
         setActiveLevel(level) {
             this.activeLevel = level
+        },
+        getLogs() {
+            this.dayslog = []
+            this.$QAdmin.getlogbyday(this.selectval).then(res => {
+                this.dayslog = transform(res.data.content)
+            })
+        },
+    },
+    watch: {
+        selectval: function(ol, ne) {
+            this.$nextTick(() => {
+                this.getLogs()
+            })
         },
     },
 }
@@ -122,8 +157,19 @@ tr:nth-child(even) {
 <style lang="sass" scoped>
 .controls-container
     display: flex
-    flex-direction: column
+    flex-direction: row
     margin: 20px 0
+.log-list-container
+    display: flex
+    flex-direction: column
+    margin-left: 20px
+    width: 400px
+.category-container
+    display: flex
+    flex-direction: column
+.categories-actual
+    display: flex
+    flex-direction: row
 .category-item
     cursor: pointer
     border-radius: 5px

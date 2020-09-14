@@ -25,7 +25,7 @@ class Log {
 
 		this.baseDir = path.join(__dirname, '../../.logs/')
 		this.fileName = `${_dateString}.log`
-		this.linePrefix = `${_dateString} ${_timeString}`
+		this.linePrefix = `${_timeString}`
 	}
 
 	private ensureTwoDigits(term: number, offset = false): string {

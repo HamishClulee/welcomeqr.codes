@@ -22,3 +22,9 @@ export const transform = (content: Array<string>):FormmatedLogs[] => {
         }
     })
 }
+
+export const ensureclean = (list: Array<string>):Array<string> => {
+    return list.filter(item => {
+        return item !== null && typeof item === 'string'
+    })
+}

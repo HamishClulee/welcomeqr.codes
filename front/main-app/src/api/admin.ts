@@ -55,4 +55,8 @@ export class QAdmin {
 
         return this.ax.post('get_log_by_day', { day })
     }
+
+    getalllogfilenames(): AxiosPromise<QUser> {
+        return this.ax.post('get_all_log_filenames')
+    }
 }

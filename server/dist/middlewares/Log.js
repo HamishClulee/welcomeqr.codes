@@ -16,7 +16,7 @@ class Log {
         let _timeString = `${this.ensureTwoDigits(this.today.getHours())}:${this.ensureTwoDigits(this.today.getMinutes())}:${this.ensureTwoDigits(this.today.getSeconds())}`;
         this.baseDir = path.join(__dirname, '../../.logs/');
         this.fileName = `${_dateString}.log`;
-        this.linePrefix = `${_dateString} ${_timeString}`;
+        this.linePrefix = `${_timeString}`;
     }
     ensureTwoDigits(term, offset = false) {
         term = offset ? (term + 1) : term;
