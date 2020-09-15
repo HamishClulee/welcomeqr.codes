@@ -8,7 +8,7 @@ const pricing = () => import('../views/pricing.vue')
 /** Admin routes */
 const adminmain = () => import('../views/admin/adminmain.vue')
 const serverlogs = () => import('../views/admin/serverlogs.vue')
-const userreports = () => import('../views/admin/userreports.vue')
+// const userreports = () => import('../views/admin/userreports.vue')
 
 
 /** Auth routes */
@@ -23,7 +23,7 @@ const verifyemail = () => import ('../views/auth/verifyemail.vue')
 const account = () => import('../views/account/account.vue')
 
 /** Tester routes */
-const getHtml = () => import('../views/testendpoint.vue')
+const getHtml = () => import('../views/testhtml.vue')
 
 /** Create App routes */
 const wapp = () => import('../views/wapp.vue')

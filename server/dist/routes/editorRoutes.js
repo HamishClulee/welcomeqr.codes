@@ -18,6 +18,7 @@ exports.setEditorRoutes = (app) => {
     editorRoutes.post('/submitsubdom', auth.isReqAllowed, editor.submitSubdom);
     editorRoutes.post('/gethtmlforuser', auth.isReqAllowed, editor.getHTML);
     editorRoutes.post('/generatesubdom', auth.isReqAllowed, editor.generateRandomSubDom);
+    editorRoutes.post('/build_email_template', editor.generateEmailHTML);
     // Public
     editorRoutes.post('/get_html_by_subdomain', editor.getHtmlBySubDom);
     // Future proofing against the day that we have 10 million subdoms, basically load

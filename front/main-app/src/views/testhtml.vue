@@ -1,166 +1,136 @@
 <template>
-    <div class="fakebody">
+    <div class="fakebody page-container wide">
+        <div class="actual-html" v-html="html">
+            <!-- HTML here -->
+        </div>
+        <div class="instructions layout-col layout-center-all">
+            <h1>Instructions</h1>
+            <img class="img-cont" src="/img/templateNames.png" />
 
-  <table border="0" cellpadding="0" cellspacing="0" width="100%">
+            <div class="all-controls layout-row layout-center-all">
+                <div class="item-container layout-center-all layout-col" v-for="(item, index) in inputnames" :key="index">
+                    <label :for="item.name">{{ item.name }}</label>
+                    <input v-if="item.type === 'text'" v-model="item.val" type="text" :name="item.name" />
+                    <textarea v-else v-model="item.val" type="text" :name="item.name" />
+                </div>
+            </div>
+            <button class="button primary" @click="sendIt">SUBMIT</button>
 
-    <!-- start logo -->
-    <tr>
-      <td align="center" bgcolor="#e9ecef">
-        <!--[if (gte mso 9)|(IE)]>
-        <table align="center" border="0" cellpadding="0" cellspacing="0" width="600">
-        <tr>
-        <td align="center" valign="top" width="600">
-        <![endif]-->
-        <table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px;">
-          <tr>
-            <td align="center" valign="top" style="padding: 36px 24px;">
-              <a href='https://welcomeqr.codes' target='_blank'>
-                <img src='https://feampete.sirv.com/Images/logo.png' width="62.9%" border='0' alt='logo'/>
-              </a>
-            </td>
-          </tr>
-        </table>
-        <!--[if (gte mso 9)|(IE)]>
-        </td>
-        </tr>
-        </table>
-        <![endif]-->
-      </td>
-    </tr>
-    <!-- end logo -->
-
-    <!-- start hero -->
-    <tr>
-      <td align="center" bgcolor="#e9ecef">
-        <!--[if (gte mso 9)|(IE)]>
-        <table align="center" border="0" cellpadding="0" cellspacing="0" width="600">
-        <tr>
-        <td align="center" valign="top" width="600">
-        <![endif]-->
-        <table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px;">
-          <tr>
-            <td align="left" bgcolor="#ffffff" style="padding: 36px 24px 0; font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; border-top: 3px solid #009688;">
-              <h1 style="margin: 0; font-size: 32px; font-weight: 700; letter-spacing: -1px; line-height: 48px;">Reset Your Password</h1>
-            </td>
-          </tr>
-        </table>
-        <!--[if (gte mso 9)|(IE)]>
-        </td>
-        </tr>
-        </table>
-        <![endif]-->
-      </td>
-    </tr>
-    <!-- end hero -->
-
-    <!-- start copy block -->
-    <tr>
-      <td align="center" bgcolor="#e9ecef">
-        <!--[if (gte mso 9)|(IE)]>
-        <table align="center" border="0" cellpadding="0" cellspacing="0" width="600">
-        <tr>
-        <td align="center" valign="top" width="600">
-        <![endif]-->
-        <table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px;">
-
-          <!-- start copy -->
-          <tr>
-            <td align="left" bgcolor="#ffffff" style="padding: 24px; font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 16px; line-height: 24px;">
-              <p style="margin: 0;">Tap the button below to reset your account password. If you didn't request a new password, or if you have remembered your previous password, you can safely delete this email.</p>
-            </td>
-          </tr>
-          <!-- end copy -->
-
-          <!-- start button -->
-          <tr>
-            <td align="left" bgcolor="#ffffff">
-              <table border="0" cellpadding="0" cellspacing="0" width="100%">
-                <tr>
-                  <td align="center" bgcolor="#ffffff" style="padding: 12px;">
-                    <table border="0" cellpadding="0" cellspacing="0">
-                      <tr>
-                        <td align="center" bgcolor="#1976D2" style="border-radius: 6px;">
-                          <a href="" target="_blank" style="display: inline-block; padding: 16px 36px; font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 16px; color: #ffffff; text-decoration: none; border-radius: 6px;">Reset Password</a>
-                        </td>
-                      </tr>
-                    </table>
-                  </td>
-                </tr>
-              </table>
-            </td>
-          </tr>
-          <!-- end button -->
-
-          <!-- start copy -->
-          <tr>
-            <td align="left" bgcolor="#ffffff" style="padding: 24px; font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 16px; line-height: 24px;">
-              <p style="margin: 0;">If that doesn't work, copy and paste the following link in to your browser:</p>
-              <p style="margin: 0;"><a href="" target="_blank"></a></p>
-            </td>
-          </tr>
-          <!-- end copy -->
-
-          <!-- start copy -->
-          <tr>
-            <td align="left" bgcolor="#ffffff" style="padding: 24px; font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 16px; line-height: 24px; border-bottom: 3px solid #009688;">
-              <p style="margin: 0;">Cheers,<br> Paste</p>
-            </td>
-          </tr>
-          <!-- end copy -->
-
-        </table>
-        <!--[if (gte mso 9)|(IE)]>
-        </td>
-        </tr>
-        </table>
-        <![endif]-->
-      </td>
-    </tr>
-    <!-- end copy block -->
-
-    <!-- start footer -->
-    <tr>
-      <td align="center" bgcolor="#e9ecef" style="padding: 24px;">
-        <!--[if (gte mso 9)|(IE)]>
-        <table align="center" border="0" cellpadding="0" cellspacing="0" width="600">
-        <tr>
-        <td align="center" valign="top" width="600">
-        <![endif]-->
-        <table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px;">
-
-          <!-- start permission -->
-          <tr>
-            <td align="center" bgcolor="#e9ecef" style="padding: 12px 24px; font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 20px; color: #666;">
-              <p style="margin: 0;">You received this email because we received a request for a password reset for your account. If you didn't request password reset you can safely delete this email.</p>
-            </td>
-          </tr>
-          <!-- end permission -->
-
-          <!-- start unsubscribe -->
-          <tr>
-            <td align="center" bgcolor="#e9ecef" style="padding: 12px 24px; font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 20px; color: #666;">
-              <p style="margin: 0;">To stop receiving these emails, you can <a href="https://welcomeqr.codes" target="_blank">unsubscribe</a> at any time.</p>
-              <p style="margin: 0;">Paste 1234 S. Broadway St. City, State 12345</p>
-            </td>
-          </tr>
-          <!-- end unsubscribe -->
-
-        </table>
-        <!--[if (gte mso 9)|(IE)]>
-        </td>
-        </tr>
-        </table>
-        <![endif]-->
-      </td>
-    </tr>
-    <!-- end footer -->
-
-  </table>
+            <div class="page-container restrict"><code v-if="html !== null"><pre>{{ html }}</pre></code></div>
+        </div>
     </div>
 </template>
 <script>
+// interface TemplateConfig {
+//     preheader: string,
+//     logoHref: string,
+//     logoSrc: string,
+//     heroHeadingText: string,
+//     emailBodyText: string,
+//     ctaButtonHref: string,
+//     ctaButtonText: string,
+//     finalContentText: string,
+//     afterBodyText: string,
+//     unsubHref: string,
+// }
 export default {
     name: 'testhtml',
+    data() {
+        return {
+            html: null,
+            inputnames: [
+                {
+                    name: 'preheader',
+                    val: '',
+                    type: 'textarea',
+                },
+                {
+                    name: 'logoHref',
+                    val: '',
+                    type: 'text',
+                    isUrl: true,
+                },
+                {
+                    name: 'logoSrc',
+                    val: '',
+                    type: 'text',
+                    isUrl: true,
+                },
+                {
+                    name: 'heroHeadingText',
+                    val: '',
+                    allowsHtml: true,
+                    type: 'textarea',
+                },
+                {
+                    name: 'emailBodyText',
+                    val: '',
+                    allowsHtml: true,
+                    type: 'textarea',
+                },
+                {
+                    name: 'ctaButtonHref',
+                    val: '',
+                    isUrl: true,
+                    type: 'text',
+                },
+                {
+                    name: 'ctaButtonText',
+                    val: '',
+                    allowsHtml: true,
+                    type: 'text',
+                },
+                {
+                    name: 'finalContentText',
+                    val: '',
+                    allowsHtml: true,
+                    type: 'textarea',
+                },
+                {
+                    name: 'afterBodyText',
+                    val: '',
+                    allowsHtml: true,
+                    type: 'textarea',
+                },
+                {
+                    name: 'unsubHref',
+                    val: '',
+                    isUrl: true,
+                    type: 'text',
+                },
+            ],
+        }
+    },
+    mounted() {
+        // {
+        //     preheader: 'Yo yo yo - gabba gabba gabba bich face',
+        //     logoHref: 'https://more-art-than.science',
+        //     logoSrc: 'https://more-art-than.science/images/0.jpeg',
+        //     heroHeadingText: 'Welcome to this awesome thing g',
+        //     emailBodyText: 'Im amazed weve come this far, throught the good times and bad times, its really fucking amazing...',
+        //     ctaButtonHref: 'https://more-art-than.science/cv',
+        //     ctaButtonText: 'M~A~T~S~',
+        //     finalContentText: 'Just one more thing before you go to bed.... carrots are good for your vision.',
+        //     afterBodyText: 'hey fine print here stepright up bro',
+        //     unsubHref: 'https://welcomeqr.codes/account',
+        // }
+    },
+    methods: {
+        sendIt() {
+            this.$QEdit.buildEmailTemplate(this.buildPayLoad).then(res => {
+                this.html = res.data.content
+            })
+        },
+    },
+    computed: {
+        buildPayLoad () {
+            let final = {}
+            this.inputnames.forEach(element => {
+                final[element.name] = element.val
+            })
+            return final
+        },
+    },
 }
 </script>
 <style lang="css" scoped>
@@ -168,99 +138,40 @@ export default {
     width: 100% !important;
     height: 100% !important;
     padding: 0 !important;
-    margin: 0 !important;
+    margin: 80px 0 0 0 !important;
+    background: white;
 }
- /**
-   * Google webfonts. Recommended to include the .woff version for cross-client compatibility.
-   */
-  @media screen {
-    @font-face {
-      font-family: 'Source Sans Pro';
-      font-style: normal;
-      font-weight: 400;
-      src: local('Source Sans Pro Regular'), local('SourceSansPro-Regular'), url(https://fonts.gstatic.com/s/sourcesanspro/v10/ODelI1aHBYDBqgeIAH2zlBM0YzuT7MdOe03otPbuUS0.woff) format('woff');
-    }
-
-    @font-face {
-      font-family: 'Source Sans Pro';
-      font-style: normal;
-      font-weight: 700;
-      src: local('Source Sans Pro Bold'), local('SourceSansPro-Bold'), url(https://fonts.gstatic.com/s/sourcesanspro/v10/toadOcfmlt9b38dHJxOBGFkQc6VGVFSmCnC_l7QZG60.woff) format('woff');
-    }
-  }
-
-  /**
-   * Avoid browser level font resizing.
-   * 1. Windows Mobile
-   * 2. iOS / OSX
-   */
-  body,
-  table,
-  td,
-  a {
-    -ms-text-size-adjust: 100%; /* 1 */
-    -webkit-text-size-adjust: 100%; /* 2 */
-  }
-
-  /**
-   * Remove extra space added to tables and cells in Outlook.
-   */
-  table,
-  td {
-    mso-table-rspace: 0pt;
-    mso-table-lspace: 0pt;
-  }
-
-  /**
-   * Better fluid images in Internet Explorer.
-   */
-  img {
-    -ms-interpolation-mode: bicubic;
-  }
-
-  /**
-   * Remove blue links for iOS devices.
-   */
-  a[x-apple-data-detectors] {
-    font-family: inherit !important;
-    font-size: inherit !important;
-    font-weight: inherit !important;
-    line-height: inherit !important;
-    color: inherit !important;
-    text-decoration: none !important;
-  }
-
-  /**
-   * Fix centering issues in Android 4.4.
-   */
-  div[style*="margin: 16px 0;"] {
-    margin: 0 !important;
-  }
-
-  body {
-    width: 100% !important;
-    height: 100% !important;
-    padding: 0 !important;
-    margin: 0 !important;
-  }
-
-  /**
-   * Collapse table borders to avoid space between cells.
-   */
-  table {
-    border-collapse: collapse !important;
-  }
-
-  a {
-    color: black;
-  }
-
-  img {
-    height: auto;
-    line-height: 100%;
-    text-decoration: none;
-    border: 0;
-    outline: none;
-  }
+</style>
+<style lang="sass" scoped>
+.restrict
+    border: 3px solid #adadad
+    border-radius: 5px
+    overflow-y: scroll
+    padding: 20px
+    background: #efefef
+    width: 90% !important
+    margin: 20px
+input, textarea
+    width: 100%
+    padding: 12px 20px
+    margin: 8px 0
+    display: inline-block
+    border: 1px solid #ccc
+    border-radius: 4px
+    box-sizing: border-box
+label
+    color: $secondary
+textarea
+    width: 100%
+.item-container
+    width: 700px
+    margin: 10px
+.all-controls
+    flex-wrap: wrap
+.img-cont
+    margin: 0 auto
+    width: 30%
+.instructions
+    border-top: 3px solid $tertiary
 </style>
   

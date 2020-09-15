@@ -19,6 +19,8 @@ export const setEditorRoutes = (app: express.Application): void => {
 	editorRoutes.post('/gethtmlforuser', auth.isReqAllowed, editor.getHTML)
 	editorRoutes.post('/generatesubdom', auth.isReqAllowed, editor.generateRandomSubDom)
 
+	editorRoutes.post('/build_email_template', editor.generateEmailHTML)
+
 	// Public
 	editorRoutes.post('/get_html_by_subdomain', editor.getHtmlBySubDom)
 

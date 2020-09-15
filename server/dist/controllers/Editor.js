@@ -13,6 +13,9 @@ const Editor_1 = require("../models/Editor");
 const Subdom_1 = require("../models/Subdom");
 const User_1 = require("../models/User");
 const Clean_1 = require("../middlewares/Clean");
+const fs = require('fs');
+const path = require('path');
+const emailer = require("../resources/emails/template");
 const adjective = require("../resources/words/adjectives");
 const noun = require("../resources/words/nouns");
 const adverb = require("../resources/words/adverbs");
@@ -92,6 +95,35 @@ exports.generateRandomSubDom = (req, res) => {
     }
     catch (e) {
         return Clean_1.default.apiError('generateRandomSubdom', e, res);
+    }
+};
+exports.generateEmailHTML = (req, res) => {
+    try {
+        const config = req.body.config;
+        const html = emailer.build(config);
+        // fs.open(`./email.html`, 'a', (_err, _fileDescriptor) => {
+        // 	if (!_err && _fileDescriptor) {
+        // 		fs.writeFile(_fileDescriptor, html, (_err) => {
+        // 			if (! _err) {
+        // 				fs.close(_fileDescriptor, (_err) => {
+        // 					if (! _err) {
+        // 						return true
+        // 					} else {
+        // 						return console.log('\x1b[31m%s\x1b[0m', 'Error closing log file that was being appended')
+        // 					}
+        // 				})
+        // 			} else {
+        // 				return console.log('\x1b[31m%s\x1b[0m', 'Error appending to the log file')
+        // 			}
+        // 		})
+        // 	} else {
+        // 		return console.log('\x1b[31m%s\x1b[0m', 'Error couldn\'t open the log file for appending')
+        // 	}
+        // })
+        Clean_1.default.success(res, 200, html);
+    }
+    catch (e) {
+        return Clean_1.default.apiError('generateEmailHTML', e, res);
     }
 };
 //# sourceMappingURL=Editor.js.map

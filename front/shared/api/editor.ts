@@ -9,6 +9,19 @@ import Vue from 'vue'
 
 axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem('QToken')}`
 
+interface TemplateConfig {
+    preheader: string, // {{-preheader-}}
+    logoHref: string, // {{-logoHref-}}
+    logoSrc: string, // {{-logoSrc-}}
+    heroHeadingText: string, // {{-heroHeadingText-}}
+    emailBodyText: string, // {{-emailBodyText-}} -> OR HTML
+    ctaButtonHref: string, // {{-ctaButtonHref-}}
+    ctaButtonText: string, // {{-ctaButtonText-}}
+    finalContentText: string, // {{-finalContentText-}} -> OR HTML
+    afterBodyText: string, // {{-afterBodyText-}} -> OR HTML
+    unsubHref: string, // {{-unsubHref-}}
+}
+
 export class QEdit {
 
     private BASE_URL = process.env.NODE_ENV === 'development' ? 'http://localhost:1980/api' : 'https://welcomeqr.codes/api'
@@ -46,6 +59,10 @@ export class QEdit {
             return Promise.reject(error)
         })
 
+    }
+
+    buildEmailTemplate(config: TemplateConfig): AxiosPromise<APIResponse> {
+        return this.ax.post('/build_email_template', { config })
     }
 
     // All the editor routes are protected via session cookie and JWT token

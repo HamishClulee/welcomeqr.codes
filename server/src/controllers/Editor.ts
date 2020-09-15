@@ -5,10 +5,14 @@ import { Subdom } from '../models/Subdom'
 import { User } from '../models/User'
 import Clean from '../middlewares/Clean'
 
+const fs = require('fs')
+const path = require('path')
+
+import * as emailer from '../resources/emails/template'
+
 import * as adjective from '../resources/words/adjectives'
 import * as noun from '../resources/words/nouns'
 import * as adverb from '../resources/words/adverbs'
-import Log from '../middlewares/Log'
 
 const SUBDOMS_ID = '5e52678609948c1e0ec9994f'
 let SUBDOMS: string[] = []
@@ -141,4 +145,53 @@ export const generateRandomSubDom = (req: IRequest, res: IResponse) => {
 		return Clean.apiError('generateRandomSubdom', e, res)
 
 	}
+}
+
+interface TemplateConfig {
+	preheader: string, // {{-preheader-}}
+	logoHref: string, // {{-logoHref-}}
+	logoSrc: string, // {{-logoSrc-}}
+	heroHeadingText: string, // {{-heroHeadingText-}}
+	emailBodyText: string, // {{-emailBodyText-}} -> OR HTML
+	ctaButtonHref: string, // {{-ctaButtonHref-}}
+	ctaButtonText: string, // {{-ctaButtonText-}}
+	finalContentText: string, // {{-finalContentText-}} -> OR HTML
+	afterBodyText: string, // {{-afterBodyText-}} -> OR HTML
+	unsubHref: string, // {{-unsubHref-}}
+}
+
+export const generateEmailHTML = (req: IRequest, res: IResponse) => {
+
+	try {
+
+		const config: TemplateConfig = req.body.config
+
+		const html = emailer.build(config)
+
+		// fs.open(`./email.html`, 'a', (_err, _fileDescriptor) => {
+		// 	if (!_err && _fileDescriptor) {
+
+		// 		fs.writeFile(_fileDescriptor, html, (_err) => {
+		// 			if (! _err) {
+		// 				fs.close(_fileDescriptor, (_err) => {
+		// 					if (! _err) {
+		// 						return true
+		// 					} else {
+		// 						return console.log('\x1b[31m%s\x1b[0m', 'Error closing log file that was being appended')
+		// 					}
+		// 				})
+		// 			} else {
+		// 				return console.log('\x1b[31m%s\x1b[0m', 'Error appending to the log file')
+		// 			}
+		// 		})
+		// 	} else {
+		// 		return console.log('\x1b[31m%s\x1b[0m', 'Error couldn\'t open the log file for appending')
+		// 	}
+		// })
+
+		Clean.success(res, 200, html)
+	} catch (e) {
+		return Clean.apiError('generateEmailHTML', e, res)
+	}
+
 }
