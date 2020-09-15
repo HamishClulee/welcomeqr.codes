@@ -99,9 +99,6 @@ export default {
             selectval: '',
         }
     },
-    // created() {
-    //     if (this.getuser.role !== 'ADMIN') this.$router.push({ name: 'home' }) 
-    // },
     mounted () {
 
         EventBus.$emit(LOADING, true)

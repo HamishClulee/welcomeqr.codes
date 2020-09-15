@@ -164,7 +164,7 @@ exports.togglesubscribe = (req, res) => __awaiter(void 0, void 0, void 0, functi
         if (!user) {
             return Clean_1.default.deny(res, 403, 'Account with that email address does not exist.');
         }
-        return Clean_1.default.approve(res, 200, user);
+        return Clean_1.default.success(res, 200, { allow: user.allowEmails }, user.allowEmails ? 'Sucessfully subscribed' : 'You are now unsubcribed from all emails');
     }
     catch (e) {
         return Clean_1.default.authError('toggle subscribe', `caught error: ${e}`, res);

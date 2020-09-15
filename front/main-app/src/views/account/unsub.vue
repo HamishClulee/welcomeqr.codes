@@ -10,7 +10,7 @@
 
             <p>You are currently {{ substatus }} all emails.</p>
 
-            <div class="sub-buttons-container">
+            <div class="sub-buttons-container" v-if="!networkinprogress">
 
                 <div
                     class="sub-button"
@@ -67,7 +67,7 @@ export default {
 
             this.$QAuth.togglesubscribe(!this.issubbed).then(res => {
                 
-                this.issubbed = res.data.user.allowsemails
+                this.issubbed = res.data.content.allow
 
                 this.networkinprogress = false
             })

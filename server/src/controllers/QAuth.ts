@@ -203,7 +203,12 @@ export const togglesubscribe = async (req: IRequest, res: IResponse) => {
 
 		if (!user) { return Clean.deny(res, 403, 'Account with that email address does not exist.') }
 
-		return Clean.approve(res, 200, user)
+		return Clean.success(
+			res,
+			200,
+			{ allow: user.allowEmails},
+			user.allowEmails ? 'Sucessfully subscribed' : 'You are now unsubcribed from all emails'
+		)
 
 	} catch (e) {
 
