@@ -38,8 +38,18 @@
 </template>
 
 <script>
+
 import qinput from '../../components/forms/qinput'
-import { EventBus, MESSAGES, LOADING, SERVER_AUTH_ERROR_MESSAGE } from '../../EventBus'
+
+import {
+    EventBus,
+    MESSAGES,
+    LOADING,
+    SERVER_AUTH_ERROR_MESSAGE,
+    alreadyloggedinas,
+    emailsentto
+} from '../../EventBus'
+
 export default {
     name: 'forgot',
     components: {
@@ -59,14 +69,13 @@ export default {
     },
     created () {
         this.$QAuth.authenticate(false).then(res => {
+
             this.$store.commit('IS_AUTHED', res.data.user)
-            EventBus.$emit(MESSAGES, {
-                is: true,
-                msg: `You are already logged in as ${res.data.user.email}!`,
-                color: 'secondary',
-                black: false,
-            })
+
+            EventBus.$emit(MESSAGES, alreadyloggedinas(res.data.user.email))
+            
             this.$router.push({ path: '/app/manage' })
+
         })
     },
     methods: {
@@ -80,29 +89,33 @@ export default {
             })
         },
         validateemail(e) {
+
             const reg = /^\S+@\S+$/
             this.email = e
             if (!reg.test(this.email)) this.emailerror = 'That email address looks funny, did you type it correctly?'
             else this.emailerror = ''
+            
         },
         success(res) {
+
             if (res.data.userError) {
+
                 this.servermsg = res.data.userError
+
             } else {
-                EventBus.$emit(MESSAGES, {
-                    is: true,
-                    msg: `We have sent you an email at ${this.email}!`,
-                    color: 'secondary',
-                    black: false,
-                })
+
+                EventBus.$emit(MESSAGES, emailsentto(this.email))
                 this.servermsg = 'Check your email for details on how to reset your password.'
+
             }
         },
     },
     computed: {
         validated() {
+
             return this.emailerror === '' 
                 && this.email !== ''
+
         },
     },
 }

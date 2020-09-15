@@ -65,7 +65,7 @@
 
 <script>
 import qinput from '../../components/forms/qinput'
-import { EventBus, MESSAGES, LOADING, SERVER_AUTH_ERROR_MESSAGE } from '../../EventBus'
+import { EventBus, MESSAGES, LOADING, SERVER_AUTH_ERROR_MESSAGE, welcomeback } from '../../EventBus'
 import { settoken } from '../../api/token'
 export default {
     name: 'signup',
@@ -99,12 +99,9 @@ export default {
                     } else {
                         this.$store.commit('IS_AUTHED', res.data.user)
                         settoken(res.data.user.token)
-                        EventBus.$emit(MESSAGES, {
-                            is: true,
-                            msg: `You are now logged in! Welcome ${res.data.user.email}!`,
-                            color: 'secondary',
-                            black: false,
-                        })
+
+                        EventBus.$emit(MESSAGES, welcomeback(res.data.user.email))
+
                         this.$router.push({ path: '/app/manage' })
                     }
                 })

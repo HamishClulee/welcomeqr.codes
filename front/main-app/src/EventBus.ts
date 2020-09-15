@@ -51,3 +51,30 @@ export const NEED_TO_BE_LOGGED_IN = {
     color: 'tertiary',
     black: false,
 }
+
+export const LOGGED_IN_WITH_GOOGLE = {
+    is: true,
+    msg: 'Logged in with Google!',
+    color: 'secondary',
+    black: false,
+}
+
+export const alreadyloggedinas = (email: string) => {
+
+    return {
+        is: true,
+        msg: `You are already logged in as ${email}!`,
+        color: 'secondary',
+        black: false,
+    }
+
+}
+
+export const emailsentto = (email: string) => {
+    return {
+        is: true,
+        msg: `We have sent you an email at ${email}!`,
+        color: 'secondary',
+        black: false,
+    }
+}

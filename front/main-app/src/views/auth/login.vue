@@ -54,9 +54,20 @@
 </template>
 
 <script>
+
 import qinput from '../../components/forms/qinput'
-import { EventBus, MESSAGES, LOADING, SERVER_AUTH_ERROR_MESSAGE } from '../../EventBus'
+
+import {
+    EventBus,
+    MESSAGES,
+    LOADING,
+    SERVER_AUTH_ERROR_MESSAGE,
+    NEED_TO_BE_LOGGED_IN,
+    alreadyloggedinas
+} from '../../EventBus'
+
 import { settoken } from '../../api/token'
+
 export default {
     name: 'login',
     components: {
@@ -81,12 +92,7 @@ export default {
 
         if (params.get('authRedirect') === 'true') {
 
-            EventBus.$emit(MESSAGES, {
-                is: true,
-                msg: 'You need to be logged in to view that page!',
-                color: 'tertiary',
-                black: false,
-            })
+            EventBus.$emit(MESSAGES, NEED_TO_BE_LOGGED_IN)
 
         }
     },
@@ -99,36 +105,44 @@ export default {
             }
         },
         validateemail(e) {
+
             const reg = /^\S+@\S+$/
             this.email = e
             if (!reg.test(this.email)) this.emailerror = 'That email address looks funny, did you type it correctly?'
             else if (this.email === '') this.emailerror = ''
             else this.emailerror = ''
+
         },
         validatepassword(e) {
+
             this.password = e
             if (this.password.length < 8) this.passerror = 'Password needs to be at least 8 characters long...'
             else if (this.password === '') this.passerror = ''
             else this.passerror = ''
+            
         },
         success(res) {
+
             if (res.data.userError) {
+
                 this.servermsg = res.data.userError
+
             } else {
+
                 settoken(res.data.user.token)
+
                 this.$store.commit('IS_AUTHED', res.data.user)
-                EventBus.$emit(MESSAGES, {
-                    is: true,
-                    msg: `You are now logged in! Welcome ${res.data.user.email}!`,
-                    color: 'secondary',
-                    black: false,
-                })
+
+                EventBus.$emit(MESSAGES, alreadyloggedinas(res.data.user.email))
+
                 this.$router.push({ path: '/app/manage' })
+
             }
         },
     },
     computed: {
         buildLink() {
+
             return process.env.NODE_ENV === 'development' ?
                 'http://localhost:1980/auth/google' :
                 '/auth/google'

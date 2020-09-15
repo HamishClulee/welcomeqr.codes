@@ -48,8 +48,17 @@
 </template>
 
 <script>
+
 import qinput from '../../components/forms/qinput'
-import { EventBus, MESSAGES, LOADING, SERVER_AUTH_ERROR_MESSAGE } from '../../EventBus'
+
+import {
+    EventBus,
+    MESSAGES,
+    LOADING,
+    SERVER_AUTH_ERROR_MESSAGE,
+    alreadyloggedinas
+} from '../../EventBus'
+
 export default {
     name: 'reset',
     components: {
@@ -71,28 +80,28 @@ export default {
     },
     created () {
         this.$QAuth.authenticate(false).then(res => {
+
             this.$store.commit('IS_AUTHED', res.data.user)
-            EventBus.$emit(MESSAGES, {
-                is: true,
-                msg: `You are already logged in as ${res.data.user.email}!`,
-                color: 'secondary',
-                black: false,
-            })
+            EventBus.$emit(MESSAGES, alreadyloggedinas(res.data.user.email))
+
         })
     },
     methods: {
         submit(e) {
+
             e.preventDefault()
-            if (this.validated) {
-                this.servermsg = ''
-            }
+            if (this.validated) this.servermsg = ''
+
             const params = new URLSearchParams(window.location.search)
             this.$QAuth.reset(params.get('token'), this.password, this.confirm).then(res => { this.success(res) })
+
         },
         validatepassword(e) {
+
             this.password = e
             if (this.password.length < 8) this.passerror = 'Password needs to be at least 8 characters long'
             else this.passerror = ''
+
         },
         validateconfirm(e) {
             this.confirm = e
@@ -103,12 +112,7 @@ export default {
             if (res.data.userError) {
                 this.servermsg = res.data.userError
             } else {
-                EventBus.$emit(MESSAGES, {
-                    is: true,
-                    msg: `Password reset, you are now logged in!`,
-                    color: 'secondary',
-                    black: false,
-                })
+                EventBus.$emit(MESSAGES, welcomeback(res.data.user.email))
                 this.servermsg = 'Password reset successfully! You are now logged in!'
                 this.$store.commit('IS_AUTHED', res.data.user)
                 this.$router.push({ path: '/app/manage' })

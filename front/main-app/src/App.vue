@@ -50,6 +50,7 @@ import {
     SITEMODAL,
     EDITOR_ERROR,
 } from './EventBus.ts'
+import { LOGGED_IN_WITH_GOOGLE } from './EventBus'
 
 // useful cludge
 let __proxy
@@ -89,8 +90,8 @@ export default {
 
         EventBus.$on(MESSAGES, deets => {
             this.showUserMessage = deets.is
-            this.msg = deets.msg || ''
-            this.sass = deets.color || ''
+            this.msg = deets.msg
+            this.sass = deets.color
             this.black = deets.black || false
         })
 
@@ -120,13 +121,10 @@ export default {
         }
 
         if (para.get('googleauth') === 'true') {
-            EventBus.$emit(MESSAGES, {
-                is: true,
-                msg: 'Logged in with Google!',
-                color: 'secondary',
-                black: false,
-            })
+
+            EventBus.$emit(MESSAGES, LOGGED_IN_WITH_GOOGLE)
             this.$router.push({ path: '/app/manage' })
+            
         }
 
         // useful cludge
