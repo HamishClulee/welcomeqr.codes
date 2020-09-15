@@ -10,19 +10,12 @@ import * as lusca from 'lusca'
 import * as passport from 'passport'
 import * as multer from 'multer'
 
-import * as editor from '../controllers/Editor'
-import * as auth from '../config/passport'
-import * as admin from '../controllers/Admin'
-
-/** All Auth functions */
-import * as QAuth from '../controllers/QAuth'
+import * as editorRoutes from '../routes/editorRoutes'
+import * as adminRoutes from '../routes/adminRoutes'
+import * as authRoutes from '../routes/authRoutes'
 
 /** Middlewares */
 import Env from './Environment'
-import Log from '../middlewares/Log'
-import Clean from '../middlewares/Clean'
-import { IRequest, IResponse } from '../interfaces'
-import { User } from '../models/User'
 
 const jwt = require('jsonwebtoken')
 const tldjs = require('tldjs')
@@ -106,94 +99,14 @@ class Express {
 
 		/** ---------------------------------------  APP ROUTING  --------------------------------- */
 
-		/**
-		 * Refactor this to use Express.Router, it's getting messy!
-		 */
+		// ==> /auth
+		authRoutes.setAuthRoutes(this.app)
 
-		/** -------------- Auth & Account -------------- */
+		// ==> /api
+		editorRoutes.setEditorRoutes(this.app)
 
-		// Local
-		this.app.post('/auth/login', QAuth.login)
-		this.app.post('/auth/signup', QAuth.signup)
-		this.app.post('/auth/logout', QAuth.logout)
-		this.app.post('/auth/verify_email_token', QAuth.verifyemailtoken)
-		this.app.post('/auth/send_verify_email', auth.isReqAllowed, QAuth.sendverifyemail)
-		this.app.post('/auth/forgot', QAuth.forgotpassword)
-		this.app.post('/auth/reset', QAuth.resetpassword)
-
-		// Helper for frontend, checks if session exists
-		// if session => ensures JWT is granted
-		// if session & JWT => returns the user linked to the session
-		this.app.post('/auth/user', auth.isReqAllowed, QAuth.getuser)
-
-		// Account settings
-		this.app.post('/auth/toggle_subscribe', auth.isReqAllowed, QAuth.togglesubscribe)
-		this.app.post('/auth/user_settings', auth.isReqAllowed, QAuth.usersettings)
-
-		// Plumbing and Misc
-		this.app.post('/auth/contact', QAuth.contact)
-
-		// Google
-		this.app.get('/auth/google', passport.authenticate('google', { scope: ['email'] }))
-
-		this.app.get('/auth/google/callback', passport.authenticate(
-			'google',
-			{
-				failureRedirect: `${BASE_URL}/?authRedirect=true`
-			}
-		),
-		async (req: IRequest, res: IResponse) => {
-
-			/**
-			 * Google has returned the email address and verified it, log the user in
-			 * and grant them a token
-			 */
-			const _user = await User.findOne({ _id: req.user._id })
-
-			if (_user) {
-				req.logIn(_user, (err) => {
-
-					if (err) { return Clean.authError('login::passport::login-err', err, res) }
-
-					const tokenPayload = {
-						userid: _user._id,
-						email: _user.email,
-						role: _user.role,
-						subdom: _user.subdom
-					}
-
-					const token = jwt.sign(tokenPayload, Env.get().tokenSecret, { expiresIn: `2 days` })
-
-					// redirect to the FE component set to eat the token and deal with FE auth
-					res.redirect(`${BASE_URL}/authcb?token=${token.split('.').join('~')}`)
-
-				})
-			} else {
-				return Clean.authError('Passport Google Success CB', 'No user found when using findOne(req.user._id)', res)
-			}
-
-		})
-
-		/** --------------Admin -------------- */
-
-		this.app.post('/admin/get_log_by_day', auth.isAdmin, auth.isReqAllowed, admin.getLogByDay)
-		this.app.post('/admin/get_all_log_filenames', auth.isAdmin, auth.isReqAllowed, admin.getAllLogFilenames)
-		this.app.post('/admin/new_client_side_error', admin.newClientSideError)
-
-		/** -------------- Editor -------------- */
-		// Protected
-		this.app.post('/api/submitnew', auth.isReqAllowed, editor.submitNew)
-		this.app.post('/api/checksubdom', auth.isReqAllowed, editor.checkSubdom)
-		this.app.post('/api/submitsubdom', auth.isReqAllowed, editor.submitSubdom)
-		this.app.post('/api/gethtmlforuser', auth.isReqAllowed, editor.getHTML)
-		this.app.post('/api/generatesubdom', auth.isReqAllowed, editor.generateRandomSubDom)
-
-		// Public
-		this.app.post('/api/get_html_by_subdomain', editor.getHtmlBySubDom)
-
-		// Future proofing against the day that we have 10 million subdoms, basically load
-		// them into memory at spin up to make access faster
-		editor._precaching()
+		// ==> /admin
+		adminRoutes.setAdminRoutes(this.app)
 
 		/** ---------------------------------------  IMAGE STORAGE  --------------------------------- */
 		const storage = multer.diskStorage({

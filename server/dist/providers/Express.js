@@ -1,13 +1,4 @@
 "use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 const express = require("express");
 const path = require("path");
@@ -19,15 +10,11 @@ const cors = require("cors");
 const redis = require("redis");
 const passport = require("passport");
 const multer = require("multer");
-const editor = require("../controllers/Editor");
-const auth = require("../config/passport");
-const admin = require("../controllers/Admin");
-/** All Auth functions */
-const QAuth = require("../controllers/QAuth");
+const editorRoutes = require("../routes/editorRoutes");
+const adminRoutes = require("../routes/adminRoutes");
+const authRoutes = require("../routes/authRoutes");
 /** Middlewares */
 const Environment_1 = require("./Environment");
-const Clean_1 = require("../middlewares/Clean");
-const User_1 = require("../models/User");
 const jwt = require('jsonwebtoken');
 const tldjs = require('tldjs');
 /** App Constants */
@@ -90,73 +77,12 @@ class Express {
         // 	this.app.use(lusca.xssProtection(true))
         // }
         /** ---------------------------------------  APP ROUTING  --------------------------------- */
-        /**
-         * Refactor this to use Express.Router, it's getting messy!
-         */
-        /** -------------- Auth & Account -------------- */
-        // Local
-        this.app.post('/auth/login', QAuth.login);
-        this.app.post('/auth/signup', QAuth.signup);
-        this.app.post('/auth/logout', QAuth.logout);
-        this.app.post('/auth/verify_email_token', QAuth.verifyemailtoken);
-        this.app.post('/auth/send_verify_email', auth.isReqAllowed, QAuth.sendverifyemail);
-        this.app.post('/auth/forgot', QAuth.forgotpassword);
-        this.app.post('/auth/reset', QAuth.resetpassword);
-        // Helper for frontend, checks if session exists
-        // if session => ensures JWT is granted
-        // if session & JWT => returns the user linked to the session
-        this.app.post('/auth/user', auth.isReqAllowed, QAuth.getuser);
-        // Account settings
-        this.app.post('/auth/toggle_subscribe', auth.isReqAllowed, QAuth.togglesubscribe);
-        this.app.post('/auth/user_settings', auth.isReqAllowed, QAuth.usersettings);
-        // Plumbing and Misc
-        this.app.post('/auth/contact', QAuth.contact);
-        // Google
-        this.app.get('/auth/google', passport.authenticate('google', { scope: ['email'] }));
-        this.app.get('/auth/google/callback', passport.authenticate('google', {
-            failureRedirect: `${BASE_URL}/?authRedirect=true`
-        }), (req, res) => __awaiter(this, void 0, void 0, function* () {
-            /**
-             * Google has returned the email address and verified it, log the user in
-             * and grant them a token
-             */
-            const _user = yield User_1.User.findOne({ _id: req.user._id });
-            if (_user) {
-                req.logIn(_user, (err) => {
-                    if (err) {
-                        return Clean_1.default.authError('login::passport::login-err', err, res);
-                    }
-                    const tokenPayload = {
-                        userid: _user._id,
-                        email: _user.email,
-                        role: _user.role,
-                        subdom: _user.subdom
-                    };
-                    const token = jwt.sign(tokenPayload, Environment_1.default.get().tokenSecret, { expiresIn: `2 days` });
-                    // redirect to the FE component set to eat the token and deal with FE auth
-                    res.redirect(`${BASE_URL}/authcb?token=${token.split('.').join('~')}`);
-                });
-            }
-            else {
-                return Clean_1.default.authError('Passport Google Success CB', 'No user found when using findOne(req.user._id)', res);
-            }
-        }));
-        /** --------------Admin -------------- */
-        this.app.post('/admin/get_log_by_day', auth.isAdmin, auth.isReqAllowed, admin.getLogByDay);
-        this.app.post('/admin/get_all_log_filenames', auth.isAdmin, auth.isReqAllowed, admin.getAllLogFilenames);
-        this.app.post('/admin/new_client_side_error', admin.newClientSideError);
-        /** -------------- Editor -------------- */
-        // Protected
-        this.app.post('/api/submitnew', auth.isReqAllowed, editor.submitNew);
-        this.app.post('/api/checksubdom', auth.isReqAllowed, editor.checkSubdom);
-        this.app.post('/api/submitsubdom', auth.isReqAllowed, editor.submitSubdom);
-        this.app.post('/api/gethtmlforuser', auth.isReqAllowed, editor.getHTML);
-        this.app.post('/api/generatesubdom', auth.isReqAllowed, editor.generateRandomSubDom);
-        // Public
-        this.app.post('/api/get_html_by_subdomain', editor.getHtmlBySubDom);
-        // Future proofing against the day that we have 10 million subdoms, basically load
-        // them into memory at spin up to make access faster
-        editor._precaching();
+        // ==> /auth
+        authRoutes.setAuthRoutes(this.app);
+        // ==> /api
+        editorRoutes.setEditorRoutes(this.app);
+        // ==> /admin
+        adminRoutes.setAdminRoutes(this.app);
         /** ---------------------------------------  IMAGE STORAGE  --------------------------------- */
         const storage = multer.diskStorage({
             destination: function (req, file, callback) {
