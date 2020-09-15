@@ -6,7 +6,7 @@ import * as bodyParser from 'body-parser'
 import * as history from 'connect-history-api-fallback'
 import * as cors from 'cors'
 import * as redis from 'redis'
-import * as lusca from 'lusca'
+// import * as lusca from 'lusca'
 import * as passport from 'passport'
 import * as multer from 'multer'
 
