@@ -1,5 +1,5 @@
 <template>
-    <main class="home-con">
+    <main class="home-con page-container">
 
         <displaysection sassclass="white">
 
@@ -12,7 +12,7 @@
                 </div>
             </div>
 
-            <footer class="construction-foot" @click="scrollDown">
+            <footer class="construction-foot layout-col layout-center-all" @click="scrollDown">
                 <div class="icon-backer" @click.stop="scrollDown"></div>
                 <h6 @click.stop="scrollDown" class="h6">FIND OUT WHY!</h6>
             </footer>
@@ -170,10 +170,6 @@ export default {
     bottom: 0
     height: 100px
     cursor: pointer
-    display: flex
-    flex-direction: column
-    align-items: center
-    justify-content: center
 .heading-con
     display: flex
     flex-direction: column
@@ -184,6 +180,7 @@ export default {
         padding-left: 0
 .home-con
     text-align: center
+    width: 100%
 .main-h1
     font-size: 2.8em
     font-family: $heading-font

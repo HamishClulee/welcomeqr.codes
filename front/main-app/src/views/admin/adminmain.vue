@@ -1,6 +1,6 @@
 <template>
-    <section class="admin-main-container">
-        <div class="admin-tabs-container">
+    <section class="admin-main-container page-container wide layout-col layout-center-all">
+        <div class="admin-tabs-container layout-row">
             <div
                 class="admin-tab-item" 
                 @click="$router.push({ name: 'serverlogs' })"
@@ -32,20 +32,12 @@ export default {
 </script>
 
 <style lang="sass" scoped>
-
 .admin-main-container
-    min-height: 80vh
-    width: 98%
-    margin: 50px auto
-    min-width: 400px
-    display: flex
-    flex-direction: column
+
 .admin-tabs-container
     margin-top: 30px
     width: 100%
     height: 56px
-    display: flex
-    flex-direction: row
     align-items: center
     border-bottom: 1px solid $medium-gray
 .admin-tab-item

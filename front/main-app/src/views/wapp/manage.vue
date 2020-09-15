@@ -1,5 +1,5 @@
 <template>
-  <section class="manage-container">
+  <section class="manage-container page-container">
 
     <h6 v-if="!getuser.subdom" class="h6">We need some details before you can get started</h6>
 
@@ -135,12 +135,6 @@ export default {
 .subsubmit
     width: 100%
 .manage-container
-    margin-top: 80px
-    min-height: 500px
-    height: 80vh
-    width: 80vw
-    margin-left: auto
-    margin-right: auto
     padding: 4em
 .subdom-input-container
     display: flex

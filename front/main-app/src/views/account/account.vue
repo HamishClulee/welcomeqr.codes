@@ -1,5 +1,5 @@
 <template>
-  <main class="account-container">
+  <main class="account-container page-container restrict layout-col">
 
         <h3 class="h3">Account Settings</h3>
 
@@ -73,12 +73,6 @@ export default {
 
 <style lang="sass" scoped>
 .account-container
-    width: 90%
-    margin: 100px auto
-    min-width: 400px
-    min-height: 90vh
-    display: flex
-    flex-direction: column
 .controls-container
     .button
         margin: 5px

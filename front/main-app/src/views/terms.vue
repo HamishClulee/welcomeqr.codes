@@ -1,5 +1,5 @@
 <template>
-    <section class="terms-master-container">
+    <section class="terms-master-container page-container restrict">
         <h1 class="h1">Terms and Conditions</h1>
         <div class="main">
     <h2><strong>Terms and Conditions</strong></h2>
@@ -98,7 +98,5 @@ export default {
 
 <style lang="sass">
 .terms-master-container
-    margin-top: 80px
-    padding: 1em 3em
     font-size: 110%
 </style>

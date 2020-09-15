@@ -1,5 +1,5 @@
 <template>
-    <section class="verify-email-container">
+    <section class="verify-email-container page-container restrict layout-col layout-center-all">
         <button class="button primary large" @click="verifyEmail">Verify Your Email</button>
     </section>
 </template>
@@ -32,12 +32,5 @@ export default {
 
 <style lang="sass" scoped>
 .verify-email-container
-    height: 80vh
-    width: 95%
-    margin: 50px auto
-    min-width: 400px
-    max-width: 1400px
-    display: flex
-    align-items: center
-    justify-content: center
+
 </style>

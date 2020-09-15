@@ -63,7 +63,7 @@ import {
     LOADING,
     SERVER_AUTH_ERROR_MESSAGE,
     NEED_TO_BE_LOGGED_IN,
-    alreadyloggedinas
+    alreadyloggedinas,
 } from '../../EventBus'
 
 import { settoken } from '../../api/token'
@@ -119,7 +119,7 @@ export default {
             if (this.password.length < 8) this.passerror = 'Password needs to be at least 8 characters long...'
             else if (this.password === '') this.passerror = ''
             else this.passerror = ''
-            
+
         },
         success(res) {
 

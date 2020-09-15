@@ -1,11 +1,11 @@
 <template>
     <section class="server-logs-container">
 
-        <section class="controls-container">
+        <section class="controls-container layout-row">
 
-            <section class="category-container">
+            <section class="category-container layout-col">
                 <h6>Filter Logs By Category</h6>
-                <span class="categories-actual">
+                <span class="categories-actual layout-row">
                     <span 
                         class="category-item category-error"
                         :class="activeLevel === 'ERROR' ? 'active-cat' : 'inactive-cat'"
@@ -35,7 +35,7 @@
             </section>
 
 
-            <section class="log-list-container">
+            <section class="log-list-container layout-col">
                 <h6>Get Specific Date (if none selected, todays log is shown)</h6>
                 <multiselect
                     v-model="selectval"
@@ -167,20 +167,12 @@ tr:nth-child(even) {
 </style>
 <style lang="sass" scoped>
 .controls-container
-    display: flex
-    flex-direction: row
     margin: 20px 0
 .log-list-container
-    display: flex
-    flex-direction: column
     margin-left: 20px
     width: 400px
 .category-container
-    display: flex
-    flex-direction: column
 .categories-actual
-    display: flex
-    flex-direction: row
 .category-item
     cursor: pointer
     border-radius: 5px

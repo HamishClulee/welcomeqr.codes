@@ -56,7 +56,7 @@ import {
     MESSAGES,
     LOADING,
     SERVER_AUTH_ERROR_MESSAGE,
-    alreadyloggedinas
+    alreadyloggedinas,
 } from '../../EventBus'
 
 export default {

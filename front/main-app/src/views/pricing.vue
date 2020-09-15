@@ -1,5 +1,5 @@
 <template>
-  <main class="pricing-con">
+  <main class="pricing-con page-container restrict">
         <h1 class="h1">Pricing</h1>
         <h2 class="h2">How to choose the right package for your business.</h2>
         <section class="details-con">
@@ -51,16 +51,6 @@ export default {
     font-size: 1.8em
     color: $medium-gray
 .pricing-con
-    margin-top: 50px
-    min-height: 800px
-    width: 95%
-    min-width: 400px
-    margin-left: auto
-    margin-right: auto
-    display: flex
-    flex-direction: column
-    align-items: center
-    justify-content: center
     .pricing-item
         margin-top: 10px
         margin-bottom: 40px

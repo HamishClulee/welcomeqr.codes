@@ -1,5 +1,5 @@
 <template>
-    <main class="contact-page-container">
+    <main class="contact-page page-container restrict layout-col layout-center-all">
         <h1 class="h1">Contact Us</h1>
         <h5 class="h5-server">{{ servermsg }}</h5>
         <section class="contact-form">
@@ -83,14 +83,7 @@ export default {
 </script>
 
 <style lang="sass" scoped>
-.contact-page-container
-    height: 100vh
-    min-height: 800px
-    display: flex
-    flex-direction: column
-    width: 100%
-    justify-content: center
-    align-items: center
+.contact-page
     .contact-form
         width: 600px
     .h5-server
