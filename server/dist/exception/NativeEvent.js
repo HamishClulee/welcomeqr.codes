@@ -17,7 +17,7 @@ class NativeEvent {
         });
         // Catch cluster exit event...
         _cluster.on('exit', (worker, code, signal) => {
-            Log_1.default.warn(`NativeEventExit`, `Cluster with ProcessID '${worker.process.pid}' is Dead with Code '${code}, and signal: '${signal}'`);
+            Log_1.default.warn(`NativeEventExit`, `Cluster with ProcessID '${worker.process.pid}' is Dead with Code: ${code}, and signal: ${signal}`);
             // Ensuring a new cluster will start if an old one dies
             _cluster.fork();
         });

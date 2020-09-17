@@ -32,7 +32,7 @@ const Clean = {
 
 	settings: function(res, user: UserDocument): SettingsResponse {
 
-		Log.info(`From Clean Settings`, `Value of user => ${user}`)
+		Log.info(`Clean : Settings`, `Value of user email => ${user.email}`)
 
 		return res.status(200).send({ user: this.buildSettings(user) })
 
@@ -42,7 +42,7 @@ const Clean = {
 
 		let _user = this.killUser()
 
-		Log.info(`From Clean Deny`, `Sending a ${status}, with message => ${msg}`)
+		Log.info(`Clean : Deny`, `Sending a ${status}, with message => ${msg}`)
 
 		return res.status(status).send({ msg, user: _user })
 
@@ -52,7 +52,7 @@ const Clean = {
 
 		let _user = this.buildUser(user)
 
-		Log.info(`From Clean Approve`, `Sending a ${status} to user => ${user.email}`)
+		Log.info(`Clean : Approve`, `Sending a ${status} to user => ${user.email}`)
 
 		return res.status(status).send({ msg, user: _user })
 
@@ -60,7 +60,7 @@ const Clean = {
 
 	success: function(res: IResponse, status: number, content: any = {}, msg: string = ''): IResponse {
 
-		Log.info(`From Clean Success`, `Sending a ${status} with message ${msg}`)
+		Log.info(`Clean : Success`, `Sending a ${status} with message ${msg}`)
 
 		return res.status(status).send({ msg, content })
 
@@ -68,7 +68,7 @@ const Clean = {
 
 	failure: function(res: IResponse, status: number, content: any = {}, msg: string = ''): IResponse {
 
-		Log.info(`From Clean Failure`, `Sending a ${status} with message => ${msg}`)
+		Log.info(`Clean : Failure`, `Sending a ${status} with message => ${msg}`)
 
 		return res.status(status).send({ msg, content })
 
@@ -128,19 +128,19 @@ const Clean = {
 
 	},
 
-	apiError: function(funcname: string, e: Error, res: IResponse): IResponse {
+	apiError: function(funcname: string, error: Error, res: IResponse): IResponse {
 
-		Log.error(`Function Name: ${ funcname }`, `${String(e)} :: Api Failure`, [Log.TAG_API_ERROR])
+		Log.error(`FnName: ${ funcname }`, `${String(error)} : Api Failure`, [Log.TAG_API_ERROR])
 
-		return res.status(501).send({ userContent: 'Ice cream machine broke, ok, have a nice day', e })
+		return res.status(501).send({ userContent: `${String(error)} : Api Failure`, error })
 
 	},
 
-	authError: function(funcname: string, e: any, res: IResponse): IResponse {
+	authError: function(funcname: string, error: any, res: IResponse): IResponse {
 
-		Log.error(`Function Name: ${ funcname }`, `${String(e)} :: User Auth Failure`, [Log.TAG_AUTH])
+		Log.error(`FnName: ${ funcname }`, `${String(error)} : User Auth Failure`, [Log.TAG_AUTH])
 
-		return res.status(403).send({ userContent: 'Ice cream machine broke, ok, have a nice day', e, user: this.killUser() })
+		return res.status(403).send({ userContent:  `${String(error)} : User Auth Failure`, error, user: this.killUser() })
 
 	}
 

@@ -1,5 +1,5 @@
 <template>
-    <section class="admin-main-container page-container wide layout-col layout-center-all">
+    <section class="admin-main-container page-container wide layout-col">
         <div class="admin-tabs-container layout-row">
             <div
                 class="admin-tab-item" 
@@ -32,8 +32,6 @@ export default {
 </script>
 
 <style lang="sass" scoped>
-.admin-main-container
-
 .admin-tabs-container
     margin-top: 30px
     width: 100%

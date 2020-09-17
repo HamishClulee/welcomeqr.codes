@@ -8,25 +8,25 @@ const generateAccessToken = (user) => {
 };
 const Clean = {
     settings: function (res, user) {
-        Log_1.default.info(`From Clean Settings`, `Value of user => ${user}`);
+        Log_1.default.info(`Clean : Settings`, `Value of user email => ${user.email}`);
         return res.status(200).send({ user: this.buildSettings(user) });
     },
     deny: function (res, status = 403, msg = '') {
         let _user = this.killUser();
-        Log_1.default.info(`From Clean Deny`, `Sending a ${status}, with message => ${msg}`);
+        Log_1.default.info(`Clean : Deny`, `Sending a ${status}, with message => ${msg}`);
         return res.status(status).send({ msg, user: _user });
     },
     approve: function (res, status, user, msg = '') {
         let _user = this.buildUser(user);
-        Log_1.default.info(`From Clean Approve`, `Sending a ${status} to user => ${user.email}`);
+        Log_1.default.info(`Clean : Approve`, `Sending a ${status} to user => ${user.email}`);
         return res.status(status).send({ msg, user: _user });
     },
     success: function (res, status, content = {}, msg = '') {
-        Log_1.default.info(`From Clean Success`, `Sending a ${status} with message ${msg}`);
+        Log_1.default.info(`Clean : Success`, `Sending a ${status} with message ${msg}`);
         return res.status(status).send({ msg, content });
     },
     failure: function (res, status, content = {}, msg = '') {
-        Log_1.default.info(`From Clean Failure`, `Sending a ${status} with message => ${msg}`);
+        Log_1.default.info(`Clean : Failure`, `Sending a ${status} with message => ${msg}`);
         return res.status(status).send({ msg, content });
     },
     killUser: function () {
@@ -74,13 +74,13 @@ const Clean = {
             isemailverified: user.emailVerified
         };
     },
-    apiError: function (funcname, e, res) {
-        Log_1.default.error(`Function Name: ${funcname}`, `${String(e)} :: Api Failure`, [Log_1.default.TAG_API_ERROR]);
-        return res.status(501).send({ userContent: 'Ice cream machine broke, ok, have a nice day', e });
+    apiError: function (funcname, error, res) {
+        Log_1.default.error(`FnName: ${funcname}`, `${String(error)} : Api Failure`, [Log_1.default.TAG_API_ERROR]);
+        return res.status(501).send({ userContent: `${String(error)} : Api Failure`, error });
     },
-    authError: function (funcname, e, res) {
-        Log_1.default.error(`Function Name: ${funcname}`, `${String(e)} :: User Auth Failure`, [Log_1.default.TAG_AUTH]);
-        return res.status(403).send({ userContent: 'Ice cream machine broke, ok, have a nice day', e, user: this.killUser() });
+    authError: function (funcname, error, res) {
+        Log_1.default.error(`FnName: ${funcname}`, `${String(error)} : User Auth Failure`, [Log_1.default.TAG_AUTH]);
+        return res.status(403).send({ userContent: `${String(error)} : User Auth Failure`, error, user: this.killUser() });
     }
 };
 exports.default = Clean;

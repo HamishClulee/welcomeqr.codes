@@ -104,13 +104,6 @@ export default {
             }
         })
 
-        EventBus.$on(EDITOR_ERROR, () => {
-            this.showUserMessage = true
-            this.msg = 'Something went wrong, we have been notified, try again soon!'
-            this.sass = 'primary'
-            this.black = false
-        })
-
         // For auth failure redirects from ExpressJS
         const para = new URLSearchParams(window.location.search)
         if (para.get('redirect') === 'true') {

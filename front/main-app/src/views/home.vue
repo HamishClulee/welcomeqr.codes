@@ -181,6 +181,7 @@ export default {
 .home-con
     text-align: center
     width: 100%
+    margin-top: 0
 .main-h1
     font-size: 2.8em
     font-family: $heading-font

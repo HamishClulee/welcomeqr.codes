@@ -72,7 +72,6 @@ export default {
 </script>
 
 <style lang="sass" scoped>
-.account-container
 .controls-container
     .button
         margin: 5px

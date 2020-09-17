@@ -175,7 +175,7 @@ export const logout = async (req: IRequest, res: IResponse) => {
 export const getuser = async (req: IRequest, res: IResponse) => {
 	try {
 
-		if (!req.user) { return Clean.deny(res, 403, 'No session - no user') }
+		if (!req.user) { return Clean.deny(res, 200, 'No session - no user') }
 
 		const user = await User.findOne({ _id: req.user._id })
 
@@ -184,7 +184,7 @@ export const getuser = async (req: IRequest, res: IResponse) => {
 			return Clean.approve(res, 200, user, 'Auth success')
 		}
 
-		return Clean.deny(res, 401, 'You do not exist')
+		return Clean.deny(res, 200, 'You do not exist')
 
 	} catch (e) {
 

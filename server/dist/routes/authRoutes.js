@@ -40,7 +40,7 @@ exports.setAuthRoutes = (app) => {
     // Helper for frontend, checks if session exists
     // if session => ensures JWT is granted
     // if session & JWT => returns the user linked to the session
-    authRoutes.post('/user', auth.isReqAllowed, QAuth.getuser);
+    authRoutes.post('/user', QAuth.getuser);
     // Account settings
     authRoutes.post('/toggle_subscribe', auth.isReqAllowed, QAuth.togglesubscribe);
     authRoutes.post('/user_settings', auth.isReqAllowed, QAuth.usersettings);

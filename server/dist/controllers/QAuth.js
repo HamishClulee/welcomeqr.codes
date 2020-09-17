@@ -143,13 +143,13 @@ exports.logout = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
 exports.getuser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         if (!req.user) {
-            return Clean_1.default.deny(res, 403, 'No session - no user');
+            return Clean_1.default.deny(res, 200, 'No session - no user');
         }
         const user = yield User_1.User.findOne({ _id: req.user._id });
         if (user) {
             return Clean_1.default.approve(res, 200, user, 'Auth success');
         }
-        return Clean_1.default.deny(res, 401, 'You do not exist');
+        return Clean_1.default.deny(res, 200, 'You do not exist');
     }
     catch (e) {
         return Clean_1.default.authError('session challenge', `caught error: ${e}`, res);

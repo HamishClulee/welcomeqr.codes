@@ -17,9 +17,9 @@
                         @click="setActiveLevel('INFO')"
                     >INFO</span>
                     <span 
-                        class="category-item category-warning" 
-                        :class="activeLevel === 'WARNING' ? 'active-cat' : 'inactive-cat'"
-                        @click="setActiveLevel('WARNING')"
+                        class="category-item category-warn" 
+                        :class="activeLevel === 'WARN' ? 'active-cat' : 'inactive-cat'"
+                        @click="setActiveLevel('WARN')"
                     >WARNING</span>
                     <span 
                         class="category-item category-client" 
@@ -171,8 +171,6 @@ tr:nth-child(even) {
 .log-list-container
     margin-left: 20px
     width: 400px
-.category-container
-.categories-actual
 .category-item
     cursor: pointer
     border-radius: 5px
@@ -186,7 +184,7 @@ tr:nth-child(even) {
     border: 2px solid $font
 .category-info
     border: 2px solid $secondary
-.category-warning
+.category-warn
     border: 2px solid $highlight
 .category-error
     border: 2px solid $tertiary
@@ -194,7 +192,7 @@ tr:nth-child(even) {
     border: 2px solid $link
 .item-info
     border-bottom: 2px solid $secondary
-.item-warning
+.item-warn
     border-bottom: 2px solid $highlight
 .item-error
     border-bottom: 2px solid $tertiary

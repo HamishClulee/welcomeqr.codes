@@ -55,7 +55,7 @@
                     SUBMIT
             </button>
 
-            <p>Don't have an account? <router-link :to="{ path: '/auth/signup' }">Sign Up here.</router-link></p>
+            <p>Already have an account? <router-link :to="{ path: '/auth/login' }">Login here.</router-link></p>
             <p><router-link :to="{ path: '/auth/forgot' }">Trouble logging in?</router-link></p>
 
         </div>

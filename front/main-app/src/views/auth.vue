@@ -13,7 +13,6 @@ export default {
 </script>
 
 <style scoped lang="sass">
-.auth-container
 .comp-switch
     display: flex
     flex-direction: row

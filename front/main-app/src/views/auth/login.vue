@@ -64,6 +64,7 @@ import {
     SERVER_AUTH_ERROR_MESSAGE,
     NEED_TO_BE_LOGGED_IN,
     alreadyloggedinas,
+    EDITOR_ERROR,
 } from '../../EventBus'
 
 import { settoken } from '../../api/token'
@@ -101,7 +102,7 @@ export default {
             e.preventDefault()
             if (this.validated) {
                 this.servermsg = ''
-                this.$QAuth.login(this.email, this.password).then(res => { this.success(res) })
+                this.$QAuth.login(this.email, this.password).then(res => { this.success(res) }).catch(err => { this.httpError(err) })
             }
         },
         validateemail(e) {
@@ -119,6 +120,14 @@ export default {
             if (this.password.length < 8) this.passerror = 'Password needs to be at least 8 characters long...'
             else if (this.password === '') this.passerror = ''
             else this.passerror = ''
+
+        },
+        httpError(err) {
+
+            this.servermsg = `Something isn't right with those login details, try again. Maybe you need to Sign Up?`
+            if (err.response.status !== 403) {
+                EventBus.$emit(MESSAGES, EDITOR_ERROR)
+            }
 
         },
         success(res) {

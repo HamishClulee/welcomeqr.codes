@@ -30,7 +30,4 @@ export default {
 }
 </script>
 
-<style lang="sass" scoped>
-.verify-email-container
-
-</style>
+<style lang="sass" scoped></style>
